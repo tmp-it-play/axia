@@ -1,0 +1,56 @@
+enabled: true
+
+groups:
+  - claude
+  - codex
+
+overrides:
+  claude/skills/api-design: false
+  claude/skills/database-schema: false
+  claude/skills/docker: false
+  claude/skills/kotest-guide: false
+  claude/skills/kotlin-spring-arch: false
+  claude/skills/migration-guide: false
+  claude/skills/the-sdk: false
+  claude/skills/java-spring-arch: false
+  claude/skills/nextjs-fsd-architecture: false
+  claude/skills/nextjs-turborepo-fsd: false
+  claude/skills/nextjs-package-boundaries: false
+  claude/skills/tailwind-shadcn: false
+  claude/skills/tanstack-query-zod: false
+  claude/agents/contradiction-finder: false
+  claude/agents/doc-polisher: false
+  claude/agents/kotlin-convention-validator: false
+  claude/agents/frontend-convention-validator: false
+  claude/agents/kotlin-test-fixer: false
+  claude/hooks/dispatcher: true
+  claude/settings: true
+  claude/hooks/secret-guard: true
+  claude/hooks/command-guard: true
+  claude/hooks/ktlint: true
+  codex/skills/api-design: false
+  codex/skills/database-schema: false
+  codex/skills/docker: false
+  codex/skills/kotest-guide: false
+  codex/skills/kotlin-spring-arch: false
+  codex/skills/migration-guide: false
+  codex/skills/the-sdk: false
+  codex/skills/java-spring-arch: false
+  codex/skills/nextjs-fsd-architecture: false
+  codex/skills/nextjs-turborepo-fsd: false
+  codex/skills/nextjs-package-boundaries: false
+  codex/skills/tailwind-shadcn: false
+  codex/skills/tanstack-query-zod: false
+  codex/agents/contradiction-finder: false
+  codex/agents/doc-polisher: false
+  codex/agents/kotlin-convention-validator: false
+  codex/agents/frontend-convention-validator: false
+  codex/agents/kotlin-test-fixer: false
+  codex/hooks/dispatcher: true
+  codex/hooks-json: true
+  codex/hooks/secret-guard: true
+  codex/hooks/command-guard: true
+  codex/hooks/ktlint: true
+
+language: ko
+pr_label: false
