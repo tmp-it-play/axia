@@ -17,10 +17,10 @@ dependencies {
 
 compose.desktop {
     application {
-        mainClass = "team.themoment.axia.MainKt"
+        mainClass = "team.themoment.axia.DesktopMainKt"
 
         nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+            targetFormats(TargetFormat.Dmg, TargetFormat.Msi)
             packageName = "team.themoment.axia"
             packageVersion = "1.0.0"
         }
