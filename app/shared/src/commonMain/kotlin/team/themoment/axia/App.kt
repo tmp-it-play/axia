@@ -1,53 +1,48 @@
 package team.themoment.axia
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.safeContentPadding
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import axia.app.shared.generated.resources.Res
-import axia.app.shared.generated.resources.compose_multiplatform
-import org.jetbrains.compose.resources.painterResource
+import team.themoment.axia.app.AxiaAppShell
+import team.themoment.axia.app.rememberAxiaAppState
+import team.themoment.axia.designsystem.theme.AxiaTheme
+import team.themoment.axia.designsystem.theme.AxiaThemeMode
+import team.themoment.axia.feature.dashboard.DashboardUiState
+import team.themoment.axia.navigation.AxiaAccessFlags
+import team.themoment.axia.navigation.AxiaDestination
 
 @Composable
 @Preview
-fun App() {
-    MaterialTheme {
-        var showContent by remember { mutableStateOf(false) }
-        Column(
-            modifier =
-                Modifier
-                    .background(MaterialTheme.colorScheme.primaryContainer)
-                    .safeContentPadding()
-                    .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Button(onClick = { showContent = !showContent }) {
-                Text("Click me!")
-            }
-            AnimatedVisibility(showContent) {
-                val greeting = remember { Greeting().greet() }
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Image(painterResource(Res.drawable.compose_multiplatform), null)
-                    Text("Compose: $greeting")
-                }
-            }
-        }
+fun App(
+    themeMode: AxiaThemeMode = AxiaThemeMode.System,
+    onThemeModeChange: (AxiaThemeMode) -> Unit = {},
+    accessFlags: AxiaAccessFlags = AxiaAccessFlags(),
+    dashboardState: DashboardUiState = DashboardUiState(),
+    initialDestination: AxiaDestination = AxiaDestination.Dashboard,
+) {
+    var activeThemeMode by remember { mutableStateOf(themeMode) }
+    LaunchedEffect(themeMode) {
+        activeThemeMode = themeMode
+    }
+    val appState =
+        rememberAxiaAppState(
+            accessFlags = accessFlags,
+            initialDestination = initialDestination,
+        )
+
+    AxiaTheme(themeMode = activeThemeMode) {
+        AxiaAppShell(
+            appState = appState,
+            dashboardState = dashboardState,
+            themeMode = activeThemeMode,
+            onThemeModeChange = { selectedThemeMode ->
+                activeThemeMode = selectedThemeMode
+                onThemeModeChange(selectedThemeMode)
+            },
+        )
     }
 }
