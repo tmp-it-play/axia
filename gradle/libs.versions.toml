@@ -16,9 +16,14 @@ ktlint = "1.8.0"
 ktlintGradle = "14.2.0"
 kotlin-wrappers = "2026.8.4"
 kotlinx-coroutines = "1.11.0"
+kotlinx-serialization = "1.11.0"
 ktor = "3.5.2"
 logback = "1.6.3"
 material3 = "1.11.0-alpha07"
+hikari = "7.1.0"
+mysql = "26.7.0"
+java-jwt = "4.6.0"
+bouncycastle = "1.85"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -39,10 +44,23 @@ compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "composeMul
 compose-components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "composeMultiplatform" }
 compose-uiToolingPreview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "composeMultiplatform" }
 kotlinx-coroutinesSwing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutinesCore = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 ktor-serverCore = { module = "io.ktor:ktor-server-core-jvm", version.ref = "ktor" }
 ktor-serverNetty = { module = "io.ktor:ktor-server-netty-jvm", version.ref = "ktor" }
 ktor-serverTestHost = { module = "io.ktor:ktor-server-test-host-jvm", version.ref = "ktor" }
+ktor-serverContentNegotiation = { module = "io.ktor:ktor-server-content-negotiation-jvm", version.ref = "ktor" }
+ktor-serverStatusPages = { module = "io.ktor:ktor-server-status-pages-jvm", version.ref = "ktor" }
+ktor-serverCallId = { module = "io.ktor:ktor-server-call-id-jvm", version.ref = "ktor" }
+ktor-serverForwardedHeader = { module = "io.ktor:ktor-server-forwarded-header-jvm", version.ref = "ktor" }
+ktor-clientCore = { module = "io.ktor:ktor-client-core-jvm", version.ref = "ktor" }
+ktor-clientCio = { module = "io.ktor:ktor-client-cio-jvm", version.ref = "ktor" }
+ktor-serializationKotlinxJson = { module = "io.ktor:ktor-serialization-kotlinx-json-jvm", version.ref = "ktor" }
+hikari = { module = "com.zaxxer:HikariCP", version.ref = "hikari" }
+mysqlConnector = { module = "com.mysql:mysql-connector-j", version.ref = "mysql" }
+javaJwt = { module = "com.auth0:java-jwt", version.ref = "java-jwt" }
+bouncycastlePkix = { module = "org.bouncycastle:bcpkix-jdk18on", version.ref = "bouncycastle" }
 wrappers-browser = { module = "org.jetbrains.kotlin-wrappers:kotlin-browser", version.ref = "kotlin-wrappers" }
 
 [plugins]
@@ -52,5 +70,6 @@ composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "composeMul
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlintGradle" }
 ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
