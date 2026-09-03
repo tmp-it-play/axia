@@ -160,7 +160,7 @@ def build_bridge(target: str, sdk: Path, configured: bool) -> Path:
             "cl", "/nologo", "/std:c++17", "/EHsc", "/MT", "/utf-8", "/DUNICODE", "/D_UNICODE",
             str(ROOT / "app/desktopApp/src/native/windows/AxiaUpdateRunner.cpp"),
             "/Fe:" + str(destination / "AxiaUpdateRunner.exe"), "/Fo:" + str(BUILD / "AxiaUpdateRunner.obj"),
-            "/link", "/MACHINE:X64", "/SUBSYSTEM:WINDOWS", "shell32.lib", "bcrypt.lib", "ole32.lib",
+            "/link", "/MACHINE:X64", "/SUBSYSTEM:WINDOWS", "shell32.lib", "user32.lib", "bcrypt.lib", "ole32.lib",
         ])
         for binary in (destination / "WinSparkle.dll", destination / "AxiaUpdateRunner.exe"):
             with binary.open("rb") as source:
