@@ -485,7 +485,12 @@ class TaskStore(
                             it.getString(2)
                     }.toMap()
                 }.orEmpty()
-        val reopened = existing != null && !existing.open && snapshot.open
+        val reopened =
+            existing != null && snapshot.open &&
+                (
+                    !existing.open ||
+                        (snapshot.kind != TaskKind.DRAFT && hasNewClosedOccurrence(existing.details, snapshot.details))
+                )
         val id =
             if (existing == null) {
                 insertId(
@@ -641,6 +646,16 @@ class TaskStore(
             }
         }
         return id
+    }
+
+    private fun hasNewClosedOccurrence(
+        previous: JsonObject,
+        current: JsonObject,
+    ): Boolean {
+        // A new immutable closure followed by an open snapshot proves a reopen between observations.
+        val known = (previous["closedOccurrenceIds"] as? JsonArray)?.toSet() ?: return false
+        val latest = current["closedOccurrenceIds"] as? JsonArray ?: return false
+        return latest.any { it !in known }
     }
 
     private fun Connection.recordAssignment(
