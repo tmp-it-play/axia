@@ -24,6 +24,8 @@ import xml.etree.ElementTree as ET
 from prepare_native import fail, sha256, validate_version
 from release import SPARKLE, checked, release_context, required
 
+MAX_FEED_BYTES = 1024 * 1024
+
 
 def validate_remote_root(value: str | None) -> PurePosixPath:
     if value is None or not value.strip():
@@ -84,6 +86,13 @@ def upload_file(remote_command: list[str], source: Path, target: PurePosixPath) 
 
 
 def validate_artifact(directory: Path, target: str, version: str, tag: str, commit: str) -> tuple[Path, Path]:
+    feed = directory / "appcast.xml"
+    if not feed.is_file():
+        fail("Release artifact digest validation failed.")
+    with feed.open("rb") as contents:
+        feed_bytes = contents.read(MAX_FEED_BYTES + 1)
+    if len(feed_bytes) > MAX_FEED_BYTES:
+        fail("Release feed exceeds the 1 MiB limit.")
     manifest = json.loads((directory / "manifest.json").read_text(encoding="utf-8"))
     if any(manifest.get(name) != value for name, value in (("platform", target), ("version", version), ("tag", tag), ("commit", commit))):
         fail("Artifact provenance does not match the selected release.")
@@ -91,12 +100,11 @@ def validate_artifact(directory: Path, target: str, version: str, tag: str, comm
         fail("macOS artifact was not approved by the notarization pipeline.")
     extension = "dmg" if target == "macos-arm64" else "msi"
     asset = directory / f"Axia-{version}.{extension}"
-    feed = directory / "appcast.xml"
     files = manifest.get("files", {})
     for path in (asset, feed):
-        if not path.is_file() or files.get(path.name) != sha256(path):
+        if not path.is_file() or files.get(path.name) != (hashlib.sha256(feed_bytes).hexdigest() if path == feed else sha256(path)):
             fail("Release artifact digest validation failed.")
-    root = ET.fromstring(feed.read_bytes())
+    root = ET.fromstring(feed_bytes)
     enclosures = root.findall("./channel/item/enclosure")
     if len(enclosures) != 1:
         fail("A release feed must contain exactly its verified platform artifact.")
@@ -141,8 +149,8 @@ def main() -> None:
         url = "https://kimtaeeun.site/axia/updates/" + target.replace("-", "/") + "/appcast.xml"
         try:
             with urllib.request.urlopen(url, timeout=30) as response:
-                data = response.read(1024 * 1024 + 1)
-                if len(data) > 1024 * 1024:
+                data = response.read(MAX_FEED_BYTES + 1)
+                if len(data) > MAX_FEED_BYTES:
                     fail("Existing feed is unexpectedly large.")
                 if data != incoming_feed.read_bytes():
                     reject_rollback(data, version)
