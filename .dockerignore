@@ -23,6 +23,7 @@
 **/local.properties
 **/.env
 **/.env.*
+**/.password
 **/*.pem
 **/*.key
 **/*.p12
