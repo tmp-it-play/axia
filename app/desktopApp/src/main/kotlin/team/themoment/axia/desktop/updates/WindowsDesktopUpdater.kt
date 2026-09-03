@@ -26,6 +26,7 @@ internal class WindowsDesktopUpdater(
     private val checking = AtomicBoolean(false)
     private val restartApproved = AtomicBoolean(false)
     private val confirmationDialog = AtomicReference<JDialog?>(null)
+    private val stagingStore = WindowsUpdateStagingStore()
     private val library = Native.load(configuration.binary("WinSparkle.dll").toString(), WinSparkleLibrary::class.java)
     private val errorCallback =
         WinCallback {
@@ -93,6 +94,17 @@ internal class WindowsDesktopUpdater(
         library.win_sparkle_set_can_shutdown_callback(canShutdown)
         library.win_sparkle_set_shutdown_request_callback(shutdownCallback)
         library.win_sparkle_set_user_run_installer_callback(installerCallback)
+        Thread(
+            {
+                // An updater from the previous process may still be returning from ShellExecuteW.
+                // Retry only owned, marked attempts; executing runners keep their payloads locked.
+                repeat(40) {
+                    if (closed.get() || stagingStore.cleanupPending()) return@Thread
+                    Thread.sleep(250)
+                }
+            },
+            "axia-update-staging-cleanup",
+        ).apply { isDaemon = true }.start()
     }
 
     override fun start() {
@@ -164,24 +176,34 @@ internal class WindowsDesktopUpdater(
         require(Files.isRegularFile(source) && source.fileName.toString().endsWith(".msi", ignoreCase = true))
         val originalDigest = digest(source)
         // Keep both executable and MSI outside the installation that the MSI replaces.
-        val staging = Files.createTempDirectory("axia-verified-update-")
-        val installer = Files.copy(source, staging.resolve("Axia.msi"))
-        require(digest(installer) == originalDigest)
-        val runner = Files.copy(configuration.binary("AxiaUpdateRunner.exe"), staging.resolve("AxiaUpdateRunner.exe"))
-        val process =
-            ProcessBuilder(
-                runner.toString(),
-                installer.toString(),
-                originalDigest,
-                ProcessHandle.current().pid().toString(),
-                packagedLauncher().toString(),
-            ).redirectError(ProcessBuilder.Redirect.DISCARD).start()
+        val staging = stagingStore.create()
+        var process: Process? = null
         try {
+            val installer = Files.copy(source, staging.directory.resolve("Axia.msi"))
+            require(digest(installer) == originalDigest)
+            val runner = Files.copy(configuration.binary("AxiaUpdateRunner.exe"), staging.directory.resolve("AxiaUpdateRunner.exe"))
+            val child =
+                ProcessBuilder(
+                    runner.toString(),
+                    installer.toString(),
+                    originalDigest,
+                    ProcessHandle.current().pid().toString(),
+                    packagedLauncher().toString(),
+                ).redirectError(ProcessBuilder.Redirect.DISCARD).start()
+            process = child
             // Do not exit until the runner has locked the verified payload and opened the parent handle.
-            val ready = CompletableFuture.supplyAsync { process.inputStream.bufferedReader().readLine() }.get(15, TimeUnit.SECONDS)
+            val ready = CompletableFuture.supplyAsync { child.inputStream.bufferedReader().use { it.readLine() } }.get(15, TimeUnit.SECONDS)
             check(ready == "READY")
+            // Ownership stays active until this JVM exits. The next startup cleans it after the
+            // native runner finishes; deleting it here would destroy the pending installation.
         } catch (failure: Exception) {
-            process.destroyForcibly()
+            val child = process
+            if (child == null) {
+                staging.close()
+            } else {
+                child.destroyForcibly()
+                child.onExit().thenRun { staging.close() }
+            }
             throw failure
         }
     }
