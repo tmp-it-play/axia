@@ -535,13 +535,8 @@ class TaskMutationService(
             val item = projectContext(taskId, project.id) ?: throw invalidMutation()
             MutationPlan(
                 dispatch = { context ->
-                    // The adapter makes four independent writes. Any error can follow a successful field write.
-                    context.write {
-                        try {
-                            adapter.updateFields(project, item.itemNodeId, request)
-                        } catch (failure: GitHubApiException) {
-                            throw GitHubApiException(status = failure.status, outcomeUncertain = true)
-                        }
+                    adapter.updateFields(project, item.itemNodeId, request) { action ->
+                        context.write(action)
                     }
                 },
                 confirm = { _ ->

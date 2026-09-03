@@ -126,6 +126,7 @@ class ProjectBoardAdapter(
         project: ProjectIntegration,
         itemId: String,
         request: ProjectFieldsUpdate,
+        dispatch: suspend (suspend () -> Unit) -> Unit,
     ) {
         project.fields.forEach { mapping ->
             val value: JsonObject? =
@@ -168,11 +169,14 @@ class ProjectBoardAdapter(
                 }
             val mutation = if (value == null) "clearProjectV2ItemFieldValue" else "updateProjectV2ItemFieldValue"
             val inputType = if (value == null) "ClearProjectV2ItemFieldValueInput!" else "UpdateProjectV2ItemFieldValueInput!"
-            transport.graphQL(
-                "mutation(${'$'}input:$inputType) { $mutation(input:${'$'}input) { clientMutationId } }",
-                buildJsonObject { put("input", input) },
-                mutation = true,
-            )
+            // Each field is an independent write and must pass the caller's current authorization guard.
+            dispatch {
+                transport.graphQL(
+                    "mutation(${'$'}input:$inputType) { $mutation(input:${'$'}input) { clientMutationId } }",
+                    buildJsonObject { put("input", input) },
+                    mutation = true,
+                )
+            }
         }
     }
 
