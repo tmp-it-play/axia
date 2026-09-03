@@ -42,6 +42,9 @@ private val LocalShapes = staticCompositionLocalOf<AxiaShapes> { missingAxiaThem
 private val LocalDimensions = staticCompositionLocalOf<AxiaDimensions> { missingAxiaTheme() }
 private val LocalMotion = staticCompositionLocalOf<AxiaMotion> { missingAxiaTheme() }
 
+/** The platform host provides its live accessibility preference, inherited by nested themes. */
+val LocalAxiaReduceMotion = staticCompositionLocalOf { false }
+
 private fun missingAxiaTheme(): Nothing = error("AxiaTheme is not present")
 
 object AxiaTheme {
@@ -89,7 +92,7 @@ object AxiaTheme {
 @Composable
 fun AxiaTheme(
     themeMode: AxiaThemeMode = AxiaThemeMode.System,
-    reduceMotion: Boolean = false,
+    reduceMotion: Boolean = LocalAxiaReduceMotion.current,
     content: @Composable () -> Unit,
 ) {
     val systemInDarkTheme = isSystemInDarkTheme()
@@ -126,6 +129,7 @@ fun AxiaTheme(
         LocalShapes provides defaultAxiaShapes,
         LocalDimensions provides defaultAxiaDimensions,
         LocalMotion provides motion,
+        LocalAxiaReduceMotion provides reduceMotion,
     ) {
         MaterialTheme(
             colorScheme = materialColorScheme,
