@@ -309,9 +309,13 @@ class ReminderService(
             val freshLifecycle = previous == null || previous.lifecycle != task.lifecycle
             val targetChanged = freshLifecycle || previous.targetDate != task.targetDate
             val dueChanged = freshLifecycle || previous.dueAt != dueAt
+            // A changed threshold must not restart an ongoing overdue cycle, including a skipped vacation slot.
+            val resetOverdueCycle =
+                freshLifecycle ||
+                    (dueChanged && (previous.dueAt == null || now.isBefore(previous.dueAt) || now.isBefore(dueAt)))
             var imminentHandled = if (targetChanged) false else previous.imminentHandled
-            var firstSent = if (dueChanged) null else previous.firstSentAt
-            var nextDue = if (dueChanged) null else previous.nextDueAt
+            var firstSent = if (resetOverdueCycle) null else previous.firstSentAt
+            var nextDue = if (resetOverdueCycle) null else previous.nextDueAt
             val subjectEligible =
                 subject.userId != null && actors.any { it.id == subject.userId } &&
                     connection
