@@ -133,7 +133,48 @@ data class UserProfileSnapshot(
     val majorClubId: Long?,
     val majorClubName: String?,
     val dataGsmGitHubLogin: String?,
+    val sex: String? = null,
+    val grade: Int? = null,
+    val classNumber: Int? = null,
+    val number: Int? = null,
+    val studentNumber: Int? = null,
+    val major: String? = null,
+    val specialty: String? = null,
+    /** Local instant immediately before fetching the authoritative snapshot; never a provider timestamp. */
+    val snapshotRequestedAt: Instant? = null,
 )
+
+class StaleProfileSnapshotException : IllegalStateException("A newer authoritative profile has already been applied")
+
+sealed interface ProjectedGitHubConflictResult {
+    data object NoConflict : ProjectedGitHubConflictResult
+
+    data object Conflict : ProjectedGitHubConflictResult
+
+    data object StaleProfile : ProjectedGitHubConflictResult
+}
+
+sealed interface ProjectedGitHubOutcome {
+    data class Verified(
+        val link: GitHubLinkApproval,
+    ) : ProjectedGitHubOutcome
+
+    data class NotOrganizationMember(
+        val link: GitHubLinkApproval,
+    ) : ProjectedGitHubOutcome
+
+    data object IdMissing : ProjectedGitHubOutcome
+
+    data object AccountNotFound : ProjectedGitHubOutcome
+}
+
+sealed interface ProjectedGitHubResult {
+    data object Applied : ProjectedGitHubResult
+
+    data object Conflict : ProjectedGitHubResult
+
+    data object StaleProfile : ProjectedGitHubResult
+}
 
 data class ExistingUserProfile(
     val userId: Long,

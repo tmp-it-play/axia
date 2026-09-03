@@ -26,6 +26,7 @@ fun Application.configureErrorHandling() {
                     code = failure.code,
                     message = failure.publicMessage,
                     requestId = call.callId,
+                    details = failure.details,
                 ),
             )
         }

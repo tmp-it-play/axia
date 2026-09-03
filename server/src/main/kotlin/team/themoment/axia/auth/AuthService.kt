@@ -12,6 +12,7 @@ import team.themoment.axia.auth.store.NewSession
 import team.themoment.axia.auth.store.PollConsumptionResult
 import team.themoment.axia.auth.store.RefreshRotationResult
 import team.themoment.axia.auth.store.SessionRevocationReason
+import team.themoment.axia.auth.store.StaleProfileSnapshotException
 import team.themoment.axia.auth.store.UserProfileSnapshot
 import team.themoment.axia.config.DataGsmConfig
 import team.themoment.axia.integration.datagsm.DataGsmAccountSnapshot
@@ -25,6 +26,7 @@ import team.themoment.axia.security.CryptoSupport
 import team.themoment.axia.security.RefreshCredentialService
 import java.nio.charset.StandardCharsets
 import java.time.Clock
+import java.time.Instant
 import java.util.UUID
 import kotlin.coroutines.cancellation.CancellationException
 
@@ -108,13 +110,14 @@ class AuthService(
         }
 
         return try {
+            val snapshotRequestedAt = clock.instant()
             val account =
                 dataGsmClient.exchangeAuthorizationCodeAndFetchUserInfo(
                     authorizationCode = requireNotNull(authorizationCode),
                     codeVerifier = codeVerifier,
                     redirectUri = dataGsmConfig.redirectUri.toString(),
                 )
-            applyLoginGates(claim.id, account)
+            applyLoginGates(claim.id, account, snapshotRequestedAt)
             CallbackHandlingResult.Completed
         } catch (exception: CancellationException) {
             throw exception
@@ -122,6 +125,9 @@ class AuthService(
             completeBlocked(claim.id, AuthBlockReason.ExternalAuthenticationFailed)
             CallbackHandlingResult.Completed
         } catch (_: GitHubIdentityClientException) {
+            completeBlocked(claim.id, AuthBlockReason.ExternalAuthenticationFailed)
+            CallbackHandlingResult.Completed
+        } catch (_: StaleProfileSnapshotException) {
             completeBlocked(claim.id, AuthBlockReason.ExternalAuthenticationFailed)
             CallbackHandlingResult.Completed
         }
@@ -313,6 +319,7 @@ class AuthService(
     private suspend fun applyLoginGates(
         transactionId: String,
         account: DataGsmAccountSnapshot,
+        snapshotRequestedAt: Instant,
     ) {
         val student = account.student
         if (account.objectType != STUDENT_OBJECT_TYPE || student == null) {
@@ -331,6 +338,14 @@ class AuthService(
                 majorClubId = student.majorClub?.id,
                 majorClubName = student.majorClub?.name,
                 dataGsmGitHubLogin = registeredGitHubLogin,
+                sex = student.sex,
+                grade = student.grade,
+                classNumber = student.classNumber,
+                number = student.number,
+                studentNumber = student.studentNumber,
+                major = student.major,
+                specialty = student.specialty,
+                snapshotRequestedAt = snapshotRequestedAt,
             )
 
         if (

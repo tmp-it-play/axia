@@ -7,6 +7,8 @@ import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 import team.themoment.axia.auth.AuthBlockReason
 import team.themoment.axia.auth.DesktopPlatform
+import team.themoment.axia.authorization.lockMemberManagement
+import team.themoment.axia.members.JdbcMemberLifecycle
 import team.themoment.axia.persistence.inTransaction
 import java.security.MessageDigest
 import java.sql.Connection
@@ -25,6 +27,166 @@ class JdbcAuthStore(
     private val dataSource: DataSource,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : AuthStore {
+    private val memberLifecycle = JdbcMemberLifecycle()
+
+    /** Caller owns the transaction and IO dispatch; existing users only, never event-driven JIT. */
+    fun projectDataGsmProfile(
+        connection: Connection,
+        profile: UserProfileSnapshot,
+        isTheMomentMember: Boolean,
+        now: Instant,
+    ): ExistingUserProfile? =
+        with(connection) {
+            check(!autoCommit) { "Profile projection requires an explicit transaction" }
+            val validated = profile.validated()
+            lockMemberManagement()
+            val existing = findUserByDataGsmIdForUpdate(validated.dataGsmUserId)
+            if (existing == null) {
+                if (!isTheMomentMember || validated.dataGsmGitHubLogin == null) {
+                    resolveCandidateConflictEpisodes(validated.dataGsmUserId, now)
+                }
+                return@with null
+            }
+            if (validated.snapshotRequestedAt?.isBefore(existing.profileSyncedAt) == true) {
+                throw StaleProfileSnapshotException()
+            }
+            val sourceLoginChanged = existing.dataGsmGitHubLogin != validated.dataGsmGitHubLogin
+            val version = updateUserProfile(existing, validated, now)
+            if (!isTheMomentMember) {
+                memberLifecycle.removeCurrentAuthorizationForDeparture(this, existing.userId, existing.isActive, now)
+                prepareStatement(DEACTIVATE_USER).use { statement ->
+                    statement.setUtcInstant(1, now)
+                    statement.setLong(2, existing.userId)
+                    check(statement.executeUpdate() == 1) { "Locked user could not be deactivated" }
+                }
+                revokeUserSessions(existing.userId, DATAGSM_INACTIVE_REASON, now)
+                revokeActiveRefreshCredentials(existing.userId, now)
+                releaseGitHubLink(existing.userId, now)
+                resolveConflictEpisodes(existing.userId, validated.dataGsmUserId, now)
+            } else if (sourceLoginChanged) {
+                val reason =
+                    if (validated.dataGsmGitHubLogin ==
+                        null
+                    ) {
+                        AuthBlockReason.GitHubIdMissing
+                    } else {
+                        AuthBlockReason.ExternalAuthenticationFailed
+                    }
+                releaseGitHubLink(existing.userId, now)
+                suspendUserSessions(existing.userId, reason, now)
+                resolveConflictEpisodes(existing.userId, validated.dataGsmUserId, now)
+            }
+            val released = sourceLoginChanged || !isTheMomentMember
+            ExistingUserProfile(
+                userId = existing.userId,
+                isActive = existing.isActive && isTheMomentMember,
+                previousDataGsmGitHubLogin = existing.dataGsmGitHubLogin,
+                profileVersion = version,
+                githubLinkReleased = released,
+                githubUserId = existing.githubUserId.takeUnless { released },
+                githubLogin = existing.githubLogin.takeUnless { released },
+                githubMembership = existing.githubMembership.takeUnless { released } ?: GitHubMembership.Unknown,
+            )
+        }
+
+    fun checkProjectedGitHubConflict(
+        connection: Connection,
+        userId: Long,
+        expectedProfileVersion: Long,
+        githubLink: GitHubLinkApproval,
+        now: Instant,
+    ): ProjectedGitHubConflictResult =
+        with(connection) {
+            check(!autoCommit) { "Identity projection requires an explicit transaction" }
+            lockMemberManagement()
+            val link = githubLink.validated()
+            val user = findUserByIdForUpdate(userId)
+            if (user?.profileVersion != expectedProfileVersion) return@with ProjectedGitHubConflictResult.StaleProfile
+            val owner = findGitHubOwnerForUpdate(link.numericId)
+            if (owner == null || owner.userId == userId) {
+                resolveCandidateConflictEpisodes(user.dataGsmUserId, now)
+                return@with ProjectedGitHubConflictResult.NoConflict
+            }
+            check(owner.isActive) { "An inactive user retains a GitHub identity" }
+            releaseExistingUserLinkForFailedApproval(user.dataGsmUserId, now)
+            recordGitHubConflict(owner.userId, link.numericId, readUserProfile(userId), now)
+            ProjectedGitHubConflictResult.Conflict
+        }
+
+    fun completeProjectedGitHubVerification(
+        connection: Connection,
+        userId: Long,
+        expectedProfileVersion: Long,
+        outcome: ProjectedGitHubOutcome,
+        now: Instant,
+    ): ProjectedGitHubResult =
+        with(connection) {
+            check(!autoCommit) { "Identity projection requires an explicit transaction" }
+            lockMemberManagement()
+            val user = findUserByIdForUpdate(userId)
+            if (user?.profileVersion != expectedProfileVersion) return@with ProjectedGitHubResult.StaleProfile
+            when (outcome) {
+                is ProjectedGitHubOutcome.Verified -> {
+                    when (checkProjectedGitHubConflict(this, userId, expectedProfileVersion, outcome.link, now)) {
+                        ProjectedGitHubConflictResult.Conflict -> return@with ProjectedGitHubResult.Conflict
+                        ProjectedGitHubConflictResult.StaleProfile -> return@with ProjectedGitHubResult.StaleProfile
+                        ProjectedGitHubConflictResult.NoConflict -> Unit
+                    }
+                    approveGitHubLink(userId, outcome.link.validated(), now)
+                    activateUser(userId, now)
+                    resumeUserSessions(userId, now)
+                    resolveCandidateConflictEpisodes(user.dataGsmUserId, now)
+                }
+
+                is ProjectedGitHubOutcome.NotOrganizationMember -> {
+                    val link = outcome.link.validated()
+                    if (user.githubUserId != null && user.githubUserId != link.numericId) {
+                        releaseGitHubLink(userId, now)
+                        resolveConflictEpisodes(userId, user.dataGsmUserId, now)
+                    }
+                    prepareStatement(MARK_GITHUB_MEMBERSHIP_LOST).use { statement ->
+                        statement.setUtcInstant(1, now)
+                        statement.setLong(2, userId)
+                        statement.executeUpdate()
+                    }
+                    suspendUserSessions(userId, AuthBlockReason.GitHubOrganizationMembershipRequired, now)
+                }
+
+                ProjectedGitHubOutcome.IdMissing, ProjectedGitHubOutcome.AccountNotFound -> {
+                    val reason =
+                        if (outcome ==
+                            ProjectedGitHubOutcome.IdMissing
+                        ) {
+                            AuthBlockReason.GitHubIdMissing
+                        } else {
+                            AuthBlockReason.GitHubAccountNotFound
+                        }
+                    releaseGitHubLink(userId, now)
+                    suspendUserSessions(userId, reason, now)
+                    resolveConflictEpisodes(userId, user.dataGsmUserId, now)
+                }
+            }
+            ProjectedGitHubResult.Applied
+        }
+
+    private fun Connection.readUserProfile(userId: Long): UserProfileSnapshot =
+        prepareStatement("SELECT * FROM users WHERE id = ?").use { statement ->
+            statement.setLong(1, userId)
+            statement.executeQuery().use { results ->
+                check(results.next()) { "Locked user profile was not found" }
+                UserProfileSnapshot(
+                    dataGsmUserId = results.getLong("datagsm_user_id"),
+                    displayName = results.getString("display_name"),
+                    email = results.getString("email"),
+                    dataGsmAccountStatus = results.getString("datagsm_account_status"),
+                    dataGsmStudentRole = results.getString("datagsm_student_role"),
+                    majorClubId = results.nullableLong("major_club_id"),
+                    majorClubName = results.getString("major_club_name"),
+                    dataGsmGitHubLogin = results.getString("datagsm_github_login"),
+                )
+            }
+        }
+
     override suspend fun createOAuthTransaction(transaction: NewOAuthTransaction): Unit =
         withContext(ioDispatcher) {
             validateNewOAuthTransaction(transaction)
@@ -110,38 +272,7 @@ class JdbcAuthStore(
         withContext(ioDispatcher) {
             val validatedProfile = profile.validated()
             databaseTransaction {
-                val existing = findUserByDataGsmIdForUpdate(validatedProfile.dataGsmUserId)
-                if (existing == null) {
-                    if (validatedProfile.dataGsmGitHubLogin == null) {
-                        resolveCandidateConflictEpisodes(validatedProfile.dataGsmUserId, now)
-                    }
-                    return@databaseTransaction null
-                }
-                val sourceLoginChanged = existing.dataGsmGitHubLogin != validatedProfile.dataGsmGitHubLogin
-                if (sourceLoginChanged) {
-                    val reason =
-                        if (validatedProfile.dataGsmGitHubLogin == null) {
-                            AuthBlockReason.GitHubIdMissing
-                        } else {
-                            AuthBlockReason.ExternalAuthenticationFailed
-                        }
-                    releaseGitHubLink(existing.userId, now)
-                    suspendUserSessions(existing.userId, reason, now)
-                    resolveConflictEpisodes(existing.userId, validatedProfile.dataGsmUserId, now)
-                }
-                val profileVersion = updateUserProfile(existing, validatedProfile, now)
-                ExistingUserProfile(
-                    userId = existing.userId,
-                    isActive = existing.isActive,
-                    previousDataGsmGitHubLogin = existing.dataGsmGitHubLogin,
-                    profileVersion = profileVersion,
-                    githubLinkReleased = sourceLoginChanged,
-                    githubUserId = existing.githubUserId.takeUnless { sourceLoginChanged },
-                    githubLogin = existing.githubLogin.takeUnless { sourceLoginChanged },
-                    githubMembership =
-                        existing.githubMembership.takeUnless { sourceLoginChanged }
-                            ?: GitHubMembership.Unknown,
-                )
+                projectDataGsmProfile(this, validatedProfile, isTheMomentMember = true, now)
             }
         }
 
@@ -152,23 +283,7 @@ class JdbcAuthStore(
         withContext(ioDispatcher) {
             val validatedProfile = profile.validated()
             databaseTransaction {
-                val existing = findUserByDataGsmIdForUpdate(validatedProfile.dataGsmUserId)
-                if (existing == null) {
-                    resolveCandidateConflictEpisodes(validatedProfile.dataGsmUserId, now)
-                    return@databaseTransaction false
-                }
-                updateUserProfile(existing, validatedProfile, now)
-                prepareStatement(DEACTIVATE_USER).use { statement ->
-                    statement.setUtcInstant(1, now)
-                    statement.setLong(2, existing.userId)
-                    check(statement.executeUpdate() == 1) { "Locked user could not be deactivated" }
-                }
-
-                revokeUserSessions(existing.userId, DATAGSM_INACTIVE_REASON, now)
-                revokeActiveRefreshCredentials(existing.userId, now)
-                releaseGitHubLink(existing.userId, now)
-                resolveConflictEpisodes(existing.userId, validatedProfile.dataGsmUserId, now)
-                true
+                projectDataGsmProfile(this, validatedProfile, isTheMomentMember = false, now) != null
             }
         }
 
@@ -181,11 +296,12 @@ class JdbcAuthStore(
             requirePositive(userId, "userId")
             expectedProfileVersion?.let { requirePositive(it, "expectedProfileVersion") }
             databaseTransaction {
+                lockMemberManagement()
                 val user = findUserByIdForUpdate(userId) ?: return@databaseTransaction false
                 if (expectedProfileVersion != null && user.profileVersion != expectedProfileVersion) {
                     return@databaseTransaction false
                 }
-                if (expectedProfileVersion == null) advanceProfileVersion(user)
+                if (expectedProfileVersion == null) advanceProfileVersion(user, now)
 
                 prepareStatement(MARK_GITHUB_MEMBERSHIP_LOST).use { statement ->
                     statement.setUtcInstant(1, now)
@@ -214,11 +330,12 @@ class JdbcAuthStore(
                 "Only a GitHub identity failure can release a GitHub link"
             }
             databaseTransaction {
+                lockMemberManagement()
                 val user = findUserByIdForUpdate(userId) ?: return@databaseTransaction false
                 if (expectedProfileVersion != null && user.profileVersion != expectedProfileVersion) {
                     return@databaseTransaction false
                 }
-                if (expectedProfileVersion == null) advanceProfileVersion(user)
+                if (expectedProfileVersion == null) advanceProfileVersion(user, now)
                 releaseGitHubLink(userId, now)
                 suspendUserSessions(userId, reason, now)
                 if (reason == AuthBlockReason.GitHubIdConflict) {
@@ -267,6 +384,7 @@ class JdbcAuthStore(
                     return@databaseTransaction GitHubConflictBlockResult.TransactionUnavailable
                 }
 
+                lockMemberManagement()
                 val existingUser = findUserByDataGsmIdForUpdate(profile.dataGsmUserId)
                 if (existingUser.hasStaleProfileVersion(expectedProfileVersion)) {
                     completeStaleProfileTransaction(transactionId, existingUser, now)
@@ -309,6 +427,7 @@ class JdbcAuthStore(
                     return@databaseTransaction LoginApprovalResult.TransactionUnavailable
                 }
 
+                lockMemberManagement()
                 val existingUser = findUserByDataGsmIdForUpdate(validatedProfile.dataGsmUserId)
                 if (existingUser.hasStaleProfileVersion(expectedProfileVersion)) {
                     completeStaleProfileTransaction(transactionId, existingUser, now)
@@ -360,9 +479,10 @@ class JdbcAuthStore(
                     }
                 releaseSavepoint(approvalSavepoint)
 
-                activateUser(linkResult.userId)
+                activateUser(linkResult.userId, now)
                 resumeUserSessions(linkResult.userId, now)
                 resolveCandidateConflictEpisodes(validatedProfile.dataGsmUserId, now)
+                memberLifecycle.afterApprovedLogin(this, linkResult.userId, existingUser == null, now)
                 completeApprovedTransaction(transactionId, linkResult.userId, now)
                 LoginApprovalResult.Approved(linkResult.userId, validatedProfile.displayName)
             }
@@ -769,10 +889,14 @@ class JdbcAuthStore(
         return nextVersion
     }
 
-    private fun Connection.advanceProfileVersion(user: UserRow) {
+    private fun Connection.advanceProfileVersion(
+        user: UserRow,
+        now: Instant,
+    ) {
         prepareStatement(ADVANCE_PROFILE_VERSION).use { statement ->
             statement.setLong(1, Math.addExact(user.profileVersion, 1L))
-            statement.setLong(2, user.userId)
+            statement.setUtcInstant(2, now)
+            statement.setLong(3, user.userId)
             check(statement.executeUpdate() == 1) { "Locked user profile version could not be advanced" }
         }
     }
@@ -797,6 +921,7 @@ class JdbcAuthStore(
             isActive = true,
             dataGsmGitHubLogin = profile.dataGsmGitHubLogin,
             profileVersion = INITIAL_PROFILE_VERSION,
+            profileSyncedAt = now,
             githubUserId = null,
             githubLogin = null,
             githubMembership = GitHubMembership.Unknown,
@@ -817,11 +942,16 @@ class JdbcAuthStore(
             }
         }
 
-    private fun Connection.activateUser(userId: Long) {
+    private fun Connection.activateUser(
+        userId: Long,
+        now: Instant,
+    ) {
         prepareStatement(ACTIVATE_USER).use { statement ->
             statement.setLong(1, userId)
             check(statement.executeUpdate() == 1) { "Locked user could not be activated" }
         }
+        team.themoment.axia.members.MemberContributionHistory
+            .capture(this, userId, now)
     }
 
     private fun Connection.findGitHubOwnerForUpdate(githubUserId: Long): GitHubOwnerRow? =
@@ -867,6 +997,8 @@ class JdbcAuthStore(
                 check(statement.executeUpdate() == 1) { "Locked GitHub link could not be updated" }
             }
         }
+        team.themoment.axia.members.MemberContributionHistory
+            .capture(this, userId, now)
     }
 
     private fun Connection.findGitHubLinkForUpdate(userId: Long): GitHubLinkRow? =
@@ -901,6 +1033,8 @@ class JdbcAuthStore(
             statement.setLong(2, userId)
             statement.executeUpdate()
         }
+        team.themoment.axia.members.MemberContributionHistory
+            .capture(this, userId, now)
     }
 
     private fun Connection.recordGitHubConflict(
@@ -1389,6 +1523,10 @@ class JdbcAuthStore(
             dataGsmGitHubLogin?.let {
                 requireSizedText(it, MAX_GITHUB_LOGIN_LENGTH, "profile.dataGsmGitHubLogin")
             }
+        listOf(grade, classNumber, number).forEach { value ->
+            require(value == null || value in 0..65_535) { "School profile number is out of range" }
+        }
+        require(studentNumber == null || studentNumber >= 0) { "Student number is out of range" }
         return copy(
             displayName = validatedDisplayName,
             email = validatedEmail,
@@ -1396,6 +1534,9 @@ class JdbcAuthStore(
             dataGsmStudentRole = validatedStudentRole,
             majorClubName = validatedMajorClubName,
             dataGsmGitHubLogin = validatedGitHubLogin,
+            sex = sex?.let { requireBoundedOptionalText(it, 32, "profile.sex") },
+            major = major?.let { requireBoundedOptionalText(it, 128, "profile.major") },
+            specialty = specialty?.let { requireBoundedOptionalText(it, 128, "profile.specialty") },
         )
     }
 
@@ -1417,6 +1558,13 @@ class JdbcAuthStore(
         setNullableLong(index++, profile.majorClubId)
         setNullableString(index++, profile.majorClubName)
         setNullableString(index++, profile.dataGsmGitHubLogin)
+        setNullableString(index++, profile.sex)
+        setNullableInt(index++, profile.grade)
+        setNullableInt(index++, profile.classNumber)
+        setNullableInt(index++, profile.number)
+        setNullableInt(index++, profile.studentNumber)
+        setNullableString(index++, profile.major)
+        setNullableString(index++, profile.specialty)
         return index
     }
 }
@@ -1449,6 +1597,7 @@ private data class UserRow(
     val isActive: Boolean,
     val dataGsmGitHubLogin: String?,
     val profileVersion: Long,
+    val profileSyncedAt: Instant,
     val githubUserId: Long?,
     val githubLogin: String?,
     val githubMembership: GitHubMembership,
@@ -1559,6 +1708,7 @@ private fun ResultSet.toUserRow(): UserRow =
         isActive = getBoolean("is_active"),
         dataGsmGitHubLogin = getString("datagsm_github_login"),
         profileVersion = getLong("profile_version"),
+        profileSyncedAt = utcInstant("profile_synced_at"),
         githubUserId = nullableLong("github_user_id"),
         githubLogin = getString("github_login"),
         githubMembership = getString("organization_membership").toGitHubMembership(),
@@ -1632,6 +1782,23 @@ private fun PreparedStatement.setNullableLong(
     } else {
         setLong(parameterIndex, value)
     }
+}
+
+private fun PreparedStatement.setNullableInt(
+    parameterIndex: Int,
+    value: Int?,
+) {
+    if (value == null) setNull(parameterIndex, Types.INTEGER) else setInt(parameterIndex, value)
+}
+
+private fun requireBoundedOptionalText(
+    value: String,
+    maximumLength: Int,
+    name: String,
+): String {
+    val normalized = value.trim()
+    require(normalized.length <= maximumLength) { "$name is too long" }
+    return normalized
 }
 
 private fun requireDigest(
@@ -1857,7 +2024,7 @@ private val MARK_TERMINAL_DELIVERED_IF_TERMINAL = MARK_TERMINAL_DELIVERED
 
 private val USER_ROW_SELECT =
     """
-    SELECT u.id AS user_id, u.datagsm_user_id, u.is_active, u.datagsm_github_login, u.profile_version,
+    SELECT u.id AS user_id, u.datagsm_user_id, u.is_active, u.datagsm_github_login, u.profile_version, u.profile_synced_at,
            l.github_user_id, l.github_login, l.organization_membership
     FROM users u
     LEFT JOIN user_github_links l ON l.user_id = u.id
@@ -1876,7 +2043,9 @@ private val UPDATE_USER_PROFILE =
     UPDATE users
     SET datagsm_user_id = ?, display_name = ?, email = ?, datagsm_account_status = ?,
         datagsm_student_role = ?, major_club_id = ?, major_club_name = ?, datagsm_github_login = ?,
-        profile_version = ?, profile_synced_at = ?
+        sex = ?, school_grade = ?, school_class_number = ?, school_number = ?, student_number = ?,
+        major = ?, specialty = ?,
+        profile_version = ?, profile_synced_at = GREATEST(?, profile_synced_at)
     WHERE id = ?
     """.trimIndent()
 
@@ -1884,8 +2053,9 @@ private val INSERT_USER =
     """
     INSERT INTO users (
         datagsm_user_id, display_name, email, datagsm_account_status, datagsm_student_role,
-        major_club_id, major_club_name, datagsm_github_login, profile_synced_at
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        major_club_id, major_club_name, datagsm_github_login, sex, school_grade, school_class_number,
+        school_number, student_number, major, specialty, profile_synced_at
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """.trimIndent()
 
 private val DEACTIVATE_USER =
@@ -1897,7 +2067,8 @@ private val DEACTIVATE_USER =
 
 private const val ACTIVATE_USER = "UPDATE users SET is_active = TRUE, deactivated_at = NULL WHERE id = ?"
 
-private const val ADVANCE_PROFILE_VERSION = "UPDATE users SET profile_version = ? WHERE id = ?"
+private const val ADVANCE_PROFILE_VERSION =
+    "UPDATE users SET profile_version = ?, profile_synced_at = GREATEST(?, profile_synced_at) WHERE id = ?"
 
 private val SELECT_GITHUB_OWNER_FOR_UPDATE =
     """

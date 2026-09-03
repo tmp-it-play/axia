@@ -1,11 +1,13 @@
 package team.themoment.axia.api
 
 import io.ktor.http.HttpStatusCode
+import kotlinx.serialization.json.JsonObject
 
 class ApiFailure(
     val status: HttpStatusCode,
     val code: ApiErrorCode,
     val publicMessage: String,
+    val details: JsonObject? = null,
 ) : RuntimeException(publicMessage) {
     companion object {
         fun invalidRequest(message: String): ApiFailure = ApiFailure(HttpStatusCode.BadRequest, ApiErrorCode.InvalidRequest, message)

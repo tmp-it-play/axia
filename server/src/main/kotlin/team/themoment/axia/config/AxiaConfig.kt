@@ -10,6 +10,8 @@ data class AxiaConfig(
     val dataGsm: DataGsmConfig,
     val gitHub: GitHubConfig,
     val security: SecurityConfig,
+    val webhooks: WebhookConfig,
+    val jobs: JobConfig = JobConfig(),
 ) {
     companion object {
         fun fromEnvironment(environment: Map<String, String> = System.getenv()): AxiaConfig {
@@ -66,10 +68,31 @@ data class AxiaConfig(
                         issuer = values.optional("AXIA_ACCESS_TOKEN_ISSUER", "axia-api"),
                         audience = values.optional("AXIA_ACCESS_TOKEN_AUDIENCE", "axia-desktop"),
                     ),
+                webhooks =
+                    WebhookConfig(
+                        dataGsmEventSecret = values.required("AXIA_DATAGSM_EVENT_SECRET"),
+                        gitHubWebhookSecret = values.secret("AXIA_GITHUB_WEBHOOK_SECRET"),
+                    ),
+                jobs =
+                    JobConfig(
+                        incremental = Duration.ofSeconds(values.positiveInt("AXIA_GITHUB_INCREMENTAL_SECONDS", 900).toLong()),
+                        full = Duration.ofSeconds(values.positiveInt("AXIA_GITHUB_FULL_SECONDS", 21_600).toLong()),
+                        redelivery = Duration.ofSeconds(values.positiveInt("AXIA_GITHUB_REDELIVERY_SECONDS", 21_600).toLong()),
+                        reminders = Duration.ofSeconds(values.positiveInt("AXIA_REMINDER_SECONDS", 60).toLong()),
+                        health = Duration.ofSeconds(values.positiveInt("AXIA_HEALTH_SECONDS", 30).toLong()),
+                    ),
             )
         }
     }
 }
+
+data class JobConfig(
+    val incremental: Duration = Duration.ofMinutes(15),
+    val full: Duration = Duration.ofHours(6),
+    val redelivery: Duration = Duration.ofHours(6),
+    val reminders: Duration = Duration.ofMinutes(1),
+    val health: Duration = Duration.ofSeconds(30),
+)
 
 data class ServerConfig(
     val host: String,
@@ -126,6 +149,22 @@ class SecurityConfig(
 class ConfigurationException(
     message: String,
 ) : IllegalStateException(message)
+
+class WebhookConfig(
+    val dataGsmEventSecret: String,
+    gitHubWebhookSecret: ByteArray,
+) {
+    init {
+        if (!dataGsmEventSecret.matches(Regex("[0-9a-f]{64}"))) {
+            throw ConfigurationException("AXIA_DATAGSM_EVENT_SECRET must be the provider-issued 64-character lowercase hex value")
+        }
+    }
+
+    val gitHubWebhookSecret: ByteArray = gitHubWebhookSecret.copyOf()
+        get() = field.copyOf()
+
+    override fun toString(): String = "WebhookConfig(dataGsmEventSecret=[REDACTED],gitHubWebhookSecret=[REDACTED])"
+}
 
 private class EnvironmentValues(
     private val values: Map<String, String>,

@@ -7,7 +7,7 @@ import javax.sql.DataSource
 
 object DatabaseFactory {
     private const val MYSQL_DRIVER_CLASS_NAME = "com.mysql.cj.jdbc.Driver"
-    private const val DEFAULT_SCHEMA_RESOURCE = "/schema.sql"
+    private val INITIAL_SCHEMA_RESOURCES = listOf("/schema.sql", "/tasks.sql", "/members.sql", "/events.sql", "/notifications.sql")
 
     fun create(config: DatabaseConfig): HikariDataSource =
         HikariDataSource(
@@ -51,8 +51,12 @@ object DatabaseFactory {
 
     fun initializeSchema(
         dataSource: DataSource,
-        resourcePath: String = DEFAULT_SCHEMA_RESOURCE,
+        resourcePath: String? = null,
     ) {
+        if (resourcePath == null) {
+            INITIAL_SCHEMA_RESOURCES.forEach { initializeSchema(dataSource, it) }
+            return
+        }
         require(resourcePath.startsWith('/')) { "Schema resource path must be absolute" }
 
         val script =
