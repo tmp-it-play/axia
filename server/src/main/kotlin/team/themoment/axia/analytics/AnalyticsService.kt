@@ -240,15 +240,25 @@ class AnalyticsService(
             ) {
                 throw ApiFailure.invalidRequest("페이지 요청이 올바르지 않습니다.")
             }
+            val beforeAt =
+                beforeId?.let { id ->
+                    // Keep the database precision and resolve the immutable anchor in this same read snapshot.
+                    connection
+                        .query("SELECT occurred_at FROM completion_events WHERE id=?", id) {
+                            requireNotNull(it.instant("occurred_at"))
+                        }.singleOrNull() ?: throw ApiFailure.invalidRequest("완료 이력 페이지 기준이 올바르지 않습니다.")
+                }
             val rows =
                 connection.query(
                     """
                     SELECT e.*,t.title FROM completion_events e JOIN task_projections t ON t.id=e.task_id
-                    WHERE (? IS NULL OR e.id<?) AND (? IS NULL OR e.product_id=?)
+                    WHERE (? IS NULL OR e.occurred_at<? OR (e.occurred_at=? AND e.id<?)) AND (? IS NULL OR e.product_id=?)
                       AND (? IS NULL OR EXISTS(SELECT 1 FROM completion_credits c WHERE c.event_id=e.id AND c.user_id=?))
-                    ORDER BY e.id DESC LIMIT ?
+                    ORDER BY e.occurred_at DESC,e.id DESC LIMIT ?
                     """.trimIndent(),
                     beforeId,
+                    beforeAt,
+                    beforeAt,
                     beforeId,
                     productId,
                     productId,
