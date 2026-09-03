@@ -167,7 +167,7 @@ class JdbcDataGsmEventProcessor(
             finishVerification(claim, target, ProjectedGitHubOutcome.IdMissing)
             return
         }
-        val identity = github.findUser(login)
+        val identity = receipts.withLeaseRenewal(claim, clock) { github.findUser(login) }
         if (identity == null) {
             finishVerification(claim, target, ProjectedGitHubOutcome.AccountNotFound)
             return
@@ -189,7 +189,7 @@ class JdbcDataGsmEventProcessor(
             }
         if (conflict != ProjectedGitHubConflictResult.NoConflict) return
         val outcome =
-            if (github.hasActiveOrganizationMembership(identity)) {
+            if (receipts.withLeaseRenewal(claim, clock) { github.hasActiveOrganizationMembership(identity) }) {
                 ProjectedGitHubOutcome.Verified(link)
             } else {
                 ProjectedGitHubOutcome.NotOrganizationMember(link)

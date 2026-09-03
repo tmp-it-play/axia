@@ -2,18 +2,29 @@ package team.themoment.axia.webhooks
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.async
+import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.supervisorScope
 import kotlinx.coroutines.withContext
 import team.themoment.axia.persistence.inTransaction
 import team.themoment.axia.security.CryptoSupport
 import java.sql.Connection
 import java.sql.PreparedStatement
 import java.sql.ResultSet
+import java.time.Clock
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.util.UUID
+import java.util.concurrent.atomic.AtomicBoolean
 import javax.sql.DataSource
+import kotlin.coroutines.cancellation.CancellationException
 
 enum class WebhookSource {
     DATAGSM,
@@ -107,28 +118,95 @@ class WebhookReceiptStore(
             }
         }
 
+    /**
+     * Keeps a claim alive only while preparing external reads. Both children finish
+     * before returning, so no renewal can contend with the caller's projection lock.
+     * Projection writes must still acquire their own [lockAndRenew] fence afterwards.
+     */
+    internal suspend fun <T> withLeaseRenewal(
+        claim: WebhookReceiptClaim,
+        clock: Clock,
+        prepare: suspend () -> T,
+    ): T =
+        supervisorScope {
+            val leaseLost = AtomicBoolean(false)
+            val work = async { prepare() }
+            val heartbeat =
+                launch {
+                    while (work.isActive && !leaseLost.get()) {
+                        delay((leaseDuration.toMillis() / 4).coerceAtLeast(1))
+                        withContext(ioDispatcher) {
+                            try {
+                                val owned = dataSource.inTransaction { lockAndRenew(this, claim, clock::instant) }
+                                check(owned) { "Webhook receipt lease was lost" }
+                            } catch (cancelled: CancellationException) {
+                                throw cancelled
+                            } catch (_: Exception) {
+                                // Latch inside the IO block: cancellation on return must not hide
+                                // a failed renewal racing with an already completed preparation.
+                                leaseLost.set(true)
+                                work.cancel(CancellationException("Webhook receipt lease was lost"))
+                            }
+                        }
+                    }
+                }
+            val prepared =
+                try {
+                    val result =
+                        try {
+                            work.await()
+                        } catch (cancelled: CancellationException) {
+                            currentCoroutineContext().ensureActive()
+                            check(!leaseLost.get()) { "Webhook receipt lease was lost" }
+                            throw cancelled
+                        }
+                    heartbeat.cancelAndJoin()
+                    check(!leaseLost.get()) { "Webhook receipt lease was lost" }
+                    result
+                } finally {
+                    withContext(NonCancellable) {
+                        work.cancel()
+                        heartbeat.cancel()
+                        work.join()
+                        heartbeat.join()
+                    }
+                }
+            currentCoroutineContext().ensureActive()
+            prepared
+        }
+
     /** Locks and renews an owned lease. Call before making projection changes. */
     fun lockAndRenew(
         connection: Connection,
         claim: WebhookReceiptClaim,
         now: Instant,
+    ): Boolean = lockAndRenew(connection, claim) { now }
+
+    private fun lockAndRenew(
+        connection: Connection,
+        claim: WebhookReceiptClaim,
+        now: () -> Instant,
     ): Boolean {
         check(!connection.autoCommit) { "Webhook projection requires an explicit transaction" }
-        val owned =
+        val renewedAt =
             connection.prepareStatement(LOCK_RECEIPT).use { statement ->
                 statement.setString(1, claim.source.name)
                 statement.setString(2, claim.deliveryId)
                 statement.executeQuery().use { result ->
-                    result.next() &&
-                        result.getString("status") == "PROCESSING" &&
-                        result.getString("lease_owner") == claim.leaseOwner &&
-                        result.instantOrNull("lease_until")?.isAfter(now) == true
+                    if (!result.next() || result.getString("status") != "PROCESSING" ||
+                        result.getString("lease_owner") != claim.leaseOwner
+                    ) {
+                        return false
+                    }
+                    // Heartbeat time is sampled after the row lock; waiting cannot revive an expired lease.
+                    val instant = now()
+                    if (result.instantOrNull("lease_until")?.isAfter(instant) != true) return false
+                    instant
                 }
             }
-        if (!owned) return false
         connection.prepareStatement(RENEW_RECEIPT).use { statement ->
-            statement.setInstant(1, now.plus(leaseDuration))
-            statement.setInstant(2, now)
+            statement.setInstant(1, renewedAt.plus(leaseDuration))
+            statement.setInstant(2, renewedAt)
             statement.bindClaim(3, claim)
             return statement.executeUpdate() == 1
         }

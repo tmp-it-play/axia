@@ -108,7 +108,7 @@ class GitHubWebhookService(
                 WebhookClaimResult.Busy -> return GitHubWebhookResult.RetryableFailure
             }
         return try {
-            val batch = sync.prepareWebhook(eventType, payload)
+            val batch = receipts.withLeaseRenewal(claim, clock) { sync.prepareWebhook(eventType, payload) }
             withContext(Dispatchers.IO) {
                 dataSource.inTransaction {
                     val now = clock.instant()
@@ -142,6 +142,8 @@ class GitHubWebhookService(
     ) {
         try {
             receipts.fail(claim, code, clock.instant())
+        } catch (cancelled: CancellationException) {
+            throw cancelled
         } catch (_: Exception) {
             logger.error("GitHub webhook failure receipt unavailable delivery={}", claim.deliveryId)
         }
