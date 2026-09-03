@@ -78,7 +78,12 @@ fun main() {
             CompositionLocalProvider(LocalAxiaReduceMotion provides motionPreference.reduceMotion) {
                 val theme = remember { DesktopThemeState() }
                 val themeMode = theme.mode
-                var windowVisible by remember { mutableStateOf(true) }
+                val nativeWindowState =
+                    rememberWindowState(
+                        width = defaultAxiaDimensions.defaultWindowWidth,
+                        height = defaultAxiaDimensions.defaultWindowHeight,
+                    )
+                val mainWindow = remember(nativeWindowState) { DesktopWindowState(nativeWindowState) }
                 var showSessions by remember { mutableStateOf(false) }
                 var lifecycleFailure by remember { mutableStateOf<String?>(null) }
                 var backgroundMenuReady by remember { mutableStateOf(false) }
@@ -122,13 +127,13 @@ fun main() {
                         try {
                             val confirmed = controller?.logout() ?: return@launch
                             showSessions = false
-                            windowVisible = true
+                            mainWindow.show()
                             if (!confirmed) lifecycle?.notify("이 기기에서 로그아웃했어요", "서버 세션 종료는 확인하지 못했습니다. 다른 로그인 기기에서 세션 목록을 확인해 주세요.")
                         } catch (exception: CancellationException) {
                             throw exception
                         } catch (_: Exception) {
                             lifecycleFailure = "보안 저장소의 로그인 정보를 삭제하지 못했습니다. 접근 권한을 확인한 뒤 로그아웃을 다시 시도해 주세요."
-                            windowVisible = true
+                            mainWindow.show()
                         }
                     }
                 }
@@ -138,9 +143,9 @@ fun main() {
                     try {
                         lifecycle =
                             DesktopLifecycle(
-                                onShow = { windowVisible = true },
+                                onShow = mainWindow::show,
                                 onSessions = {
-                                    windowVisible = true
+                                    mainWindow.show()
                                     showSessions = true
                                 },
                                 onLogout = { logout() },
@@ -161,13 +166,9 @@ fun main() {
                 }
 
                 Window(
-                    onCloseRequest = { if (backgroundMenuReady) windowVisible = false },
-                    visible = windowVisible,
-                    state =
-                        rememberWindowState(
-                            width = defaultAxiaDimensions.defaultWindowWidth,
-                            height = defaultAxiaDimensions.defaultWindowHeight,
-                        ),
+                    onCloseRequest = { if (backgroundMenuReady) mainWindow.hide() },
+                    visible = mainWindow.visible,
+                    state = mainWindow.nativeState,
                     title = "Axia",
                 ) {
                     DisposableEffect(window, updater) {
@@ -189,8 +190,8 @@ fun main() {
                                 defaultAxiaDimensions.minimumWindowHeight.value.roundToInt(),
                             )
                     }
-                    LaunchedEffect(windowVisible) {
-                        if (windowVisible) {
+                    LaunchedEffect(mainWindow.visible, mainWindow.activationRequest) {
+                        if (mainWindow.visible) {
                             window.toFront()
                             window.requestFocus()
                         }
@@ -202,7 +203,7 @@ fun main() {
                             Item("로그아웃", onClick = { logout() }, enabled = controller != null)
                             Item("업데이트 확인", onClick = updater::checkForUpdates)
                             Separator()
-                            Item("창 숨기기", onClick = { windowVisible = false }, enabled = backgroundMenuReady)
+                            Item("창 숨기기", onClick = mainWindow::hide, enabled = backgroundMenuReady)
                             Item("종료", onClick = ::exitApplication)
                         }
                     }
