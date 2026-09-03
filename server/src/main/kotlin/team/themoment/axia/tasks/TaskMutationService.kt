@@ -710,10 +710,9 @@ class TaskMutationService(
             ) {
                 throw staleSnapshot(userId, taskId)
             }
-            val stale = staleSnapshot(userId, taskId)
             plan(latest, state).also { prepared ->
                 prepared.preDispatch =
-                    { connection -> if (tasks.revision(connection, taskId) != latest.revision) throw stale }
+                    { connection -> if (tasks.revision(connection, taskId) != latest.revision) throw TaskRevisionChanged(taskId) }
             }
         }
     }
@@ -791,6 +790,8 @@ class TaskMutationService(
                 }
                 return MutationResult(attempt.id, result?.taskId ?: attempt.taskId, result?.confirmed == true, true)
             }
+            // The dispatch transaction has rolled back; read the conflict response from current state.
+            if (failure is TaskRevisionChanged) throw staleSnapshot(userId, failure.taskId)
             if (failure is ApiFailure) throw failure
             if (failure is GitHubApiException) {
                 throw ApiFailure(
@@ -1124,6 +1125,10 @@ class TaskMutationService(
         val confirmed: Boolean,
         val taskId: Long?,
     )
+
+    private class TaskRevisionChanged(
+        val taskId: Long,
+    ) : RuntimeException()
 
     private class MutationPlan(
         val dispatch: suspend (DispatchContext) -> Unit,
