@@ -104,7 +104,10 @@ int WINAPI wWinMain(HINSTANCE, HINSTANCE, PWSTR, int) {
             Handle installerProcess{execute.hProcess};
             installed = WaitForSingleObject(installerProcess.value, INFINITE) == WAIT_OBJECT_0;
             DWORD result = ERROR_INSTALL_FAILURE;
-            installed = installed && GetExitCodeProcess(installerProcess.value, &result) && (result == ERROR_SUCCESS || result == ERROR_SUCCESS_REBOOT_REQUIRED);
+            installed = installed && GetExitCodeProcess(installerProcess.value, &result);
+            // Windows is already restarting; do not report failure or launch Axia into shutdown.
+            if (installed && result == ERROR_SUCCESS_REBOOT_INITIATED) return 0;
+            installed = installed && (result == ERROR_SUCCESS || result == ERROR_SUCCESS_REBOOT_REQUIRED);
         }
         if (!installed) Failure();
         // Relaunch even after a user-cancelled MSI, so the previous application remains usable.
