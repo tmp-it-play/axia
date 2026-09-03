@@ -40,6 +40,7 @@ import team.themoment.axia.designsystem.component.AxiaButtonStyle
 import team.themoment.axia.designsystem.component.AxiaDivider
 import team.themoment.axia.designsystem.component.AxiaEmptyState
 import team.themoment.axia.designsystem.component.AxiaPanel
+import team.themoment.axia.designsystem.component.AxiaPanelTransition
 import team.themoment.axia.designsystem.component.AxiaSelect
 import team.themoment.axia.designsystem.component.AxiaSelectOption
 import team.themoment.axia.designsystem.component.AxiaTextField
@@ -175,21 +176,27 @@ fun TasksScreen(
                 }
             }
             AxiaPanel(Modifier.width(AxiaTheme.dimensions.detailPanelWidth).fillMaxHeight()) {
-                when {
-                    detailLoading -> {
-                        AxiaEmptyState("상세 내용을 불러오고 있어요", "잠시만 기다려 주세요.")
-                    }
+                AxiaPanelTransition(
+                    contentKey = if (detailLoading) null else selectedTask?.task?.rowKey,
+                    modifier = Modifier.fillMaxSize(),
+                    animate = !detailLoading && selectedTask != null,
+                ) {
+                    when {
+                        detailLoading -> {
+                            AxiaEmptyState("상세 내용을 불러오고 있어요", "잠시만 기다려 주세요.")
+                        }
 
-                    selectedTask != null -> {
-                        TaskDetailPanel(selectedTask, onOpenSource, {
-                            // Review rows contain the reviewer, not the PR's assignees. Fetch the canonical
-                            // detail before offering a PR edit so the two assignment scopes never mix.
-                            onSelectTask(selectedTask.task.copy(kind = TaskKind.PULL_REQUEST, assignmentKey = null))
-                        }, detailActions)
-                    }
+                        selectedTask != null -> {
+                            TaskDetailPanel(selectedTask, onOpenSource, {
+                                // Review rows contain the reviewer, not the PR's assignees. Fetch the canonical
+                                // detail before offering a PR edit so the two assignment scopes never mix.
+                                onSelectTask(selectedTask.task.copy(kind = TaskKind.PULL_REQUEST, assignmentKey = null))
+                            }, detailActions)
+                        }
 
-                    else -> {
-                        AxiaEmptyState("태스크를 선택해 주세요", "원본 정보와 보드 상태를 오른쪽에서 확인할 수 있습니다.")
+                        else -> {
+                            AxiaEmptyState("태스크를 선택해 주세요", "원본 정보와 보드 상태를 오른쪽에서 확인할 수 있습니다.")
+                        }
                     }
                 }
             }
