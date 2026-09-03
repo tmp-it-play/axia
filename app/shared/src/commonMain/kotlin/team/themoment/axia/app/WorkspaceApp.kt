@@ -85,8 +85,11 @@ import team.themoment.axia.unavailability.UnavailabilityUpdateRequest
 
 private data class WorkspaceUndo(
     val label: String,
+    val target: WorkspaceUndoTarget = WorkspaceUndoTarget.AxiaDatabase,
     val execute: () -> Unit,
 )
+
+private enum class WorkspaceUndoTarget { AxiaDatabase, GitHub }
 
 private enum class ManagementSection { Members, Integrations, Reminders }
 
@@ -517,7 +520,7 @@ fun WorkspaceApp(
             undo?.let { action ->
                 AxiaBanner(action.label, actionLabel = "되돌리기", onAction = {
                     if (!state.busy &&
-                        state.pendingTaskWrite == null
+                        (action.target != WorkspaceUndoTarget.GitHub || state.pendingTaskWrite == null)
                     ) {
                         undo = null
                         action.execute()
@@ -702,7 +705,7 @@ fun WorkspaceApp(
                                     // inverse with a newly fetched revision when the user later presses Undo.
                                     if (after == project.copy(targetDate = date.toString()) && latest.task.canWrite) {
                                         undo =
-                                            WorkspaceUndo("마감일 변경 되돌리기") {
+                                            WorkspaceUndo("마감일 변경 되돌리기", WorkspaceUndoTarget.GitHub) {
                                                 controller.submitTaskWrite(
                                                     calendarTargetCommand(latest.task, after, project.targetDate),
                                                 ) { reloadPeriods() }
