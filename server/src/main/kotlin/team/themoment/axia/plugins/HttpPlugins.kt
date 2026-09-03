@@ -35,7 +35,8 @@ fun Application.configureHttpPlugins() {
         json(
             Json {
                 encodeDefaults = true
-                explicitNulls = false
+                // Nullable DTO fields without defaults require explicit nulls, including field-clearing requests.
+                explicitNulls = true
                 ignoreUnknownKeys = true
             },
         )
