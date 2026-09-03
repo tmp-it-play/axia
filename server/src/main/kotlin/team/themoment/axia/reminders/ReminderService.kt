@@ -105,7 +105,13 @@ class ReminderService(
                     return@memberTransaction ReminderSettingsResponse(taskId, hours, settings.second, review.scope.assignmentKey)
                 }
                 if (!task.active ||
-                    query("SELECT 1 FROM task_assignees WHERE task_id=? AND user_id=?", taskId, actor.userId) { it.getInt(1) }.isEmpty()
+                    query(
+                        "SELECT 1 FROM task_assignees a JOIN user_github_links g ON g.user_id=a.user_id " +
+                            "AND g.github_user_id=a.github_user_id AND g.organization_membership='MEMBER' " +
+                            "WHERE a.task_id=? AND a.user_id=?",
+                        taskId,
+                        actor.userId,
+                    ) { it.getInt(1) }.isEmpty()
                 ) {
                     throw accessDenied()
                 }
@@ -250,7 +256,13 @@ class ReminderService(
     ) {
         val baseAssignments =
             connection.query("SELECT github_user_id,user_id FROM task_assignees WHERE task_id=? ORDER BY github_user_id", task.id) {
-                ReminderSubject("user:${it.getLong("github_user_id")}", it.nullableLong("user_id"), task.kind, task.startedAt)
+                ReminderSubject(
+                    "user:${it.getLong("github_user_id")}",
+                    it.nullableLong("user_id"),
+                    task.kind,
+                    task.startedAt,
+                    githubId = it.getLong("github_user_id"),
+                )
             }
         val reviews =
             if (task.kind == TaskKind.PULL_REQUEST) {
@@ -264,6 +276,7 @@ class ReminderService(
                         TaskKind.REVIEW_REQUEST,
                         requireNotNull(it.instant("requested_at")),
                         ReviewReminderScope(it.getLong("github_user_id"), it.getString("request_occurrence_id")),
+                        githubId = it.getLong("github_user_id"),
                     )
                 }
             } else {
@@ -299,7 +312,15 @@ class ReminderService(
             var imminentHandled = if (targetChanged) false else previous.imminentHandled
             var firstSent = if (dueChanged) null else previous.firstSentAt
             var nextDue = if (dueChanged) null else previous.nextDueAt
-            val subjectEligible = subject.userId != null && actors.any { it.id == subject.userId }
+            val subjectEligible =
+                subject.userId != null && actors.any { it.id == subject.userId } &&
+                    connection
+                        .query(
+                            "SELECT 1 FROM user_github_links WHERE user_id=? AND github_user_id=? AND organization_membership='MEMBER'",
+                            subject.userId,
+                            subject.githubId,
+                        ) { it.getInt(1) }
+                        .isNotEmpty()
             val positions =
                 if (subjectEligible) {
                     connection
@@ -535,6 +556,7 @@ private data class ReminderSubject(
     val kind: TaskKind,
     val startedAt: Instant,
     val reviewScope: ReviewReminderScope? = null,
+    val githubId: Long? = null,
 )
 
 private data class ReminderState(

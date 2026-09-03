@@ -119,6 +119,33 @@ object MemberContributionHistory {
             }.also { check(it.size <= 1) { "Overlapping contribution identity intervals" } }
             .singleOrNull()
 
+    /** Display attribution only: a second-resolution source event must have one owner for its entire possible interval. */
+    fun ownerThroughoutSecond(
+        connection: Connection,
+        githubId: Long,
+        occurredAt: Instant,
+    ): Long? {
+        val start = occurredAt.truncatedTo(ChronoUnit.SECONDS)
+        val end = start.plusSeconds(1)
+        val intervals =
+            connection.query(
+                "SELECT user_id,valid_from,valid_until FROM member_contribution_history " +
+                    "WHERE github_user_id=? AND valid_from<? AND (valid_until IS NULL OR valid_until>?) ORDER BY valid_from,id",
+                githubId,
+                end,
+                start,
+            ) {
+                Triple(it.getLong("user_id"), requireNotNull(it.instant("valid_from")), it.instant("valid_until") ?: end)
+            }
+        val owner = intervals.firstOrNull()?.first ?: return null
+        var coveredUntil = start
+        intervals.forEach { (userId, from, until) ->
+            if (userId != owner || from.isAfter(coveredUntil)) return null
+            coveredUntil = maxOf(coveredUntil, until)
+        }
+        return owner.takeUnless { coveredUntil.isBefore(end) }
+    }
+
     private data class HistoryRow(
         val id: Long,
         val from: Instant,

@@ -417,7 +417,8 @@ class TaskStore(
                 reminderOverrideHours = override.first,
                 remindersSuppressed = override.second,
                 canChangeReminderOverride =
-                    actor.isEligible && reminderActive && summary.assignees.any { it.userId == actor.userId } &&
+                    actor.isEligible && reminderActive &&
+                        summary.assignees.any { it.userId == actor.userId && TaskWarning.PREVIOUS_GITHUB_ACCOUNT !in it.warnings } &&
                         (review == null || (review.currentlyLinked && review.userId == actor.userId)),
                 canChangeReminderSuppression = actor.isEligible && reminderActive && canSuppress,
                 milestoneNumber =
@@ -527,7 +528,7 @@ class TaskStore(
             }
         execute("DELETE FROM task_assignees WHERE task_id=?", id)
         snapshot.assignees.distinctBy { it.id }.forEach { assignee ->
-            val userId = previousAssignees[assignee.id] ?: currentUser(assignee.id)
+            val userId = previousAssignees[assignee.id] ?: historicalAssignee(snapshot, assignee.id) ?: currentUser(assignee.id)
             execute(
                 "INSERT INTO task_assignees(task_id,github_user_id,github_login,github_node_id,user_id) VALUES(?,?,?,?,?)",
                 id,
@@ -547,7 +548,9 @@ class TaskStore(
                 review.actor.id,
                 review.actor.login,
                 review.actor.nodeId,
-                previousReviewers[review.actor.id] ?: currentUser(review.actor.id),
+                previousReviewers[review.actor.id]
+                    ?: MemberContributionHistory.ownerThroughoutSecond(this, review.actor.id, review.requestedAt)
+                    ?: currentUser(review.actor.id),
                 review.occurrenceId,
                 review.requestedAt,
             )
@@ -759,6 +762,17 @@ class TaskStore(
         ) {
             it.getLong(1)
         }.singleOrNull()
+
+    private fun Connection.historicalAssignee(
+        snapshot: GitHubTaskSnapshot,
+        githubId: Long,
+    ): Long? {
+        if (snapshot.kind == TaskKind.DRAFT) return null
+        // The provider's complete timeline retains source order; IDs and second-resolution times are not sort keys.
+        val latest = snapshot.assignmentOccurrences.lastOrNull { it.assignee.id == githubId } ?: return null
+        if (!latest.assigned) return null
+        return MemberContributionHistory.ownerThroughoutSecond(this, githubId, latest.occurredAt)
+    }
 
     private fun Connection.putProjectContext(
         taskId: Long,
