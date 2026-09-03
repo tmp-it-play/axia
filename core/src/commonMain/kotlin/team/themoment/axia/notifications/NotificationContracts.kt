@@ -25,6 +25,11 @@ data class NotificationListResponse(
 )
 
 @Serializable
+data class RecentAssignmentActivityResponse(
+    val assignments: List<NotificationSummary>,
+)
+
+@Serializable
 data class NativeNotificationClaimResponse(
     val claimId: String?,
     val notifications: List<NotificationSummary>,

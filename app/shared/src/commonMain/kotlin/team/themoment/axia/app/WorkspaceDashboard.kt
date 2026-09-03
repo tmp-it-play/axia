@@ -89,10 +89,7 @@ internal fun WorkspaceUiState.dashboard(): DashboardUiState {
             },
         unreadNotificationCount = unreadCount.coerceAtMost(Int.MAX_VALUE.toLong()).toInt(),
         recentAssignments =
-            notifications
-                .filter {
-                    it.type in assignmentNotificationTypes
-                }.take(5)
+            dashboardAssignments
                 .map { DashboardActivity(it.id.toString(), it.title, it.body) },
         recentCompletions =
             dashboardCompletions.map {
@@ -110,5 +107,3 @@ internal fun WorkspaceUiState.dashboard(): DashboardUiState {
         githubConnection = if (github.readOnly) GitHubConnectionState.ReadOnly else GitHubConnectionState.Available,
     )
 }
-
-private val assignmentNotificationTypes = setOf("TASK_ASSIGNED", "TASK_UNASSIGNED", "REVIEW_REQUESTED", "REVIEW_REQUEST_REMOVED")

@@ -27,6 +27,11 @@ fun Route.notificationRoutes(
             val unread = query["unreadOnly"]?.let { it.toBooleanStrictOrNull() ?: throw invalidPage() } ?: false
             call.respond(notifications.list(actor.userId, before, unread, limit))
         }
+        get("/recent-assignments") {
+            call.preventSensitiveResponseCaching()
+            val actor = call.requireAuthenticatedSession(authService)
+            call.respond(notifications.recentAssignments(actor.userId))
+        }
         post("/{id}/read") {
             call.preventSensitiveResponseCaching()
             val actor = call.requireAuthenticatedSession(authService)

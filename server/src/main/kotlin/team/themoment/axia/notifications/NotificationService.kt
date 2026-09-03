@@ -62,6 +62,26 @@ class NotificationService(
             }
         }
 
+    /** The dashboard's activity is independent of inbox pagination and read/unread filters. */
+    suspend fun recentAssignments(userId: Long): RecentAssignmentActivityResponse =
+        withContext(ioDispatcher) {
+            dataSource.inTransaction(isolationLevel = Connection.TRANSACTION_REPEATABLE_READ, readOnly = true) {
+                authorization.requireCurrent(this, userId, forUpdate = false)
+                RecentAssignmentActivityResponse(
+                    query(
+                        """
+                        SELECT n.* FROM notifications n
+                        WHERE n.recipient_user_id = ?
+                          AND n.type IN ('TASK_ASSIGNED','TASK_UNASSIGNED','REVIEW_REQUESTED','REVIEW_REQUEST_REMOVED')
+                        ORDER BY n.id DESC LIMIT 5
+                        """.trimIndent(),
+                        userId,
+                        map = ::notificationSummary,
+                    ),
+                )
+            }
+        }
+
     suspend fun markRead(
         userId: Long,
         id: Long,

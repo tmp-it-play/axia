@@ -28,6 +28,7 @@ import team.themoment.axia.members.MemberSummary
 import team.themoment.axia.notifications.GlobalReminderPolicy
 import team.themoment.axia.notifications.NotificationListResponse
 import team.themoment.axia.notifications.NotificationSummary
+import team.themoment.axia.notifications.RecentAssignmentActivityResponse
 import team.themoment.axia.platform.AxiaTime
 import team.themoment.axia.products.IntegrationListResponse
 import team.themoment.axia.products.ProductListResponse
@@ -63,6 +64,7 @@ data class WorkspaceUiState(
     val myTasks: List<TaskSummary> = emptyList(),
     val calendarTasks: List<TaskSummary> = emptyList(),
     val dashboardCompletions: List<CompletionHistoryEntry> = emptyList(),
+    val dashboardAssignments: List<NotificationSummary> = emptyList(),
     val selectedTask: TaskDetail? = null,
     val selectedMember: MemberDetail? = null,
     val selectedProduct: ProductId = ProductId.HELLO_GSM,
@@ -147,11 +149,14 @@ class WorkspaceController(
                         val mine = async { allTasks(TaskFilters(userId = current.member.id)) }
                         val completions =
                             async { gateway.get<CompletionHistoryResponse>("/v1/completions?userId=${current.member.id}&limit=5") }
+                        val assignments =
+                            async { gateway.get<RecentAssignmentActivityResponse>("/v1/notifications/recent-assignments") }
                         val fetchedTasks = tasks.await()
                         val fetchedMembers = members.await()
                         val fetchedProducts = products.await()
                         val fetchedMine = mine.await()
                         val fetchedCompletions = completions.await()
+                        val fetchedAssignments = assignments.await()
                         if (generation == refreshGeneration) {
                             state =
                                 state.copy(
@@ -161,6 +166,7 @@ class WorkspaceController(
                                     myTasks = fetchedMine.tasks,
                                     github = fetchedTasks.github,
                                     dashboardCompletions = fetchedCompletions.completions,
+                                    dashboardAssignments = fetchedAssignments.assignments,
                                 )
                         }
                     }
