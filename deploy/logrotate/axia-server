@@ -1,0 +1,11 @@
+/var/log/axia/server/server.json /var/log/axia/server/launcher.log {
+    daily
+    rotate 14
+    maxage 14
+    missingok
+    ifempty
+    compress
+    dateext
+    copytruncate
+    su root root
+}
