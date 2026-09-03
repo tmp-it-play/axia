@@ -65,3 +65,9 @@ The mounted server log directory contains `server.json` and `launcher.log`; use 
 Provider keys have not been supplied: successful production login, Event lifecycle, and GitHub synchronization are **not established**. Missing keys stop preflight/start; no fake HTTP service replaces the API. DataGSM's stable-ID/full-snapshot Event contract remains an external prerequisite. GitHub Draft assignment changes reversed entirely between observations cannot be reconstructed from its current-assignee-only API.
 
 Desktop update code expects signed feeds/assets at `https://kimtaeeun.site/axia/updates/...`, but **this Nginx deployment does not serve those paths**. Signing, publication, and an explicitly chosen serving arrangement remain unfinished; do not claim update delivery is deployed.
+
+### Desktop publication directory — not yet served
+
+The release workflow requires the repository-level Actions variable `AXIA_FEED_REMOTE_ROOT`, with `/Users/snowykte0426/Downloads/axia/updates` as the intended explicit destination. `publish.py --remote-root` can override it; no `/srv` fallback exists. The publisher supports Linux `sha256sum` and macOS `shasum -a 256` and requires pre-existing, trusted `macos/arm64` and `windows/x64` directories beneath that root. See the [release publication instructions](../scripts/release/README.md).
+
+This setting selects only where approved release files are published. It does not create a Ktor route, host mount, or Nginx update location, and the current deployment remains unable to serve update files.

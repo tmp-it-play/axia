@@ -28,6 +28,8 @@ env:
   AXIA_RELEASE_VERSION: ${{ inputs.version }}
   AXIA_RELEASE_TAG: ${{ inputs.tag }}
   AXIA_CONFIRM_RELEASE: ${{ inputs.confirm_release }}
+  # Repository-level Actions variable, available before the deployment environment is evaluated.
+  AXIA_FEED_REMOTE_ROOT: ${{ vars.AXIA_FEED_REMOTE_ROOT }}
 
 jobs:
   preflight:
@@ -43,7 +45,9 @@ jobs:
         with:
           python-version: '3.14'
       - name: Require explicit release and every signing/publication credential
-        run: python scripts/release/release.py --preflight
+        run: |
+          python scripts/release/publish.py --check-remote-root
+          python scripts/release/release.py --preflight
         env:
           AXIA_MACOS_CERTIFICATE_P12_BASE64: ${{ secrets.AXIA_MACOS_CERTIFICATE_P12_BASE64 }}
           AXIA_MACOS_CERTIFICATE_PASSWORD: ${{ secrets.AXIA_MACOS_CERTIFICATE_PASSWORD }}
