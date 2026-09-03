@@ -218,7 +218,7 @@ fun WorkspaceApp(
             }
 
             AxiaDestination.Analytics -> {
-                if (flags.canViewAnalytics) controller.loadAnalytics(analyticsFilter.query())
+                if (flags.canViewAnalytics && analyticsFilter.isValid) controller.loadAnalytics(analyticsFilter.query())
             }
 
             AxiaDestination.Notifications -> {
