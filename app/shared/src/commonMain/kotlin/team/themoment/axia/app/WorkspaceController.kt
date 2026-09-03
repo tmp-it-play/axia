@@ -76,6 +76,7 @@ data class WorkspaceUiState(
     val detailLoading: Boolean = false,
     val busy: Boolean = false,
     val error: String? = null,
+    val refreshError: String? = null,
     val notice: String? = null,
     val pendingTaskWrite: TaskWriteCommand? = null,
     val confirmedTaskWriteId: String? = null,
@@ -127,6 +128,7 @@ class WorkspaceController(
     private var analyticsGeneration = 0L
     private var historyGeneration = 0L
     private var reminderPoliciesGeneration = 0L
+    private var periodsRange: Pair<Long, Long>? = null
     private var onTaskWriteConfirmed: (suspend (MutationResult) -> Unit)? = null
 
     fun refresh() {
@@ -136,7 +138,7 @@ class WorkspaceController(
         refreshJob =
             scope.launch {
                 // Polling must not dismiss errors from a separate user action or post-save refresh.
-                state = state.copy(loading = true)
+                state = state.copy(loading = true, refreshError = null)
                 try {
                     val current = gateway.get<CurrentUserResponse>("/v1/me")
                     if (generation != refreshGeneration) return@launch
@@ -173,7 +175,7 @@ class WorkspaceController(
                 } catch (cancelled: CancellationException) {
                     throw cancelled
                 } catch (failure: Exception) {
-                    if (generation == refreshGeneration) showError(failure)
+                    if (generation == refreshGeneration) showRefreshError(failure)
                 } finally {
                     if (generation == refreshGeneration) state = state.copy(loading = false)
                 }
@@ -289,7 +291,7 @@ class WorkspaceController(
         onSuccess: () -> Unit = {},
     ) {
         if (state.busy) return
-        state = state.copy(busy = true, error = null, notice = null)
+        state = state.copy(busy = true, error = null, refreshError = null, notice = null)
         scope.launch {
             try {
                 val response = gateway.checked(method, path, body)
@@ -338,7 +340,7 @@ class WorkspaceController(
         command: TaskWriteCommand,
         confirming: Boolean,
     ) {
-        state = state.copy(busy = true, error = null, notice = null)
+        state = state.copy(busy = true, error = null, refreshError = null, notice = null)
         scope.launch {
             try {
                 val response = gateway.checked(command.method, command.path, command.body)
@@ -395,7 +397,26 @@ class WorkspaceController(
                     }
                     failure.error.details?.get("latest")?.let { latest ->
                         runCatching { workspaceJson.decodeFromJsonElement<TaskDetail>(latest) }.getOrNull()?.let { detail ->
-                            if (state.selectedTask?.task?.id == detail.task.id) state = state.copy(selectedTask = detail)
+                            if (detail.task.id == command.taskId) {
+                                fun matches(task: TaskSummary): Boolean =
+                                    task.id == detail.task.id && task.kind == detail.task.kind &&
+                                        task.assignmentKey == detail.task.assignmentKey
+
+                                fun replace(tasks: List<TaskSummary>): List<TaskSummary> =
+                                    tasks.map { if (matches(it)) detail.task else it }
+
+                                state =
+                                    state.copy(
+                                        selectedTask =
+                                            if (state.selectedTask?.task?.let(::matches) == true) detail else state.selectedTask,
+                                        tasks = replace(state.tasks),
+                                        myTasks = replace(state.myTasks),
+                                        calendarTasks = replace(state.calendarTasks),
+                                    )
+                                // Re-evaluate filtered membership without losing the immediate conflict snapshot.
+                                refresh()
+                                reloadPeriods()
+                            }
                         }
                     }
                 }
@@ -406,13 +427,20 @@ class WorkspaceController(
         }
     }
 
+    /** Delayed save/Undo callbacks refresh the displayed range, not the month they captured. */
+    fun reloadPeriods() {
+        val (from, until) = periodsRange ?: return
+        loadPeriods(from, until)
+    }
+
     fun loadPeriods(
         from: Long,
         until: Long,
     ) {
+        periodsRange = from to until
         val generation = ++periodsGeneration
         periodsJob?.cancel()
-        state = state.copy(periodsLoading = true)
+        state = state.copy(periodsLoading = true, refreshError = null)
         periodsJob =
             scope.launch {
                 try {
@@ -440,7 +468,7 @@ class WorkspaceController(
                 } catch (
                     failure: Exception,
                 ) {
-                    if (generation == periodsGeneration) showError(failure)
+                    if (generation == periodsGeneration) showRefreshError(failure)
                 } finally {
                     if (generation == periodsGeneration) state = state.copy(periodsLoading = false)
                 }
@@ -625,7 +653,7 @@ class WorkspaceController(
     }
 
     fun dismissMessage() {
-        state = state.copy(error = null, notice = null)
+        state = state.copy(error = null, refreshError = null, notice = null)
     }
 
     private suspend fun allTasks(filters: TaskFilters): TaskListResponse {
@@ -654,17 +682,24 @@ class WorkspaceController(
         return TaskListResponse(tasks, github = availability)
     }
 
-    private fun showError(failure: Exception) {
-        state =
-            state.copy(
-                error =
-                    if (failure is WorkspaceFailure) {
-                        failure.error.message
-                    } else {
-                        "서버와 연결하지 못했습니다. 네트워크 상태를 확인하고 다시 시도해 주세요."
-                    },
-            )
+    private fun showRefreshError(failure: Exception) {
+        if (state.error == null) {
+            showError(failure)
+        } else {
+            state = state.copy(refreshError = errorMessage(failure))
+        }
     }
+
+    private fun showError(failure: Exception) {
+        state = state.copy(error = errorMessage(failure), refreshError = null)
+    }
+
+    private fun errorMessage(failure: Exception): String =
+        if (failure is WorkspaceFailure) {
+            failure.error.message
+        } else {
+            "서버와 연결하지 못했습니다. 네트워크 상태를 확인하고 다시 시도해 주세요."
+        }
 }
 
 internal fun queryString(values: Map<String, String>): String =

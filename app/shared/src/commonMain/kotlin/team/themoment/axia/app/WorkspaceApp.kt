@@ -148,7 +148,7 @@ fun WorkspaceApp(
             .toEpochMilliseconds()
 
     fun reloadPeriods() {
-        controller.loadPeriods(calendarFrom, calendarUntil)
+        controller.reloadPeriods()
     }
 
     fun openTask(id: Long) {
@@ -214,7 +214,7 @@ fun WorkspaceApp(
             }
 
             AxiaDestination.Calendar -> {
-                reloadPeriods()
+                controller.loadPeriods(calendarFrom, calendarUntil)
             }
 
             AxiaDestination.Analytics -> {
@@ -491,7 +491,7 @@ fun WorkspaceApp(
             state.error?.let {
                 AxiaBanner(
                     "요청을 완료하지 못했어요",
-                    description = it,
+                    description = listOfNotNull(it, state.refreshError).distinct().joinToString("\n"),
                     style = AxiaBannerStyle.Danger,
                     actionLabel = "확인",
                     onAction = controller::dismissMessage,
