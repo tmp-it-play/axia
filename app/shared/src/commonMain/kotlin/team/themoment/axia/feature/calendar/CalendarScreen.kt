@@ -82,9 +82,29 @@ fun CalendarScreen(
         }
     var showingPeriods by remember { mutableStateOf(false) }
     var selectedDay by remember(month) { mutableStateOf<LocalDate?>(null) }
+    var focusedEntryKey by remember(month, filters) { mutableStateOf<String?>(null) }
     val latestCallbacks by rememberUpdatedState(callbacks)
     val selectedMember = periods.members.firstOrNull { it.id == (filters.userId ?: periods.currentUser?.member?.id) }
     val canCreate = !periods.saving && selectedMember?.let { canEditUnavailability(periods.currentUser, it) } == true
+
+    fun canMove(entry: CalendarEntry): Boolean =
+        !periods.saving &&
+            when {
+                entry.type == CalendarEntryType.TARGET -> {
+                    !readOnly && !taskWritePending && entry.task?.canWrite == true
+                }
+
+                entry.period != null -> {
+                    periods.members.firstOrNull { it.id == entry.period.userId }?.let {
+                        canEditUnavailability(periods.currentUser, it)
+                    } == true
+                }
+
+                else -> {
+                    false
+                }
+            }
+
     LaunchedEffect(periods.editor) { if (periods.editor != null) showingPeriods = true }
     Column(modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(AxiaTheme.spacing.space3)) {
         FlowRow(
@@ -266,33 +286,18 @@ fun CalendarScreen(
                                         )
                                     }
                                     val dayEntries = entries[date].orEmpty()
-                                    dayEntries.take(2).forEach { entry ->
-                                        val movable =
-                                            !periods.saving &&
-                                                when {
-                                                    entry.type == CalendarEntryType.TARGET -> {
-                                                        !readOnly && !taskWritePending &&
-                                                            entry.task?.canWrite == true
-                                                    }
-
-                                                    entry.period != null -> {
-                                                        periods.members.firstOrNull { it.id == entry.period.userId }?.let {
-                                                            canEditUnavailability(
-                                                                periods.currentUser,
-                                                                it,
-                                                            )
-                                                        } ==
-                                                            true
-                                                    }
-
-                                                    else -> {
-                                                        false
-                                                    }
-                                                }
+                                    val focusedEntry = dayEntries.firstOrNull { it.key == focusedEntryKey }
+                                    val visibleEntries =
+                                        if (focusedEntry == null) {
+                                            dayEntries.take(2)
+                                        } else {
+                                            (listOf(focusedEntry) + dayEntries.filterNot { it.key == focusedEntry.key }).take(2)
+                                        }
+                                    visibleEntries.forEach { entry ->
                                         CalendarEntryChip(entry, onClick = {
                                             entry.task?.let { callbacks.onOpenTask(it.id) }
                                                 ?: entry.period?.let { periodCallbacks.onEdit(it) }
-                                        }, movable = movable, onDragPosition = { dropDate = dateAt(it) }, onDrop = {
+                                        }, movable = canMove(entry), onDragPosition = { dropDate = dateAt(it) }, onDrop = {
                                             val target = dropDate
                                             dropDate = null
                                             if (target != null && target != entry.date) {
@@ -325,12 +330,36 @@ fun CalendarScreen(
         }) {
             val dayEntries = entries[date].orEmpty()
             if (dayEntries.isEmpty()) AxiaEmptyState("등록된 일정이 없어요", "이 날짜에 새 일정을 등록할 수 있습니다.")
+            if (dayEntries.any(::canMove)) {
+                Text(
+                    "드래그할 항목을 선택하면 달력의 해당 날짜 맨 위에 표시됩니다. 다른 날짜로 끌어 옮기세요.",
+                    style = AxiaTheme.typography.secondary,
+                    color = AxiaTheme.semanticColors.textSecondary,
+                )
+            }
             dayEntries.forEach { entry ->
-                CalendarEntryChip(entry, onClick = {
-                    selectedDay = null
-                    entry.task?.let { callbacks.onOpenTask(it.id) } ?: entry.period?.let { periodCallbacks.onEdit(it) }
-                })
-                Text(entry.description, style = AxiaTheme.typography.secondary, color = AxiaTheme.semanticColors.textSecondary)
+                Column(verticalArrangement = Arrangement.spacedBy(AxiaTheme.spacing.space2)) {
+                    CalendarEntryChip(entry, onClick = {
+                        selectedDay = null
+                        entry.task?.let { callbacks.onOpenTask(it.id) } ?: entry.period?.let { periodCallbacks.onEdit(it) }
+                    })
+                    Text(entry.description, style = AxiaTheme.typography.secondary, color = AxiaTheme.semanticColors.textSecondary)
+                    if (canMove(entry)) {
+                        AxiaButton(
+                            "달력에서 드래그하기",
+                            {
+                                focusedEntryKey = entry.key
+                                showingPeriods = false
+                                selectedDay = null
+                            },
+                            modifier =
+                                Modifier.semantics {
+                                    contentDescription = "${entry.type.label} ${entry.title}, ${entry.description}, 달력에서 드래그하기"
+                                },
+                            style = AxiaButtonStyle.Secondary,
+                        )
+                    }
+                }
             }
             AxiaButton("${selectedMember?.displayName ?: "내"} 일정 등록", {
                 selectedMember?.let { callbacks.onCreatePeriodRange(it.id, date, date.plus(1, DateTimeUnit.DAY)) }
