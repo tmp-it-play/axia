@@ -57,6 +57,7 @@ fun AxiaAppShell(
     themeMode: AxiaThemeMode,
     onThemeModeChange: (AxiaThemeMode) -> Unit,
     modifier: Modifier = Modifier,
+    content: (@Composable () -> Unit)? = null,
 ) {
     val uriHandler = LocalUriHandler.current
     Row(
@@ -97,23 +98,27 @@ fun AxiaAppShell(
                             bottom = AxiaTheme.spacing.space8,
                         ),
             ) {
-                when (appState.currentDestination) {
-                    AxiaDestination.Dashboard -> {
-                        DashboardScreen(
-                            state = dashboardState,
-                            onBrowseTasks = { appState.navigate(AxiaDestination.Tasks) },
-                        )
-                    }
+                if (content != null) {
+                    content()
+                } else {
+                    when (appState.currentDestination) {
+                        AxiaDestination.Dashboard -> {
+                            DashboardScreen(
+                                state = dashboardState,
+                                onBrowseTasks = { appState.navigate(AxiaDestination.Tasks) },
+                            )
+                        }
 
-                    AxiaDestination.Settings -> {
-                        SettingsScreen(
-                            themeMode = themeMode,
-                            onThemeModeChange = onThemeModeChange,
-                        )
-                    }
+                        AxiaDestination.Settings -> {
+                            SettingsScreen(
+                                themeMode = themeMode,
+                                onThemeModeChange = onThemeModeChange,
+                            )
+                        }
 
-                    else -> {
-                        DestinationEmptyState(destination = appState.currentDestination)
+                        else -> {
+                            DestinationEmptyState(destination = appState.currentDestination)
+                        }
                     }
                 }
             }

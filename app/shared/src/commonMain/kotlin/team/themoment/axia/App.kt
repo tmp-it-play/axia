@@ -8,6 +8,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.Preview
 import team.themoment.axia.app.AxiaAppShell
+import team.themoment.axia.app.WorkspaceApp
+import team.themoment.axia.app.WorkspaceGateway
 import team.themoment.axia.app.rememberAxiaAppState
 import team.themoment.axia.designsystem.theme.AxiaTheme
 import team.themoment.axia.designsystem.theme.AxiaThemeMode
@@ -23,6 +25,11 @@ fun App(
     accessFlags: AxiaAccessFlags = AxiaAccessFlags(),
     dashboardState: DashboardUiState = DashboardUiState(),
     initialDestination: AxiaDestination = AxiaDestination.Dashboard,
+    gateway: WorkspaceGateway? = null,
+    onManageSessions: () -> Unit = {},
+    onLogout: () -> Unit = {},
+    onCheckUpdates: () -> Unit = {},
+    updateStatusMessage: String? = null,
 ) {
     var activeThemeMode by remember { mutableStateOf(themeMode) }
     LaunchedEffect(themeMode) {
@@ -35,6 +42,22 @@ fun App(
         )
 
     AxiaTheme(themeMode = activeThemeMode) {
+        if (gateway != null) {
+            WorkspaceApp(
+                gateway = gateway,
+                themeMode = activeThemeMode,
+                onThemeModeChange = { selected ->
+                    activeThemeMode = selected
+                    onThemeModeChange(selected)
+                },
+                onManageSessions = onManageSessions,
+                onLogout = onLogout,
+                onCheckUpdates = onCheckUpdates,
+                updateStatusMessage = updateStatusMessage,
+                initialDestination = initialDestination,
+            )
+            return@AxiaTheme
+        }
         AxiaAppShell(
             appState = appState,
             dashboardState = dashboardState,

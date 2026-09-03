@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -321,13 +322,17 @@ private fun DashboardTaskRow(
                 ).padding(end = AxiaTheme.spacing.space4),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Box(
+        Column(
             modifier =
                 Modifier
                     .width(AxiaTheme.dimensions.flowRail)
                     .height(AxiaTheme.dimensions.taskRowMinHeight)
-                    .background(task.position.railColor()),
-        )
+                    .background(AxiaTheme.semanticColors.border),
+        ) {
+            task.positions.sortedBy { it.ordinal }.forEach { position ->
+                Box(Modifier.fillMaxWidth().weight(1f).background(position.railColor()))
+            }
+        }
         Spacer(modifier = Modifier.width(AxiaTheme.spacing.space3))
         TaskKindCell(task = task, modifier = Modifier.width(AxiaTheme.dimensions.taskKindColumnWidth))
         TaskTitle(task = task, modifier = Modifier.weight(2.2f))
@@ -377,11 +382,16 @@ private fun ProductAndPositionCell(
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
-        task.position?.let { position ->
-            AxiaBadge(
-                label = position.label(),
-                style = position.badgeStyle(),
-            )
+        FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(AxiaTheme.spacing.space1),
+            verticalArrangement = Arrangement.spacedBy(AxiaTheme.spacing.space1),
+        ) {
+            task.positions.sortedBy { it.ordinal }.forEach { position ->
+                AxiaBadge(
+                    label = position.label(),
+                    style = position.badgeStyle(),
+                )
+            }
         }
     }
 }
@@ -649,13 +659,12 @@ private fun ActivitySection(
 }
 
 @Composable
-private fun DashboardTaskPosition?.railColor(): Color =
+private fun DashboardTaskPosition.railColor(): Color =
     when (this) {
         DashboardTaskPosition.Server -> AxiaTheme.positionColors.server.representative
         DashboardTaskPosition.Frontend -> AxiaTheme.positionColors.frontend.representative
         DashboardTaskPosition.Cloud -> AxiaTheme.positionColors.cloud.representative
         DashboardTaskPosition.Design -> AxiaTheme.positionColors.design.representative
-        null -> AxiaTheme.semanticColors.border
     }
 
 private fun DashboardTask.sourceLabel(): String? {
@@ -684,7 +693,7 @@ private fun DashboardTask.assigneeStateLabels(): List<String> =
 private fun DashboardTask.accessibilityStateDescription(): String =
     buildList {
         add("제품 $productName")
-        position?.let { add("포지션 ${it.label()}") }
+        positions.sortedBy { it.ordinal }.forEach { add("포지션 ${it.label()}") }
         add(
             when (val assignee = assignee) {
                 DashboardAssignee.Unassigned -> "담당자 없음"

@@ -4,11 +4,15 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.unit.dp
+import team.themoment.axia.designsystem.component.AxiaButton
+import team.themoment.axia.designsystem.component.AxiaButtonStyle
 import team.themoment.axia.designsystem.component.AxiaChoiceGroup
 import team.themoment.axia.designsystem.component.AxiaChoiceOption
 import team.themoment.axia.designsystem.component.AxiaIconKind
@@ -43,9 +47,13 @@ fun SettingsScreen(
     themeMode: AxiaThemeMode,
     onThemeModeChange: (AxiaThemeMode) -> Unit,
     modifier: Modifier = Modifier,
+    onManageSessions: (() -> Unit)? = null,
+    onLogout: (() -> Unit)? = null,
+    onCheckUpdates: (() -> Unit)? = null,
+    updateStatusMessage: String? = null,
 ) {
     Column(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth().verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(AxiaTheme.spacing.space6),
     ) {
         AxiaPanel(modifier = Modifier.fillMaxWidth().widthIn(max = 760.dp)) {
@@ -69,6 +77,36 @@ fun SettingsScreen(
                     selectedKey = themeMode,
                     onSelectionChange = onThemeModeChange,
                 )
+            }
+        }
+        if (onManageSessions != null || onLogout != null) {
+            AxiaPanel(Modifier.fillMaxWidth().widthIn(max = 760.dp)) {
+                Column(verticalArrangement = Arrangement.spacedBy(AxiaTheme.spacing.space3)) {
+                    Text("로그인과 기기", style = AxiaTheme.typography.sectionTitle, color = AxiaTheme.semanticColors.textPrimary)
+                    Text(
+                        "기기별 240일 세션입니다. 사용하지 않는 기기의 로그인은 여기서 종료할 수 있습니다.",
+                        style = AxiaTheme.typography.secondary,
+                        color = AxiaTheme.semanticColors.textSecondary,
+                    )
+                    onManageSessions?.let { AxiaButton("기기 세션 관리", it, style = AxiaButtonStyle.Secondary) }
+                    onLogout?.let { AxiaButton("이 기기에서 로그아웃", it, style = AxiaButtonStyle.Danger) }
+                }
+            }
+        }
+        onCheckUpdates?.let {
+            AxiaPanel(Modifier.fillMaxWidth().widthIn(max = 760.dp)) {
+                Column(verticalArrangement = Arrangement.spacedBy(AxiaTheme.spacing.space3)) {
+                    Text("앱 업데이트", style = AxiaTheme.typography.sectionTitle, color = AxiaTheme.semanticColors.textPrimary)
+                    Text(
+                        "시작할 때 자동으로 확인하며 다운로드 후 다시 시작할 시점을 선택할 수 있습니다.",
+                        style = AxiaTheme.typography.secondary,
+                        color = AxiaTheme.semanticColors.textSecondary,
+                    )
+                    updateStatusMessage?.let { message ->
+                        Text(message, style = AxiaTheme.typography.body, color = AxiaTheme.semanticColors.textPrimary)
+                    }
+                    AxiaButton("업데이트 확인", it, style = AxiaButtonStyle.Secondary)
+                }
             }
         }
     }

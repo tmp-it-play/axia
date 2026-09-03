@@ -24,7 +24,7 @@ data class DashboardTask(
     val updatedAtEpochMillis: Long = 0,
     val urgency: DashboardTaskUrgency = DashboardTaskUrgency.Normal,
     val priority: DashboardTaskPriority = DashboardTaskPriority.Normal,
-    val position: DashboardTaskPosition? = null,
+    val positions: Set<DashboardTaskPosition> = emptySet(),
     val contexts: Set<DashboardTaskContext> = emptySet(),
 )
 
