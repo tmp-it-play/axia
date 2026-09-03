@@ -14,7 +14,7 @@ The macOS override mounts a truststore containing the existing MySQL **public CA
 
 ## Stage and start the loaded image
 
-Prepare this deployment directory:
+The deployment directory is `/Users/snowykte0426/Downloads/axia`. Prepare it with these files:
 
 | Deployed file | Source / purpose |
 | --- | --- |
@@ -30,11 +30,11 @@ Create the log directory before launch; bind mounts do not create it. On Docker 
 
 Build Linux arm64 outside the shared production host, then transfer/load the verified image. Set `AXIA_SERVER_IMAGE` to its immutable loaded image ID or digest, not a mutable tag. The macOS override removes the build configuration.
 
-Run preflight **before** start, replacing `/absolute/axia` with the deployment directory:
+Run preflight **before** start:
 
 ```sh
-bash /absolute/axia/preflight.sh /absolute/axia/config/server.env
-bash /absolute/axia/start.sh /absolute/axia
+bash /Users/snowykte0426/Downloads/axia/preflight.sh /Users/snowykte0426/Downloads/axia/config/server.env
+bash /Users/snowykte0426/Downloads/axia/start.sh /Users/snowykte0426/Downloads/axia
 curl --fail http://127.0.0.1:18080/health/live
 curl --fail http://127.0.0.1:18080/health/ready
 ```
