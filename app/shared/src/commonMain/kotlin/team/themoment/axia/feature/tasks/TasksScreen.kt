@@ -1,8 +1,11 @@
 package team.themoment.axia.feature.tasks
 
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,8 +30,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -43,6 +48,7 @@ import team.themoment.axia.designsystem.component.AxiaPanel
 import team.themoment.axia.designsystem.component.AxiaPanelTransition
 import team.themoment.axia.designsystem.component.AxiaSelect
 import team.themoment.axia.designsystem.component.AxiaSelectOption
+import team.themoment.axia.designsystem.component.AxiaTaskLedgerColumns
 import team.themoment.axia.designsystem.component.AxiaTextField
 import team.themoment.axia.designsystem.theme.AxiaTheme
 import team.themoment.axia.domain.ProductId
@@ -141,35 +147,45 @@ fun TasksScreen(
                         AxiaEmptyState(if (loading) "태스크를 불러오고 있어요" else "조건에 맞는 태스크가 없어요", "제품·담당자 필터를 바꾸거나 연결된 저장소를 확인해 주세요.")
                     }
                 } else {
-                    LazyColumn(Modifier.fillMaxSize()) {
-                        tasks.groupBy { it.productId }.forEach { (product, productTasks) ->
-                            item(key = "product:${product.name}") {
-                                Row(
-                                    Modifier
-                                        .fillMaxWidth()
-                                        .background(
-                                            AxiaTheme.semanticColors.surfaceSubtle,
-                                        ).padding(AxiaTheme.spacing.space4),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                ) {
-                                    Text(
-                                        product.displayName,
-                                        Modifier.semantics {
-                                            heading()
-                                        },
-                                        style = AxiaTheme.typography.bodyEmphasis,
-                                        color = AxiaTheme.semanticColors.textPrimary,
-                                    )
-                                    Text(
-                                        "${productTasks.size}개",
-                                        style = AxiaTheme.typography.metadata,
-                                        color = AxiaTheme.semanticColors.textSecondary,
-                                    )
+                    Column(Modifier.fillMaxSize()) {
+                        AxiaTaskLedgerColumns(
+                            title = { LedgerLabel("태스크") },
+                            status = { LedgerLabel("상태") },
+                            product = { LedgerLabel("제품") },
+                            assignee = { LedgerLabel("담당자") },
+                            modifier = Modifier.background(AxiaTheme.semanticColors.surfaceSubtle).padding(AxiaTheme.spacing.space4),
+                        )
+                        AxiaDivider()
+                        LazyColumn(Modifier.weight(1f).fillMaxWidth()) {
+                            tasks.groupBy { it.productId }.forEach { (product, productTasks) ->
+                                item(key = "product:${product.name}") {
+                                    Row(
+                                        Modifier
+                                            .fillMaxWidth()
+                                            .background(
+                                                AxiaTheme.semanticColors.surfaceSubtle,
+                                            ).padding(AxiaTheme.spacing.space4),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                    ) {
+                                        Text(
+                                            product.displayName,
+                                            Modifier.semantics {
+                                                heading()
+                                            },
+                                            style = AxiaTheme.typography.bodyEmphasis,
+                                            color = AxiaTheme.semanticColors.textPrimary,
+                                        )
+                                        Text(
+                                            "${productTasks.size}개",
+                                            style = AxiaTheme.typography.metadata,
+                                            color = AxiaTheme.semanticColors.textSecondary,
+                                        )
+                                    }
                                 }
-                            }
-                            items(productTasks, key = { it.rowKey }) { task ->
-                                TaskRow(task, selectedTask?.task?.rowKey == task.rowKey, { onSelectTask(task) })
-                                AxiaDivider()
+                                items(productTasks, key = { it.rowKey }) { task ->
+                                    TaskRow(task, selectedTask?.task?.rowKey == task.rowKey, { onSelectTask(task) })
+                                    AxiaDivider()
+                                }
                             }
                         }
                     }
@@ -210,89 +226,108 @@ private fun TaskRow(
     selected: Boolean,
     onSelect: () -> Unit,
 ) {
-    Column(
-        Modifier
-            .fillMaxWidth()
-            .defaultMinSize(minHeight = AxiaTheme.dimensions.taskRowMinHeight)
-            .background(if (selected) AxiaTheme.semanticColors.surfaceSubtle else AxiaTheme.semanticColors.surface)
-            .border(
-                AxiaTheme.dimensions.hairline,
-                if (TaskWarning.UNASSIGNED in
-                    task.warnings
+    val interactionSource = remember(task.rowKey) { MutableInteractionSource() }
+    val focused by interactionSource.collectIsFocusedAsState()
+    AxiaTaskLedgerColumns(
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .defaultMinSize(minHeight = AxiaTheme.dimensions.taskRowMinHeight)
+                .background(if (selected) AxiaTheme.semanticColors.surfaceSubtle else AxiaTheme.semanticColors.surface)
+                .border(
+                    if (focused) AxiaTheme.dimensions.focusRing else AxiaTheme.dimensions.hairline,
+                    when {
+                        focused -> AxiaTheme.semanticColors.action
+                        TaskWarning.UNASSIGNED in task.warnings -> AxiaTheme.semanticColors.warning.content
+                        else -> Color.Transparent
+                    },
+                ).clickable(
+                    interactionSource = interactionSource,
+                    indication = LocalIndication.current,
+                    role = Role.Button,
+                    onClick = onSelect,
+                ).semantics { this.selected = selected }
+                .padding(AxiaTheme.spacing.space4),
+        title = {
+            Column(verticalArrangement = Arrangement.spacedBy(AxiaTheme.spacing.space2)) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(AxiaTheme.spacing.space2),
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    AxiaTheme.semanticColors.warning.content
-                } else {
-                    AxiaTheme.semanticColors.surface
-                },
-            ).clickable(role = Role.Button, onClick = onSelect)
-            .padding(AxiaTheme.spacing.space4),
-        verticalArrangement = Arrangement.spacedBy(AxiaTheme.spacing.space2),
-    ) {
-        Row(
-            Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(AxiaTheme.spacing.space2),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            AxiaBadge(task.kind.label, if (task.kind == TaskKind.DRAFT) AxiaBadgeStyle.Warning else AxiaBadgeStyle.Info)
-            Text(
-                task.title,
-                Modifier.weight(1f),
-                style = AxiaTheme.typography.bodyEmphasis,
-                color = AxiaTheme.semanticColors.textPrimary,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
-            )
-        }
-        Text(
-            listOfNotNull(
-                task.repositoryName,
-                task.number?.let {
-                    "#$it"
-                },
-                task.targetDate?.let {
-                    "마감 $it"
-                },
-            ).joinToString(" · "),
-            style = AxiaTheme.typography.metadata,
-            color = AxiaTheme.semanticColors.textSecondary,
-        )
-        FlowRow(
-            horizontalArrangement = Arrangement.spacedBy(AxiaTheme.spacing.space2),
-            verticalArrangement = Arrangement.spacedBy(AxiaTheme.spacing.space1),
-        ) {
-            if (task.urgency !=
-                TaskUrgency.NORMAL
-            ) {
-                AxiaBadge(
-                    if (task.urgency ==
-                        TaskUrgency.OVERDUE
-                    ) {
-                        "지연"
-                    } else {
-                        "마감 임박"
-                    },
-                    if (task.urgency ==
-                        TaskUrgency.OVERDUE
-                    ) {
-                        AxiaBadgeStyle.Danger
-                    } else {
-                        AxiaBadgeStyle.Warning
-                    },
-                )
-            }
-            task.warnings.forEach { warning -> AxiaBadge(warning.label, AxiaBadgeStyle.Warning) }
-            task.assignees.forEach { assignee ->
+                    AxiaBadge(task.kind.label, if (task.kind == TaskKind.DRAFT) AxiaBadgeStyle.Warning else AxiaBadgeStyle.Info)
+                    Text(
+                        task.title,
+                        Modifier.weight(1f),
+                        style = AxiaTheme.typography.bodyEmphasis,
+                        color = AxiaTheme.semanticColors.textPrimary,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
                 Text(
-                    assignee.displayName ?: assignee.githubLogin,
-                    style = AxiaTheme.typography.secondary,
+                    listOfNotNull(task.repositoryName, task.number?.let { "#$it" }, task.targetDate?.let { "마감 $it" }).joinToString(" · "),
+                    style = AxiaTheme.typography.metadata,
                     color = AxiaTheme.semanticColors.textSecondary,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
                 )
+                if (task.warnings.isNotEmpty()) {
+                    FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(AxiaTheme.spacing.space2),
+                        verticalArrangement = Arrangement.spacedBy(AxiaTheme.spacing.space1),
+                    ) {
+                        task.warnings.sortedBy { it.ordinal }.forEach { AxiaBadge(it.label, AxiaBadgeStyle.Warning) }
+                    }
+                }
             }
-            task.assignees.flatMap { it.positions }.distinct().sortedBy { it.ordinal }.forEach { position ->
-                AxiaBadge(position.displayName, position.badgeStyle)
+        },
+        status = {
+            Column(verticalArrangement = Arrangement.spacedBy(AxiaTheme.spacing.space1)) {
+                AxiaBadge(
+                    when {
+                        task.isCompleted -> "완료"
+                        !task.isOpen -> "종료"
+                        task.status == TaskStatus.UNSET -> "열림"
+                        else -> task.status.label
+                    },
+                    if (task.isCompleted) AxiaBadgeStyle.Success else AxiaBadgeStyle.Metadata,
+                )
+                if (task.urgency != TaskUrgency.NORMAL) {
+                    AxiaBadge(
+                        if (task.urgency == TaskUrgency.OVERDUE) "지연" else "마감 임박",
+                        if (task.urgency == TaskUrgency.OVERDUE) AxiaBadgeStyle.Danger else AxiaBadgeStyle.Warning,
+                    )
+                }
             }
-        }
-    }
+        },
+        product = {
+            Column(verticalArrangement = Arrangement.spacedBy(AxiaTheme.spacing.space1)) {
+                Text(task.productId.displayName, style = AxiaTheme.typography.secondary, color = AxiaTheme.semanticColors.textSecondary)
+                task.assignees.flatMap { it.positions }.distinct().sortedBy { it.ordinal }.forEach { position ->
+                    AxiaBadge(position.displayName, position.badgeStyle)
+                }
+            }
+        },
+        assignee = {
+            Column(verticalArrangement = Arrangement.spacedBy(AxiaTheme.spacing.space1)) {
+                val names = task.assignees.map { it.displayName ?: it.githubLogin }.ifEmpty { listOf("담당자 없음") }
+                names.forEach { name ->
+                    Text(
+                        name,
+                        style = AxiaTheme.typography.secondary,
+                        color = AxiaTheme.semanticColors.textSecondary,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
+            }
+        },
+    )
+}
+
+@Composable
+private fun LedgerLabel(text: String) {
+    Text(text, style = AxiaTheme.typography.metadata, color = AxiaTheme.semanticColors.textSecondary)
 }
 
 @Composable
