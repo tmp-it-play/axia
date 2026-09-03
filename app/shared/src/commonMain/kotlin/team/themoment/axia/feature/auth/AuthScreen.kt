@@ -73,15 +73,27 @@ fun AuthScreen(
                         SignedOutContent(onLogin = onLogin)
                     }
 
+                    AuthUiState.RestoringSession -> {
+                        AuthStateHeader("세션을 확인하고 있어요", "이 기기의 보안 저장소에서 로그인 상태를 확인합니다.")
+                    }
+
                     AuthUiState.CreatingTransaction -> {
                         CreatingTransactionContent(onCancel = onCancel)
                     }
 
-                    AuthUiState.AwaitingBrowser -> {
+                    is AuthUiState.AwaitingBrowser -> {
                         AwaitingBrowserContent(
                             onReopenBrowser = onReopenBrowser,
                             onCancel = onCancel,
+                            browserLaunchFailed = state.browserLaunchFailed,
                         )
+                    }
+
+                    is AuthUiState.Failure -> {
+                        AuthStateHeader(state.title, state.description)
+                        if (state.canRetry) {
+                            AxiaButton(label = state.retryLabel, onClick = onRetry)
+                        }
                     }
 
                     is AuthUiState.Blocked -> {
@@ -179,6 +191,7 @@ private fun CreatingTransactionContent(onCancel: () -> Unit) {
 private fun AwaitingBrowserContent(
     onReopenBrowser: () -> Unit,
     onCancel: () -> Unit,
+    browserLaunchFailed: Boolean,
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(AxiaTheme.spacing.space5)) {
         AuthStateHeader(
@@ -186,9 +199,9 @@ private fun AwaitingBrowserContent(
             description = "시스템 기본 브라우저에서 DataGSM 로그인을 마치면 Axia가 자동으로 이어집니다.",
         )
         AxiaBanner(
-            title = "브라우저 응답 대기 중",
-            description = "이 창은 닫지 않아도 됩니다.",
-            style = AxiaBannerStyle.Info,
+            title = if (browserLaunchFailed) "기본 브라우저를 열지 못했어요" else "브라우저 응답 대기 중",
+            description = if (browserLaunchFailed) "기본 브라우저 설정을 확인한 뒤 다시 열어 주세요." else "이 창은 닫지 않아도 됩니다.",
+            style = if (browserLaunchFailed) AxiaBannerStyle.Warning else AxiaBannerStyle.Info,
             announceChanges = true,
         )
         Row(horizontalArrangement = Arrangement.spacedBy(AxiaTheme.spacing.space2)) {
@@ -398,7 +411,11 @@ private val AuthUiState.accessibilityDescription: String
     get() =
         when (this) {
             AuthUiState.SignedOut -> "로그아웃됨"
+            AuthUiState.RestoringSession -> "기존 세션 확인 중"
             AuthUiState.CreatingTransaction -> "로그인 준비 중"
-            AuthUiState.AwaitingBrowser -> "브라우저 로그인 대기 중"
+            is AuthUiState.AwaitingBrowser -> "브라우저 로그인 대기 중"
+            is AuthUiState.Failure -> stateDescriptionForFailure()
             is AuthUiState.Blocked -> "로그인 차단됨: ${reason.content.title}"
         }
+
+private fun AuthUiState.Failure.stateDescriptionForFailure(): String = "$title: $description"

@@ -9,9 +9,22 @@ import team.themoment.axia.auth.AuthBlockReason
 sealed interface AuthUiState {
     data object SignedOut : AuthUiState
 
+    data object RestoringSession : AuthUiState
+
     data object CreatingTransaction : AuthUiState
 
-    data object AwaitingBrowser : AuthUiState
+    @Immutable
+    data class AwaitingBrowser(
+        val browserLaunchFailed: Boolean = false,
+    ) : AuthUiState
+
+    @Immutable
+    data class Failure(
+        val title: String,
+        val description: String,
+        val canRetry: Boolean = true,
+        val retryLabel: String = "다시 시도",
+    ) : AuthUiState
 
     @Immutable
     data class Blocked(

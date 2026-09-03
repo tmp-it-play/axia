@@ -1,18 +1,44 @@
 package team.themoment.axia
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.window.MenuBar
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.launch
+import team.themoment.axia.designsystem.component.AxiaBanner
+import team.themoment.axia.designsystem.component.AxiaBannerStyle
 import team.themoment.axia.designsystem.foundation.defaultAxiaDimensions
+import team.themoment.axia.designsystem.theme.AxiaTheme
 import team.themoment.axia.designsystem.theme.AxiaThemeMode
+import team.themoment.axia.desktop.DesktopInstanceLock
+import team.themoment.axia.desktop.DesktopLifecycle
+import team.themoment.axia.desktop.auth.DesktopAuthApi
+import team.themoment.axia.desktop.auth.DesktopAuthController
+import team.themoment.axia.desktop.auth.DesktopAuthHost
+import team.themoment.axia.desktop.auth.DesktopAuthState
+import team.themoment.axia.desktop.auth.DesktopSessionDialog
+import team.themoment.axia.desktop.auth.DesktopSystemBrowser
+import team.themoment.axia.desktop.auth.JdkDesktopApiTransport
+import team.themoment.axia.desktop.security.DesktopPlatformSupport
+import team.themoment.axia.feature.auth.AuthScreen
+import team.themoment.axia.feature.auth.AuthUiState
 import java.awt.Dimension
 import java.util.prefs.BackingStoreException
 import java.util.prefs.Preferences
+import javax.swing.JOptionPane
 import kotlin.math.roundToInt
 
 private const val THEME_MODE_PREFERENCE_KEY = "theme-mode"
@@ -20,12 +46,76 @@ private const val SYSTEM_THEME_PREFERENCE = "system"
 private const val LIGHT_THEME_PREFERENCE = "light"
 private const val DARK_THEME_PREFERENCE = "dark"
 
-fun main() =
+fun main() {
+    System.setProperty("apple.awt.application.name", "Axia")
+    System.setProperty("apple.laf.useScreenMenuBar", "true")
+    val instanceLock =
+        try {
+            DesktopInstanceLock.acquire()
+        } catch (_: Exception) {
+            JOptionPane.showMessageDialog(null, "Axia 실행 잠금을 만들지 못했습니다. 앱 데이터 폴더 접근 권한을 확인해 주세요.")
+            return
+        }
+    if (instanceLock == null) {
+        JOptionPane.showMessageDialog(null, "Axia가 이미 실행 중입니다. 메뉴바 또는 트레이에서 Axia 열기를 선택해 주세요.")
+        return
+    }
     application {
         var themeMode by remember { mutableStateOf(DesktopThemePreferences.loadThemeMode()) }
+        var windowVisible by remember { mutableStateOf(true) }
+        var showSessions by remember { mutableStateOf(false) }
+        var lifecycleFailure by remember { mutableStateOf<String?>(null) }
+        var backgroundMenuReady by remember { mutableStateOf(false) }
+        val scope = rememberCoroutineScope()
+        val startup = remember { runCatching { DesktopRuntime.create() } }
+        val runtime = startup.getOrNull()
+        val controller = runtime?.controller
+        val authState = controller?.state?.collectAsState()?.value
+        var lifecycle by remember { mutableStateOf<DesktopLifecycle?>(null) }
+
+        fun logout() {
+            scope.launch {
+                try {
+                    val confirmed = controller?.logout() ?: return@launch
+                    showSessions = false
+                    windowVisible = true
+                    if (!confirmed) lifecycle?.notify("이 기기에서 로그아웃했어요", "서버 세션 종료는 확인하지 못했습니다. 다른 로그인 기기에서 세션 목록을 확인해 주세요.")
+                } catch (exception: CancellationException) {
+                    throw exception
+                } catch (_: Exception) {
+                    lifecycleFailure = "보안 저장소의 로그인 정보를 삭제하지 못했습니다. 접근 권한을 확인한 뒤 로그아웃을 다시 시도해 주세요."
+                    windowVisible = true
+                }
+            }
+        }
+
+        DisposableEffect(runtime) {
+            controller?.start()
+            try {
+                lifecycle =
+                    DesktopLifecycle(
+                        onShow = { windowVisible = true },
+                        onSessions = {
+                            windowVisible = true
+                            showSessions = true
+                        },
+                        onLogout = { logout() },
+                        onExit = { exitApplication() },
+                    )
+                backgroundMenuReady = true
+            } catch (_: Exception) {
+                lifecycleFailure = "백그라운드 메뉴를 만들지 못했습니다. 다시 열 수 없는 상태가 되지 않도록 창을 유지합니다."
+            }
+            onDispose {
+                lifecycle?.close()
+                runtime?.close()
+                instanceLock.close()
+            }
+        }
 
         Window(
-            onCloseRequest = ::exitApplication,
+            onCloseRequest = { if (backgroundMenuReady) windowVisible = false },
+            visible = windowVisible,
             state =
                 rememberWindowState(
                     width = defaultAxiaDimensions.defaultWindowWidth,
@@ -40,16 +130,98 @@ fun main() =
                         defaultAxiaDimensions.minimumWindowHeight.value.roundToInt(),
                     )
             }
+            LaunchedEffect(windowVisible) {
+                if (windowVisible) {
+                    window.toFront()
+                    window.requestFocus()
+                }
+            }
 
-            App(
-                themeMode = themeMode,
-                onThemeModeChange = { selectedThemeMode ->
-                    themeMode = selectedThemeMode
-                    DesktopThemePreferences.saveThemeMode(selectedThemeMode)
-                },
-            )
+            MenuBar {
+                Menu("Axia") {
+                    Item("기기 세션 관리", onClick = { showSessions = true }, enabled = authState is DesktopAuthState.SignedIn)
+                    Item("로그아웃", onClick = { logout() }, enabled = controller != null)
+                    Separator()
+                    Item("창 숨기기", onClick = { windowVisible = false }, enabled = backgroundMenuReady)
+                    Item("종료", onClick = ::exitApplication)
+                }
+            }
+            Column(Modifier.fillMaxSize()) {
+                lifecycleFailure?.let { message ->
+                    AxiaTheme(themeMode) {
+                        AxiaBanner(
+                            title = "Desktop 기능을 확인해 주세요",
+                            description = message,
+                            style = AxiaBannerStyle.Warning,
+                            modifier = Modifier.padding(AxiaTheme.spacing.space3),
+                        )
+                    }
+                }
+                if (controller != null) {
+                    DesktopAuthHost(controller, themeMode) {
+                        App(
+                            themeMode = themeMode,
+                            onThemeModeChange = { selectedThemeMode ->
+                                themeMode = selectedThemeMode
+                                DesktopThemePreferences.saveThemeMode(selectedThemeMode)
+                            },
+                        )
+                    }
+                } else {
+                    AxiaTheme(themeMode) {
+                        AuthScreen(
+                            state = startupFailure(startup.exceptionOrNull()),
+                            onLogin = {},
+                            onReopenBrowser = {},
+                            onCancel = {},
+                            onRetry = {},
+                            onOpenDataGsmMyInfo = {},
+                        )
+                    }
+                }
+            }
+        }
+        if (showSessions && controller != null && authState is DesktopAuthState.SignedIn) {
+            DesktopSessionDialog(controller, themeMode, onClose = { showSessions = false })
         }
     }
+}
+
+private fun startupFailure(failure: Throwable?): AuthUiState.Failure {
+    val description =
+        when (failure) {
+            is UnsupportedOperationException -> "Apple Silicon macOS 또는 x64 Windows에서 실행해 주세요."
+            is LinkageError -> "운영체제의 보안 저장소 연결 모듈을 불러오지 못했습니다. 올바른 아키텍처의 앱을 다시 설치해 주세요."
+            is IllegalArgumentException -> "AXIA_DESKTOP_API_BASE_URL이 사용자 정보나 query 없이 올바른 HTTPS 주소인지 확인해 주세요."
+            else -> "Desktop 초기화에 실패했습니다. 앱 설치와 운영체제 보안 설정을 확인해 주세요."
+        }
+    return AuthUiState.Failure("Desktop을 시작하지 못했어요", description, canRetry = false)
+}
+
+private class DesktopRuntime(
+    val controller: DesktopAuthController,
+    private val transport: JdkDesktopApiTransport,
+) : AutoCloseable {
+    override fun close() {
+        controller.close()
+        transport.close()
+    }
+
+    companion object {
+        fun create(): DesktopRuntime {
+            val platform = DesktopPlatformSupport.current()
+            val baseUrl = JdkDesktopApiTransport.configuredBaseUrl()
+            val store = DesktopPlatformSupport.credentialStore(baseUrl)
+            val transport = JdkDesktopApiTransport(baseUrl)
+            return try {
+                DesktopRuntime(DesktopAuthController(DesktopAuthApi(transport), store, platform, DesktopSystemBrowser()), transport)
+            } catch (failure: Throwable) {
+                transport.close()
+                throw failure
+            }
+        }
+    }
+}
 
 private object DesktopThemePreferences {
     fun loadThemeMode(): AxiaThemeMode =
