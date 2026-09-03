@@ -48,6 +48,7 @@ import java.time.Clock
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 import java.util.UUID
 import javax.sql.DataSource
 
@@ -187,12 +188,13 @@ class TaskStore(
             val existing = byNode(snapshot.nodeId)
             val completions = snapshot.completions.filter { !it.occurredAt.isBefore(repository.second) }
             if (existing == null && !snapshot.open && completions.isEmpty() && snapshot.createdAt.isBefore(repository.second)) return null
-            val id = upsert(snapshot, repository.first, repositoryId, now)
+            val attribution = assignmentAttribution(existing, snapshot, repository.second)
+            val id = upsert(snapshot, repository.first, repositoryId, now, attribution.ownerOverrides)
             completions.forEach { completion -> recordCompletion(id, repository.first, snapshot, completion) }
             snapshot.assignmentOccurrences
                 .filter {
                     !it.occurredAt.isBefore(repository.second)
-                }.forEach { recordAssignment(id, repository.first, snapshot.title, it, now) }
+                }.forEach { recordAssignment(id, repository.first, snapshot.title, it, attribution.recipients[it.id], now) }
             id
         }
 
@@ -442,6 +444,7 @@ class TaskStore(
         product: ProductId,
         repositoryId: Long?,
         now: Instant,
+        assignmentOwnerOverrides: Map<Long, Long?> = emptyMap(),
     ): Long {
         val existing = byNode(snapshot.nodeId)
         if (existing != null &&
@@ -533,7 +536,12 @@ class TaskStore(
             }
         execute("DELETE FROM task_assignees WHERE task_id=?", id)
         snapshot.assignees.distinctBy { it.id }.forEach { assignee ->
-            val userId = previousAssignees[assignee.id] ?: historicalAssignee(snapshot, assignee.id) ?: currentUser(assignee.id)
+            val userId =
+                if (assignmentOwnerOverrides.containsKey(assignee.id)) {
+                    assignmentOwnerOverrides[assignee.id]
+                } else {
+                    previousAssignees[assignee.id] ?: assigneeOwner(snapshot, assignee.id)
+                }
             execute(
                 "INSERT INTO task_assignees(task_id,github_user_id,github_login,github_node_id,user_id) VALUES(?,?,?,?,?)",
                 id,
@@ -545,6 +553,14 @@ class TaskStore(
         }
         execute("UPDATE review_assignments SET active=FALSE WHERE task_id=?", id)
         snapshot.reviewAssignments.forEach { review ->
+            val newRequest = previousReviews[review.actor.id] != review.occurrenceId
+            val reviewerId =
+                if (newRequest) {
+                    assignmentOwnerAt(review.actor.id, review.requestedAt)
+                } else {
+                    previousReviewers[review.actor.id]
+                        ?: assignmentOwnerAt(review.actor.id, review.requestedAt)
+                }
             execute(
                 """INSERT INTO review_assignments(task_id,github_user_id,github_login,github_node_id,user_id,request_occurrence_id,requested_at,active)
                    VALUES(?,?,?,?,?,?,?,TRUE) ON DUPLICATE KEY UPDATE github_login=VALUES(github_login),github_node_id=VALUES(github_node_id),user_id=VALUES(user_id),
@@ -553,19 +569,17 @@ class TaskStore(
                 review.actor.id,
                 review.actor.login,
                 review.actor.nodeId,
-                previousReviewers[review.actor.id]
-                    ?: MemberContributionHistory.ownerThroughoutSecond(this, review.actor.id, review.requestedAt)
-                    ?: currentUser(review.actor.id),
+                reviewerId,
                 review.occurrenceId,
                 review.requestedAt,
             )
-            if (previousReviews[review.actor.id] != review.occurrenceId) {
+            if (newRequest) {
                 notifyAssignment(
                     id,
                     product,
                     snapshot.title,
                     review.actor.id,
-                    currentUser(review.actor.id),
+                    reviewerId,
                     "REVIEW_REQUESTED",
                     "review:${review.occurrenceId}",
                     now,
@@ -658,11 +672,62 @@ class TaskStore(
         return latest.any { it !in known }
     }
 
+    private data class AssignmentAttribution(
+        val ownerOverrides: Map<Long, Long?>,
+        val recipients: Map<String, Long?>,
+    )
+
+    private fun Connection.assignmentAttribution(
+        existing: StoredTask?,
+        snapshot: GitHubTaskSnapshot,
+        trackingStartedAt: Instant,
+    ): AssignmentAttribution {
+        val owners =
+            existing
+                ?.let { task ->
+                    query("SELECT github_user_id,user_id FROM task_assignees WHERE task_id=?", task.id) {
+                        it.getLong(1) to it.nullableLong("user_id")
+                    }.toMap()
+                }.orEmpty()
+                .toMutableMap()
+        val recorded =
+            existing
+                ?.let { task ->
+                    query("SELECT occurrence_id FROM task_assignment_events WHERE task_id=?", task.id) { it.getString(1) }.toSet()
+                }.orEmpty()
+        val precedingAssignments = mutableMapOf<Long, GitHubAssignmentOccurrence>()
+        val visited = mutableSetOf<String>()
+        val changedOwners = mutableMapOf<Long, Long?>()
+        val recipients = mutableMapOf<String, Long?>()
+        // Resolve before replacing current rows. Source order, not IDs or second-resolution timestamps,
+        // preserves the old recipient across account reuse and unseen unassign/reassign cycles.
+        snapshot.assignmentOccurrences.forEach { event ->
+            if (!visited.add(event.id)) return@forEach
+            val githubId = event.assignee.id
+            val preceding =
+                if (event.assigned) precedingAssignments.put(githubId, event) else precedingAssignments.remove(githubId)
+            if (event.occurredAt.isBefore(trackingStartedAt) || event.id in recorded) return@forEach
+            val recipient =
+                if (event.assigned) {
+                    assignmentOwnerAt(githubId, event.occurredAt)
+                } else if (owners.containsKey(githubId)) {
+                    owners[githubId]
+                } else {
+                    preceding?.let { MemberContributionHistory.ownerThroughoutSecond(this, githubId, it.occurredAt) }
+                }
+            recipients[event.id] = recipient
+            owners[githubId] = recipient.takeIf { event.assigned }
+            changedOwners[githubId] = owners[githubId]
+        }
+        return AssignmentAttribution(changedOwners, recipients)
+    }
+
     private fun Connection.recordAssignment(
         taskId: Long,
         product: ProductId,
         title: String,
         event: GitHubAssignmentOccurrence,
+        recipient: Long?,
         now: Instant,
     ) {
         val inserted =
@@ -686,17 +751,12 @@ class TaskStore(
             )
         }
         if (inserted == 0) return
-        val user =
-            query("SELECT user_id FROM task_assignees WHERE task_id=? AND github_user_id=?", taskId, event.assignee.id) {
-                it.nullableLong("user_id")
-            }.singleOrNull()
-                ?: currentUser(event.assignee.id)
         notifyAssignment(
             taskId,
             product,
             title,
             event.assignee.id,
-            user,
+            recipient,
             if (event.assigned) "TASK_ASSIGNED" else "TASK_UNASSIGNED",
             "assignment:${event.id}",
             now,
@@ -778,15 +838,35 @@ class TaskStore(
             it.getLong(1)
         }.singleOrNull()
 
-    private fun Connection.historicalAssignee(
+    private fun Connection.assigneeOwner(
         snapshot: GitHubTaskSnapshot,
         githubId: Long,
     ): Long? {
-        if (snapshot.kind == TaskKind.DRAFT) return null
+        if (snapshot.kind == TaskKind.DRAFT) return currentUser(githubId)
         // The provider's complete timeline retains source order; IDs and second-resolution times are not sort keys.
-        val latest = snapshot.assignmentOccurrences.lastOrNull { it.assignee.id == githubId } ?: return null
-        if (!latest.assigned) return null
-        return MemberContributionHistory.ownerThroughoutSecond(this, githubId, latest.occurredAt)
+        val latest = snapshot.assignmentOccurrences.lastOrNull { it.assignee.id == githubId }
+        return if (latest?.assigned == true) assignmentOwnerAt(githubId, latest.occurredAt) else currentUser(githubId)
+    }
+
+    private fun Connection.assignmentOwnerAt(
+        githubId: Long,
+        occurredAt: Instant,
+    ): Long? {
+        MemberContributionHistory.ownerThroughoutSecond(this, githubId, occurredAt)?.let { return it }
+        val current = currentUser(githubId) ?: return null
+        val start = occurredAt.truncatedTo(ChronoUnit.SECONDS)
+        // A previously unknown current assignment can become identifiable after joining. Account reuse
+        // within the source event's second is different: replay must not guess which owner was assigned.
+        val otherOwner =
+            query(
+                "SELECT 1 FROM member_contribution_history WHERE github_user_id=? AND user_id<>? " +
+                    "AND valid_from<? AND (valid_until IS NULL OR valid_until>?) LIMIT 1",
+                githubId,
+                current,
+                start.plusSeconds(1),
+                start,
+            ) { it.getInt(1) }.isNotEmpty()
+        return current.takeUnless { otherOwner }
     }
 
     private fun Connection.putProjectContext(
