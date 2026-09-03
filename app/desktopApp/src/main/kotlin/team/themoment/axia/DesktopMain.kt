@@ -17,7 +17,12 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.swing.Swing
+import kotlinx.coroutines.withContext
+import team.themoment.axia.app.WorkspaceGateway
+import team.themoment.axia.app.WorkspaceResponse
 import team.themoment.axia.designsystem.component.AxiaBanner
 import team.themoment.axia.designsystem.component.AxiaBannerStyle
 import team.themoment.axia.designsystem.foundation.defaultAxiaDimensions
@@ -32,13 +37,20 @@ import team.themoment.axia.desktop.auth.DesktopAuthState
 import team.themoment.axia.desktop.auth.DesktopSessionDialog
 import team.themoment.axia.desktop.auth.DesktopSystemBrowser
 import team.themoment.axia.desktop.auth.JdkDesktopApiTransport
+import team.themoment.axia.desktop.notifications.DesktopNotificationPump
+import team.themoment.axia.desktop.notifications.DesktopNotificationStatus
 import team.themoment.axia.desktop.security.DesktopPlatformSupport
+import team.themoment.axia.desktop.updates.DesktopUpdateStatus
+import team.themoment.axia.desktop.updates.DesktopUpdater
 import team.themoment.axia.feature.auth.AuthScreen
 import team.themoment.axia.feature.auth.AuthUiState
 import java.awt.Dimension
+import java.awt.event.WindowAdapter
+import java.awt.event.WindowEvent
 import java.util.prefs.BackingStoreException
 import java.util.prefs.Preferences
 import javax.swing.JOptionPane
+import javax.swing.SwingUtilities
 import kotlin.math.roundToInt
 
 private const val THEME_MODE_PREFERENCE_KEY = "theme-mode"
@@ -70,8 +82,36 @@ fun main() {
         val startup = remember { runCatching { DesktopRuntime.create() } }
         val runtime = startup.getOrNull()
         val controller = runtime?.controller
+        val gateway =
+            remember(controller) {
+                controller?.let { auth ->
+                    WorkspaceGateway { method, path, body ->
+                        val response = auth.request(method, path, body)
+                        WorkspaceResponse(response.status, response.body)
+                    }
+                }
+            }
         val authState = controller?.state?.collectAsState()?.value
         var lifecycle by remember { mutableStateOf<DesktopLifecycle?>(null) }
+        val notificationPump =
+            remember(controller) {
+                controller?.let { auth ->
+                    DesktopNotificationPump(auth, notify = { notification ->
+                        withContext(Dispatchers.Swing) {
+                            val activeLifecycle = lifecycle
+                            if (activeLifecycle == null) {
+                                false
+                            } else {
+                                activeLifecycle.notify(notification.title, notification.body)
+                                true
+                            }
+                        }
+                    })
+                }
+            }
+        val notificationStatus = notificationPump?.status?.collectAsState()?.value
+        val updater = remember { DesktopUpdater.create { SwingUtilities.invokeLater { exitApplication() } } }
+        val updateStatus by updater.status.collectAsState()
 
         fun logout() {
             scope.launch {
@@ -103,10 +143,13 @@ fun main() {
                         onExit = { exitApplication() },
                     )
                 backgroundMenuReady = true
+                notificationPump?.start()
             } catch (_: Exception) {
                 lifecycleFailure = "백그라운드 메뉴를 만들지 못했습니다. 다시 열 수 없는 상태가 되지 않도록 창을 유지합니다."
             }
             onDispose {
+                updater.close()
+                notificationPump?.close()
                 lifecycle?.close()
                 runtime?.close()
                 instanceLock.close()
@@ -123,6 +166,18 @@ fun main() {
                 ),
             title = "Axia",
         ) {
+            DisposableEffect(window, updater) {
+                // WinSparkle initializes only after the native main window is visible.
+                val listener =
+                    object : WindowAdapter() {
+                        override fun windowOpened(event: WindowEvent) {
+                            updater.start()
+                        }
+                    }
+                window.addWindowListener(listener)
+                if (window.isShowing) updater.start()
+                onDispose { window.removeWindowListener(listener) }
+            }
             LaunchedEffect(window) {
                 window.minimumSize =
                     Dimension(
@@ -141,12 +196,23 @@ fun main() {
                 Menu("Axia") {
                     Item("기기 세션 관리", onClick = { showSessions = true }, enabled = authState is DesktopAuthState.SignedIn)
                     Item("로그아웃", onClick = { logout() }, enabled = controller != null)
+                    Item("업데이트 확인", onClick = updater::checkForUpdates)
                     Separator()
                     Item("창 숨기기", onClick = { windowVisible = false }, enabled = backgroundMenuReady)
                     Item("종료", onClick = ::exitApplication)
                 }
             }
             Column(Modifier.fillMaxSize()) {
+                if (notificationStatus == DesktopNotificationStatus.DeliveryUnavailable) {
+                    AxiaTheme(themeMode) {
+                        AxiaBanner(
+                            "시스템 알림을 전달하지 못했어요",
+                            description = "운영체제의 Axia 알림 설정을 확인해 주세요. 알림함에서는 계속 확인할 수 있습니다.",
+                            style = AxiaBannerStyle.Warning,
+                            modifier = Modifier.padding(AxiaTheme.spacing.space3),
+                        )
+                    }
+                }
                 lifecycleFailure?.let { message ->
                     AxiaTheme(themeMode) {
                         AxiaBanner(
@@ -165,6 +231,11 @@ fun main() {
                                 themeMode = selectedThemeMode
                                 DesktopThemePreferences.saveThemeMode(selectedThemeMode)
                             },
+                            gateway = gateway,
+                            onManageSessions = { showSessions = true },
+                            onLogout = { logout() },
+                            onCheckUpdates = updater::checkForUpdates,
+                            updateStatusMessage = updateStatus.label,
                         )
                     }
                 } else {
@@ -186,6 +257,19 @@ fun main() {
         }
     }
 }
+
+private val DesktopUpdateStatus.label: String
+    get() =
+        when (this) {
+            is DesktopUpdateStatus.Unavailable -> reason
+            DesktopUpdateStatus.Ready -> "자동 업데이트가 활성화되어 있습니다."
+            DesktopUpdateStatus.Checking -> "새 업데이트를 확인하고 있습니다."
+            DesktopUpdateStatus.Downloading -> "서명된 업데이트를 다운로드하고 있습니다."
+            DesktopUpdateStatus.UpdateReady -> "업데이트 준비가 끝났습니다. 업데이트 창에서 다시 시작하거나 나중에 설치할 수 있습니다."
+            DesktopUpdateStatus.Installing -> "업데이트를 설치하고 다시 시작합니다."
+            DesktopUpdateStatus.NoUpdate -> "현재 최신 버전입니다."
+            is DesktopUpdateStatus.Error -> reason
+        }
 
 private fun startupFailure(failure: Throwable?): AuthUiState.Failure {
     val description =
