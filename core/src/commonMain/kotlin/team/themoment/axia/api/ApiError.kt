@@ -2,6 +2,7 @@ package team.themoment.axia.api
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonObject
 
 /**
  * Stable error envelope returned by the Axia API.
@@ -14,6 +15,7 @@ data class ApiError(
     val code: ApiErrorCode,
     val message: String,
     val requestId: String? = null,
+    val details: JsonObject? = null,
 )
 
 /** Machine-readable error codes used by the authentication and session API. */
@@ -27,6 +29,18 @@ enum class ApiErrorCode {
 
     @SerialName("access_denied")
     AccessDenied,
+
+    @SerialName("resource_not_found")
+    ResourceNotFound,
+
+    @SerialName("github_read_only")
+    GitHubReadOnly,
+
+    @SerialName("external_write_uncertain")
+    ExternalWriteUncertain,
+
+    @SerialName("invalid_provider_contract")
+    InvalidProviderContract,
 
     /**
      * The transaction cannot be polled because its id or secret is invalid, or
