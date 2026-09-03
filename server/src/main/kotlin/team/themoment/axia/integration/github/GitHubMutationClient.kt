@@ -139,7 +139,7 @@ class GitHubMutationClient(
                 put("clientMutationId", operationId)
             },
             "projectItem { id content { ... on DraftIssue { id } } }",
-        ).requiredObject("projectItem")
+        ).mutationObject("projectItem")
 
     suspend fun updateDraft(
         nodeId: String,
@@ -176,7 +176,7 @@ class GitHubMutationClient(
                 put("clientMutationId", operationId)
             },
             "item { id content { ... on Issue { id number } } }",
-        ).requiredObject("item")
+        ).mutationObject("item")
 
     suspend fun addProject(
         project: ProjectIntegration,
@@ -192,7 +192,7 @@ class GitHubMutationClient(
                 put("clientMutationId", operationId)
             },
             "item { id }",
-        ).requiredObject("item")
+        ).mutationObject("item")
 
     /** A lost creation response has no provable identity: reread for freshness, but never infer success from matching text. */
     suspend fun inspectUncertainCreation(
@@ -237,7 +237,11 @@ class GitHubMutationClient(
                     put("input", input)
                 },
                 mutation = true,
-            ).requiredObject(name)
+            ).mutationObject(name)
+
+    // The write has already reached GitHub; a missing result cannot prove that it was not applied.
+    private fun JsonObject.mutationObject(name: String): JsonObject =
+        objectOrNull(name) ?: throw GitHubApiException(invalidContract = true, outcomeUncertain = true)
 
     private suspend fun objectMutation(
         method: HttpMethod,

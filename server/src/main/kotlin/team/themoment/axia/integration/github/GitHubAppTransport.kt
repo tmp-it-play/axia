@@ -320,7 +320,14 @@ class GitHubAppTransport(
                 )
             }
             TransportResponse(
-                if (responseBody.isBlank()) JsonNull else decoded ?: throw GitHubApiException(authenticationFailure = appAuthentication),
+                if (responseBody.isBlank()) {
+                    JsonNull
+                } else {
+                    decoded ?: throw GitHubApiException(
+                        outcomeUncertain = mutation,
+                        authenticationFailure = appAuthentication,
+                    )
+                },
                 response.headers[HttpHeaders.Link],
             )
         } catch (cancelled: CancellationException) {
