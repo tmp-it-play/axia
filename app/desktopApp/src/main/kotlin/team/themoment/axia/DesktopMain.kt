@@ -29,7 +29,6 @@ import team.themoment.axia.designsystem.component.AxiaBanner
 import team.themoment.axia.designsystem.component.AxiaBannerStyle
 import team.themoment.axia.designsystem.foundation.defaultAxiaDimensions
 import team.themoment.axia.designsystem.theme.AxiaTheme
-import team.themoment.axia.designsystem.theme.AxiaThemeMode
 import team.themoment.axia.designsystem.theme.LocalAxiaReduceMotion
 import team.themoment.axia.desktop.DesktopInstanceLock
 import team.themoment.axia.desktop.DesktopLifecycle
@@ -52,17 +51,10 @@ import team.themoment.axia.feature.auth.AuthUiState
 import java.awt.Dimension
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
-import java.util.prefs.BackingStoreException
-import java.util.prefs.Preferences
 import javax.swing.JOptionPane
 import javax.swing.SwingUtilities
 import kotlin.math.roundToInt
 import kotlin.system.exitProcess
-
-private const val THEME_MODE_PREFERENCE_KEY = "theme-mode"
-private const val SYSTEM_THEME_PREFERENCE = "system"
-private const val LIGHT_THEME_PREFERENCE = "light"
-private const val DARK_THEME_PREFERENCE = "dark"
 
 fun main() {
     System.setProperty("apple.awt.application.name", "Axia")
@@ -84,7 +76,8 @@ fun main() {
             val motionPreference by motion.state.collectAsState()
             LaunchedEffect(motion) { motion.observe() }
             CompositionLocalProvider(LocalAxiaReduceMotion provides motionPreference.reduceMotion) {
-                var themeMode by remember { mutableStateOf(DesktopThemePreferences.loadThemeMode()) }
+                val theme = remember { DesktopThemeState() }
+                val themeMode = theme.mode
                 var windowVisible by remember { mutableStateOf(true) }
                 var showSessions by remember { mutableStateOf(false) }
                 var lifecycleFailure by remember { mutableStateOf<String?>(null) }
@@ -214,6 +207,7 @@ fun main() {
                         }
                     }
                     Column(Modifier.fillMaxSize()) {
+                        DesktopThemeFailureNotice(theme)
                         if (motionPreference == DesktopMotionPreferenceState.Unavailable) {
                             AxiaTheme(themeMode) {
                                 AxiaBanner(
@@ -248,10 +242,7 @@ fun main() {
                             DesktopAuthHost(controller, themeMode) {
                                 App(
                                     themeMode = themeMode,
-                                    onThemeModeChange = { selectedThemeMode ->
-                                        themeMode = selectedThemeMode
-                                        DesktopThemePreferences.saveThemeMode(selectedThemeMode)
-                                    },
+                                    onThemeModeChange = theme::select,
                                     gateway = gateway,
                                     onManageSessions = { showSessions = true },
                                     onLogout = { logout() },
@@ -329,42 +320,4 @@ private class DesktopRuntime(
             }
         }
     }
-}
-
-private object DesktopThemePreferences {
-    fun loadThemeMode(): AxiaThemeMode =
-        try {
-            when (preferenceNode.get(THEME_MODE_PREFERENCE_KEY, SYSTEM_THEME_PREFERENCE)) {
-                LIGHT_THEME_PREFERENCE -> AxiaThemeMode.Light
-                DARK_THEME_PREFERENCE -> AxiaThemeMode.Dark
-                else -> AxiaThemeMode.System
-            }
-        } catch (_: SecurityException) {
-            AxiaThemeMode.System
-        } catch (_: IllegalStateException) {
-            AxiaThemeMode.System
-        }
-
-    fun saveThemeMode(themeMode: AxiaThemeMode) {
-        val preferenceValue =
-            when (themeMode) {
-                AxiaThemeMode.System -> SYSTEM_THEME_PREFERENCE
-                AxiaThemeMode.Light -> LIGHT_THEME_PREFERENCE
-                AxiaThemeMode.Dark -> DARK_THEME_PREFERENCE
-            }
-
-        try {
-            preferenceNode.put(THEME_MODE_PREFERENCE_KEY, preferenceValue)
-            preferenceNode.flush()
-        } catch (_: SecurityException) {
-            // Keep the in-memory selection when preferences are unavailable.
-        } catch (_: IllegalStateException) {
-            // Keep the in-memory selection when preferences are unavailable.
-        } catch (_: BackingStoreException) {
-            // Keep the in-memory selection when the backing store cannot be flushed.
-        }
-    }
-
-    private val preferenceNode: Preferences
-        get() = Preferences.userNodeForPackage(DesktopThemePreferences::class.java)
 }

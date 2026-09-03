@@ -66,7 +66,7 @@ fun SettingsScreen(
                         style = AxiaTheme.typography.sectionTitle,
                     )
                     Text(
-                        text = "선택한 테마는 이 기기에 저장됩니다.",
+                        text = "시스템 설정을 따르거나 라이트·다크 테마를 선택하세요.",
                         color = AxiaTheme.semanticColors.textSecondary,
                         style = AxiaTheme.typography.secondary,
                     )
