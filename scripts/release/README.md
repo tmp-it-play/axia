@@ -29,6 +29,8 @@ They and their ancestors must be real directories, not symlinks. The publisher n
 
 ## Transfer and integrity
 
+Incoming and existing public feeds share a 1 MiB (1,048,576-byte) limit; oversized incoming feeds are rejected before manifest validation or publication, without rewriting signed bytes.
+
 The host needs POSIX `sh`, `cat`, `chmod`, `mkdir`, `ln`, `mv`, `unlink`, and either Linux `sha256sum` or macOS `shasum -a 256`. A working `sha256sum` is preferred when installed; a failed checksum command is an error, not a reason to fall back to another tool.
 
 Uploads stream binary bytes through authenticated SSH standard input into private, exclusive staging files. Every remote shell path is quoted. Hashing standard input avoids checksum-tool filename escaping differences. Existing destination directories, symlinks, and special files are rejected before linking assets or replacing feeds.
@@ -37,4 +39,6 @@ Versioned `Axia-<version>.dmg` / `.msi` assets are immutable: an identical exist
 
 ## Serving is a separate requirement
 
-Public URLs remain `https://kimtaeeun.site/axia/updates/{macos/arm64,windows/x64}/...`; changing the filesystem root does not change those URLs. The configured publication directory must eventually be connected to an explicitly implemented serving arrangement. The current reverse-proxy-only deployment has no update route or mount: setting this variable alone does **not** make feeds/assets public, and publication will stop at public asset verification until serving exists. This script does not install Nginx locations, cache rules, IP restrictions, maintenance responses, or logging policy.
+Public URLs remain `https://kimtaeeun.site/axia/updates/{macos/arm64,windows/x64}/...`; changing the filesystem root does not change those URLs. The server's optional update routes and read-only deployment override are described in the [deployment instructions](../../deploy/README.md#optional-runtime-file-serving--implemented-not-enabled-on-the-host). Use the same `AXIA_FEED_REMOTE_ROOT` host directory for publishing and mounting; only the container-side path becomes `/opt/axia/updates`.
+
+The current production deployment does not enable that mount or forward the public update path to the application. Setting the publication variable alone does **not** make feeds/assets public, and publication will stop at public asset verification until serving is connected. This script does not install Nginx locations, cache rules, IP restrictions, maintenance responses, or logging policy.

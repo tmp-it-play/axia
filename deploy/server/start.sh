@@ -27,6 +27,9 @@ axia_compose=("$axia_docker" compose --env-file "$axia_deploy_directory/.env" -f
 if [[ -f $axia_deploy_directory/compose.host.yml ]]; then
     axia_compose+=(-f "$axia_deploy_directory/compose.host.yml")
 fi
+if [[ -f $axia_deploy_directory/compose.updates.yml ]]; then
+    axia_compose+=(-f "$axia_deploy_directory/compose.updates.yml")
+fi
 "${axia_compose[@]}" config --quiet
 "${axia_compose[@]}" up --detach --no-build --pull never server
 

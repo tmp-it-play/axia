@@ -2,6 +2,7 @@ package team.themoment.axia.config
 
 import team.themoment.axia.persistence.DatabaseConfig
 import java.net.URI
+import java.nio.file.Path
 import java.time.Duration
 
 data class AxiaConfig(
@@ -12,6 +13,7 @@ data class AxiaConfig(
     val security: SecurityConfig,
     val webhooks: WebhookConfig,
     val jobs: JobConfig = JobConfig(),
+    val updates: UpdateConfig? = null,
 ) {
     companion object {
         fun fromEnvironment(environment: Map<String, String> = System.getenv()): AxiaConfig {
@@ -81,7 +83,33 @@ data class AxiaConfig(
                         reminders = Duration.ofSeconds(values.positiveInt("AXIA_REMINDER_SECONDS", 60).toLong()),
                         health = Duration.ofSeconds(values.positiveInt("AXIA_HEALTH_SECONDS", 30).toLong()),
                     ),
+                updates = UpdateConfig.fromEnvironment(environment),
             )
+        }
+    }
+}
+
+data class UpdateConfig(
+    val root: Path,
+) {
+    init {
+        if (!root.isAbsolute || root.parent == null || root.normalize() != root) {
+            throw ConfigurationException("AXIA_UPDATES_ROOT must be an absolute normalized directory path, not the filesystem root")
+        }
+    }
+
+    companion object {
+        fun fromEnvironment(environment: Map<String, String>): UpdateConfig? {
+            val value = environment["AXIA_UPDATES_ROOT"] ?: return null
+            if (value.any { it.code < 32 || it.code == 127 }) {
+                throw ConfigurationException("AXIA_UPDATES_ROOT must not contain control characters")
+            }
+            if (value.isBlank()) return null
+            val path =
+                runCatching { Path.of(value) }.getOrElse {
+                    throw ConfigurationException("AXIA_UPDATES_ROOT must be a valid directory path")
+                }
+            return UpdateConfig(path)
         }
     }
 }

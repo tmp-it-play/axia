@@ -31,6 +31,7 @@ dependencies {
     implementation(libs.ktor.serverCore)
     implementation(libs.ktor.serverForwardedHeader)
     implementation(libs.ktor.serverNetty)
+    implementation(libs.ktor.serverPartialContent)
     implementation(libs.ktor.serverStatusPages)
     testImplementation(libs.ktor.serverTestHost)
     testImplementation(libs.kotlin.testJunit)

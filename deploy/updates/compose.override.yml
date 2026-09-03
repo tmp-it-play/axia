@@ -1,0 +1,13 @@
+# Optional public updates mount. Copy as compose.updates.yml only when enabling file serving.
+# The host path must match the repository Actions variable used by the release publisher.
+services:
+  server:
+    environment:
+      AXIA_UPDATES_ROOT: /opt/axia/updates
+    volumes:
+      - type: bind
+        source: ${AXIA_FEED_REMOTE_ROOT:?Set the absolute published updates directory}
+        target: /opt/axia/updates
+        read_only: true
+        bind:
+          create_host_path: false

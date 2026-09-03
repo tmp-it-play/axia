@@ -70,4 +70,14 @@ Desktop update code expects signed feeds/assets at `https://kimtaeeun.site/axia/
 
 The release workflow requires the repository-level Actions variable `AXIA_FEED_REMOTE_ROOT`, with `/Users/snowykte0426/Downloads/axia/updates` as the intended explicit destination. `publish.py --remote-root` can override it; no `/srv` fallback exists. The publisher supports Linux `sha256sum` and macOS `shasum -a 256` and requires pre-existing, trusted `macos/arm64` and `windows/x64` directories beneath that root. See the [release publication instructions](../scripts/release/README.md).
 
-This setting selects only where approved release files are published. It does not create a Ktor route, host mount, or Nginx update location, and the current deployment remains unable to serve update files.
+This setting selects where approved release files are published. It does not enable runtime serving or change the existing Nginx configuration by itself.
+
+### Optional runtime file serving — implemented, not enabled on the host
+
+The server can serve unauthenticated `GET`/`HEAD` for `/updates/macos/arm64/appcast.xml`, `/updates/windows/x64/appcast.xml`, and their versioned `Axia-<version>.dmg` / `.msi` files. Installer downloads support HTTP ranges. Feed bytes are returned unchanged, including their signatures; the feed limit is 1 MiB. Other filenames, platform/architecture pairs, directory listings, staging files, and symlinks are not public endpoints. The release workflow signs approved artifacts and the native updaters verify signatures; the file-serving endpoint does not replace either check.
+
+`AXIA_UPDATES_ROOT` is optional and unset by default. When configured, it must name an existing readable directory; invalid configuration fails before database/runtime initialization. The application neither creates that directory nor publishes or signs files. Only trusted release administrators should be able to modify the root and its ancestors. Published installers are immutable; feeds are replaced atomically by the publisher.
+
+To opt in later, copy `deploy/updates/compose.override.yml` as `compose.updates.yml` in the deployment directory and set its nonsecret `.env` entry `AXIA_FEED_REMOTE_ROOT=/Users/snowykte0426/Downloads/axia/updates`, matching the release workflow variable. `start.sh` includes the extra file only when present. The override mounts that directory read-only at `/opt/axia/updates` and sets the internal `AXIA_UPDATES_ROOT` automatically; it does not create missing host directories or mount signing keys.
+
+Public delivery still requires the existing Nginx to proxy `/axia/updates/...` to `http://127.0.0.1:18080/updates/...`. This upstream mapping is not installed by these scripts, and the checked-in Nginx fragment is unchanged. The current host has neither this optional mount nor a running updated application, so production updates remain unavailable. This implementation adds no Nginx static-file, cache, IP, logging, or maintenance policy.

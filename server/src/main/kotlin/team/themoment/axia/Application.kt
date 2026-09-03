@@ -16,6 +16,8 @@ import team.themoment.axia.auth.authRoutes
 import team.themoment.axia.config.AxiaConfig
 import team.themoment.axia.plugins.configureErrorHandling
 import team.themoment.axia.plugins.configureHttpPlugins
+import team.themoment.axia.updates.PublishedUpdates
+import team.themoment.axia.updates.updateRoutes
 
 fun main() {
     val config = AxiaConfig.fromEnvironment()
@@ -32,10 +34,14 @@ fun Application.module() {
 }
 
 fun Application.module(config: AxiaConfig) {
+    val updates = config.updates?.let { PublishedUpdates(it.root) }
     val runtime = AxiaRuntime.create(config)
     monitor.subscribe(ApplicationStopped) { runtime.close() }
     monitor.subscribe(ApplicationStarted) { runtime.start() }
-    configureApi(runtime.authService, runtime::ready) { runtime.routes(this) }
+    configureApi(runtime.authService, runtime::ready) {
+        runtime.routes(this)
+        updates?.let { updateRoutes(it) }
+    }
 }
 
 private fun Application.configureApi(
