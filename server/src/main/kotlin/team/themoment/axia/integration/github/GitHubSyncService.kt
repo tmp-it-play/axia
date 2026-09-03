@@ -250,7 +250,7 @@ class GitHubSyncService(
         val snapshot =
             boardRead {
                 github.project(project.number).also {
-                    if (it.nodeId != project.nodeId) throw GitHubApiException(invalidContract = true)
+                    if (it.nodeId != project.nodeId) throw GitHubApiException(invalidContract = true, boardConfigurationFailure = true)
                     adapter.validateMappings(it, project.fields)
                 }
             }
@@ -276,7 +276,7 @@ class GitHubSyncService(
                         }
                     // Repository fetch failures must still trigger provider recovery, not disable a board.
                     val snapshotTask = github.task(repository, number)
-                    if (snapshotTask.nodeId != contentId) throw BoardResourceUnavailable()
+                    if (snapshotTask.nodeId != contentId) throw GitHubApiException(invalidContract = true)
                     repositoryTasks.getOrPut(repository.id) { mutableListOf() }.add(snapshotTask)
                 }
 
@@ -306,10 +306,10 @@ class GitHubSyncService(
                 }
 
                 else -> {
-                    throw BoardResourceUnavailable()
+                    throw GitHubApiException(invalidContract = true)
                 }
             }
-            if (contexts.put(contentId, context) != null) throw BoardResourceUnavailable()
+            if (contexts.put(contentId, context) != null) throw GitHubApiException(invalidContract = true)
         }
         return GitHubProjectionBatch(
             repositoryTasks.map { (id, snapshots) -> GitHubRepositoryProjection(repositories.values.single { it.id == id }, snapshots) },
@@ -321,7 +321,7 @@ class GitHubSyncService(
         try {
             operation()
         } catch (failure: GitHubApiException) {
-            if (failure.resourceUnavailable || (failure.invalidContract && !failure.authenticationFailure)) {
+            if (failure.resourceUnavailable || failure.boardConfigurationFailure) {
                 throw BoardResourceUnavailable()
             }
             throw failure

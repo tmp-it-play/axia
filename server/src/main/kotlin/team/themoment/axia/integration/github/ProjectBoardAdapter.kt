@@ -19,47 +19,61 @@ class ProjectBoardAdapter(
     private val transport: GitHubAppTransport,
 ) {
     fun initialMappings(snapshot: GitHubProjectSnapshot): List<ProjectFieldMapping> =
-        ProjectSemanticField.entries
-            .map { semantic ->
-                val field =
-                    snapshot.fields.singleOrNull { it.text("name") == initialNames.getValue(semantic) }
-                        ?: throw GitHubApiException(invalidContract = true)
-                val expectedOptions = optionNames[semantic].orEmpty()
-                val options =
-                    expectedOptions.mapValues { (_, name) ->
-                        field.objects("options").singleOrNull { it.text("name") == name }?.requiredText("id")
-                            ?: throw GitHubApiException(invalidContract = true)
-                    }
-                ProjectFieldMapping(semantic, field.requiredText("id"), options)
-            }.also { validateMappings(snapshot, it) }
+        validatedFields(snapshot).let { fields ->
+            ProjectSemanticField.entries
+                .map { semantic ->
+                    val field =
+                        fields.singleOrNull { it.requiredText("name") == initialNames.getValue(semantic) }
+                            ?: throw invalidBoardConfiguration()
+                    val isDate = semantic in setOf(ProjectSemanticField.START_DATE, ProjectSemanticField.TARGET_DATE)
+                    if (field.requiredText("dataType") != if (isDate) "DATE" else "SINGLE_SELECT") throw invalidBoardConfiguration()
+                    val expectedOptions = optionNames[semantic].orEmpty()
+                    val options =
+                        expectedOptions.mapValues { (_, name) ->
+                            field.objects("options").singleOrNull { it.text("name") == name }?.requiredText("id")
+                                ?: throw invalidBoardConfiguration()
+                        }
+                    ProjectFieldMapping(semantic, field.requiredText("id"), options)
+                }.also { validateMappings(snapshot, it) }
+        }
 
     fun validateMappings(
         snapshot: GitHubProjectSnapshot,
         mappings: List<ProjectFieldMapping>,
     ) {
+        val fields = validatedFields(snapshot)
         if (mappings.map { it.semantic }.toSet() != ProjectSemanticField.entries.toSet() || mappings.size != 4 ||
             mappings.map { it.fieldNodeId }.distinct().size != mappings.size
         ) {
-            throw GitHubApiException(invalidContract = true)
+            throw invalidBoardConfiguration()
         }
         mappings.forEach { mapping ->
             val field =
-                snapshot.fields.singleOrNull { it.text("id") == mapping.fieldNodeId }
-                    ?: throw GitHubApiException(invalidContract = true)
+                fields.singleOrNull { it.requiredText("id") == mapping.fieldNodeId }
+                    ?: throw invalidBoardConfiguration()
             val isDate = mapping.semantic in setOf(ProjectSemanticField.START_DATE, ProjectSemanticField.TARGET_DATE)
-            if (field.text("dataType") != if (isDate) "DATE" else "SINGLE_SELECT") throw GitHubApiException(invalidContract = true)
-            if (mapping.options.keys != optionNames[mapping.semantic].orEmpty().keys) throw GitHubApiException(invalidContract = true)
+            if (field.requiredText("dataType") != if (isDate) "DATE" else "SINGLE_SELECT") throw invalidBoardConfiguration()
+            if (mapping.options.keys != optionNames[mapping.semantic].orEmpty().keys) throw invalidBoardConfiguration()
             if (!isDate) {
                 val ids = field.objects("options").map { it.requiredText("id") }.toSet()
                 if (!ids.containsAll(mapping.options.values) || mapping.options.values
                         .distinct()
                         .size != mapping.options.size
                 ) {
-                    throw GitHubApiException(invalidContract = true)
+                    throw invalidBoardConfiguration()
                 }
             }
         }
     }
+
+    private fun validatedFields(snapshot: GitHubProjectSnapshot): List<JsonObject> =
+        snapshot.fields.also { fields ->
+            fields.forEach { it.validateProjectField() }
+            if (fields.map { it.requiredText("id") }.distinct().size != fields.size) throw GitHubApiException(invalidContract = true)
+        }
+
+    private fun invalidBoardConfiguration(): GitHubApiException =
+        GitHubApiException(invalidContract = true, boardConfigurationFailure = true)
 
     fun context(
         project: ProjectIntegration,
@@ -69,16 +83,20 @@ class ProjectBoardAdapter(
             item
                 .objects("allFieldValues")
                 .mapNotNull { value ->
+                    value.validateProjectFieldValue()
                     value.objectOrNull("field")?.text("id")?.let { it to value }
                 }.toMap()
 
         fun option(semantic: ProjectSemanticField): String? {
             val mapping = project.fields.singleOrNull { it.semantic == semantic } ?: return null
-            val optionId = values[mapping.fieldNodeId]?.text("optionId") ?: return null
+            val value = values[mapping.fieldNodeId] ?: return null
+            if (value["optionId"] == null || value["optionId"] == JsonNull) return null
+            val optionId = value.requiredText("optionId")
+            if (optionId.isBlank()) throw GitHubApiException(invalidContract = true)
             return mapping.options.entries
                 .singleOrNull { it.value == optionId }
                 ?.key
-                ?: throw GitHubApiException(invalidContract = true)
+                ?: throw invalidBoardConfiguration()
         }
 
         fun date(semantic: ProjectSemanticField): String? {

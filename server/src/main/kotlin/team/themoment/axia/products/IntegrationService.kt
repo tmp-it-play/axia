@@ -18,6 +18,7 @@ import team.themoment.axia.persistence.inTransaction
 import team.themoment.axia.persistence.query
 import team.themoment.axia.reminders.taskOperations
 import team.themoment.axia.scheduling.JobLease
+import team.themoment.axia.scheduling.ProviderHealthStore
 import java.sql.Connection
 import java.time.Clock
 import javax.sql.DataSource
@@ -205,11 +206,11 @@ class IntegrationService(
                 val mappings = adapter.initialMappings(remote)
                 store.activateProject(project.id, remote, mappings, remote.repositoryNodeIds.isEmpty(), guard)
             } catch (failure: GitHubApiException) {
-                if (failure.resourceUnavailable ||
-                    (failure.invalidContract && !failure.authenticationFailure)
-                ) {
+                if (failure.resourceUnavailable || failure.boardConfigurationFailure) {
                     store.setProjectUnavailable(project.id, guard)
                 } else {
+                    // Seed verification runs before reconciliation, so its parse failures must also lock writes.
+                    ProviderHealthStore(dataSource, clock).markReadFailure(failure)
                     throw failure
                 }
             }
@@ -229,7 +230,12 @@ class IntegrationService(
                         ?.let { store.setDefaultProject(repository.id, it.id, guard) }
                 }
             } catch (failure: GitHubApiException) {
-                if (failure.status in setOf(404, 422)) store.setRepositoryUnavailable(repository.id, guard) else throw failure
+                if (!failure.authenticationFailure && !failure.rateLimited && failure.status in setOf(404, 422)) {
+                    store.setRepositoryUnavailable(repository.id, guard)
+                } else {
+                    ProviderHealthStore(dataSource, clock).markReadFailure(failure)
+                    throw failure
+                }
             }
         }
     }
@@ -248,14 +254,18 @@ class IntegrationService(
         } catch (failure: GitHubApiException) {
             throw ApiFailure(
                 if (failure.status in setOf(403, 404, 422) ||
-                    failure.invalidContract
+                    failure.boardConfigurationFailure
                 ) {
                     HttpStatusCode.Conflict
                 } else {
                     HttpStatusCode.BadGateway
                 },
                 if (failure.invalidContract) ApiErrorCode.InvalidProviderContract else ApiErrorCode.ExternalServiceUnavailable,
-                "GitHub App의 접근 권한과 보드 필드 구성을 확인해 주세요. Issue·PR 원본은 변경하지 않았습니다.",
+                if (failure.resourceUnavailable || failure.boardConfigurationFailure) {
+                    "GitHub App의 접근 권한과 보드 필드 구성을 확인해 주세요. Issue·PR 원본은 변경하지 않았습니다."
+                } else {
+                    "GitHub 응답을 확인하지 못했습니다. 잠시 후 다시 시도해 주세요. Issue·PR 원본은 변경하지 않았습니다."
+                },
             )
         }
 

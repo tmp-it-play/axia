@@ -11,7 +11,8 @@ import java.time.Instant
 
 internal fun JsonObject.text(key: String): String? = (get(key) as? JsonPrimitive)?.contentOrNull
 
-internal fun JsonObject.requiredText(key: String): String = text(key) ?: throw GitHubApiException(invalidContract = true)
+internal fun JsonObject.requiredText(key: String): String =
+    (get(key) as? JsonPrimitive)?.takeIf { it.isString }?.contentOrNull ?: throw GitHubApiException(invalidContract = true)
 
 internal fun JsonObject.long(key: String): Long? = (get(key) as? JsonPrimitive)?.longOrNull
 
@@ -56,3 +57,27 @@ internal fun JsonObject.graphActor(): GitHubActor =
     GitHubActor(long("fullDatabaseId") ?: requiredLong("databaseId"), requiredText("login"), requiredText("id")).also {
         if (it.id <= 0 || it.login.isBlank()) throw GitHubApiException(invalidContract = true)
     }
+
+internal fun JsonObject.validateProjectField() {
+    if (requiredText("id").isBlank()) throw GitHubApiException(invalidContract = true)
+    requiredText("name")
+    if (requiredText("dataType") == "SINGLE_SELECT") {
+        val options = objects("options")
+        options.forEach { option ->
+            if (option.requiredText("id").isBlank()) throw GitHubApiException(invalidContract = true)
+            option.requiredText("name")
+        }
+        if (options.map { it.requiredText("id") }.distinct().size != options.size) throw GitHubApiException(invalidContract = true)
+    }
+}
+
+/** Other field-value union variants have no selected fields; validate only the queried option/date variants. */
+internal fun JsonObject.validateProjectFieldValue() {
+    if (get("optionId") != null && get("optionId") != JsonNull && requiredText("optionId").isBlank()) {
+        throw GitHubApiException(invalidContract = true)
+    }
+    if (get("date") != null && get("date") != JsonNull) requiredText("date")
+    if (get("field") != null && get("field") != JsonNull && requiredObject("field").requiredText("id").isBlank()) {
+        throw GitHubApiException(invalidContract = true)
+    }
+}

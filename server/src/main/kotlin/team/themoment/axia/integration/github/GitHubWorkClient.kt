@@ -145,17 +145,27 @@ class GitHubWorkClient(
         var after: String? = null
         var project: JsonObject
         do {
-            project = transport
-                .graphQL(
-                    PROJECT_QUERY,
-                    buildJsonObject {
-                        put("organization", organization)
-                        put("number", number)
-                        put("after", after?.let(::JsonPrimitive) ?: JsonNull)
-                    },
-                    resourceScoped = true,
-                ).requiredObject("organization")
-                .objectOrNull("projectV2") ?: throw GitHubApiException(status = 404)
+            project =
+                transport
+                    .graphQL(
+                        PROJECT_QUERY,
+                        buildJsonObject {
+                            put("organization", organization)
+                            put("number", number)
+                            put("after", after?.let(::JsonPrimitive) ?: JsonNull)
+                        },
+                        resourceScoped = true,
+                        validate = { data ->
+                            val board = data.requiredObject("organization").boardObject("projectV2")
+                            if (board.requiredText("id").isBlank()) throw GitHubApiException(invalidContract = true)
+                            board.requiredText("title")
+                            board.requiredText("url")
+                            val connection = board.requiredObject("fields")
+                            connection.validateConnection()
+                            connection.objects("nodes").forEach { it.validateProjectField() }
+                        },
+                    ).requiredObject("organization")
+                    .boardObject("projectV2")
             val connection = project.requiredObject("fields")
             fields += connection.objects("nodes")
             after = connection.nextCursor()
@@ -172,7 +182,8 @@ class GitHubWorkClient(
                             put("after", after?.let(::JsonPrimitive) ?: JsonNull)
                         },
                         resourceScoped = true,
-                    ).requiredObject("node")
+                        validate = { it.boardObject("node").requiredObject("repositories").validateConnection() },
+                    ).boardObject("node")
                     .requiredObject("repositories")
             repositories += connection.objects("nodes").map { it.requiredText("id") }
             after = connection.nextCursor()
@@ -200,7 +211,19 @@ class GitHubWorkClient(
                             put("after", after?.let(::JsonPrimitive) ?: JsonNull)
                         },
                         resourceScoped = true,
-                    ).requiredObject("node")
+                        validate = { data ->
+                            val connection = data.boardObject("node").requiredObject("items")
+                            connection.validateConnection()
+                            connection.objects("nodes").forEach { item ->
+                                item.requiredObject("fieldValues").validateFieldValues()
+                                item
+                                    .objectOrNull("content")
+                                    ?.takeIf { it.text("__typename") == "DraftIssue" }
+                                    ?.requiredObject("assignees")
+                                    ?.validateConnection()
+                            }
+                        },
+                    ).boardObject("node")
                     .requiredObject("items")
             items += connection.objects("nodes")
             after = connection.nextCursor()
@@ -219,7 +242,8 @@ class GitHubWorkClient(
                                 put("id", item.requiredText("id"))
                                 put("after", fieldCursor)
                             },
-                            resourceScoped = true,
+                            // A disappearing item is an incomplete board read, not loss of the board itself.
+                            validate = { it.requiredObject("node").requiredObject("fieldValues").validateFieldValues() },
                         ).requiredObject("node")
                         .requiredObject("fieldValues")
                 values += connection.objects("nodes")
@@ -238,7 +262,7 @@ class GitHubWorkClient(
                                     put("id", content.requiredText("id"))
                                     put("after", assigneeCursor)
                                 },
-                                resourceScoped = true,
+                                validate = { it.requiredObject("node").requiredObject("assignees").validateConnection() },
                             ).requiredObject("node")
                             .requiredObject("assignees")
                     assignees += connection.objects("nodes")
@@ -495,5 +519,27 @@ internal fun RepositoryIntegration.path(): String {
 
 internal fun JsonObject.nextCursor(): String? {
     val pageInfo = requiredObject("pageInfo")
-    return if (pageInfo.boolean("hasNextPage")) pageInfo.requiredText("endCursor") else null
+    return if (pageInfo.boolean("hasNextPage")) {
+        pageInfo.requiredText("endCursor").takeIf { it.isNotBlank() } ?: throw GitHubApiException(invalidContract = true)
+    } else {
+        null
+    }
+}
+
+/** Only an explicit null for a queried board proves absence; missing keys/wrong types are malformed responses. */
+private fun JsonObject.boardObject(key: String): JsonObject =
+    when (val value = get(key)) {
+        JsonNull -> throw GitHubApiException(status = 404)
+        is JsonObject -> value
+        else -> throw GitHubApiException(invalidContract = true)
+    }
+
+private fun JsonObject.validateConnection() {
+    objects("nodes")
+    nextCursor()
+}
+
+private fun JsonObject.validateFieldValues() {
+    validateConnection()
+    objects("nodes").forEach { it.validateProjectFieldValue() }
 }

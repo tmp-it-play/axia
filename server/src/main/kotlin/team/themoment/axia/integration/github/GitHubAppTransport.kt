@@ -54,6 +54,7 @@ class GitHubApiException(
     val invalidContract: Boolean = false,
     val rateLimited: Boolean = false,
     val authenticationFailure: Boolean = false,
+    val boardConfigurationFailure: Boolean = false,
 ) : RuntimeException("GitHub operation could not be confirmed") {
     val resourceUnavailable: Boolean
         get() =
@@ -159,12 +160,13 @@ class GitHubAppTransport(
             GitHubCursorPage(items, nextCursor(response.link, path))
         }
 
-    /** Resource-scoped reads isolate one board's contract/access failure, never credentials or provider outages. */
+    /** Only confirmed access loss is resource-scoped; malformed responses must still fail recovery. */
     suspend fun graphQL(
         query: String,
         variables: JsonObject = JsonObject(emptyMap()),
         mutation: Boolean = false,
         resourceScoped: Boolean = false,
+        validate: (JsonObject) -> Unit = {},
     ): JsonObject {
         val body =
             buildJsonObject {
@@ -176,6 +178,9 @@ class GitHubAppTransport(
             val response =
                 request(HttpMethod.Post, "/graphql", body, emptyMap(), false, mutation) as? JsonObject
                     ?: throw GitHubApiException(invalidContract = true, outcomeUncertain = mutation)
+            if (response["errors"] != null && response["errors"] != JsonNull && response["errors"] !is JsonArray) {
+                throw GitHubApiException(invalidContract = true, outcomeUncertain = mutation)
+            }
             val errors = response["errors"] as? JsonArray
             if (!errors.isNullOrEmpty()) {
                 // GraphQL can return partial data and errors together; never commit a partial snapshot.
@@ -195,8 +200,11 @@ class GitHubAppTransport(
                     outcomeUncertain = mutation,
                 )
             }
-            return response["data"] as? JsonObject
-                ?: throw GitHubApiException(invalidContract = true, outcomeUncertain = mutation)
+            val data =
+                response["data"] as? JsonObject
+                    ?: throw GitHubApiException(invalidContract = true, outcomeUncertain = mutation)
+            validate(data)
+            return data
         }
         return if (mutation) execute() else withReadRetry(resourceScoped) { execute() }
     }
@@ -212,10 +220,10 @@ class GitHubAppTransport(
                 throw cancelled
             } catch (failure: GitHubApiException) {
                 // A missing resource is an integration-level result, not a provider-wide outage.
-                if (failure.status == 404 ||
+                if ((failure.status == 404 && !failure.authenticationFailure && !failure.rateLimited) ||
                     (
                         resourceScoped && !failure.authenticationFailure &&
-                            (failure.resourceUnavailable || failure.invalidContract)
+                            failure.resourceUnavailable
                     )
                 ) {
                     throw failure
