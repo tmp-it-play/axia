@@ -6,6 +6,7 @@ import androidx.compose.ui.graphics.Path
 import team.themoment.axia.simulation.world.CountryKind
 import team.themoment.axia.simulation.world.World
 import kotlin.math.abs
+import kotlin.math.atan2
 import kotlin.math.floor
 import kotlin.math.sqrt
 
@@ -29,11 +30,49 @@ class RegionBorders(
     val path: Path,
 )
 
+/** 국가 이름과 그 이름을 따라 쓸 곡선. 곡선은 왼쪽에서 오른쪽으로 읽히는 방향이며 호 길이 표를 미리 계산해 둔다. */
 class CountryLabel(
     val countryId: String,
     val name: String,
-    val space: CountryLabelSpace,
-)
+    curve: CountryLabelCurve,
+) {
+    private val start = if (curve.start.x <= curve.end.x) curve.start else curve.end
+    private val end = if (curve.start.x <= curve.end.x) curve.end else curve.start
+    private val control = curve.control
+    private val samples = Array(SAMPLES + 1) { pointAt(it / SAMPLES.toFloat()) }
+    private val lengths =
+        FloatArray(SAMPLES + 1).also { table ->
+            for (i in 1..SAMPLES) table[i] = table[i - 1] + (samples[i] - samples[i - 1]).getDistance()
+        }
+
+    val thickness = curve.thickness
+    val length: Float get() = lengths[SAMPLES]
+    val bounds: Rect =
+        Rect(samples.minOf { it.x }, samples.minOf { it.y }, samples.maxOf { it.x }, samples.maxOf { it.y })
+            .inflate(curve.thickness / 2f)
+
+    /** 호 길이 [distance] 지점의 위치와 접선 각도(라디안). */
+    fun placeAt(distance: Float): Pair<Offset, Float> {
+        val target = distance.coerceIn(0f, length)
+        var index = lengths.indexOfFirst { it >= target }.coerceAtLeast(1)
+        if (index > SAMPLES) index = SAMPLES
+        val segment = lengths[index] - lengths[index - 1]
+        val fraction = if (segment > 0f) (target - lengths[index - 1]) / segment else 0f
+        val a = samples[index - 1]
+        val b = samples[index]
+        val direction = b - a
+        return (a + direction * fraction) to atan2(direction.y, direction.x)
+    }
+
+    private fun pointAt(t: Float): Offset {
+        val u = 1f - t
+        return start * (u * u) + control * (2f * u * t) + end * (t * t)
+    }
+
+    private companion object {
+        const val SAMPLES = 32
+    }
+}
 
 /** 세계 정의와 지도 형상을 합쳐 그리기와 클릭 판정에 필요한 구조를 만든다. Path는 UI 스레드에서 처음 그릴 때 만든다. */
 class WorldMapModel(
@@ -67,8 +106,8 @@ class WorldMapModel(
     val labels: List<CountryLabel> =
         geometry.countries.values
             .filter { it.id in world.countries }
-            .map { CountryLabel(it.id, world.country(it.id).name, it.labelSpace) }
-            .sortedByDescending { it.space.width * it.space.height }
+            .map { CountryLabel(it.id, world.country(it.id).name, it.labelCurve) }
+            .sortedByDescending { it.length * it.thickness }
 
     val regionBorders: List<RegionBorders> by lazy {
         geometry.borders
