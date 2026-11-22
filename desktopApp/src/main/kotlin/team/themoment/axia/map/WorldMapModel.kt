@@ -5,7 +5,9 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Path
 import team.themoment.axia.simulation.world.CountryKind
 import team.themoment.axia.simulation.world.World
+import kotlin.math.abs
 import kotlin.math.floor
+import kotlin.math.sqrt
 
 class CountryFill(
     val countryId: String,
@@ -18,6 +20,19 @@ class CountryFill(
 class BorderTile(
     val bounds: Rect,
     val path: Path,
+)
+
+/** 한 국가의 행정구역 경계. [typicalRegionSize]는 행정구역 하나의 대략적인 한 변 길이(투영 좌표)다. */
+class RegionBorders(
+    val bounds: Rect,
+    val typicalRegionSize: Float,
+    val path: Path,
+)
+
+class CountryLabel(
+    val countryId: String,
+    val name: String,
+    val space: CountryLabelSpace,
 )
 
 /** 세계 정의와 지도 형상을 합쳐 그리기와 클릭 판정에 필요한 구조를 만든다. Path는 UI 스레드에서 처음 그릴 때 만든다. */
@@ -33,8 +48,8 @@ class WorldMapModel(
     init {
         val missing = world.regions.keys - regionsById.keys
         require(missing.isEmpty()) { "Map has no shape for regions: ${missing.take(5)}" }
-        val uncolored = world.countries.keys - geometry.countryColors.keys
-        require(uncolored.isEmpty()) { "Map has no color for countries: ${uncolored.take(5)}" }
+        val unknown = world.countries.keys - geometry.countries.keys
+        require(unknown.isEmpty()) { "Map has no entry for countries: ${unknown.take(5)}" }
     }
 
     val countryFills: List<CountryFill> by lazy {
@@ -42,15 +57,37 @@ class WorldMapModel(
             CountryFill(
                 countryId = countryId,
                 unclaimed = world.country(countryId).kind == CountryKind.UNCLAIMED,
-                colorIndex = geometry.countryColors.getValue(countryId),
+                colorIndex = geometry.countries.getValue(countryId).colorIndex,
                 bounds = shapes.map(RegionShape::bounds).reduce(::unionOf),
                 path = Path().apply { shapes.forEach { shape -> shape.rings.forEach(::addRing) } },
             )
         }
     }
 
+    val labels: List<CountryLabel> =
+        geometry.countries.values
+            .filter { it.id in world.countries }
+            .map { CountryLabel(it.id, world.country(it.id).name, it.labelSpace) }
+            .sortedByDescending { it.space.width * it.space.height }
+
+    val regionBorders: List<RegionBorders> by lazy {
+        geometry.borders
+            .filter { it.kind == BorderKind.REGION }
+            .groupBy { requireNotNull(it.ownerId) }
+            .map { (countryId, lines) ->
+                val shapes = regionsByCountry.getValue(countryId)
+                val area = abs(shapes.sumOf { shape -> shape.rings.sumOf(::signedArea) })
+                RegionBorders(
+                    bounds = lines.map(BorderLine::bounds).reduce(::unionOf),
+                    typicalRegionSize = sqrt(area / shapes.size).toFloat(),
+                    path = Path().apply { lines.forEach { addPolyline(it.points) } },
+                )
+            }
+    }
+
     val borderTiles: Map<BorderKind, List<BorderTile>> by lazy {
         geometry.borders
+            .filter { it.kind != BorderKind.REGION }
             .groupBy(BorderLine::kind)
             .mapValues { (_, lines) ->
                 lines
@@ -133,3 +170,13 @@ private fun unionOf(
     a: Rect,
     b: Rect,
 ): Rect = Rect(minOf(a.left, b.left), minOf(a.top, b.top), maxOf(a.right, b.right), maxOf(a.bottom, b.bottom))
+
+private fun signedArea(ring: FloatArray): Double {
+    var area = 0.0
+    var j = ring.size - 2
+    for (i in ring.indices step 2) {
+        area += ring[j].toDouble() * ring[i + 1] - ring[i].toDouble() * ring[j + 1]
+        j = i
+    }
+    return area / 2.0
+}

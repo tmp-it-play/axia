@@ -22,4 +22,6 @@ object MapPalette {
     val selectedCountry = Color(0x2EFFFFFF)
     val selectedRegion = Color(0x40FFFFFF)
     val selectedOutline = Color(0xFFFFF2C0)
+    val label = Color(0xFF2A2119)
+    val labelHalo = Color(0xB3F2EAD8)
 }
