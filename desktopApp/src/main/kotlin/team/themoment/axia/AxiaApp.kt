@@ -23,12 +23,16 @@ import team.themoment.axia.selection.SelectionPanel
 import team.themoment.axia.simulation.SimulationRunner
 import team.themoment.axia.simulation.world.World
 import team.themoment.axia.time.TimeControlBar
+import team.themoment.axia.update.AppUpdater
+import team.themoment.axia.update.UpdateNotice
 
 @Composable
 fun AxiaApp(
     world: World,
     mapModel: WorldMapModel,
     runner: SimulationRunner,
+    updater: AppUpdater?,
+    onInstallerLaunched: () -> Unit,
 ) {
     val clock by runner.clock.collectAsState()
     val economy by runner.economy.collectAsState()
@@ -54,6 +58,15 @@ fun AxiaApp(
                 onSelect = { mapMode = it },
                 modifier = Modifier.align(Alignment.TopStart).padding(12.dp),
             )
+            updater?.let {
+                val updateState by it.state.collectAsState()
+                UpdateNotice(
+                    state = updateState,
+                    onInstall = { installer -> it.install(installer, onInstallerLaunched) },
+                    onDismiss = it::dismiss,
+                    modifier = Modifier.align(Alignment.TopEnd).padding(12.dp),
+                )
+            }
             MapLegend(mode = mapMode, modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp))
             selectedRegionId?.let { regionId ->
                 SelectionPanel(

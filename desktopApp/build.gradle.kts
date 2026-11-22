@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
+    alias(libs.plugins.kotlinSerialization)
 }
 
 kotlin {
@@ -20,6 +21,7 @@ dependencies {
     implementation(libs.compose.material3)
     implementation(libs.compose.components.resources)
     implementation(libs.kotlinx.coroutinesSwing)
+    implementation(libs.kotlinx.serializationJson)
 }
 
 compose.resources {
@@ -34,7 +36,8 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi)
             packageName = "Axia"
-            packageVersion = "1.0.0"
+            packageVersion = providers.gradleProperty("axia.version").getOrElse("1.0.0")
+            modules("java.net.http")
             macOS {
                 bundleID = "team.themoment.axia"
             }
