@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import team.themoment.axia.game.panels.BudgetPanel
 import team.themoment.axia.game.panels.EconomyPanel
 import team.themoment.axia.game.panels.OverviewPanel
+import team.themoment.axia.game.panels.PoliticsPanel
 import team.themoment.axia.game.panels.SocietyPanel
 import team.themoment.axia.game.panels.StatisticsPanel
 import team.themoment.axia.map.MapLegend
@@ -42,6 +43,7 @@ fun GameScreen(
     val clock by runner.clock.collectAsState()
     val economy by runner.economy.collectAsState()
     val nation by runner.nation.collectAsState()
+    val politics by runner.politics.collectAsState()
     var panel by remember { mutableStateOf<GamePanel?>(GamePanel.OVERVIEW) }
     var selectedRegionId by remember { mutableStateOf<String?>(null) }
     var mapMode by remember { mutableStateOf(MapMode.POLITICAL) }
@@ -85,11 +87,48 @@ fun GameScreen(
                                 .width(if (open == GamePanel.STATISTICS) 760.dp else 440.dp),
                     ) {
                         when (open) {
-                            GamePanel.OVERVIEW -> OverviewPanel(playerName, nation, playerIndicators)
-                            GamePanel.ECONOMY -> EconomyPanel(playerIndicators, playerHistory)
-                            GamePanel.BUDGET -> BudgetPanel(nation.budget, runner::setTaxRate, runner::setSpending)
-                            GamePanel.SOCIETY -> SocietyPanel(nation)
-                            GamePanel.STATISTICS -> StatisticsPanel(playerHistory, nation.history)
+                            GamePanel.OVERVIEW -> {
+                                OverviewPanel(playerName, nation, playerIndicators)
+                            }
+
+                            GamePanel.ECONOMY -> {
+                                EconomyPanel(playerIndicators, playerHistory)
+                            }
+
+                            GamePanel.BUDGET -> {
+                                BudgetPanel(
+                                    nation.budget,
+                                    politics,
+                                    runner::editBudgetDraft,
+                                    runner::clearBudgetDraft,
+                                    onIntroduce = {
+                                        runner.introduceBudget()
+                                        panel = GamePanel.POLITICS
+                                    },
+                                    onViewBill = { panel = GamePanel.POLITICS },
+                                )
+                            }
+
+                            GamePanel.POLITICS -> {
+                                PoliticsPanel(
+                                    politics,
+                                    onBudget = { panel = GamePanel.BUDGET },
+                                    onNegotiate = runner::negotiateBudgetWith,
+                                    onIntroduce = runner::introduceBudget,
+                                    onRevise = {
+                                        runner.reviseStalledBudget()
+                                        panel = GamePanel.BUDGET
+                                    },
+                                )
+                            }
+
+                            GamePanel.SOCIETY -> {
+                                SocietyPanel(nation)
+                            }
+
+                            GamePanel.STATISTICS -> {
+                                StatisticsPanel(playerHistory, nation.history)
+                            }
                         }
                     }
                 }

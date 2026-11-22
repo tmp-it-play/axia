@@ -167,6 +167,7 @@ fun DossierSlider(
     onValueChange: (Float) -> Unit,
     modifier: Modifier = Modifier,
     secondary: String? = null,
+    enabled: Boolean = true,
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
         Row(verticalAlignment = Alignment.Bottom) {
@@ -186,6 +187,7 @@ fun DossierSlider(
             value = value,
             onValueChange = onValueChange,
             valueRange = range,
+            enabled = enabled,
             modifier = Modifier.height(24.dp),
             colors =
                 SliderDefaults.colors(

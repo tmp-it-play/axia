@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -75,7 +76,7 @@ fun DossierPanel(
                         .background(DossierColors.paper)
                         .border(1.dp, DossierColors.paperLine)
                         .ruledPaper()
-                        .then(if (scrollable) Modifier.verticalScroll(rememberScrollState()) else Modifier)
+                        .then(if (scrollable) Modifier.verticalScroll(key(title) { rememberScrollState() }) else Modifier)
                         .padding(start = 16.dp, end = 16.dp, top = 18.dp, bottom = 16.dp),
                 content = content,
             )

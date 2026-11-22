@@ -26,6 +26,7 @@ enum class GamePanel(
     OVERVIEW("개요"),
     ECONOMY("경제"),
     BUDGET("재정"),
+    POLITICS("정치"),
     SOCIETY("사회"),
     STATISTICS("통계"),
 }
