@@ -1,0 +1,258 @@
+[
+  {
+    "id": "KOR",
+    "initialGovernment": "윤석열 · 국민의힘",
+    "reviewBody": "국회",
+    "regime": "LIBERAL_DEMOCRACY",
+    "legislativeConstraints": 0.854,
+    "civilParticipation": 0.813
+  },
+  {
+    "id": "USA",
+    "initialGovernment": "조 바이든 · 민주당",
+    "reviewBody": "연방의회",
+    "regime": "LIBERAL_DEMOCRACY",
+    "legislativeConstraints": 0.921,
+    "civilParticipation": 0.982
+  },
+  {
+    "id": "CHN",
+    "initialGovernment": "시진핑 · 중국공산당",
+    "reviewBody": "전국인민대표대회",
+    "regime": "CLOSED_AUTOCRACY",
+    "legislativeConstraints": 0.106,
+    "civilParticipation": 0.276
+  },
+  {
+    "id": "JPN",
+    "initialGovernment": "기시다 후미오 · 자유민주당",
+    "reviewBody": "국회",
+    "regime": "LIBERAL_DEMOCRACY",
+    "legislativeConstraints": 0.89,
+    "civilParticipation": 0.682
+  },
+  {
+    "id": "DEU",
+    "initialGovernment": "올라프 숄츠 · 사회민주당",
+    "reviewBody": "연방의회",
+    "regime": "LIBERAL_DEMOCRACY",
+    "legislativeConstraints": 0.98,
+    "civilParticipation": 0.981
+  },
+  {
+    "id": "GBR",
+    "initialGovernment": "리시 수낵 · 보수당",
+    "reviewBody": "의회",
+    "regime": "LIBERAL_DEMOCRACY",
+    "legislativeConstraints": 0.943,
+    "civilParticipation": 0.914
+  },
+  {
+    "id": "FRA",
+    "initialGovernment": "에마뉘엘 마크롱 · 엘리자베트 보른",
+    "reviewBody": "의회",
+    "regime": "LIBERAL_DEMOCRACY",
+    "legislativeConstraints": 0.947,
+    "civilParticipation": 0.878
+  },
+  {
+    "id": "RUS",
+    "initialGovernment": "블라디미르 푸틴 · 미하일 미슈스틴",
+    "reviewBody": "연방의회",
+    "regime": "ELECTORAL_AUTOCRACY",
+    "legislativeConstraints": 0.061,
+    "civilParticipation": 0.138
+  },
+  {
+    "id": "UKR",
+    "initialGovernment": "볼로디미르 젤렌스키 · 인민의 종",
+    "reviewBody": "최고 라다",
+    "regime": "ELECTORAL_AUTOCRACY",
+    "legislativeConstraints": 0.595,
+    "civilParticipation": 0.766
+  },
+  {
+    "id": "IND",
+    "initialGovernment": "나렌드라 모디 · 인도인민당",
+    "reviewBody": "연방의회",
+    "regime": "ELECTORAL_AUTOCRACY",
+    "legislativeConstraints": 0.602,
+    "civilParticipation": 0.606
+  },
+  {
+    "id": "BRA",
+    "initialGovernment": "루이스 이나시우 룰라 다 시우바 · 노동자당",
+    "reviewBody": "국민의회",
+    "regime": "ELECTORAL_DEMOCRACY",
+    "legislativeConstraints": 0.935,
+    "civilParticipation": 0.935
+  },
+  {
+    "id": "CAN",
+    "initialGovernment": "쥐스탱 트뤼도 · 자유당",
+    "reviewBody": "연방의회",
+    "regime": "LIBERAL_DEMOCRACY",
+    "legislativeConstraints": 0.853,
+    "civilParticipation": 0.944
+  },
+  {
+    "id": "PRK",
+    "initialGovernment": "김정은 · 조선로동당",
+    "reviewBody": "최고인민회의",
+    "regime": "CLOSED_AUTOCRACY",
+    "legislativeConstraints": 0.094,
+    "civilParticipation": 0.03
+  },
+  {
+    "id": "AUS",
+    "initialGovernment": "앤서니 앨버니지 · 노동당",
+    "reviewBody": "연방의회",
+    "regime": "LIBERAL_DEMOCRACY",
+    "legislativeConstraints": 0.939,
+    "civilParticipation": 0.836
+  },
+  {
+    "id": "POL",
+    "initialGovernment": "도날트 투스크 · 시민강령",
+    "reviewBody": "의회",
+    "regime": "ELECTORAL_DEMOCRACY",
+    "legislativeConstraints": 0.814,
+    "civilParticipation": 0.541
+  },
+  {
+    "id": "ITA",
+    "initialGovernment": "조르자 멜로니 · 이탈리아의 형제들",
+    "reviewBody": "의회",
+    "regime": "LIBERAL_DEMOCRACY",
+    "legislativeConstraints": 0.948,
+    "civilParticipation": 0.889
+  },
+  {
+    "id": "FIN",
+    "initialGovernment": "페테리 오르포 · 국민연합당",
+    "reviewBody": "의회",
+    "regime": "LIBERAL_DEMOCRACY",
+    "legislativeConstraints": 0.965,
+    "civilParticipation": 0.939
+  },
+  {
+    "id": "EST",
+    "initialGovernment": "카야 칼라스 · 개혁당",
+    "reviewBody": "국회",
+    "regime": "LIBERAL_DEMOCRACY",
+    "legislativeConstraints": 0.95,
+    "civilParticipation": 0.91
+  },
+  {
+    "id": "LVA",
+    "initialGovernment": "에비카 실리냐 · 신통합",
+    "reviewBody": "국회",
+    "regime": "LIBERAL_DEMOCRACY",
+    "legislativeConstraints": 0.854,
+    "civilParticipation": 0.898
+  },
+  {
+    "id": "LTU",
+    "initialGovernment": "잉그리다 시모니테 내각",
+    "reviewBody": "국회",
+    "regime": "ELECTORAL_DEMOCRACY",
+    "legislativeConstraints": 0.957,
+    "civilParticipation": 0.839
+  },
+  {
+    "id": "TUR",
+    "initialGovernment": "레제프 타이이프 에르도안 · 정의개발당",
+    "reviewBody": "대국민의회",
+    "regime": "ELECTORAL_AUTOCRACY",
+    "legislativeConstraints": 0.172,
+    "civilParticipation": 0.378
+  },
+  {
+    "id": "ISR",
+    "initialGovernment": "베냐민 네타냐후 · 리쿠드",
+    "reviewBody": "크네세트",
+    "regime": "ELECTORAL_DEMOCRACY",
+    "legislativeConstraints": 0.926,
+    "civilParticipation": 0.824
+  },
+  {
+    "id": "IRN",
+    "initialGovernment": "알리 하메네이 · 에브라힘 라이시",
+    "reviewBody": "이슬람 의회 · 헌법수호위원회",
+    "regime": "CLOSED_AUTOCRACY",
+    "legislativeConstraints": 0.303,
+    "civilParticipation": 0.113
+  },
+  {
+    "id": "SAU",
+    "initialGovernment": "살만 국왕 · 무함마드 빈 살만",
+    "reviewBody": "국왕 · 각료회의",
+    "regime": "CLOSED_AUTOCRACY",
+    "legislativeConstraints": 0.05,
+    "civilParticipation": 0.22
+  },
+  {
+    "id": "EGY",
+    "initialGovernment": "압델 파타흐 엘시시 · 무스타파 마드불리",
+    "reviewBody": "하원",
+    "regime": "ELECTORAL_AUTOCRACY",
+    "legislativeConstraints": 0.184,
+    "civilParticipation": 0.193
+  },
+  {
+    "id": "ZAF",
+    "initialGovernment": "시릴 라마포사 · 아프리카민족회의",
+    "reviewBody": "의회",
+    "regime": "ELECTORAL_DEMOCRACY",
+    "legislativeConstraints": 0.867,
+    "civilParticipation": 0.765
+  },
+  {
+    "id": "TWN",
+    "initialGovernment": "차이잉원 · 민주진보당",
+    "reviewBody": "입법원",
+    "regime": "LIBERAL_DEMOCRACY",
+    "legislativeConstraints": 0.834,
+    "civilParticipation": 0.933
+  },
+  {
+    "id": "IDN",
+    "initialGovernment": "조코 위도도 · 투쟁민주당",
+    "reviewBody": "국민대표회의",
+    "regime": "ELECTORAL_DEMOCRACY",
+    "legislativeConstraints": 0.562,
+    "civilParticipation": 0.801
+  },
+  {
+    "id": "VNM",
+    "initialGovernment": "응우옌푸쫑 · 베트남 공산당",
+    "reviewBody": "국회",
+    "regime": "CLOSED_AUTOCRACY",
+    "legislativeConstraints": 0.513,
+    "civilParticipation": 0.707
+  },
+  {
+    "id": "THA",
+    "initialGovernment": "세타 타위신 · 프아타이당",
+    "reviewBody": "국회",
+    "regime": "ELECTORAL_AUTOCRACY",
+    "legislativeConstraints": 0.818,
+    "civilParticipation": 0.571
+  },
+  {
+    "id": "RWA",
+    "initialGovernment": "폴 카가메 · 르완다 애국전선",
+    "reviewBody": "의회",
+    "regime": "ELECTORAL_AUTOCRACY",
+    "legislativeConstraints": 0.336,
+    "civilParticipation": 0.386
+  },
+  {
+    "id": "PAK",
+    "initialGovernment": "안와르울하크 카카르 과도 내각",
+    "reviewBody": "연방 내각",
+    "regime": "ELECTORAL_AUTOCRACY",
+    "legislativeConstraints": 0.498,
+    "civilParticipation": 0.732
+  }
+]

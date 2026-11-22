@@ -1,0 +1,554 @@
+{
+  "KOR": {
+    "sourceNote": "2024-01-01 현원. https://ko.wikipedia.org/wiki/대한민국_제21대_국회#의석_변동 https://www.yna.co.kr/view/AKR20231227151000001 제21대 국회 12월 정당 이동을 반영한 재적 298석. 무소속에는 의장을 포함한다.",
+    "chamber": {
+      "name": "국회",
+      "filledSeats": 298,
+      "groups": [
+        { "name": "국민의힘", "seats": 112, "role": "LEAD" },
+        { "name": "더불어민주당", "seats": 167, "role": "OPPOSITION", "constituency": "WORKERS" },
+        { "name": "정의당", "seats": 6, "role": "OPPOSITION", "constituency": "WORKERS" },
+        { "name": "진보당", "seats": 1, "role": "OPPOSITION", "constituency": "WORKERS" },
+        { "name": "기본소득당", "seats": 1, "role": "OPPOSITION" },
+        { "name": "한국의희망", "seats": 1, "role": "OPPOSITION" },
+        { "name": "무소속", "seats": 10, "role": "OTHER" }
+      ]
+    }
+  },
+  "USA": {
+    "sourceNote": "2024-01-01 현원. https://history.house.gov/institution/party-divisions/party-divisions/ https://history.house.gov/dropdowntemplate?htmlContentID=36507224029&id=36507224009 2022년 당선 222 대 213에서 공화당 의석 2석(산토스 제명, 매카시 사임)을 뺐다. 비표결 지역 대표 제외.",
+    "chamber": {
+      "name": "연방 하원",
+      "filledSeats": 433,
+      "groups": [
+        { "name": "민주당", "seats": 213, "role": "LEAD", "constituency": "WORKERS" },
+        { "name": "공화당", "seats": 220, "role": "OPPOSITION", "constituency": "CAPITALISTS" }
+      ]
+    }
+  },
+  "CHN": {
+    "sourceNote": "2023-03-05 제14기 전인대 개회. IPU Parline https://data.ipu.org/parliament/CN/CN-LC01/election/CN-LC01-E20230305/ 2023-02-24 전인대 상무위원회가 대표 2,977명의 자격을 확인했다. IPU 선거 결과표에 전체 의석의 정당별 분포가 없어 게임에서는 기관 심의로 처리한다. https://www.12371.cn/2023/02/24/ARTI1677233807374308.shtml",
+    "chamber": null
+  },
+  "JPN": {
+    "sourceNote": "2021-10-31 총선. IPU Parline https://data.ipu.org/parliament/JP/JP-LC01/election/JP-LC01-E20211031/ 기시다 내각의 자민·공명 연립.",
+    "chamber": {
+      "name": "중의원",
+      "filledSeats": 465,
+      "groups": [
+        { "name": "자유민주당", "seats": 259, "role": "LEAD", "constituency": "CAPITALISTS" },
+        { "name": "입헌민주당", "seats": 96, "role": "OPPOSITION", "constituency": "WORKERS" },
+        { "name": "일본유신회", "seats": 41, "role": "OPPOSITION", "constituency": "SELF_EMPLOYED" },
+        { "name": "공명당", "seats": 32, "role": "COALITION" },
+        { "name": "국민민주당", "seats": 11, "role": "OPPOSITION" },
+        { "name": "일본공산당", "seats": 10, "role": "OPPOSITION", "constituency": "WORKERS" },
+        { "name": "레이와 신센구미", "seats": 3, "role": "OPPOSITION" },
+        { "name": "사회민주당", "seats": 1, "role": "OPPOSITION", "constituency": "WORKERS" },
+        { "name": "무소속", "seats": 12, "role": "OTHER" }
+      ]
+    }
+  },
+  "DEU": {
+    "sourceNote": "2021-09-26 총선. IPU Parline https://data.ipu.org/parliament/DE/DE-LC01/election/DE-LC01-E20210926/ 사민·녹색·자민 신호등 연정. 총선 이후의 탈당과 원내 그룹 개편은 미반영.",
+    "chamber": {
+      "name": "연방의회",
+      "filledSeats": 736,
+      "groups": [
+        { "name": "사회민주당", "seats": 206, "role": "LEAD", "constituency": "WORKERS" },
+        { "name": "기독민주연합", "seats": 152, "role": "OPPOSITION", "constituency": "CAPITALISTS" },
+        { "name": "녹색당", "seats": 118, "role": "COALITION", "constituency": "PROFESSIONALS" },
+        { "name": "자유민주당", "seats": 92, "role": "COALITION", "constituency": "CAPITALISTS" },
+        { "name": "독일을 위한 대안", "seats": 83, "role": "OPPOSITION" },
+        { "name": "기독사회연합", "seats": 45, "role": "OPPOSITION" },
+        { "name": "좌파당", "seats": 39, "role": "OPPOSITION", "constituency": "WORKERS" },
+        { "name": "남슐레스비히 유권자연합", "seats": 1, "role": "OTHER" }
+      ]
+    }
+  },
+  "GBR": {
+    "sourceNote": "2024-01-01 현원. 영국 의회 https://members-api.parliament.uk/api/Parties/StateOfTheParties/1/2024-01-01 공석 1석. 의장, 임시 부의장 로저 게일을 포함한 부의장 4명(보수 3, 노동 1), 등원을 거부한 신페인 7명은 일반 표결에서 제외. https://publications.parliament.uk/pa/cm5901/cmselect/cmproced/535/report.html",
+    "chamber": {
+      "name": "하원",
+      "filledSeats": 649,
+      "groups": [
+        { "name": "보수당", "seats": 350, "role": "LEAD", "constituency": "CAPITALISTS", "nonVoting": 3 },
+        { "name": "노동당", "seats": 198, "role": "OPPOSITION", "constituency": "WORKERS", "nonVoting": 1 },
+        { "name": "스코틀랜드 국민당", "seats": 43, "role": "OPPOSITION" },
+        { "name": "무소속", "seats": 18, "role": "OTHER" },
+        { "name": "자유민주당", "seats": 15, "role": "OPPOSITION", "constituency": "PROFESSIONALS" },
+        { "name": "민주연합당", "seats": 8, "role": "OPPOSITION" },
+        { "name": "신페인", "seats": 7, "role": "OTHER", "nonVoting": 7 },
+        { "name": "플라이드 컴리", "seats": 3, "role": "OPPOSITION" },
+        { "name": "알바당", "seats": 2, "role": "OPPOSITION" },
+        { "name": "사회민주노동당", "seats": 2, "role": "OPPOSITION" },
+        { "name": "동맹당", "seats": 1, "role": "OPPOSITION" },
+        { "name": "녹색당", "seats": 1, "role": "OPPOSITION" },
+        { "name": "의장", "seats": 1, "role": "OTHER", "nonVoting": 1 }
+      ]
+    }
+  },
+  "FRA": {
+    "sourceNote": "2023-12-21 마지막 본회의 제3215호 기명투표. https://www.assemblee-nationale.fr/dyn/16/scrutins/3215 의결 참가 여부와 무관하게 각 원내 교섭단체의 전체 현원을 사용했다.",
+    "chamber": {
+      "name": "국민의회",
+      "filledSeats": 577,
+      "groups": [
+        { "name": "르네상스", "seats": 170, "role": "LEAD" },
+        { "name": "국민연합", "seats": 88, "role": "OPPOSITION" },
+        { "name": "굴복하지 않는 프랑스", "seats": 75, "role": "OPPOSITION", "constituency": "WORKERS" },
+        { "name": "공화당", "seats": 62, "role": "OPPOSITION", "constituency": "CAPITALISTS" },
+        { "name": "민주운동·무소속", "seats": 51, "role": "COALITION" },
+        { "name": "사회당·동맹", "seats": 31, "role": "OPPOSITION", "constituency": "WORKERS" },
+        { "name": "오리종·동맹", "seats": 29, "role": "COALITION" },
+        { "name": "생태주의", "seats": 23, "role": "OPPOSITION" },
+        { "name": "민주공화좌파", "seats": 22, "role": "OPPOSITION", "constituency": "WORKERS" },
+        { "name": "LIOT", "seats": 21, "role": "OPPOSITION" },
+        { "name": "무소속", "seats": 5, "role": "OTHER" }
+      ]
+    }
+  },
+  "RUS": {
+    "sourceNote": "2021-09-19 총선. IPU Parline https://data.ipu.org/parliament/RU/RU-LC01/election/RU-LC01-E20210919/ IPU 표에 수록된 6개 원내 집단 분류.",
+    "chamber": {
+      "name": "국가두마",
+      "filledSeats": 450,
+      "groups": [
+        { "name": "통합러시아", "seats": 326, "role": "LEAD" },
+        { "name": "러시아연방공산당", "seats": 57, "role": "OPPOSITION", "constituency": "WORKERS" },
+        { "name": "정의러시아", "seats": 28, "role": "OPPOSITION" },
+        { "name": "자유민주당", "seats": 23, "role": "OPPOSITION" },
+        { "name": "새로운 사람들", "seats": 15, "role": "OPPOSITION" },
+        { "name": "무소속", "seats": 1, "role": "OTHER" }
+      ]
+    }
+  },
+  "UKR": {
+    "sourceNote": "2023-12-21 본회의 표결 명부. https://meeting.rada.gov.ua/work/vote/vot-25800_skl9 https://meeting.rada.gov.ua/work/vote/vot-25802_skl9 https://zakon.rada.gov.ua/laws/show/254к/96-вр#Text 출석·결석 포함 교섭단체 현원. 통과선은 헌법 제91조에 따라 정원 450명의 과반인 226표.",
+    "chamber": {
+      "name": "최고 라다",
+      "filledSeats": 401,
+      "groups": [
+        { "name": "인민의 종", "seats": 235, "role": "LEAD" },
+        { "name": "유럽연대", "seats": 27, "role": "OPPOSITION" },
+        { "name": "조국당", "seats": 24, "role": "OPPOSITION" },
+        { "name": "삶과 평화를 위한 플랫폼", "seats": 22, "role": "OTHER" },
+        { "name": "목소리", "seats": 20, "role": "OPPOSITION" },
+        { "name": "우크라이나 재건", "seats": 17, "role": "OTHER" },
+        { "name": "미래를 위하여", "seats": 17, "role": "OTHER" },
+        { "name": "신뢰", "seats": 19, "role": "OTHER" },
+        { "name": "무소속", "seats": 20, "role": "OTHER" }
+      ],
+      "absoluteMajority": 226
+    }
+  },
+  "IND": {
+    "sourceNote": "2019-04-11~2019-05-19 총선. IPU Parline https://data.ipu.org/parliament/IN/IN-LC01/election/IN-LC01-E20190411/ DMK에는 2019-08-05 벨로르 지연 선거 당선 1석을 합산했다. 이후 분열한 시브 세나는 원 선거 명부로 합산. 록 잔샥티·민족주의국민회의당도 분당 전 명부를 유지한다. 아프나 달은 모디 내각에 참여. https://www.eci.gov.in/statistical-reports",
+    "chamber": {
+      "name": "로크 사바",
+      "filledSeats": 543,
+      "groups": [
+        { "name": "인도인민당", "seats": 303, "role": "LEAD" },
+        { "name": "인도국민회의", "seats": 52, "role": "OPPOSITION" },
+        { "name": "드라비다 진보연맹", "seats": 24, "role": "OPPOSITION" },
+        { "name": "트리나물 국민회의", "seats": 22, "role": "OPPOSITION" },
+        { "name": "YSR 국민회의당", "seats": 22, "role": "OTHER" },
+        { "name": "시브 세나 계열", "seats": 18, "role": "OTHER" },
+        { "name": "자나타 달 통합파", "seats": 16, "role": "OPPOSITION" },
+        { "name": "비주 자나타 달", "seats": 12, "role": "OTHER" },
+        { "name": "대중사회당", "seats": 10, "role": "OPPOSITION" },
+        { "name": "바라트 국민위원회", "seats": 9, "role": "OPPOSITION" },
+        { "name": "록 잔샥티 계열", "seats": 6, "role": "OTHER" },
+        { "name": "민족주의국민회의당 계열", "seats": 5, "role": "OTHER" },
+        { "name": "사마지와디당", "seats": 5, "role": "OPPOSITION" },
+        { "name": "인도공산당 마르크스주의", "seats": 3, "role": "OPPOSITION", "constituency": "WORKERS" },
+        { "name": "인도연합무슬림연맹", "seats": 3, "role": "OPPOSITION" },
+        { "name": "잠무카슈미르 국민회의", "seats": 3, "role": "OPPOSITION" },
+        { "name": "텔루구데삼당", "seats": 3, "role": "OTHER" },
+        { "name": "아프나 달", "seats": 2, "role": "COALITION" },
+        { "name": "전인도무슬림평의회", "seats": 2, "role": "OPPOSITION" },
+        { "name": "인도공산당", "seats": 2, "role": "OPPOSITION", "constituency": "WORKERS" },
+        { "name": "시로마니 아칼리 달", "seats": 2, "role": "OTHER" },
+        { "name": "전인도 안나 드라비다 진보연맹", "seats": 1, "role": "OTHER" },
+        { "name": "보통사람당", "seats": 1, "role": "OPPOSITION" },
+        { "name": "전인도통합민주전선", "seats": 1, "role": "OPPOSITION" },
+        { "name": "전자르칸드학생연합", "seats": 1, "role": "SUPPLY" },
+        { "name": "나가인민전선", "seats": 1, "role": "OTHER" },
+        { "name": "미조민족전선", "seats": 1, "role": "OTHER" },
+        { "name": "자나타 달 세속파", "seats": 1, "role": "SUPPLY" },
+        { "name": "자르칸드해방전선", "seats": 1, "role": "OPPOSITION" },
+        { "name": "해방표범당", "seats": 1, "role": "OPPOSITION" },
+        { "name": "시킴혁명전선", "seats": 1, "role": "SUPPLY" },
+        { "name": "케랄라국민회의", "seats": 1, "role": "OTHER" },
+        { "name": "민족주의민주진보당", "seats": 1, "role": "SUPPLY" },
+        { "name": "국민인민당", "seats": 1, "role": "SUPPLY" },
+        { "name": "혁명사회당", "seats": 1, "role": "OPPOSITION" },
+        { "name": "민족민주당", "seats": 1, "role": "OTHER" },
+        { "name": "무소속", "seats": 4, "role": "OTHER" }
+      ]
+    }
+  },
+  "BRA": {
+    "sourceNote": "2024-01-01 현원. 브라질 하원 공개 API, 6페이지 합계. https://dadosabertos.camara.leg.br/api/v2/deputados?dataInicio=2024-01-01&dataFim=2024-01-01&itens=100 해당 날짜에 재직한 서로 다른 의원 513명의 siglaPartido를 집계했다. 내각에 참여해도 당 전체가 정부를 일관되게 지지하지 않는 정당은 정부 협력으로 단순화.",
+    "chamber": {
+      "name": "하원",
+      "filledSeats": 513,
+      "groups": [
+        { "name": "노동자당", "seats": 68, "role": "LEAD", "constituency": "WORKERS" },
+        { "name": "자유당", "seats": 95, "role": "OPPOSITION", "constituency": "CAPITALISTS" },
+        { "name": "브라질연합", "seats": 59, "role": "SUPPLY" },
+        { "name": "진보당", "seats": 50, "role": "SUPPLY" },
+        { "name": "브라질민주운동", "seats": 44, "role": "COALITION" },
+        { "name": "사회민주당", "seats": 43, "role": "COALITION" },
+        { "name": "공화당", "seats": 42, "role": "SUPPLY" },
+        { "name": "민주노동당", "seats": 18, "role": "COALITION" },
+        { "name": "포데모스", "seats": 15, "role": "OTHER" },
+        { "name": "브라질사회민주당", "seats": 14, "role": "OPPOSITION" },
+        { "name": "브라질사회당", "seats": 14, "role": "COALITION" },
+        { "name": "사회주의자유당", "seats": 13, "role": "SUPPLY" },
+        { "name": "브라질공산당", "seats": 7, "role": "COALITION" },
+        { "name": "아반치", "seats": 7, "role": "SUPPLY" },
+        { "name": "녹색당", "seats": 6, "role": "SUPPLY" },
+        { "name": "연대당", "seats": 6, "role": "SUPPLY" },
+        { "name": "시민당", "seats": 4, "role": "OTHER" },
+        { "name": "파트리오타", "seats": 4, "role": "OTHER" },
+        { "name": "노부", "seats": 3, "role": "OPPOSITION" },
+        { "name": "지속가능네트워크", "seats": 1, "role": "SUPPLY" }
+      ]
+    }
+  },
+  "CAN": {
+    "sourceNote": "2021-09-20 총선. IPU Parline https://data.ipu.org/parliament/CA/CA-LC01/election/CA-LC01-E20210920/ 신민주당은 내각 밖 예산·신임 협력. https://www.canada.ca/en/leader-government-house-commons/corporate/transparency/briefing-documents/briefing-book-2023.html",
+    "chamber": {
+      "name": "하원",
+      "filledSeats": 338,
+      "groups": [
+        { "name": "자유당", "seats": 160, "role": "LEAD" },
+        { "name": "보수당", "seats": 119, "role": "OPPOSITION", "constituency": "CAPITALISTS" },
+        { "name": "퀘벡 블록", "seats": 32, "role": "OPPOSITION" },
+        { "name": "신민주당", "seats": 25, "role": "SUPPLY", "constituency": "WORKERS" },
+        { "name": "녹색당", "seats": 2, "role": "OPPOSITION" }
+      ]
+    }
+  },
+  "PRK": {
+    "sourceNote": "2019-03-10 총선. IPU Parline https://data.ipu.org/parliament/KP/KP-LC01/election/KP-LC01-E20190310/ 모든 당선자는 조선로동당과 우당이 선정한 단일 전선 후보. 정당별 의석은 공개되지 않아 선거 전선을 하나로 합산했다.",
+    "chamber": {
+      "name": "최고인민회의",
+      "filledSeats": 687,
+      "groups": [
+        { "name": "조국통일민주주의전선", "seats": 687, "role": "LEAD" }
+      ]
+    }
+  },
+  "AUS": {
+    "sourceNote": "2022-05-21 총선. IPU Parline https://data.ipu.org/parliament/AU/AU-LC01/election/AU-LC01-E20220521/ 자유당·국민당 계열은 IPU 선거 연합 단위.",
+    "chamber": {
+      "name": "하원",
+      "filledSeats": 151,
+      "groups": [
+        { "name": "노동당", "seats": 77, "role": "LEAD", "constituency": "WORKERS" },
+        { "name": "자유·국민 연합", "seats": 58, "role": "OPPOSITION", "constituency": "CAPITALISTS" },
+        { "name": "녹색당", "seats": 4, "role": "OPPOSITION" },
+        { "name": "중도연합", "seats": 1, "role": "OTHER" },
+        { "name": "캐터의 호주당", "seats": 1, "role": "OTHER" },
+        { "name": "무소속", "seats": 10, "role": "OTHER" }
+      ]
+    }
+  },
+  "POL": {
+    "sourceNote": "2023-10-15 총선. IPU Parline https://data.ipu.org/parliament/PL/PL-LC01/election/PL-LC01-E20231015/ 2023년 12월 출범한 투스크 내각. 제3의 길은 공동 선거 명부.",
+    "chamber": {
+      "name": "세임",
+      "filledSeats": 460,
+      "groups": [
+        { "name": "법과정의당", "seats": 194, "role": "OPPOSITION" },
+        { "name": "시민연합", "seats": 157, "role": "LEAD" },
+        { "name": "제3의 길", "seats": 65, "role": "COALITION" },
+        { "name": "신좌파", "seats": 26, "role": "COALITION" },
+        { "name": "자유독립연맹", "seats": 18, "role": "OPPOSITION" }
+      ]
+    }
+  },
+  "ITA": {
+    "sourceNote": "2022-09-25 총선. IPU Parline https://data.ipu.org/parliament/IT/IT-LC01/election/IT-LC01-E20220925/ IPU 중도우파 공동 명부 237석을 네 연정 참여 명부로 분할. 나머지 연합은 선거 단위. https://researchbriefings.files.parliament.uk/documents/CBP-9629/CBP-9629.pdf",
+    "chamber": {
+      "name": "하원",
+      "filledSeats": 400,
+      "groups": [
+        { "name": "이탈리아의 형제들", "seats": 119, "role": "LEAD" },
+        { "name": "동맹", "seats": 66, "role": "COALITION" },
+        { "name": "전진 이탈리아", "seats": 45, "role": "COALITION" },
+        { "name": "우리 온건파", "seats": 7, "role": "COALITION" },
+        { "name": "민주당 주도 중도좌파연합", "seats": 84, "role": "OPPOSITION", "constituency": "WORKERS" },
+        { "name": "오성운동", "seats": 52, "role": "OPPOSITION" },
+        { "name": "행동당·생동하는 이탈리아", "seats": 21, "role": "OPPOSITION" },
+        { "name": "남티롤인민당 연합", "seats": 3, "role": "OTHER" },
+        { "name": "기타 지역·해외 명부", "seats": 3, "role": "OTHER" }
+      ]
+    }
+  },
+  "FIN": {
+    "sourceNote": "2023-04-02 총선. IPU Parline https://data.ipu.org/parliament/FI/FI-LC01/election/FI-LC01-E20230402/ 오르포 4당 연정.",
+    "chamber": {
+      "name": "의회",
+      "filledSeats": 200,
+      "groups": [
+        { "name": "국민연합당", "seats": 48, "role": "LEAD" },
+        { "name": "핀인당", "seats": 46, "role": "COALITION" },
+        { "name": "사회민주당", "seats": 43, "role": "OPPOSITION", "constituency": "WORKERS" },
+        { "name": "중앙당", "seats": 23, "role": "OPPOSITION", "constituency": "FARMERS" },
+        { "name": "녹색동맹", "seats": 13, "role": "OPPOSITION" },
+        { "name": "좌파동맹", "seats": 11, "role": "OPPOSITION", "constituency": "WORKERS" },
+        { "name": "스웨덴인민당", "seats": 9, "role": "COALITION" },
+        { "name": "기독교민주당", "seats": 5, "role": "COALITION" },
+        { "name": "지금운동", "seats": 1, "role": "OPPOSITION" },
+        { "name": "올란드 대표", "seats": 1, "role": "OTHER" }
+      ]
+    }
+  },
+  "EST": {
+    "sourceNote": "2023-03-05 총선. IPU Parline https://data.ipu.org/parliament/EE/EE-LC01/election/EE-LC01-E20230305/ 칼라스 3당 연정.",
+    "chamber": {
+      "name": "국회",
+      "filledSeats": 101,
+      "groups": [
+        { "name": "개혁당", "seats": 37, "role": "LEAD" },
+        { "name": "보수인민당", "seats": 17, "role": "OPPOSITION" },
+        { "name": "중앙당", "seats": 16, "role": "OPPOSITION" },
+        { "name": "에스토니아 200", "seats": 14, "role": "COALITION" },
+        { "name": "사회민주당", "seats": 9, "role": "COALITION" },
+        { "name": "조국당", "seats": 8, "role": "OPPOSITION" }
+      ]
+    }
+  },
+  "LVA": {
+    "sourceNote": "2022-10-01 총선. IPU Parline https://data.ipu.org/parliament/LV/LV-LC01/election/LV-LC01-E20221001/ 연정은 선거 직후 내각이 아닌 2023-09-15 실리냐 내각을 적용. https://www.mk.gov.lv/en/article/government-headed-evika-silina-starts-work",
+    "chamber": {
+      "name": "국회",
+      "filledSeats": 100,
+      "groups": [
+        { "name": "신통합", "seats": 26, "role": "LEAD" },
+        { "name": "녹색농민연합", "seats": 16, "role": "COALITION", "constituency": "FARMERS" },
+        { "name": "통합명부", "seats": 15, "role": "OPPOSITION" },
+        { "name": "국민연합", "seats": 13, "role": "OPPOSITION" },
+        { "name": "안정을 위하여", "seats": 11, "role": "OPPOSITION" },
+        { "name": "진보당", "seats": 10, "role": "COALITION" },
+        { "name": "라트비아 우선", "seats": 9, "role": "OPPOSITION" }
+      ]
+    }
+  },
+  "LTU": {
+    "sourceNote": "2020-10-11~2020-10-25 총선. IPU Parline https://data.ipu.org/parliament/LT/LT-LC01/election/LT-LC01-E20201011/ 시모니테 3당 연정. https://www.lrs.lt/sip/portal.show?p_k=2&p_t=290147",
+    "chamber": {
+      "name": "국회",
+      "filledSeats": 141,
+      "groups": [
+        { "name": "조국연합·기독교민주당", "seats": 50, "role": "LEAD" },
+        { "name": "농민녹색연합", "seats": 32, "role": "OPPOSITION", "constituency": "FARMERS" },
+        { "name": "사회민주당", "seats": 13, "role": "OPPOSITION", "constituency": "WORKERS" },
+        { "name": "자유운동", "seats": 13, "role": "COALITION" },
+        { "name": "자유당", "seats": 11, "role": "COALITION" },
+        { "name": "노동당", "seats": 10, "role": "OPPOSITION" },
+        { "name": "폴란드인 선거행동", "seats": 3, "role": "OPPOSITION" },
+        { "name": "사회민주노동당", "seats": 3, "role": "OPPOSITION" },
+        { "name": "자유와 정의", "seats": 1, "role": "OTHER" },
+        { "name": "녹색당", "seats": 1, "role": "OTHER" },
+        { "name": "무소속", "seats": 4, "role": "OTHER" }
+      ]
+    }
+  },
+  "TUR": {
+    "sourceNote": "2023-05-14 총선. IPU Parline https://data.ipu.org/parliament/TR/TR-LC01/election/TR-LC01-E20230514/ AKP 내각을 지지하는 원외·원내 동맹과 별도 정당을 구분. 녹색좌파당 선거 명부는 이후 DEM 계열로 표시.",
+    "chamber": {
+      "name": "대국민의회",
+      "filledSeats": 600,
+      "groups": [
+        { "name": "정의개발당", "seats": 267, "role": "LEAD" },
+        { "name": "공화인민당", "seats": 130, "role": "OPPOSITION" },
+        { "name": "인민평등민주당 계열", "seats": 57, "role": "OPPOSITION" },
+        { "name": "민족주의행동당", "seats": 50, "role": "SUPPLY" },
+        { "name": "좋은당", "seats": 44, "role": "OPPOSITION" },
+        { "name": "민주진보당", "seats": 15, "role": "OPPOSITION" },
+        { "name": "행복당", "seats": 10, "role": "OPPOSITION" },
+        { "name": "미래당", "seats": 10, "role": "OPPOSITION" },
+        { "name": "신복지당", "seats": 5, "role": "SUPPLY" },
+        { "name": "튀르키예 노동자당", "seats": 4, "role": "OPPOSITION", "constituency": "WORKERS" },
+        { "name": "민주당", "seats": 3, "role": "OPPOSITION" },
+        { "name": "노동당", "seats": 2, "role": "OPPOSITION", "constituency": "WORKERS" },
+        { "name": "인민민주당", "seats": 2, "role": "OTHER" },
+        { "name": "민주좌파당", "seats": 1, "role": "SUPPLY" }
+      ]
+    }
+  },
+  "ISR": {
+    "sourceNote": "2022-11-01 총선. IPU Parline https://data.ipu.org/parliament/IL/IL-LC01/election/IL-LC01-E20221101/ 종교시온주의 공동 명부는 합산. 국가통합당은 2023년 10월 비상내각 참여. https://www.gov.il/BlobFolder/dynamiccollectorresultitem/prospectuses_18k_report_2023/en/Prospectuses_prospectuses_18k_report_2023.pdf",
+    "chamber": {
+      "name": "크네세트",
+      "filledSeats": 120,
+      "groups": [
+        { "name": "리쿠드", "seats": 32, "role": "LEAD" },
+        { "name": "예시 아티드", "seats": 24, "role": "OPPOSITION" },
+        { "name": "종교시온주의 연합", "seats": 14, "role": "COALITION" },
+        { "name": "국가통합당", "seats": 12, "role": "COALITION" },
+        { "name": "샤스", "seats": 11, "role": "COALITION" },
+        { "name": "통합토라유대주의", "seats": 7, "role": "COALITION" },
+        { "name": "이스라엘 우리집", "seats": 6, "role": "OPPOSITION" },
+        { "name": "통합아랍명부", "seats": 5, "role": "OPPOSITION" },
+        { "name": "하다시·타알", "seats": 5, "role": "OPPOSITION" },
+        { "name": "노동당", "seats": 4, "role": "OPPOSITION", "constituency": "WORKERS" }
+      ]
+    }
+  },
+  "IRN": {
+    "sourceNote": "2020-02-21~2020-09-11 총선. IPU Parline https://data.ipu.org/parliament/IR/IR-LC01/election/IR-LC01-E20200221/ 개별 정당명 대신 이란 의회통신(ICANA) 1차 당선 분류를 쓴다. USIP의 1차 당선자 279명 중 개혁·중도 20석. 2020년 9월 IPU 현원 286석을 기준으로 순증 7석은 소속 미분류. https://data.ipu.org/parliament/IR/IR-LC01/ https://iranprimer.usip.org/blog/2020/feb/24/2020-parliamentary-election-results",
+    "chamber": {
+      "name": "이슬람 의회",
+      "filledSeats": 286,
+      "groups": [
+        { "name": "원칙주의 계열", "seats": 221, "role": "SUPPLY" },
+        { "name": "개혁·중도 계열", "seats": 20, "role": "OPPOSITION" },
+        { "name": "무소속", "seats": 38, "role": "OTHER" },
+        { "name": "소속 미분류", "seats": 7, "role": "OTHER" }
+      ]
+    }
+  },
+  "SAU": {
+    "sourceNote": "2024-01-01 제도. https://mof.gov.sa/en/MediaCenter/news/Pages/News_6122023.aspx 정당 표결 없이 국왕·각료회의 심의를 적용한다.",
+    "chamber": null
+  },
+  "EGY": {
+    "sourceNote": "2020-10-24~2020-12-08 총선. IPU Parline https://data.ipu.org/parliament/EG/EG-LC01/election/EG-LC01-E20201024/ 대통령은 무소속. 정원은 지역·비례 568명과 임명 28명. IPU 정당표 합계와 2023년 12월 현원은 모두 592명. 정원과의 차이 4석은 표결에서 제외. https://data.ipu.org/parliament/EG/EG-LC01/",
+    "chamber": {
+      "name": "하원",
+      "filledSeats": 592,
+      "groups": [
+        { "name": "국가미래당", "seats": 317, "role": "SUPPLY" },
+        { "name": "공화인민당", "seats": 49, "role": "SUPPLY" },
+        { "name": "신와프드당", "seats": 25, "role": "OTHER" },
+        { "name": "조국수호당", "seats": 23, "role": "SUPPLY" },
+        { "name": "현대이집트당", "seats": 13, "role": "OTHER" },
+        { "name": "개혁개발당", "seats": 9, "role": "OTHER" },
+        { "name": "회의당", "seats": 8, "role": "OTHER" },
+        { "name": "누르당", "seats": 7, "role": "OTHER" },
+        { "name": "이집트자유당", "seats": 7, "role": "OTHER" },
+        { "name": "이집트사회민주당", "seats": 7, "role": "OTHER" },
+        { "name": "타감무", "seats": 6, "role": "OTHER" },
+        { "name": "정의당", "seats": 2, "role": "OTHER" },
+        { "name": "세대의지당", "seats": 2, "role": "OTHER" },
+        { "name": "무소속", "seats": 117, "role": "OTHER" }
+      ]
+    }
+  },
+  "ZAF": {
+    "sourceNote": "2019-05-08 총선. IPU Parline https://data.ipu.org/parliament/ZA/ZA-LC01/election/ZA-LC01-E20190508/ 국민통합정부 출범 전 ANC 단독 과반.",
+    "chamber": {
+      "name": "국민의회",
+      "filledSeats": 400,
+      "groups": [
+        { "name": "아프리카민족회의", "seats": 230, "role": "LEAD", "constituency": "WORKERS" },
+        { "name": "민주동맹", "seats": 84, "role": "OPPOSITION" },
+        { "name": "경제자유투사", "seats": 44, "role": "OPPOSITION", "constituency": "WORKERS" },
+        { "name": "잉카타자유당", "seats": 14, "role": "OPPOSITION" },
+        { "name": "자유전선 플러스", "seats": 10, "role": "OPPOSITION" },
+        { "name": "아프리카기독민주당", "seats": 4, "role": "OPPOSITION" },
+        { "name": "통합민주운동", "seats": 2, "role": "OTHER" },
+        { "name": "아프리카변혁운동", "seats": 2, "role": "OTHER" },
+        { "name": "GOOD", "seats": 2, "role": "OTHER" },
+        { "name": "민족자유당", "seats": 2, "role": "OTHER" },
+        { "name": "아프리카독립회의", "seats": 2, "role": "OTHER" },
+        { "name": "인민회의", "seats": 2, "role": "OTHER" },
+        { "name": "범아프리카회의", "seats": 1, "role": "OTHER" },
+        { "name": "알자마아", "seats": 1, "role": "OTHER" }
+      ]
+    }
+  },
+  "TWN": {
+    "sourceNote": "2023-04-24 대만 외교부 현원표(제10대 임기 말까지 같은 분포). https://ws.mofa.gov.tw/001/Upload/402/relfile/1984/115030/04ca6f40-8dee-422b-b7a4-ff55252d5ffc.pdf 제10대 113석 중 공석 1석. 2020년 총선 이후 보궐선거와 당적 변동을 반영.",
+    "chamber": {
+      "name": "입법원",
+      "filledSeats": 112,
+      "groups": [
+        { "name": "민주진보당", "seats": 62, "role": "LEAD" },
+        { "name": "중국국민당", "seats": 37, "role": "OPPOSITION" },
+        { "name": "대만민중당", "seats": 5, "role": "OPPOSITION" },
+        { "name": "시대역량", "seats": 3, "role": "OPPOSITION" },
+        { "name": "무소속", "seats": 5, "role": "OTHER" }
+      ]
+    }
+  },
+  "IDN": {
+    "sourceNote": "2019-04-17 총선. IPU Parline https://data.ipu.org/parliament/ID/ID-LC01/election/ID-LC01-E20190417/ 조코 위도도 2기 내각 참여 기준. 대선 후보 지지 연합과 구별. https://setkab.go.id/kabinet-indonesia-maju/",
+    "chamber": {
+      "name": "국민대표회의",
+      "filledSeats": 575,
+      "groups": [
+        { "name": "투쟁민주당", "seats": 128, "role": "LEAD" },
+        { "name": "골카르", "seats": 85, "role": "COALITION" },
+        { "name": "그린드라", "seats": 78, "role": "COALITION" },
+        { "name": "나스뎀", "seats": 59, "role": "COALITION" },
+        { "name": "국민각성당", "seats": 58, "role": "COALITION" },
+        { "name": "민주당", "seats": 54, "role": "OPPOSITION" },
+        { "name": "번영정의당", "seats": 50, "role": "OPPOSITION" },
+        { "name": "국민수권당", "seats": 44, "role": "COALITION" },
+        { "name": "통일개발당", "seats": 19, "role": "COALITION" }
+      ]
+    }
+  },
+  "VNM": {
+    "sourceNote": "2021-05-23 총선. IPU Parline https://data.ipu.org/parliament/VN/VN-LC01/election/VN-LC01-E20210523/ 1명 당선 무효. 정원 500석 중 실제 당선된 499명만 표결.",
+    "chamber": {
+      "name": "국회",
+      "filledSeats": 499,
+      "groups": [
+        { "name": "베트남 공산당", "seats": 485, "role": "LEAD" },
+        { "name": "무소속", "seats": 14, "role": "OTHER" }
+      ]
+    }
+  },
+  "THA": {
+    "sourceNote": "2023-05-14 총선. IPU Parline https://data.ipu.org/parliament/TH/TH-LC01/election/TH-LC01-E20230514/ 2023년 8월 세타 11당 연정. https://thailand.prd.go.th/en/content/category/detail/id/48/iid/315944",
+    "chamber": {
+      "name": "하원",
+      "filledSeats": 500,
+      "groups": [
+        { "name": "전진당", "seats": 151, "role": "OPPOSITION" },
+        { "name": "프아타이당", "seats": 141, "role": "LEAD" },
+        { "name": "품짜이타이당", "seats": 71, "role": "COALITION" },
+        { "name": "팔랑쁘라차랏당", "seats": 40, "role": "COALITION" },
+        { "name": "통합태국국가당", "seats": 36, "role": "COALITION" },
+        { "name": "민주당", "seats": 25, "role": "OPPOSITION" },
+        { "name": "찻타이팟타나당", "seats": 10, "role": "COALITION" },
+        { "name": "프라차찻당", "seats": 9, "role": "COALITION" },
+        { "name": "타이상타이당", "seats": 6, "role": "OPPOSITION" },
+        { "name": "찻팟타나끌라당", "seats": 2, "role": "COALITION" },
+        { "name": "프아타이루암팔랑당", "seats": 2, "role": "COALITION" },
+        { "name": "공정당", "seats": 1, "role": "OTHER" },
+        { "name": "신민주당", "seats": 1, "role": "OTHER" },
+        { "name": "신당", "seats": 1, "role": "OTHER" },
+        { "name": "신사회력당", "seats": 1, "role": "COALITION" },
+        { "name": "교사당", "seats": 1, "role": "OTHER" },
+        { "name": "타이카운티당", "seats": 1, "role": "COALITION" },
+        { "name": "태국자유당", "seats": 1, "role": "COALITION" }
+      ]
+    }
+  },
+  "RWA": {
+    "sourceNote": "2018-09-03 총선. IPU Parline https://data.ipu.org/parliament/RW/RW-LC01/election/RW-LC01-E20180903/ 직선 53석과 특별대표 간선 27석. 특별대표를 특정 정당 소속으로 간주하지 않는다.",
+    "chamber": {
+      "name": "하원",
+      "filledSeats": 80,
+      "groups": [
+        { "name": "르완다 애국전선 연합", "seats": 40, "role": "LEAD" },
+        { "name": "사회민주당", "seats": 5, "role": "SUPPLY" },
+        { "name": "자유당", "seats": 4, "role": "SUPPLY" },
+        { "name": "임베라쿠리 사회당", "seats": 2, "role": "OPPOSITION" },
+        { "name": "민주녹색당", "seats": 2, "role": "OPPOSITION" },
+        { "name": "여성·청년·장애인 대표", "seats": 27, "role": "OTHER" }
+      ]
+    }
+  },
+  "PAK": {
+    "sourceNote": "2024-01-01 과도기. https://data.ipu.org/parliament/PK/PK-LC01/election/PK-LC01-E20240208/ 총선 전 하원이 해산된 카카르 과도 내각. 이전 의회 의석을 배정하지 않는다.",
+    "chamber": null
+  }
+}
