@@ -94,6 +94,10 @@ internal class PlayerBudget(
     private val levels = initialLevels.toMutableMap()
     private val revenues = TaxKind.entries.associateWith { 0.0 }.toMutableMap()
 
+    init {
+        updateRevenues(outputGap = 0.0)
+    }
+
     private var educationLagged = initialLevels.getValue(SpendingKind.EDUCATION)
     private var infrastructureLagged = initialLevels.getValue(SpendingKind.ECONOMY)
     private var corporateLagged = initialRates.getValue(TaxKind.CORPORATE)
@@ -136,6 +140,11 @@ internal class PlayerBudget(
         corporateLagged += (rates.getValue(TaxKind.CORPORATE) - corporateLagged) / CORPORATE_LAG_MONTHS
         consumptionLagged += (rates.getValue(TaxKind.CONSUMPTION) - consumptionLagged) / PRICE_PASS_THROUGH_MONTHS
 
+        updateRevenues(outputGap)
+        return FiscalShares(revenue = revenues.values.sum() + otherRevenue, primarySpending = levels.values.sum())
+    }
+
+    private fun updateRevenues(outputGap: Double) {
         TaxKind.entries.forEach { kind ->
             val rate = rates.getValue(kind)
             val base =
@@ -143,7 +152,6 @@ internal class PlayerBudget(
                     (1.0 - kind.behavior * (rate - initialRates.getValue(kind))).coerceAtLeast(MIN_BASE_FACTOR)
             revenues[kind] = rate * base.coerceAtLeast(0.0)
         }
-        return FiscalShares(revenue = revenues.values.sum() + otherRevenue, primarySpending = levels.values.sum())
     }
 
     override val potentialGrowthEffect: Double
