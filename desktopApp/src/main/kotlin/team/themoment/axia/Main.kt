@@ -17,6 +17,7 @@ import team.themoment.axia.map.MapGeometry
 import team.themoment.axia.map.WorldMapModel
 import team.themoment.axia.simulation.Simulation
 import team.themoment.axia.simulation.SimulationRunner
+import team.themoment.axia.simulation.economy.WorldEconomy
 import team.themoment.axia.simulation.time.GameSpeed
 import team.themoment.axia.simulation.world.WorldLoader
 import team.themoment.axia.theme.AxiaTheme
@@ -29,7 +30,7 @@ fun main() {
     val world = WorldLoader.loadDefault()
     val mapModel = WorldMapModel(world, MapGeometry.loadDefault())
     val simulationScope = CoroutineScope(SupervisorJob())
-    val runner = SimulationRunner(Simulation(world), simulationScope)
+    val runner = SimulationRunner(Simulation(world, WorldEconomy.loadDefault(world)), simulationScope)
     application {
         Window(
             onCloseRequest = {

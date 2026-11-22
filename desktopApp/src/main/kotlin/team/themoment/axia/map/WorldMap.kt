@@ -45,6 +45,7 @@ private const val LABEL_HALO_DP = 2.5f
 @Composable
 fun WorldMap(
     model: WorldMapModel,
+    fillColor: (CountryFill) -> Color,
     selectedRegionId: String?,
     onRegionClick: (String?) -> Unit,
     modifier: Modifier = Modifier,
@@ -80,7 +81,7 @@ fun WorldMap(
         drawRect(MapPalette.ocean)
         if (viewport.zoom > 0f) {
             val copies = visibleCopies(viewport)
-            copies.forEach { shift -> drawWorldCopy(model, viewport, shift, selectedRegionId) }
+            copies.forEach { shift -> drawWorldCopy(model, viewport, shift, fillColor, selectedRegionId) }
             drawLabels(model, viewport, copies, labelLayouts)
         }
     }
@@ -98,6 +99,7 @@ private fun DrawScope.drawWorldCopy(
     model: WorldMapModel,
     viewport: MapViewport,
     shift: Float,
+    fillColor: (CountryFill) -> Color,
     selectedRegionId: String?,
 ) {
     val zoom = viewport.zoom
@@ -116,8 +118,7 @@ private fun DrawScope.drawWorldCopy(
     }) {
         model.countryFills.forEach { fill ->
             if (fill.bounds.overlaps(area)) {
-                val color = if (fill.unclaimed) MapPalette.unclaimed else MapPalette.countries[fill.colorIndex]
-                drawPath(fill.path, color)
+                drawPath(fill.path, fillColor(fill))
             }
         }
         if (selectedCountryId != null) {
