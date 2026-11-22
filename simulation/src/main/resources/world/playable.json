@@ -1,0 +1,8 @@
+{
+ "countries": [
+  "KOR", "USA", "CHN", "JPN", "DEU", "GBR", "FRA", "RUS",
+  "UKR", "IND", "BRA", "CAN", "PRK", "AUS", "POL", "ITA",
+  "FIN", "EST", "LVA", "LTU", "TUR", "ISR", "IRN", "SAU",
+  "EGY", "ZAF", "TWN", "IDN", "VNM", "THA", "RWA", "PAK"
+ ]
+}

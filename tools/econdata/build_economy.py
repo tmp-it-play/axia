@@ -50,7 +50,46 @@ WORLD_BANK_INDICATORS = {
     "expense": "GC.XPN.TOTL.GD.ZS",
     "debt": "GC.DOD.TOTL.GD.ZS",
     "interestOfRevenue": "GC.XPN.INTP.RV.ZS",
+    "agricultureEmployment": "SL.AGR.EMPL.ZS",  # 고용 대비 %
+    "industryEmployment": "SL.IND.EMPL.ZS",
+    "servicesEmployment": "SL.SRV.EMPL.ZS",
+    "selfEmployment": "SL.EMP.SELF.ZS",
+    "elderlyShare": "SP.POP.65UP.TO.ZS",  # 인구 대비 %
+    "childShare": "SP.POP.0014.TO.ZS",
+    "gini": "SI.POV.GINI",
+    "defense": "MS.MIL.XPND.GD.ZS",  # GDP 대비 %
+    "education": "SE.XPD.TOTL.GD.ZS",
+    "health": "SH.XPD.GHED.GD.ZS",
+    "incomeProfitTaxShare": "GC.TAX.YPKG.RV.ZS",  # 세입 대비 %
+    "consumptionTaxShare": "GC.TAX.GSRV.RV.ZS",
+    "socialContributionShare": "GC.REV.SOCL.ZS",
+    "tradeTaxShare": "GC.TAX.INTT.RV.ZS",
 }
+
+SOCIETY_FIELDS = [
+    "agricultureEmployment",
+    "industryEmployment",
+    "servicesEmployment",
+    "selfEmployment",
+    "elderlyShare",
+    "childShare",
+    "gini",
+]
+BUDGET_FIELDS = [
+    "defense",
+    "education",
+    "health",
+    "incomeProfitTaxShare",
+    "consumptionTaxShare",
+    "socialContributionShare",
+    "tradeTaxShare",
+]
+
+# World Bank의 소득·이익세는 개인소득세와 법인세의 합이다. 법인세 비중은 소득 그룹별 대략적인 템플릿으로 나눈다.
+CORPORATE_SHARE_OF_INCOME_TAX = {"HIC": 0.3, "UMC": 0.45, "LMC": 0.5, "LIC": 0.5}
+
+# 국방, 교육, 보건 지출 합이 기초지출의 이 비율을 넘으면 비율을 유지한 채 줄인다.
+MAX_CORE_SPENDING_SHARE = 0.8
 
 # 우리 국가 코드(Natural Earth ADM0_A3)와 출처 코드가 다른 경우.
 SOURCE_CODES = {"KOS": ["KOS", "XKX"], "PSX": ["PSE", "WBG"], "SDS": ["SSD"]}
@@ -63,6 +102,7 @@ MANUAL = {
     "CYN": {"gdp": 4.5e9, "growth": 0.04, "population": 0.39e6, "inflation": 0.6, "unemployment": 0.07},
     "SOL": {"gdp": 3.4e9, "growth": 0.03, "population": 5.7e6, "inflation": 0.05, "unemployment": 0.2},
     "VAT": {"gdp": 0.03e9, "growth": 0.0, "population": 800, "inflation": 0.02, "unemployment": 0.0},
+    "TWN": {"agricultureEmployment": 0.045, "industryEmployment": 0.355, "servicesEmployment": 0.6, "selfEmployment": 0.17, "defense": 0.024},
     "PRK": {"gdp": 30e9},
     "ERI": {"gdp": 2.3e9},
 }
@@ -80,6 +120,8 @@ FIELDS = [
     "interest",
     "potentialGrowth",
     "growthVolatility",
+    *SOCIETY_FIELDS,
+    *BUDGET_FIELDS,
 ]
 REQUIRED = {"gdp", "population"}
 MIN_DEBT_FOR_RATE = 0.1
@@ -205,6 +247,45 @@ def from_world_bank(codes, series):
         "interest": pct(interest_of_revenue * revenue / 100.0) if revenue is not None and interest_of_revenue is not None else None,
         "potentialGrowth": potential,
         "growthVolatility": volatility,
+        **{field: pct(get(field)) for field in SOCIETY_FIELDS + BUDGET_FIELDS if field != "gini"},
+        "gini": pct(get("gini", range(FIRST_YEAR, BASE_YEAR + 1))),
+    }
+
+
+def society_entry(values, group):
+    employment = [values["agricultureEmployment"], values["industryEmployment"], values["servicesEmployment"]]
+    total = sum(employment) or 1.0
+    return {
+        "incomeGroup": group,
+        "agricultureEmployment": round(employment[0] / total, 4),
+        "industryEmployment": round(employment[1] / total, 4),
+        "servicesEmployment": round(employment[2] / total, 4),
+        "selfEmployment": round(clamp(values["selfEmployment"], 0.02, 0.9), 4),
+        "elderlyShare": round(clamp(values["elderlyShare"], 0.01, 0.4), 4),
+        "childShare": round(clamp(values["childShare"], 0.08, 0.55), 4),
+        "gini": round(clamp(values["gini"], 0.2, 0.7), 4),
+    }
+
+
+def budget_entry(values, group, primary_spending):
+    core = [values["defense"], values["education"], values["health"]]
+    limit = primary_spending * MAX_CORE_SPENDING_SHARE
+    scale = min(1.0, limit / sum(core)) if sum(core) > 0 else 1.0
+    taxes = [values["incomeProfitTaxShare"], values["consumptionTaxShare"], values["socialContributionShare"], values["tradeTaxShare"]]
+    taxes = [clamp(value, 0.0, 1.0) for value in taxes]
+    if sum(taxes) > 1.0:
+        taxes = [value / sum(taxes) for value in taxes]
+    corporate = CORPORATE_SHARE_OF_INCOME_TAX.get(group, 0.45)
+    return {
+        "defense": round(core[0] * scale, 5),
+        "education": round(core[1] * scale, 5),
+        "health": round(core[2] * scale, 5),
+        "incomeTaxShare": round(taxes[0] * (1 - corporate), 4),
+        "corporateTaxShare": round(taxes[0] * corporate, 4),
+        "consumptionTaxShare": round(taxes[1], 4),
+        "socialContributionShare": round(taxes[2], 4),
+        "tradeTaxShare": round(taxes[3], 4),
+        "otherRevenueShare": round(max(0.0, 1.0 - sum(taxes)), 4),
     }
 
 
@@ -276,6 +357,7 @@ def main():
             interest_rate = median_rates.get(groups[country], median_rates[None])
             interest = interest_rate * debt
             estimated.add("interest")
+        primary_spending = clamp(values["expense"] - interest, 0.03, 0.8)
         entries.append(
             {
                 "id": country,
@@ -288,9 +370,11 @@ def main():
                 "inflation": round(clamp(values["inflation"], -0.02, 3.0), 5),
                 "unemployment": round(clamp(values["unemployment"], 0.005, 0.4), 5),
                 "revenue": round(clamp(values["revenue"], 0.03, 0.7), 5),
-                "primarySpending": round(clamp(values["expense"] - interest, 0.03, 0.8), 5),
+                "primarySpending": round(primary_spending, 5),
                 "debt": round(debt, 5),
                 "interestRate": round(clamp(interest_rate, 0.005, 0.25), 5),
+                "society": society_entry(values, groups[country]),
+                "budget": budget_entry(values, groups[country], primary_spending),
                 "estimated": sorted(estimated),
             },
         )

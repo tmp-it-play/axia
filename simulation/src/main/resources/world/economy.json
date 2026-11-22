@@ -15,8 +15,35 @@
    "primarySpending": 0.16746,
    "debt": 0.08255,
    "interestRate": 0.02679,
+   "society": {
+    "incomeGroup": "LIC",
+    "agricultureEmployment": 0.5129,
+    "industryEmployment": 0.1921,
+    "servicesEmployment": 0.295,
+    "selfEmployment": 0.8312,
+    "elderlyShare": 0.0238,
+    "childShare": 0.4323,
+    "gini": 0.374
+   },
+   "budget": {
+    "defense": 0.01828,
+    "education": 0.02927,
+    "health": 0.00248,
+    "incomeTaxShare": 0.1268,
+    "corporateTaxShare": 0.1268,
+    "consumptionTaxShare": 0.299,
+    "socialContributionShare": 0.0556,
+    "tradeTaxShare": 0.0999,
+    "otherRevenueShare": 0.2919
+   },
    "estimated": [
-    "interest"
+    "consumptionTaxShare",
+    "education",
+    "gini",
+    "incomeProfitTaxShare",
+    "interest",
+    "socialContributionShare",
+    "tradeTaxShare"
    ]
   },
   {
@@ -33,7 +60,30 @@
    "primarySpending": 0.18409,
    "debt": 0.75739,
    "interestRate": 0.06518,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.5241,
+    "industryEmployment": 0.0707,
+    "servicesEmployment": 0.4053,
+    "selfEmployment": 0.7589,
+    "elderlyShare": 0.0281,
+    "childShare": 0.4457,
+    "gini": 0.513
+   },
+   "budget": {
+    "defense": 0.0143,
+    "education": 0.02513,
+    "health": 0.01134,
+    "incomeTaxShare": 0.1443,
+    "corporateTaxShare": 0.1443,
+    "consumptionTaxShare": 0.1154,
+    "socialContributionShare": 0.026,
+    "tradeTaxShare": 0.0203,
+    "otherRevenueShare": 0.5497
+   },
+   "estimated": [
+    "socialContributionShare"
+   ]
   },
   {
    "id": "ALB",
@@ -49,6 +99,27 @@
    "primarySpending": 0.26521,
    "debt": 0.57952,
    "interestRate": 0.03472,
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.3204,
+    "industryEmployment": 0.2165,
+    "servicesEmployment": 0.4631,
+    "selfEmployment": 0.5096,
+    "elderlyShare": 0.163,
+    "childShare": 0.1704,
+    "gini": 0.294
+   },
+   "budget": {
+    "defense": 0.01703,
+    "education": 0.03092,
+    "health": 0.03498,
+    "incomeTaxShare": 0.0961,
+    "corporateTaxShare": 0.0787,
+    "consumptionTaxShare": 0.4403,
+    "socialContributionShare": 0.2121,
+    "tradeTaxShare": 0.0137,
+    "otherRevenueShare": 0.159
+   },
    "estimated": []
   },
   {
@@ -65,7 +136,35 @@
    "primarySpending": 0.3532,
    "debt": 0.3544,
    "interestRate": 0.01582,
-   "estimated": []
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0314,
+    "industryEmployment": 0.2232,
+    "servicesEmployment": 0.7455,
+    "selfEmployment": 0.1349,
+    "elderlyShare": 0.1542,
+    "childShare": 0.1225,
+    "gini": 0.323
+   },
+   "budget": {
+    "defense": 0.01691,
+    "education": 0.01899,
+    "health": 0.05451,
+    "incomeTaxShare": 0.125,
+    "corporateTaxShare": 0.0536,
+    "consumptionTaxShare": 0.234,
+    "socialContributionShare": 0.3575,
+    "tradeTaxShare": 0.0906,
+    "otherRevenueShare": 0.1392
+   },
+   "estimated": [
+    "agricultureEmployment",
+    "defense",
+    "gini",
+    "industryEmployment",
+    "selfEmployment",
+    "servicesEmployment"
+   ]
   },
   {
    "id": "ARE",
@@ -81,7 +180,31 @@
    "primarySpending": 0.22029,
    "debt": 0.31909,
    "interestRate": 0.01985,
-   "estimated": []
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0152,
+    "industryEmployment": 0.3078,
+    "servicesEmployment": 0.677,
+    "selfEmployment": 0.0517,
+    "elderlyShare": 0.017,
+    "childShare": 0.1634,
+    "gini": 0.264
+   },
+   "budget": {
+    "defense": 0.01691,
+    "education": 0.03894,
+    "health": 0.0332,
+    "incomeTaxShare": 0.1674,
+    "corporateTaxShare": 0.0718,
+    "consumptionTaxShare": 0.1386,
+    "socialContributionShare": 0.0675,
+    "tradeTaxShare": 0.0001,
+    "otherRevenueShare": 0.5547
+   },
+   "estimated": [
+    "defense",
+    "incomeProfitTaxShare"
+   ]
   },
   {
    "id": "ARG",
@@ -97,6 +220,27 @@
    "primarySpending": 0.34825,
    "debt": 1.53375,
    "interestRate": 0.01639,
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.0737,
+    "industryEmployment": 0.2141,
+    "servicesEmployment": 0.7122,
+    "selfEmployment": 0.2575,
+    "elderlyShare": 0.122,
+    "childShare": 0.2219,
+    "gini": 0.424
+   },
+   "budget": {
+    "defense": 0.00752,
+    "education": 0.05003,
+    "health": 0.06185,
+    "incomeTaxShare": 0.0469,
+    "corporateTaxShare": 0.0383,
+    "consumptionTaxShare": 0.2996,
+    "socialContributionShare": 0.2821,
+    "tradeTaxShare": 0.1123,
+    "otherRevenueShare": 0.2208
+   },
    "estimated": []
   },
   {
@@ -113,7 +257,30 @@
    "primarySpending": 0.24196,
    "debt": 0.48493,
    "interestRate": 0.05505,
-   "estimated": []
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.2807,
+    "industryEmployment": 0.2047,
+    "servicesEmployment": 0.5146,
+    "selfEmployment": 0.3482,
+    "elderlyShare": 0.1321,
+    "childShare": 0.1955,
+    "gini": 0.272
+   },
+   "budget": {
+    "defense": 0.05506,
+    "education": 0.02439,
+    "health": 0.01464,
+    "incomeTaxShare": 0.1973,
+    "corporateTaxShare": 0.1614,
+    "consumptionTaxShare": 0.4712,
+    "socialContributionShare": 0.1393,
+    "tradeTaxShare": 0.0308,
+    "otherRevenueShare": 0.0
+   },
+   "estimated": [
+    "socialContributionShare"
+   ]
   },
   {
    "id": "ATG",
@@ -129,7 +296,38 @@
    "primarySpending": 0.16243,
    "debt": 0.74534,
    "interestRate": 0.02832,
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0314,
+    "industryEmployment": 0.2232,
+    "servicesEmployment": 0.7455,
+    "selfEmployment": 0.1349,
+    "elderlyShare": 0.1124,
+    "childShare": 0.1822,
+    "gini": 0.323
+   },
+   "budget": {
+    "defense": 0.01691,
+    "education": 0.03105,
+    "health": 0.02308,
+    "incomeTaxShare": 0.1674,
+    "corporateTaxShare": 0.0718,
+    "consumptionTaxShare": 0.2635,
+    "socialContributionShare": 0.2948,
+    "tradeTaxShare": 0.0104,
+    "otherRevenueShare": 0.1921
+   },
    "estimated": [
+    "agricultureEmployment",
+    "consumptionTaxShare",
+    "defense",
+    "gini",
+    "incomeProfitTaxShare",
+    "industryEmployment",
+    "selfEmployment",
+    "servicesEmployment",
+    "socialContributionShare",
+    "tradeTaxShare",
     "unemployment"
    ]
   },
@@ -147,7 +345,30 @@
    "primarySpending": 0.36717,
    "debt": 0.49418,
    "interestRate": 0.01476,
-   "estimated": []
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0215,
+    "industryEmployment": 0.1968,
+    "servicesEmployment": 0.7817,
+    "selfEmployment": 0.1634,
+    "elderlyShare": 0.1738,
+    "childShare": 0.1803,
+    "gini": 0.338
+   },
+   "budget": {
+    "defense": 0.01856,
+    "education": 0.05059,
+    "health": 0.0766,
+    "incomeTaxShare": 0.4031,
+    "corporateTaxShare": 0.1727,
+    "consumptionTaxShare": 0.1509,
+    "socialContributionShare": 0.2502,
+    "tradeTaxShare": 0.0231,
+    "otherRevenueShare": 0.0
+   },
+   "estimated": [
+    "socialContributionShare"
+   ]
   },
   {
    "id": "AUT",
@@ -163,7 +384,30 @@
    "primarySpending": 0.51545,
    "debt": 0.77771,
    "interestRate": 0.00988,
-   "estimated": []
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0312,
+    "industryEmployment": 0.2572,
+    "servicesEmployment": 0.7116,
+    "selfEmployment": 0.1224,
+    "elderlyShare": 0.2016,
+    "childShare": 0.143,
+    "gini": 0.312
+   },
+   "budget": {
+    "defense": 0.00862,
+    "education": 0.05277,
+    "health": 0.08532,
+    "incomeTaxShare": 0.1968,
+    "corporateTaxShare": 0.0843,
+    "consumptionTaxShare": 0.2578,
+    "socialContributionShare": 0.3336,
+    "tradeTaxShare": 0.0104,
+    "otherRevenueShare": 0.1172
+   },
+   "estimated": [
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "AZE",
@@ -179,7 +423,30 @@
    "primarySpending": 0.32064,
    "debt": 0.21807,
    "interestRate": 0.03233,
-   "estimated": []
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.3514,
+    "industryEmployment": 0.154,
+    "servicesEmployment": 0.4946,
+    "selfEmployment": 0.6735,
+    "elderlyShare": 0.0801,
+    "childShare": 0.2234,
+    "gini": 0.38
+   },
+   "budget": {
+    "defense": 0.04918,
+    "education": 0.0366,
+    "health": 0.01394,
+    "incomeTaxShare": 0.1053,
+    "corporateTaxShare": 0.0861,
+    "consumptionTaxShare": 0.1991,
+    "socialContributionShare": 0.1433,
+    "tradeTaxShare": 0.0356,
+    "otherRevenueShare": 0.4307
+   },
+   "estimated": [
+    "gini"
+   ]
   },
   {
    "id": "BDI",
@@ -195,7 +462,30 @@
    "primarySpending": 0.26511,
    "debt": 0.60382,
    "interestRate": 0.03192,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LIC",
+    "agricultureEmployment": 0.8559,
+    "industryEmployment": 0.0308,
+    "servicesEmployment": 0.1133,
+    "selfEmployment": 0.8497,
+    "elderlyShare": 0.0251,
+    "childShare": 0.4536,
+    "gini": 0.375
+   },
+   "budget": {
+    "defense": 0.03427,
+    "education": 0.04871,
+    "health": 0.0134,
+    "incomeTaxShare": 0.0792,
+    "corporateTaxShare": 0.0792,
+    "consumptionTaxShare": 0.4642,
+    "socialContributionShare": 0.0556,
+    "tradeTaxShare": 0.0999,
+    "otherRevenueShare": 0.222
+   },
+   "estimated": [
+    "socialContributionShare"
+   ]
   },
   {
    "id": "BEL",
@@ -211,7 +501,30 @@
    "primarySpending": 0.51378,
    "debt": 1.02544,
    "interestRate": 0.0143,
-   "estimated": []
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0109,
+    "industryEmployment": 0.2015,
+    "servicesEmployment": 0.7877,
+    "selfEmployment": 0.1474,
+    "elderlyShare": 0.2015,
+    "childShare": 0.1629,
+    "gini": 0.268
+   },
+   "budget": {
+    "defense": 0.01172,
+    "education": 0.06276,
+    "health": 0.07958,
+    "incomeTaxShare": 0.2418,
+    "corporateTaxShare": 0.1036,
+    "consumptionTaxShare": 0.2532,
+    "socialContributionShare": 0.3577,
+    "tradeTaxShare": 0.0104,
+    "otherRevenueShare": 0.0332
+   },
+   "estimated": [
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "BEN",
@@ -227,7 +540,33 @@
    "primarySpending": 0.17576,
    "debt": 0.61324,
    "interestRate": 0.02882,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.4186,
+    "industryEmployment": 0.183,
+    "servicesEmployment": 0.3984,
+    "selfEmployment": 0.8053,
+    "elderlyShare": 0.0309,
+    "childShare": 0.4184,
+    "gini": 0.344
+   },
+   "budget": {
+    "defense": 0.00758,
+    "education": 0.0323,
+    "health": 0.00489,
+    "incomeTaxShare": 0.1272,
+    "corporateTaxShare": 0.1272,
+    "consumptionTaxShare": 0.3338,
+    "socialContributionShare": 0.026,
+    "tradeTaxShare": 0.0733,
+    "otherRevenueShare": 0.3125
+   },
+   "estimated": [
+    "consumptionTaxShare",
+    "incomeProfitTaxShare",
+    "socialContributionShare",
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "BFA",
@@ -243,7 +582,30 @@
    "primarySpending": 0.27047,
    "debt": 0.56818,
    "interestRate": 0.0419,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LIC",
+    "agricultureEmployment": 0.527,
+    "industryEmployment": 0.1656,
+    "servicesEmployment": 0.3074,
+    "selfEmployment": 0.8284,
+    "elderlyShare": 0.0262,
+    "childShare": 0.424,
+    "gini": 0.374
+   },
+   "budget": {
+    "defense": 0.04079,
+    "education": 0.05328,
+    "health": 0.02453,
+    "incomeTaxShare": 0.1268,
+    "corporateTaxShare": 0.1268,
+    "consumptionTaxShare": 0.4298,
+    "socialContributionShare": 0.0556,
+    "tradeTaxShare": 0.1037,
+    "otherRevenueShare": 0.1573
+   },
+   "estimated": [
+    "socialContributionShare"
+   ]
   },
   {
    "id": "BGD",
@@ -259,7 +621,30 @@
    "primarySpending": 0.10574,
    "debt": 0.39726,
    "interestRate": 0.05161,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.4537,
+    "industryEmployment": 0.1763,
+    "servicesEmployment": 0.3701,
+    "selfEmployment": 0.6187,
+    "elderlyShare": 0.0632,
+    "childShare": 0.2836,
+    "gini": 0.309
+   },
+   "budget": {
+    "defense": 0.00868,
+    "education": 0.02162,
+    "health": 0.00314,
+    "incomeTaxShare": 0.1288,
+    "corporateTaxShare": 0.1288,
+    "consumptionTaxShare": 0.4322,
+    "socialContributionShare": 0.026,
+    "tradeTaxShare": 0.0932,
+    "otherRevenueShare": 0.191
+   },
+   "estimated": [
+    "socialContributionShare"
+   ]
   },
   {
    "id": "BGR",
@@ -275,6 +660,27 @@
    "primarySpending": 0.37424,
    "debt": 0.22931,
    "interestRate": 0.005,
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0625,
+    "industryEmployment": 0.2959,
+    "servicesEmployment": 0.6416,
+    "selfEmployment": 0.12,
+    "elderlyShare": 0.2183,
+    "childShare": 0.1454,
+    "gini": 0.395
+   },
+   "budget": {
+    "defense": 0.01948,
+    "education": 0.04501,
+    "health": 0.04974,
+    "incomeTaxShare": 0.1252,
+    "corporateTaxShare": 0.0536,
+    "consumptionTaxShare": 0.4092,
+    "socialContributionShare": 0.2445,
+    "tradeTaxShare": 0.0003,
+    "otherRevenueShare": 0.1672
+   },
    "estimated": []
   },
   {
@@ -291,7 +697,31 @@
    "primarySpending": 0.2308,
    "debt": 1.2302,
    "interestRate": 0.04674,
-   "estimated": []
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0088,
+    "industryEmployment": 0.3514,
+    "servicesEmployment": 0.6398,
+    "selfEmployment": 0.0263,
+    "elderlyShare": 0.0364,
+    "childShare": 0.1899,
+    "gini": 0.323
+   },
+   "budget": {
+    "defense": 0.03521,
+    "education": 0.01888,
+    "health": 0.02368,
+    "incomeTaxShare": 0.0022,
+    "corporateTaxShare": 0.001,
+    "consumptionTaxShare": 0.1386,
+    "socialContributionShare": 0.2948,
+    "tradeTaxShare": 0.0409,
+    "otherRevenueShare": 0.5225
+   },
+   "estimated": [
+    "gini",
+    "socialContributionShare"
+   ]
   },
   {
    "id": "BHS",
@@ -307,7 +737,33 @@
    "primarySpending": 0.1921,
    "debt": 0.77951,
    "interestRate": 0.05015,
-   "estimated": []
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0083,
+    "industryEmployment": 0.1489,
+    "servicesEmployment": 0.8428,
+    "selfEmployment": 0.1717,
+    "elderlyShare": 0.115,
+    "childShare": 0.1833,
+    "gini": 0.323
+   },
+   "budget": {
+    "defense": 0.01691,
+    "education": 0.02742,
+    "health": 0.03187,
+    "incomeTaxShare": 0.1248,
+    "corporateTaxShare": 0.0535,
+    "consumptionTaxShare": 0.4254,
+    "socialContributionShare": 0.2198,
+    "tradeTaxShare": 0.1764,
+    "otherRevenueShare": 0.0
+   },
+   "estimated": [
+    "defense",
+    "gini",
+    "incomeProfitTaxShare",
+    "socialContributionShare"
+   ]
   },
   {
    "id": "BIH",
@@ -323,6 +779,27 @@
    "primarySpending": 0.40933,
    "debt": 0.29078,
    "interestRate": 0.02924,
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.1757,
+    "industryEmployment": 0.3063,
+    "servicesEmployment": 0.518,
+    "selfEmployment": 0.227,
+    "elderlyShare": 0.2164,
+    "childShare": 0.1322,
+    "gini": 0.303
+   },
+   "budget": {
+    "defense": 0.00786,
+    "education": 0.03246,
+    "health": 0.06004,
+    "incomeTaxShare": 0.054,
+    "corporateTaxShare": 0.0441,
+    "consumptionTaxShare": 0.4142,
+    "socialContributionShare": 0.4018,
+    "tradeTaxShare": 0.0,
+    "otherRevenueShare": 0.0859
+   },
    "estimated": []
   },
   {
@@ -339,6 +816,27 @@
    "primarySpending": 0.38743,
    "debt": 0.40724,
    "interestRate": 0.039,
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.1011,
+    "industryEmployment": 0.3098,
+    "servicesEmployment": 0.5891,
+    "selfEmployment": 0.0713,
+    "elderlyShare": 0.1706,
+    "childShare": 0.1668,
+    "gini": 0.244
+   },
+   "budget": {
+    "defense": 0.01928,
+    "education": 0.04909,
+    "health": 0.04727,
+    "incomeTaxShare": 0.0114,
+    "corporateTaxShare": 0.0093,
+    "consumptionTaxShare": 0.2779,
+    "socialContributionShare": 0.3406,
+    "tradeTaxShare": 0.0977,
+    "otherRevenueShare": 0.2632
+   },
    "estimated": []
   },
   {
@@ -355,7 +853,33 @@
    "primarySpending": 0.2353,
    "debt": 0.6662,
    "interestRate": 0.03397,
-   "estimated": []
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.1684,
+    "industryEmployment": 0.1538,
+    "servicesEmployment": 0.6778,
+    "selfEmployment": 0.355,
+    "elderlyShare": 0.0484,
+    "childShare": 0.2699,
+    "gini": 0.399
+   },
+   "budget": {
+    "defense": 0.01045,
+    "education": 0.04231,
+    "health": 0.02699,
+    "incomeTaxShare": 0.1086,
+    "corporateTaxShare": 0.0889,
+    "consumptionTaxShare": 0.3411,
+    "socialContributionShare": 0.1491,
+    "tradeTaxShare": 0.0412,
+    "otherRevenueShare": 0.2711
+   },
+   "estimated": [
+    "consumptionTaxShare",
+    "incomeProfitTaxShare",
+    "socialContributionShare",
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "BOL",
@@ -371,7 +895,33 @@
    "primarySpending": 0.29855,
    "debt": 0.78281,
    "interestRate": 0.02505,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.2508,
+    "industryEmployment": 0.2011,
+    "servicesEmployment": 0.5481,
+    "selfEmployment": 0.6665,
+    "elderlyShare": 0.0555,
+    "childShare": 0.3014,
+    "gini": 0.421
+   },
+   "budget": {
+    "defense": 0.01304,
+    "education": 0.07894,
+    "health": 0.04655,
+    "incomeTaxShare": 0.1272,
+    "corporateTaxShare": 0.1272,
+    "consumptionTaxShare": 0.3338,
+    "socialContributionShare": 0.026,
+    "tradeTaxShare": 0.0733,
+    "otherRevenueShare": 0.3125
+   },
+   "estimated": [
+    "consumptionTaxShare",
+    "incomeProfitTaxShare",
+    "socialContributionShare",
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "BRA",
@@ -387,6 +937,27 @@
    "primarySpending": 0.39764,
    "debt": 0.84001,
    "interestRate": 0.06601,
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.082,
+    "industryEmployment": 0.2017,
+    "servicesEmployment": 0.7163,
+    "selfEmployment": 0.3123,
+    "elderlyShare": 0.1063,
+    "childShare": 0.1994,
+    "gini": 0.515
+   },
+   "budget": {
+    "defense": 0.00994,
+    "education": 0.05619,
+    "health": 0.04294,
+    "incomeTaxShare": 0.1861,
+    "corporateTaxShare": 0.1523,
+    "consumptionTaxShare": 0.1805,
+    "socialContributionShare": 0.2319,
+    "tradeTaxShare": 0.0211,
+    "otherRevenueShare": 0.2282
+   },
    "estimated": []
   },
   {
@@ -403,7 +974,34 @@
    "primarySpending": 0.21623,
    "debt": 1.04122,
    "interestRate": 0.04639,
-   "estimated": []
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0137,
+    "industryEmployment": 0.1623,
+    "servicesEmployment": 0.824,
+    "selfEmployment": 0.1998,
+    "elderlyShare": 0.1609,
+    "childShare": 0.1749,
+    "gini": 0.341
+   },
+   "budget": {
+    "defense": 0.01691,
+    "education": 0.03775,
+    "health": 0.02251,
+    "incomeTaxShare": 0.1674,
+    "corporateTaxShare": 0.0718,
+    "consumptionTaxShare": 0.2635,
+    "socialContributionShare": 0.2948,
+    "tradeTaxShare": 0.0104,
+    "otherRevenueShare": 0.1921
+   },
+   "estimated": [
+    "consumptionTaxShare",
+    "defense",
+    "incomeProfitTaxShare",
+    "socialContributionShare",
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "BRN",
@@ -419,8 +1017,35 @@
    "primarySpending": 0.30085,
    "debt": 0.01672,
    "interestRate": 0.0156,
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0127,
+    "industryEmployment": 0.2045,
+    "servicesEmployment": 0.7828,
+    "selfEmployment": 0.0748,
+    "elderlyShare": 0.0651,
+    "childShare": 0.2102,
+    "gini": 0.323
+   },
+   "budget": {
+    "defense": 0.02976,
+    "education": 0.04501,
+    "health": 0.02062,
+    "incomeTaxShare": 0.1674,
+    "corporateTaxShare": 0.0718,
+    "consumptionTaxShare": 0.2635,
+    "socialContributionShare": 0.2948,
+    "tradeTaxShare": 0.0104,
+    "otherRevenueShare": 0.1921
+   },
    "estimated": [
-    "interest"
+    "consumptionTaxShare",
+    "education",
+    "gini",
+    "incomeProfitTaxShare",
+    "interest",
+    "socialContributionShare",
+    "tradeTaxShare"
    ]
   },
   {
@@ -437,7 +1062,30 @@
    "primarySpending": 0.27181,
    "debt": 1.1718,
    "interestRate": 0.01445,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.4381,
+    "industryEmployment": 0.1525,
+    "servicesEmployment": 0.4093,
+    "selfEmployment": 0.7022,
+    "elderlyShare": 0.0637,
+    "childShare": 0.2146,
+    "gini": 0.285
+   },
+   "budget": {
+    "defense": 0.01453,
+    "education": 0.05845,
+    "health": 0.02943,
+    "incomeTaxShare": 0.0997,
+    "corporateTaxShare": 0.0997,
+    "consumptionTaxShare": 0.1793,
+    "socialContributionShare": 0.0052,
+    "tradeTaxShare": 0.0287,
+    "otherRevenueShare": 0.5873
+   },
+   "estimated": [
+    "defense"
+   ]
   },
   {
    "id": "BWA",
@@ -453,7 +1101,30 @@
    "primarySpending": 0.3138,
    "debt": 0.22494,
    "interestRate": 0.04266,
-   "estimated": []
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.18,
+    "industryEmployment": 0.1579,
+    "servicesEmployment": 0.6621,
+    "selfEmployment": 0.2824,
+    "elderlyShare": 0.0397,
+    "childShare": 0.3228,
+    "gini": 0.549
+   },
+   "budget": {
+    "defense": 0.01803,
+    "education": 0.08058,
+    "health": 0.04721,
+    "incomeTaxShare": 0.1785,
+    "corporateTaxShare": 0.146,
+    "consumptionTaxShare": 0.1454,
+    "socialContributionShare": 0.1491,
+    "tradeTaxShare": 0.3261,
+    "otherRevenueShare": 0.055
+   },
+   "estimated": [
+    "socialContributionShare"
+   ]
   },
   {
    "id": "CAF",
@@ -469,7 +1140,30 @@
    "primarySpending": 0.11829,
    "debt": 0.38962,
    "interestRate": 0.01034,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LIC",
+    "agricultureEmployment": 0.6587,
+    "industryEmployment": 0.1351,
+    "servicesEmployment": 0.2062,
+    "selfEmployment": 0.8557,
+    "elderlyShare": 0.021,
+    "childShare": 0.4917,
+    "gini": 0.43
+   },
+   "budget": {
+    "defense": 0.02377,
+    "education": 0.0183,
+    "health": 0.0153,
+    "incomeTaxShare": 0.0537,
+    "corporateTaxShare": 0.0537,
+    "consumptionTaxShare": 0.3015,
+    "socialContributionShare": 0.0556,
+    "tradeTaxShare": 0.1586,
+    "otherRevenueShare": 0.377
+   },
+   "estimated": [
+    "socialContributionShare"
+   ]
   },
   {
    "id": "CAN",
@@ -485,6 +1179,27 @@
    "primarySpending": 0.41683,
    "debt": 1.05071,
    "interestRate": 0.005,
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0127,
+    "industryEmployment": 0.1921,
+    "servicesEmployment": 0.7951,
+    "selfEmployment": 0.1318,
+    "elderlyShare": 0.1936,
+    "childShare": 0.153,
+    "gini": 0.315
+   },
+   "budget": {
+    "defense": 0.01315,
+    "education": 0.04844,
+    "health": 0.07866,
+    "incomeTaxShare": 0.384,
+    "corporateTaxShare": 0.1646,
+    "consumptionTaxShare": 0.1405,
+    "socialContributionShare": 0.2316,
+    "tradeTaxShare": 0.0099,
+    "otherRevenueShare": 0.0694
+   },
    "estimated": []
   },
   {
@@ -501,6 +1216,27 @@
    "primarySpending": 0.30947,
    "debt": 0.40152,
    "interestRate": 0.005,
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0224,
+    "industryEmployment": 0.1991,
+    "servicesEmployment": 0.7784,
+    "selfEmployment": 0.1673,
+    "elderlyShare": 0.1961,
+    "childShare": 0.1501,
+    "gini": 0.335
+   },
+   "budget": {
+    "defense": 0.00706,
+    "education": 0.04864,
+    "health": 0.03868,
+    "incomeTaxShare": 0.1642,
+    "corporateTaxShare": 0.0704,
+    "consumptionTaxShare": 0.2803,
+    "socialContributionShare": 0.3879,
+    "tradeTaxShare": 0.0086,
+    "otherRevenueShare": 0.0887
+   },
    "estimated": []
   },
   {
@@ -517,6 +1253,27 @@
    "primarySpending": 0.27013,
    "debt": 0.39382,
    "interestRate": 0.00915,
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0621,
+    "industryEmployment": 0.2211,
+    "servicesEmployment": 0.7169,
+    "selfEmployment": 0.2465,
+    "elderlyShare": 0.1369,
+    "childShare": 0.1738,
+    "gini": 0.432
+   },
+   "budget": {
+    "defense": 0.0163,
+    "education": 0.04912,
+    "health": 0.05251,
+    "incomeTaxShare": 0.1909,
+    "corporateTaxShare": 0.0818,
+    "consumptionTaxShare": 0.4554,
+    "socialContributionShare": 0.0507,
+    "tradeTaxShare": 0.0091,
+    "otherRevenueShare": 0.212
+   },
    "estimated": []
   },
   {
@@ -533,6 +1290,27 @@
    "primarySpending": 0.31819,
    "debt": 0.84084,
    "interestRate": 0.01087,
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.228,
+    "industryEmployment": 0.3143,
+    "servicesEmployment": 0.4577,
+    "selfEmployment": 0.3845,
+    "elderlyShare": 0.1432,
+    "childShare": 0.1659,
+    "gini": 0.36
+   },
+   "budget": {
+    "defense": 0.01622,
+    "education": 0.03897,
+    "health": 0.03394,
+    "incomeTaxShare": 0.0995,
+    "corporateTaxShare": 0.0814,
+    "consumptionTaxShare": 0.3122,
+    "socialContributionShare": 0.4277,
+    "tradeTaxShare": 0.0136,
+    "otherRevenueShare": 0.0657
+   },
    "estimated": []
   },
   {
@@ -549,7 +1327,30 @@
    "primarySpending": 0.18451,
    "debt": 0.56701,
    "interestRate": 0.04461,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.4708,
+    "industryEmployment": 0.1379,
+    "servicesEmployment": 0.3913,
+    "selfEmployment": 0.7165,
+    "elderlyShare": 0.0257,
+    "childShare": 0.4128,
+    "gini": 0.353
+   },
+   "budget": {
+    "defense": 0.00865,
+    "education": 0.03394,
+    "health": 0.01401,
+    "incomeTaxShare": 0.1341,
+    "corporateTaxShare": 0.1341,
+    "consumptionTaxShare": 0.3557,
+    "socialContributionShare": 0.026,
+    "tradeTaxShare": 0.2551,
+    "otherRevenueShare": 0.0951
+   },
+   "estimated": [
+    "socialContributionShare"
+   ]
   },
   {
    "id": "CMR",
@@ -565,6 +1366,27 @@
    "primarySpending": 0.16184,
    "debt": 0.4356,
    "interestRate": 0.02482,
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.429,
+    "industryEmployment": 0.1457,
+    "servicesEmployment": 0.4253,
+    "selfEmployment": 0.6976,
+    "elderlyShare": 0.0277,
+    "childShare": 0.4176,
+    "gini": 0.422
+   },
+   "budget": {
+    "defense": 0.00926,
+    "education": 0.02839,
+    "health": 0.00669,
+    "incomeTaxShare": 0.1088,
+    "corporateTaxShare": 0.1088,
+    "consumptionTaxShare": 0.4329,
+    "socialContributionShare": 0.0156,
+    "tradeTaxShare": 0.1124,
+    "otherRevenueShare": 0.2213
+   },
    "estimated": []
   },
   {
@@ -581,7 +1403,30 @@
    "primarySpending": 0.1577,
    "debt": 0.17186,
    "interestRate": 0.00751,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LIC",
+    "agricultureEmployment": 0.5952,
+    "industryEmployment": 0.0798,
+    "servicesEmployment": 0.325,
+    "selfEmployment": 0.8563,
+    "elderlyShare": 0.0307,
+    "childShare": 0.4609,
+    "gini": 0.447
+   },
+   "budget": {
+    "defense": 0.01119,
+    "education": 0.02845,
+    "health": 0.0069,
+    "incomeTaxShare": 0.1941,
+    "corporateTaxShare": 0.1941,
+    "consumptionTaxShare": 0.1955,
+    "socialContributionShare": 0.0556,
+    "tradeTaxShare": 0.0654,
+    "otherRevenueShare": 0.2953
+   },
+   "estimated": [
+    "socialContributionShare"
+   ]
   },
   {
    "id": "COG",
@@ -597,7 +1442,30 @@
    "primarySpending": 0.16786,
    "debt": 0.98263,
    "interestRate": 0.03008,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.371,
+    "industryEmployment": 0.1963,
+    "servicesEmployment": 0.4327,
+    "selfEmployment": 0.7698,
+    "elderlyShare": 0.0291,
+    "childShare": 0.4088,
+    "gini": 0.489
+   },
+   "budget": {
+    "defense": 0.02012,
+    "education": 0.0334,
+    "health": 0.01121,
+    "incomeTaxShare": 0.0431,
+    "corporateTaxShare": 0.0431,
+    "consumptionTaxShare": 0.138,
+    "socialContributionShare": 0.026,
+    "tradeTaxShare": 0.0664,
+    "otherRevenueShare": 0.6833
+   },
+   "estimated": [
+    "socialContributionShare"
+   ]
   },
   {
    "id": "COL",
@@ -613,6 +1481,27 @@
    "primarySpending": 0.31249,
    "debt": 0.55364,
    "interestRate": 0.0694,
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.144,
+    "industryEmployment": 0.1999,
+    "servicesEmployment": 0.6561,
+    "selfEmployment": 0.4659,
+    "elderlyShare": 0.0938,
+    "childShare": 0.206,
+    "gini": 0.546
+   },
+   "budget": {
+    "defense": 0.02943,
+    "education": 0.05262,
+    "health": 0.05738,
+    "incomeTaxShare": 0.1568,
+    "corporateTaxShare": 0.1283,
+    "consumptionTaxShare": 0.2365,
+    "socialContributionShare": 0.1794,
+    "tradeTaxShare": 0.0133,
+    "otherRevenueShare": 0.2857
+   },
    "estimated": []
   },
   {
@@ -629,7 +1518,34 @@
    "primarySpending": 0.17482,
    "debt": 0.32392,
    "interestRate": 0.01151,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.3462,
+    "industryEmployment": 0.1475,
+    "servicesEmployment": 0.5063,
+    "selfEmployment": 0.5809,
+    "elderlyShare": 0.0447,
+    "childShare": 0.374,
+    "gini": 0.342
+   },
+   "budget": {
+    "defense": 0.01453,
+    "education": 0.02341,
+    "health": 0.00846,
+    "incomeTaxShare": 0.1272,
+    "corporateTaxShare": 0.1272,
+    "consumptionTaxShare": 0.3338,
+    "socialContributionShare": 0.026,
+    "tradeTaxShare": 0.0733,
+    "otherRevenueShare": 0.3125
+   },
+   "estimated": [
+    "consumptionTaxShare",
+    "defense",
+    "incomeProfitTaxShare",
+    "socialContributionShare",
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "CPV",
@@ -645,6 +1561,27 @@
    "primarySpending": 0.23492,
    "debt": 1.3433,
    "interestRate": 0.01645,
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.099,
+    "industryEmployment": 0.2272,
+    "servicesEmployment": 0.6738,
+    "selfEmployment": 0.3929,
+    "elderlyShare": 0.0658,
+    "childShare": 0.2637,
+    "gini": 0.424
+   },
+   "budget": {
+    "defense": 0.00573,
+    "education": 0.04348,
+    "health": 0.03425,
+    "incomeTaxShare": 0.1248,
+    "corporateTaxShare": 0.1021,
+    "consumptionTaxShare": 0.3617,
+    "socialContributionShare": 0.0018,
+    "tradeTaxShare": 0.1503,
+    "otherRevenueShare": 0.2592
+   },
    "estimated": []
   },
   {
@@ -661,6 +1598,27 @@
    "primarySpending": 0.13552,
    "debt": 0.60411,
    "interestRate": 0.07857,
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.1341,
+    "industryEmployment": 0.2021,
+    "servicesEmployment": 0.6638,
+    "selfEmployment": 0.2661,
+    "elderlyShare": 0.1172,
+    "childShare": 0.1933,
+    "gini": 0.467
+   },
+   "budget": {
+    "defense": 0.0,
+    "education": 0.05312,
+    "health": 0.04611,
+    "incomeTaxShare": 0.1107,
+    "corporateTaxShare": 0.0474,
+    "consumptionTaxShare": 0.2387,
+    "socialContributionShare": 0.3252,
+    "tradeTaxShare": 0.0371,
+    "otherRevenueShare": 0.2409
+   },
    "estimated": []
   },
   {
@@ -677,11 +1635,38 @@
    "primarySpending": 0.28777,
    "debt": 0.53618,
    "interestRate": 0.03166,
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.1614,
+    "industryEmployment": 0.1708,
+    "servicesEmployment": 0.6678,
+    "selfEmployment": 0.2491,
+    "elderlyShare": 0.162,
+    "childShare": 0.1551,
+    "gini": 0.38
+   },
+   "budget": {
+    "defense": 0.01323,
+    "education": 0.08441,
+    "health": 0.07826,
+    "incomeTaxShare": 0.1086,
+    "corporateTaxShare": 0.0889,
+    "consumptionTaxShare": 0.3411,
+    "socialContributionShare": 0.1491,
+    "tradeTaxShare": 0.0412,
+    "otherRevenueShare": 0.2711
+   },
    "estimated": [
+    "consumptionTaxShare",
     "debt",
+    "defense",
     "expense",
+    "gini",
+    "incomeProfitTaxShare",
     "interest",
-    "revenue"
+    "revenue",
+    "socialContributionShare",
+    "tradeTaxShare"
    ]
   },
   {
@@ -698,18 +1683,53 @@
    "primarySpending": 0.28777,
    "debt": 0.53618,
    "interestRate": 0.03166,
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.1667,
+    "industryEmployment": 0.2169,
+    "servicesEmployment": 0.6164,
+    "selfEmployment": 0.3249,
+    "elderlyShare": 0.08,
+    "childShare": 0.2361,
+    "gini": 0.38
+   },
+   "budget": {
+    "defense": 0.01323,
+    "education": 0.0406,
+    "health": 0.03378,
+    "incomeTaxShare": 0.1086,
+    "corporateTaxShare": 0.0889,
+    "consumptionTaxShare": 0.3411,
+    "socialContributionShare": 0.1491,
+    "tradeTaxShare": 0.0412,
+    "otherRevenueShare": 0.2711
+   },
    "estimated": [
+    "agricultureEmployment",
+    "childShare",
+    "consumptionTaxShare",
     "debt",
+    "defense",
+    "education",
+    "elderlyShare",
     "expense",
     "gdp",
+    "gini",
     "growth",
     "growthVolatility",
+    "health",
+    "incomeProfitTaxShare",
+    "industryEmployment",
     "inflation",
     "interest",
     "population",
     "populationGrowth",
     "potentialGrowth",
     "revenue",
+    "selfEmployment",
+    "servicesEmployment",
+    "socialContributionShare",
+    "tradeTaxShare",
     "unemployment"
    ]
   },
@@ -727,6 +1747,27 @@
    "primarySpending": 0.39496,
    "debt": 0.71136,
    "interestRate": 0.01615,
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0246,
+    "industryEmployment": 0.1613,
+    "servicesEmployment": 0.8141,
+    "selfEmployment": 0.1078,
+    "elderlyShare": 0.1432,
+    "childShare": 0.1605,
+    "gini": 0.318
+   },
+   "budget": {
+    "defense": 0.01595,
+    "education": 0.04742,
+    "health": 0.06234,
+    "incomeTaxShare": 0.1674,
+    "corporateTaxShare": 0.0718,
+    "consumptionTaxShare": 0.2965,
+    "socialContributionShare": 0.3299,
+    "tradeTaxShare": 0.0016,
+    "otherRevenueShare": 0.1328
+   },
    "estimated": []
   },
   {
@@ -743,7 +1784,30 @@
    "primarySpending": 0.43439,
    "debt": 0.42223,
    "interestRate": 0.01289,
-   "estimated": []
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0291,
+    "industryEmployment": 0.3651,
+    "servicesEmployment": 0.6059,
+    "selfEmployment": 0.1623,
+    "elderlyShare": 0.2055,
+    "childShare": 0.1567,
+    "gini": 0.257
+   },
+   "budget": {
+    "defense": 0.01315,
+    "education": 0.04303,
+    "health": 0.07107,
+    "incomeTaxShare": 0.1473,
+    "corporateTaxShare": 0.0631,
+    "consumptionTaxShare": 0.2854,
+    "socialContributionShare": 0.4168,
+    "tradeTaxShare": 0.0104,
+    "otherRevenueShare": 0.0769
+   },
+   "estimated": [
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "DEU",
@@ -759,7 +1823,30 @@
    "primarySpending": 0.47069,
    "debt": 0.61824,
    "interestRate": 0.01032,
-   "estimated": []
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0121,
+    "industryEmployment": 0.264,
+    "servicesEmployment": 0.7239,
+    "selfEmployment": 0.083,
+    "elderlyShare": 0.2279,
+    "childShare": 0.1392,
+    "gini": 0.337
+   },
+   "budget": {
+    "defense": 0.01503,
+    "education": 0.05239,
+    "health": 0.09292,
+    "incomeTaxShare": 0.1172,
+    "corporateTaxShare": 0.0502,
+    "consumptionTaxShare": 0.2019,
+    "socialContributionShare": 0.553,
+    "tradeTaxShare": 0.0104,
+    "otherRevenueShare": 0.0673
+   },
+   "estimated": [
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "DJI",
@@ -775,7 +1862,35 @@
    "primarySpending": 0.21445,
    "debt": 0.35607,
    "interestRate": 0.005,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.0124,
+    "industryEmployment": 0.0633,
+    "servicesEmployment": 0.9243,
+    "selfEmployment": 0.5141,
+    "elderlyShare": 0.0474,
+    "childShare": 0.2957,
+    "gini": 0.416
+   },
+   "budget": {
+    "defense": 0.01453,
+    "education": 0.04018,
+    "health": 0.01052,
+    "incomeTaxShare": 0.1272,
+    "corporateTaxShare": 0.1272,
+    "consumptionTaxShare": 0.3338,
+    "socialContributionShare": 0.026,
+    "tradeTaxShare": 0.0733,
+    "otherRevenueShare": 0.3125
+   },
+   "estimated": [
+    "consumptionTaxShare",
+    "defense",
+    "education",
+    "incomeProfitTaxShare",
+    "socialContributionShare",
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "DMA",
@@ -791,7 +1906,38 @@
    "primarySpending": 0.62276,
    "debt": 1.01258,
    "interestRate": 0.02524,
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.1667,
+    "industryEmployment": 0.2169,
+    "servicesEmployment": 0.6164,
+    "selfEmployment": 0.3249,
+    "elderlyShare": 0.1274,
+    "childShare": 0.1811,
+    "gini": 0.38
+   },
+   "budget": {
+    "defense": 0.01323,
+    "education": 0.04694,
+    "health": 0.03362,
+    "incomeTaxShare": 0.1086,
+    "corporateTaxShare": 0.0889,
+    "consumptionTaxShare": 0.3411,
+    "socialContributionShare": 0.1491,
+    "tradeTaxShare": 0.0412,
+    "otherRevenueShare": 0.2711
+   },
    "estimated": [
+    "agricultureEmployment",
+    "consumptionTaxShare",
+    "defense",
+    "gini",
+    "incomeProfitTaxShare",
+    "industryEmployment",
+    "selfEmployment",
+    "servicesEmployment",
+    "socialContributionShare",
+    "tradeTaxShare",
     "unemployment"
    ]
   },
@@ -809,6 +1955,27 @@
    "primarySpending": 0.47505,
    "debt": 0.33042,
    "interestRate": 0.005,
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0202,
+    "industryEmployment": 0.1926,
+    "servicesEmployment": 0.7872,
+    "selfEmployment": 0.0816,
+    "elderlyShare": 0.206,
+    "childShare": 0.1587,
+    "gini": 0.299
+   },
+   "budget": {
+    "defense": 0.02012,
+    "education": 0.06356,
+    "health": 0.0796,
+    "incomeTaxShare": 0.3414,
+    "corporateTaxShare": 0.1463,
+    "consumptionTaxShare": 0.3244,
+    "socialContributionShare": 0.0186,
+    "tradeTaxShare": 0.0004,
+    "otherRevenueShare": 0.1689
+   },
    "estimated": []
   },
   {
@@ -825,6 +1992,27 @@
    "primarySpending": 0.15967,
    "debt": 0.60511,
    "interestRate": 0.05221,
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.0739,
+    "industryEmployment": 0.1918,
+    "servicesEmployment": 0.7344,
+    "selfEmployment": 0.4237,
+    "elderlyShare": 0.0758,
+    "childShare": 0.2691,
+    "gini": 0.384
+   },
+   "budget": {
+    "defense": 0.00786,
+    "education": 0.03761,
+    "health": 0.02948,
+    "incomeTaxShare": 0.1622,
+    "corporateTaxShare": 0.1327,
+    "consumptionTaxShare": 0.4909,
+    "socialContributionShare": 0.0363,
+    "tradeTaxShare": 0.0527,
+    "otherRevenueShare": 0.1253
+   },
    "estimated": []
   },
   {
@@ -841,7 +2029,33 @@
    "primarySpending": 0.36217,
    "debt": 0.47655,
    "interestRate": 0.02465,
-   "estimated": []
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.0985,
+    "industryEmployment": 0.3196,
+    "servicesEmployment": 0.5819,
+    "selfEmployment": 0.3054,
+    "elderlyShare": 0.0638,
+    "childShare": 0.3064,
+    "gini": 0.276
+   },
+   "budget": {
+    "defense": 0.0739,
+    "education": 0.0561,
+    "health": 0.02309,
+    "incomeTaxShare": 0.1086,
+    "corporateTaxShare": 0.0889,
+    "consumptionTaxShare": 0.3411,
+    "socialContributionShare": 0.1491,
+    "tradeTaxShare": 0.0412,
+    "otherRevenueShare": 0.2711
+   },
+   "estimated": [
+    "consumptionTaxShare",
+    "incomeProfitTaxShare",
+    "socialContributionShare",
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "ECU",
@@ -857,6 +2071,27 @@
    "primarySpending": 0.387,
    "debt": 0.54491,
    "interestRate": 0.01595,
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.3,
+    "industryEmployment": 0.1747,
+    "servicesEmployment": 0.5254,
+    "selfEmployment": 0.5093,
+    "elderlyShare": 0.0809,
+    "childShare": 0.25,
+    "gini": 0.446
+   },
+   "budget": {
+    "defense": 0.02222,
+    "education": 0.0382,
+    "health": 0.04685,
+    "incomeTaxShare": 0.0679,
+    "corporateTaxShare": 0.0556,
+    "consumptionTaxShare": 0.2107,
+    "socialContributionShare": 0.1605,
+    "tradeTaxShare": 0.064,
+    "otherRevenueShare": 0.4413
+   },
    "estimated": []
   },
   {
@@ -873,7 +2108,34 @@
    "primarySpending": 0.15922,
    "debt": 0.9593,
    "interestRate": 0.07109,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.1829,
+    "industryEmployment": 0.292,
+    "servicesEmployment": 0.5251,
+    "selfEmployment": 0.2734,
+    "elderlyShare": 0.0497,
+    "childShare": 0.3244,
+    "gini": 0.285
+   },
+   "budget": {
+    "defense": 0.00809,
+    "education": 0.04018,
+    "health": 0.01575,
+    "incomeTaxShare": 0.1272,
+    "corporateTaxShare": 0.1272,
+    "consumptionTaxShare": 0.3338,
+    "socialContributionShare": 0.026,
+    "tradeTaxShare": 0.0733,
+    "otherRevenueShare": 0.3125
+   },
+   "estimated": [
+    "consumptionTaxShare",
+    "education",
+    "incomeProfitTaxShare",
+    "socialContributionShare",
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "ERI",
@@ -889,9 +2151,37 @@
    "primarySpending": 0.29495,
    "debt": 2.60393,
    "interestRate": 0.00676,
+   "society": {
+    "incomeGroup": "LIC",
+    "agricultureEmployment": 0.5636,
+    "industryEmployment": 0.1261,
+    "servicesEmployment": 0.3104,
+    "selfEmployment": 0.5276,
+    "elderlyShare": 0.0415,
+    "childShare": 0.3868,
+    "gini": 0.374
+   },
+   "budget": {
+    "defense": 0.01424,
+    "education": 0.02927,
+    "health": 0.00849,
+    "incomeTaxShare": 0.1268,
+    "corporateTaxShare": 0.1268,
+    "consumptionTaxShare": 0.299,
+    "socialContributionShare": 0.0556,
+    "tradeTaxShare": 0.0999,
+    "otherRevenueShare": 0.2919
+   },
    "estimated": [
+    "consumptionTaxShare",
+    "defense",
+    "education",
+    "gini",
     "growth",
-    "inflation"
+    "incomeProfitTaxShare",
+    "inflation",
+    "socialContributionShare",
+    "tradeTaxShare"
    ]
   },
   {
@@ -908,7 +2198,30 @@
    "primarySpending": 0.4366,
    "debt": 1.05178,
    "interestRate": 0.01712,
-   "estimated": []
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.035,
+    "industryEmployment": 0.2003,
+    "servicesEmployment": 0.7648,
+    "selfEmployment": 0.1484,
+    "elderlyShare": 0.2065,
+    "childShare": 0.1326,
+    "gini": 0.334
+   },
+   "budget": {
+    "defense": 0.01535,
+    "education": 0.04586,
+    "health": 0.06748,
+    "incomeTaxShare": 0.1565,
+    "corporateTaxShare": 0.0671,
+    "consumptionTaxShare": 0.2483,
+    "socialContributionShare": 0.4139,
+    "tradeTaxShare": 0.0104,
+    "otherRevenueShare": 0.1039
+   },
+   "estimated": [
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "EST",
@@ -924,7 +2237,30 @@
    "primarySpending": 0.43545,
    "debt": 0.20274,
    "interestRate": 0.00843,
-   "estimated": []
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0259,
+    "industryEmployment": 0.2737,
+    "servicesEmployment": 0.7003,
+    "selfEmployment": 0.1192,
+    "elderlyShare": 0.2091,
+    "childShare": 0.1597,
+    "gini": 0.307
+   },
+   "budget": {
+    "defense": 0.02983,
+    "education": 0.05207,
+    "health": 0.0566,
+    "incomeTaxShare": 0.1495,
+    "corporateTaxShare": 0.0641,
+    "consumptionTaxShare": 0.3502,
+    "socialContributionShare": 0.3219,
+    "tradeTaxShare": 0.0104,
+    "otherRevenueShare": 0.1038
+   },
+   "estimated": [
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "ETH",
@@ -940,7 +2276,30 @@
    "primarySpending": 0.10195,
    "debt": 0.38735,
    "interestRate": 0.01614,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LIC",
+    "agricultureEmployment": 0.6217,
+    "industryEmployment": 0.0636,
+    "servicesEmployment": 0.3146,
+    "selfEmployment": 0.8494,
+    "elderlyShare": 0.0317,
+    "childShare": 0.3937,
+    "gini": 0.311
+   },
+   "budget": {
+    "defense": 0.00768,
+    "education": 0.02927,
+    "health": 0.00614,
+    "incomeTaxShare": 0.1141,
+    "corporateTaxShare": 0.1141,
+    "consumptionTaxShare": 0.2969,
+    "socialContributionShare": 0.0556,
+    "tradeTaxShare": 0.1828,
+    "otherRevenueShare": 0.2364
+   },
+   "estimated": [
+    "socialContributionShare"
+   ]
   },
   {
    "id": "FIN",
@@ -956,7 +2315,30 @@
    "primarySpending": 0.55959,
    "debt": 0.77194,
    "interestRate": 0.005,
-   "estimated": []
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0362,
+    "industryEmployment": 0.2137,
+    "servicesEmployment": 0.7502,
+    "selfEmployment": 0.1287,
+    "elderlyShare": 0.2358,
+    "childShare": 0.1494,
+    "gini": 0.274
+   },
+   "budget": {
+    "defense": 0.02009,
+    "education": 0.06376,
+    "health": 0.08499,
+    "incomeTaxShare": 0.1891,
+    "corporateTaxShare": 0.081,
+    "consumptionTaxShare": 0.3104,
+    "socialContributionShare": 0.2912,
+    "tradeTaxShare": 0.0104,
+    "otherRevenueShare": 0.1178
+   },
+   "estimated": [
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "FJI",
@@ -972,7 +2354,30 @@
    "primarySpending": 0.26286,
    "debt": 0.8282,
    "interestRate": 0.04681,
-   "estimated": []
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.3676,
+    "industryEmployment": 0.1258,
+    "servicesEmployment": 0.5065,
+    "selfEmployment": 0.3468,
+    "elderlyShare": 0.0634,
+    "childShare": 0.2739,
+    "gini": 0.307
+   },
+   "budget": {
+    "defense": 0.01342,
+    "education": 0.04247,
+    "health": 0.02703,
+    "incomeTaxShare": 0.145,
+    "corporateTaxShare": 0.1186,
+    "consumptionTaxShare": 0.4351,
+    "socialContributionShare": 0.1491,
+    "tradeTaxShare": 0.1378,
+    "otherRevenueShare": 0.0144
+   },
+   "estimated": [
+    "socialContributionShare"
+   ]
   },
   {
    "id": "FRA",
@@ -988,6 +2393,27 @@
    "primarySpending": 0.55059,
    "debt": 1.09507,
    "interestRate": 0.01554,
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0251,
+    "industryEmployment": 0.1925,
+    "servicesEmployment": 0.7825,
+    "selfEmployment": 0.1292,
+    "elderlyShare": 0.2175,
+    "childShare": 0.1678,
+    "gini": 0.318
+   },
+   "budget": {
+    "defense": 0.01948,
+    "education": 0.05324,
+    "health": 0.078,
+    "incomeTaxShare": 0.2053,
+    "corporateTaxShare": 0.088,
+    "consumptionTaxShare": 0.1934,
+    "socialContributionShare": 0.3837,
+    "tradeTaxShare": 0.0,
+    "otherRevenueShare": 0.1297
+   },
    "estimated": []
   },
   {
@@ -1004,7 +2430,34 @@
    "primarySpending": 0.63019,
    "debt": 0.12762,
    "interestRate": 0.0151,
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.1667,
+    "industryEmployment": 0.2169,
+    "servicesEmployment": 0.6164,
+    "selfEmployment": 0.3249,
+    "elderlyShare": 0.0573,
+    "childShare": 0.3213,
+    "gini": 0.401
+   },
+   "budget": {
+    "defense": 0.01323,
+    "education": 0.11559,
+    "health": 0.01833,
+    "incomeTaxShare": 0.0601,
+    "corporateTaxShare": 0.0492,
+    "consumptionTaxShare": 0.034,
+    "socialContributionShare": 0.1491,
+    "tradeTaxShare": 0.045,
+    "otherRevenueShare": 0.6626
+   },
    "estimated": [
+    "agricultureEmployment",
+    "defense",
+    "industryEmployment",
+    "selfEmployment",
+    "servicesEmployment",
+    "socialContributionShare",
     "unemployment"
    ]
   },
@@ -1022,6 +2475,27 @@
    "primarySpending": 0.18464,
    "debt": 0.70586,
    "interestRate": 0.0425,
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.2932,
+    "industryEmployment": 0.1828,
+    "servicesEmployment": 0.5241,
+    "selfEmployment": 0.3249,
+    "elderlyShare": 0.0404,
+    "childShare": 0.3666,
+    "gini": 0.38
+   },
+   "budget": {
+    "defense": 0.01323,
+    "education": 0.02316,
+    "health": 0.02059,
+    "incomeTaxShare": 0.1316,
+    "corporateTaxShare": 0.1077,
+    "consumptionTaxShare": 0.1395,
+    "socialContributionShare": 0.0159,
+    "tradeTaxShare": 0.1983,
+    "otherRevenueShare": 0.407
+   },
    "estimated": []
   },
   {
@@ -1038,6 +2512,27 @@
    "primarySpending": 0.41624,
    "debt": 0.98333,
    "interestRate": 0.02387,
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0088,
+    "industryEmployment": 0.1592,
+    "servicesEmployment": 0.8321,
+    "selfEmployment": 0.1342,
+    "elderlyShare": 0.1924,
+    "childShare": 0.1741,
+    "gini": 0.324
+   },
+   "budget": {
+    "defense": 0.02152,
+    "education": 0.05907,
+    "health": 0.08988,
+    "incomeTaxShare": 0.2742,
+    "corporateTaxShare": 0.1175,
+    "consumptionTaxShare": 0.3159,
+    "socialContributionShare": 0.1869,
+    "tradeTaxShare": 0.006,
+    "otherRevenueShare": 0.0996
+   },
    "estimated": []
   },
   {
@@ -1054,7 +2549,30 @@
    "primarySpending": 0.28205,
    "debt": 0.38733,
    "interestRate": 0.03815,
-   "estimated": []
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.3563,
+    "industryEmployment": 0.161,
+    "servicesEmployment": 0.4826,
+    "selfEmployment": 0.472,
+    "elderlyShare": 0.1532,
+    "childShare": 0.2104,
+    "gini": 0.348
+   },
+   "budget": {
+    "defense": 0.01646,
+    "education": 0.03709,
+    "health": 0.02309,
+    "incomeTaxShare": 0.1949,
+    "corporateTaxShare": 0.1595,
+    "consumptionTaxShare": 0.457,
+    "socialContributionShare": 0.1491,
+    "tradeTaxShare": 0.0066,
+    "otherRevenueShare": 0.0329
+   },
+   "estimated": [
+    "socialContributionShare"
+   ]
   },
   {
    "id": "GHA",
@@ -1070,7 +2588,30 @@
    "primarySpending": 0.15489,
    "debt": 0.79092,
    "interestRate": 0.03853,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.3601,
+    "industryEmployment": 0.1764,
+    "servicesEmployment": 0.4636,
+    "selfEmployment": 0.6815,
+    "elderlyShare": 0.0363,
+    "childShare": 0.3618,
+    "gini": 0.435
+   },
+   "budget": {
+    "defense": 0.00395,
+    "education": 0.0291,
+    "health": 0.01863,
+    "incomeTaxShare": 0.1974,
+    "corporateTaxShare": 0.1974,
+    "consumptionTaxShare": 0.3256,
+    "socialContributionShare": 0.026,
+    "tradeTaxShare": 0.1024,
+    "otherRevenueShare": 0.1512
+   },
+   "estimated": [
+    "socialContributionShare"
+   ]
   },
   {
    "id": "GIN",
@@ -1086,7 +2627,33 @@
    "primarySpending": 0.10937,
    "debt": 0.25926,
    "interestRate": 0.01891,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.4902,
+    "industryEmployment": 0.1396,
+    "servicesEmployment": 0.3702,
+    "selfEmployment": 0.8252,
+    "elderlyShare": 0.0344,
+    "childShare": 0.4124,
+    "gini": 0.296
+   },
+   "budget": {
+    "defense": 0.02133,
+    "education": 0.01725,
+    "health": 0.00807,
+    "incomeTaxShare": 0.1272,
+    "corporateTaxShare": 0.1272,
+    "consumptionTaxShare": 0.3338,
+    "socialContributionShare": 0.026,
+    "tradeTaxShare": 0.0733,
+    "otherRevenueShare": 0.3125
+   },
+   "estimated": [
+    "consumptionTaxShare",
+    "incomeProfitTaxShare",
+    "socialContributionShare",
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "GMB",
@@ -1102,7 +2669,33 @@
    "primarySpending": 0.21872,
    "debt": 0.7737,
    "interestRate": 0.02679,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LIC",
+    "agricultureEmployment": 0.2907,
+    "industryEmployment": 0.186,
+    "servicesEmployment": 0.5234,
+    "selfEmployment": 0.6924,
+    "elderlyShare": 0.0298,
+    "childShare": 0.4073,
+    "gini": 0.388
+   },
+   "budget": {
+    "defense": 0.00601,
+    "education": 0.02808,
+    "health": 0.013,
+    "incomeTaxShare": 0.1268,
+    "corporateTaxShare": 0.1268,
+    "consumptionTaxShare": 0.299,
+    "socialContributionShare": 0.0556,
+    "tradeTaxShare": 0.0999,
+    "otherRevenueShare": 0.2919
+   },
+   "estimated": [
+    "consumptionTaxShare",
+    "incomeProfitTaxShare",
+    "socialContributionShare",
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "GNB",
@@ -1118,7 +2711,31 @@
    "primarySpending": 0.19265,
    "debt": 0.7939,
    "interestRate": 0.03308,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LIC",
+    "agricultureEmployment": 0.6221,
+    "industryEmployment": 0.0965,
+    "servicesEmployment": 0.2814,
+    "selfEmployment": 0.7589,
+    "elderlyShare": 0.0314,
+    "childShare": 0.3924,
+    "gini": 0.334
+   },
+   "budget": {
+    "defense": 0.00892,
+    "education": 0.02927,
+    "health": 0.00938,
+    "incomeTaxShare": 0.1075,
+    "corporateTaxShare": 0.1075,
+    "consumptionTaxShare": 0.2646,
+    "socialContributionShare": 0.0556,
+    "tradeTaxShare": 0.1668,
+    "otherRevenueShare": 0.2982
+   },
+   "estimated": [
+    "education",
+    "socialContributionShare"
+   ]
   },
   {
    "id": "GNQ",
@@ -1134,7 +2751,31 @@
    "primarySpending": 0.17858,
    "debt": 0.3845,
    "interestRate": 0.02784,
-   "estimated": []
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.5544,
+    "industryEmployment": 0.1012,
+    "servicesEmployment": 0.3445,
+    "selfEmployment": 0.2704,
+    "elderlyShare": 0.0362,
+    "childShare": 0.3748,
+    "gini": 0.385
+   },
+   "budget": {
+    "defense": 0.01315,
+    "education": 0.0406,
+    "health": 0.01129,
+    "incomeTaxShare": 0.1086,
+    "corporateTaxShare": 0.0889,
+    "consumptionTaxShare": 0.0395,
+    "socialContributionShare": 0.1491,
+    "tradeTaxShare": 0.0113,
+    "otherRevenueShare": 0.6025
+   },
+   "estimated": [
+    "education",
+    "socialContributionShare"
+   ]
   },
   {
    "id": "GRC",
@@ -1150,6 +2791,27 @@
    "primarySpending": 0.46128,
    "debt": 1.65535,
    "interestRate": 0.02047,
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.1148,
+    "industryEmployment": 0.1595,
+    "servicesEmployment": 0.7257,
+    "selfEmployment": 0.3095,
+    "elderlyShare": 0.2348,
+    "childShare": 0.1359,
+    "gini": 0.334
+   },
+   "budget": {
+    "defense": 0.0289,
+    "education": 0.03375,
+    "health": 0.04249,
+    "incomeTaxShare": 0.1393,
+    "corporateTaxShare": 0.0597,
+    "consumptionTaxShare": 0.3456,
+    "socialContributionShare": 0.2832,
+    "tradeTaxShare": 0.0,
+    "otherRevenueShare": 0.1722
+   },
    "estimated": []
   },
   {
@@ -1166,7 +2828,37 @@
    "primarySpending": 0.27188,
    "debt": 0.74549,
    "interestRate": 0.01983,
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.1667,
+    "industryEmployment": 0.2169,
+    "servicesEmployment": 0.6164,
+    "selfEmployment": 0.3249,
+    "elderlyShare": 0.1187,
+    "childShare": 0.1985,
+    "gini": 0.438
+   },
+   "budget": {
+    "defense": 0.01323,
+    "education": 0.05125,
+    "health": 0.02103,
+    "incomeTaxShare": 0.1086,
+    "corporateTaxShare": 0.0889,
+    "consumptionTaxShare": 0.3411,
+    "socialContributionShare": 0.1491,
+    "tradeTaxShare": 0.0412,
+    "otherRevenueShare": 0.2711
+   },
    "estimated": [
+    "agricultureEmployment",
+    "consumptionTaxShare",
+    "defense",
+    "incomeProfitTaxShare",
+    "industryEmployment",
+    "selfEmployment",
+    "servicesEmployment",
+    "socialContributionShare",
+    "tradeTaxShare",
     "unemployment"
    ]
   },
@@ -1184,6 +2876,27 @@
    "primarySpending": 0.12107,
    "debt": 0.27226,
    "interestRate": 0.06001,
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.2981,
+    "industryEmployment": 0.2251,
+    "servicesEmployment": 0.4768,
+    "selfEmployment": 0.3954,
+    "elderlyShare": 0.0473,
+    "childShare": 0.3214,
+    "gini": 0.452
+   },
+   "budget": {
+    "defense": 0.00419,
+    "education": 0.03109,
+    "health": 0.02436,
+    "incomeTaxShare": 0.1848,
+    "corporateTaxShare": 0.1512,
+    "consumptionTaxShare": 0.5152,
+    "socialContributionShare": 0.0575,
+    "tradeTaxShare": 0.0427,
+    "otherRevenueShare": 0.0488
+   },
    "estimated": []
   },
   {
@@ -1200,7 +2913,35 @@
    "primarySpending": 0.22447,
    "debt": 0.2665,
    "interestRate": 0.01313,
-   "estimated": []
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.1317,
+    "industryEmployment": 0.2832,
+    "servicesEmployment": 0.5851,
+    "selfEmployment": 0.3257,
+    "elderlyShare": 0.0648,
+    "childShare": 0.2932,
+    "gini": 0.323
+   },
+   "budget": {
+    "defense": 0.00654,
+    "education": 0.04501,
+    "health": 0.0173,
+    "incomeTaxShare": 0.1674,
+    "corporateTaxShare": 0.0718,
+    "consumptionTaxShare": 0.2635,
+    "socialContributionShare": 0.2948,
+    "tradeTaxShare": 0.0104,
+    "otherRevenueShare": 0.1921
+   },
+   "estimated": [
+    "consumptionTaxShare",
+    "education",
+    "gini",
+    "incomeProfitTaxShare",
+    "socialContributionShare",
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "HND",
@@ -1216,6 +2957,27 @@
    "primarySpending": 0.25981,
    "debt": 0.42045,
    "interestRate": 0.02946,
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.2298,
+    "industryEmployment": 0.2179,
+    "servicesEmployment": 0.5523,
+    "selfEmployment": 0.4463,
+    "elderlyShare": 0.0429,
+    "childShare": 0.31,
+    "gini": 0.468
+   },
+   "budget": {
+    "defense": 0.01526,
+    "education": 0.0455,
+    "health": 0.02461,
+    "incomeTaxShare": 0.0975,
+    "corporateTaxShare": 0.0975,
+    "consumptionTaxShare": 0.4338,
+    "socialContributionShare": 0.1837,
+    "tradeTaxShare": 0.0262,
+    "otherRevenueShare": 0.1612
+   },
    "estimated": []
   },
   {
@@ -1232,6 +2994,27 @@
    "primarySpending": 0.4541,
    "debt": 0.60948,
    "interestRate": 0.021,
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0466,
+    "industryEmployment": 0.2744,
+    "servicesEmployment": 0.679,
+    "selfEmployment": 0.1356,
+    "elderlyShare": 0.2282,
+    "childShare": 0.1414,
+    "gini": 0.301
+   },
+   "budget": {
+    "defense": 0.01647,
+    "education": 0.04092,
+    "health": 0.06005,
+    "incomeTaxShare": 0.0553,
+    "corporateTaxShare": 0.0237,
+    "consumptionTaxShare": 0.4715,
+    "socialContributionShare": 0.2786,
+    "tradeTaxShare": 0.0,
+    "otherRevenueShare": 0.1709
+   },
    "estimated": []
   },
   {
@@ -1248,7 +3031,33 @@
    "primarySpending": 0.06004,
    "debt": 0.27891,
    "interestRate": 0.01022,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.4667,
+    "industryEmployment": 0.0911,
+    "servicesEmployment": 0.4421,
+    "selfEmployment": 0.7667,
+    "elderlyShare": 0.0462,
+    "childShare": 0.3157,
+    "gini": 0.411
+   },
+   "budget": {
+    "defense": 0.00059,
+    "education": 0.00965,
+    "health": 0.00298,
+    "incomeTaxShare": 0.1272,
+    "corporateTaxShare": 0.1272,
+    "consumptionTaxShare": 0.3338,
+    "socialContributionShare": 0.026,
+    "tradeTaxShare": 0.0733,
+    "otherRevenueShare": 0.3125
+   },
+   "estimated": [
+    "consumptionTaxShare",
+    "incomeProfitTaxShare",
+    "socialContributionShare",
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "HUN",
@@ -1264,7 +3073,30 @@
    "primarySpending": 0.46134,
    "debt": 0.73306,
    "interestRate": 0.04923,
-   "estimated": []
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0443,
+    "industryEmployment": 0.3103,
+    "servicesEmployment": 0.6454,
+    "selfEmployment": 0.1206,
+    "elderlyShare": 0.2082,
+    "childShare": 0.1449,
+    "gini": 0.306
+   },
+   "budget": {
+    "defense": 0.02044,
+    "education": 0.03801,
+    "health": 0.04672,
+    "incomeTaxShare": 0.1299,
+    "corporateTaxShare": 0.0557,
+    "consumptionTaxShare": 0.3823,
+    "socialContributionShare": 0.2545,
+    "tradeTaxShare": 0.0104,
+    "otherRevenueShare": 0.1672
+   },
+   "estimated": [
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "IDN",
@@ -1280,7 +3112,33 @@
    "primarySpending": 0.14532,
    "debt": 0.39601,
    "interestRate": 0.05317,
-   "estimated": []
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.2878,
+    "industryEmployment": 0.2195,
+    "servicesEmployment": 0.4927,
+    "selfEmployment": 0.5405,
+    "elderlyShare": 0.0705,
+    "childShare": 0.2493,
+    "gini": 0.361
+   },
+   "budget": {
+    "defense": 0.00821,
+    "education": 0.01275,
+    "health": 0.01449,
+    "incomeTaxShare": 0.1086,
+    "corporateTaxShare": 0.0889,
+    "consumptionTaxShare": 0.3411,
+    "socialContributionShare": 0.1491,
+    "tradeTaxShare": 0.0412,
+    "otherRevenueShare": 0.2711
+   },
+   "estimated": [
+    "consumptionTaxShare",
+    "incomeProfitTaxShare",
+    "socialContributionShare",
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "IND",
@@ -1296,6 +3154,27 @@
    "primarySpending": 0.24325,
    "debt": 0.84749,
    "interestRate": 0.06236,
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.4351,
+    "industryEmployment": 0.2503,
+    "servicesEmployment": 0.3146,
+    "selfEmployment": 0.7613,
+    "elderlyShare": 0.0692,
+    "childShare": 0.2506,
+    "gini": 0.23
+   },
+   "budget": {
+    "defense": 0.02357,
+    "education": 0.04099,
+    "health": 0.01303,
+    "incomeTaxShare": 0.1742,
+    "corporateTaxShare": 0.1742,
+    "consumptionTaxShare": 0.326,
+    "socialContributionShare": 0.001,
+    "tradeTaxShare": 0.0549,
+    "otherRevenueShare": 0.2697
+   },
    "estimated": []
   },
   {
@@ -1312,7 +3191,30 @@
    "primarySpending": 0.21875,
    "debt": 0.42105,
    "interestRate": 0.01027,
-   "estimated": []
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0463,
+    "industryEmployment": 0.1728,
+    "servicesEmployment": 0.7809,
+    "selfEmployment": 0.1408,
+    "elderlyShare": 0.1554,
+    "childShare": 0.1902,
+    "gini": 0.29
+   },
+   "budget": {
+    "defense": 0.00224,
+    "education": 0.02905,
+    "health": 0.05036,
+    "incomeTaxShare": 0.3432,
+    "corporateTaxShare": 0.1471,
+    "consumptionTaxShare": 0.2556,
+    "socialContributionShare": 0.1752,
+    "tradeTaxShare": 0.0104,
+    "otherRevenueShare": 0.0684
+   },
+   "estimated": [
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "IRN",
@@ -1328,7 +3230,33 @@
    "primarySpending": 0.11746,
    "debt": 0.29643,
    "interestRate": 0.03506,
-   "estimated": []
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.1407,
+    "industryEmployment": 0.35,
+    "servicesEmployment": 0.5092,
+    "selfEmployment": 0.434,
+    "elderlyShare": 0.0792,
+    "childShare": 0.2284,
+    "gini": 0.359
+   },
+   "budget": {
+    "defense": 0.02494,
+    "education": 0.02824,
+    "health": 0.02815,
+    "incomeTaxShare": 0.1086,
+    "corporateTaxShare": 0.0889,
+    "consumptionTaxShare": 0.3411,
+    "socialContributionShare": 0.1491,
+    "tradeTaxShare": 0.0412,
+    "otherRevenueShare": 0.2711
+   },
+   "estimated": [
+    "consumptionTaxShare",
+    "incomeProfitTaxShare",
+    "socialContributionShare",
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "IRQ",
@@ -1344,7 +3272,30 @@
    "primarySpending": 0.40519,
    "debt": 0.42078,
    "interestRate": 0.01538,
-   "estimated": []
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.0836,
+    "industryEmployment": 0.2662,
+    "servicesEmployment": 0.6502,
+    "selfEmployment": 0.3155,
+    "elderlyShare": 0.034,
+    "childShare": 0.3709,
+    "gini": 0.298
+   },
+   "budget": {
+    "defense": 0.02263,
+    "education": 0.0406,
+    "health": 0.02546,
+    "incomeTaxShare": 0.011,
+    "corporateTaxShare": 0.009,
+    "consumptionTaxShare": 0.0035,
+    "socialContributionShare": 0.0,
+    "tradeTaxShare": 0.0089,
+    "otherRevenueShare": 0.9676
+   },
+   "estimated": [
+    "education"
+   ]
   },
   {
    "id": "ISL",
@@ -1360,6 +3311,27 @@
    "primarySpending": 0.42097,
    "debt": 0.61601,
    "interestRate": 0.0512,
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0378,
+    "industryEmployment": 0.1825,
+    "servicesEmployment": 0.7798,
+    "selfEmployment": 0.1506,
+    "elderlyShare": 0.1535,
+    "childShare": 0.1806,
+    "gini": 0.268
+   },
+   "budget": {
+    "defense": 0.0,
+    "education": 0.07308,
+    "health": 0.0728,
+    "incomeTaxShare": 0.2419,
+    "corporateTaxShare": 0.1037,
+    "consumptionTaxShare": 0.3519,
+    "socialContributionShare": 0.0952,
+    "tradeTaxShare": 0.0045,
+    "otherRevenueShare": 0.2029
+   },
    "estimated": []
   },
   {
@@ -1376,6 +3348,27 @@
    "primarySpending": 0.37454,
    "debt": 0.6192,
    "interestRate": 0.04117,
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0081,
+    "industryEmployment": 0.1542,
+    "servicesEmployment": 0.8376,
+    "selfEmployment": 0.1153,
+    "elderlyShare": 0.1242,
+    "childShare": 0.2761,
+    "gini": 0.383
+   },
+   "budget": {
+    "defense": 0.05279,
+    "education": 0.05933,
+    "health": 0.04631,
+    "incomeTaxShare": 0.2484,
+    "corporateTaxShare": 0.1065,
+    "consumptionTaxShare": 0.3066,
+    "socialContributionShare": 0.1692,
+    "tradeTaxShare": 0.0029,
+    "otherRevenueShare": 0.1664
+   },
    "estimated": []
   },
   {
@@ -1392,7 +3385,30 @@
    "primarySpending": 0.50234,
    "debt": 1.33939,
    "interestRate": 0.02533,
-   "estimated": []
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0359,
+    "industryEmployment": 0.2664,
+    "servicesEmployment": 0.6977,
+    "selfEmployment": 0.213,
+    "elderlyShare": 0.2422,
+    "childShare": 0.1214,
+    "gini": 0.343
+   },
+   "budget": {
+    "defense": 0.01534,
+    "education": 0.04068,
+    "health": 0.06143,
+    "incomeTaxShare": 0.2357,
+    "corporateTaxShare": 0.101,
+    "consumptionTaxShare": 0.2332,
+    "socialContributionShare": 0.3083,
+    "tradeTaxShare": 0.0104,
+    "otherRevenueShare": 0.1114
+   },
+   "estimated": [
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "JAM",
@@ -1408,7 +3424,30 @@
    "primarySpending": 0.22519,
    "debt": 0.66546,
    "interestRate": 0.07748,
-   "estimated": []
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.1455,
+    "industryEmployment": 0.1724,
+    "servicesEmployment": 0.6821,
+    "selfEmployment": 0.359,
+    "elderlyShare": 0.0786,
+    "childShare": 0.1913,
+    "gini": 0.399
+   },
+   "budget": {
+    "defense": 0.01186,
+    "education": 0.05655,
+    "health": 0.04894,
+    "incomeTaxShare": 0.1778,
+    "corporateTaxShare": 0.1455,
+    "consumptionTaxShare": 0.4457,
+    "socialContributionShare": 0.145,
+    "tradeTaxShare": 0.0859,
+    "otherRevenueShare": 0.0
+   },
+   "estimated": [
+    "socialContributionShare"
+   ]
   },
   {
    "id": "JOR",
@@ -1424,6 +3463,27 @@
    "primarySpending": 0.29376,
    "debt": 0.81031,
    "interestRate": 0.05481,
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.0328,
+    "industryEmployment": 0.1637,
+    "servicesEmployment": 0.8035,
+    "selfEmployment": 0.1151,
+    "elderlyShare": 0.0432,
+    "childShare": 0.3123,
+    "gini": 0.337
+   },
+   "budget": {
+    "defense": 0.04819,
+    "education": 0.03515,
+    "health": 0.03447,
+    "incomeTaxShare": 0.1061,
+    "corporateTaxShare": 0.0868,
+    "consumptionTaxShare": 0.446,
+    "socialContributionShare": 0.0006,
+    "tradeTaxShare": 0.0263,
+    "otherRevenueShare": 0.3344
+   },
    "estimated": []
   },
   {
@@ -1440,7 +3500,33 @@
    "primarySpending": 0.37504,
    "debt": 2.20078,
    "interestRate": 0.005,
-   "estimated": []
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0301,
+    "industryEmployment": 0.2371,
+    "servicesEmployment": 0.7329,
+    "selfEmployment": 0.095,
+    "elderlyShare": 0.2956,
+    "childShare": 0.1165,
+    "gini": 0.323
+   },
+   "budget": {
+    "defense": 0.01097,
+    "education": 0.03337,
+    "health": 0.0911,
+    "incomeTaxShare": 0.1674,
+    "corporateTaxShare": 0.0718,
+    "consumptionTaxShare": 0.2635,
+    "socialContributionShare": 0.2948,
+    "tradeTaxShare": 0.0104,
+    "otherRevenueShare": 0.1921
+   },
+   "estimated": [
+    "consumptionTaxShare",
+    "incomeProfitTaxShare",
+    "socialContributionShare",
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "KAZ",
@@ -1456,7 +3542,30 @@
    "primarySpending": 0.2254,
    "debt": 0.22982,
    "interestRate": 0.03709,
-   "estimated": []
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.1202,
+    "industryEmployment": 0.1981,
+    "servicesEmployment": 0.6817,
+    "selfEmployment": 0.2628,
+    "elderlyShare": 0.0831,
+    "childShare": 0.2954,
+    "gini": 0.292
+   },
+   "budget": {
+    "defense": 0.00445,
+    "education": 0.04865,
+    "health": 0.0248,
+    "incomeTaxShare": 0.1493,
+    "corporateTaxShare": 0.1222,
+    "consumptionTaxShare": 0.2998,
+    "socialContributionShare": 0.1491,
+    "tradeTaxShare": 0.1323,
+    "otherRevenueShare": 0.1473
+   },
+   "estimated": [
+    "socialContributionShare"
+   ]
   },
   {
    "id": "KEN",
@@ -1472,6 +3581,27 @@
    "primarySpending": 0.17818,
    "debt": 0.73405,
    "interestRate": 0.0652,
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.4716,
+    "industryEmployment": 0.1216,
+    "servicesEmployment": 0.4068,
+    "selfEmployment": 0.6525,
+    "elderlyShare": 0.0291,
+    "childShare": 0.3745,
+    "gini": 0.385
+   },
+   "budget": {
+    "defense": 0.00975,
+    "education": 0.03962,
+    "health": 0.01954,
+    "incomeTaxShare": 0.1666,
+    "corporateTaxShare": 0.1666,
+    "consumptionTaxShare": 0.3351,
+    "socialContributionShare": 0.0385,
+    "tradeTaxShare": 0.08,
+    "otherRevenueShare": 0.2131
+   },
    "estimated": []
   },
   {
@@ -1488,6 +3618,27 @@
    "primarySpending": 0.31841,
    "debt": 0.4195,
    "interestRate": 0.02515,
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.1677,
+    "industryEmployment": 0.26,
+    "servicesEmployment": 0.5723,
+    "selfEmployment": 0.3149,
+    "elderlyShare": 0.0543,
+    "childShare": 0.3267,
+    "gini": 0.272
+   },
+   "budget": {
+    "defense": 0.03183,
+    "education": 0.06827,
+    "health": 0.02402,
+    "incomeTaxShare": 0.0608,
+    "corporateTaxShare": 0.0608,
+    "consumptionTaxShare": 0.4267,
+    "socialContributionShare": 0.1505,
+    "tradeTaxShare": 0.0667,
+    "otherRevenueShare": 0.2344
+   },
    "estimated": []
   },
   {
@@ -1504,7 +3655,31 @@
    "primarySpending": 0.18798,
    "debt": 0.26278,
    "interestRate": 0.01035,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.353,
+    "industryEmployment": 0.2756,
+    "servicesEmployment": 0.3713,
+    "selfEmployment": 0.5606,
+    "elderlyShare": 0.0596,
+    "childShare": 0.3011,
+    "gini": 0.3675
+   },
+   "budget": {
+    "defense": 0.01545,
+    "education": 0.02181,
+    "health": 0.01241,
+    "incomeTaxShare": 0.1525,
+    "corporateTaxShare": 0.1525,
+    "consumptionTaxShare": 0.422,
+    "socialContributionShare": 0.026,
+    "tradeTaxShare": 0.0978,
+    "otherRevenueShare": 0.1491
+   },
+   "estimated": [
+    "gini",
+    "socialContributionShare"
+   ]
   },
   {
    "id": "KIR",
@@ -1520,7 +3695,34 @@
    "primarySpending": 0.8,
    "debt": 0.11306,
    "interestRate": 0.014,
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.3653,
+    "industryEmployment": 0.1755,
+    "servicesEmployment": 0.4592,
+    "selfEmployment": 0.6507,
+    "elderlyShare": 0.0412,
+    "childShare": 0.3493,
+    "gini": 0.247
+   },
+   "budget": {
+    "defense": 0.01453,
+    "education": 0.16391,
+    "health": 0.08588,
+    "incomeTaxShare": 0.0371,
+    "corporateTaxShare": 0.0371,
+    "consumptionTaxShare": 0.1175,
+    "socialContributionShare": 0.026,
+    "tradeTaxShare": 0.0046,
+    "otherRevenueShare": 0.7777
+   },
    "estimated": [
+    "agricultureEmployment",
+    "defense",
+    "industryEmployment",
+    "selfEmployment",
+    "servicesEmployment",
+    "socialContributionShare",
     "unemployment"
    ]
   },
@@ -1538,7 +3740,35 @@
    "primarySpending": 0.42503,
    "debt": 0.60015,
    "interestRate": 0.02015,
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0314,
+    "industryEmployment": 0.2232,
+    "servicesEmployment": 0.7455,
+    "selfEmployment": 0.1349,
+    "elderlyShare": 0.107,
+    "childShare": 0.1833,
+    "gini": 0.323
+   },
+   "budget": {
+    "defense": 0.01691,
+    "education": 0.03497,
+    "health": 0.03112,
+    "incomeTaxShare": 0.1085,
+    "corporateTaxShare": 0.0465,
+    "consumptionTaxShare": 0.2101,
+    "socialContributionShare": 0.2948,
+    "tradeTaxShare": 0.1295,
+    "otherRevenueShare": 0.2107
+   },
    "estimated": [
+    "agricultureEmployment",
+    "defense",
+    "gini",
+    "industryEmployment",
+    "selfEmployment",
+    "servicesEmployment",
+    "socialContributionShare",
     "unemployment"
    ]
   },
@@ -1556,6 +3786,27 @@
    "primarySpending": 0.34939,
    "debt": 0.50562,
    "interestRate": 0.005,
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0532,
+    "industryEmployment": 0.2399,
+    "servicesEmployment": 0.7068,
+    "selfEmployment": 0.2318,
+    "elderlyShare": 0.1834,
+    "childShare": 0.1097,
+    "gini": 0.329
+   },
+   "budget": {
+    "defense": 0.02599,
+    "education": 0.05409,
+    "health": 0.05018,
+    "incomeTaxShare": 0.2099,
+    "corporateTaxShare": 0.09,
+    "consumptionTaxShare": 0.161,
+    "socialContributionShare": 0.2924,
+    "tradeTaxShare": 0.0109,
+    "otherRevenueShare": 0.2358
+   },
    "estimated": []
   },
   {
@@ -1572,7 +3823,39 @@
    "primarySpending": 0.29375,
    "debt": 0.18628,
    "interestRate": 0.02142,
-   "estimated": []
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.1667,
+    "industryEmployment": 0.2169,
+    "servicesEmployment": 0.6164,
+    "selfEmployment": 0.3249,
+    "elderlyShare": 0.0964,
+    "childShare": 0.2129,
+    "gini": 0.383
+   },
+   "budget": {
+    "defense": 0.01274,
+    "education": 0.0406,
+    "health": 0.03378,
+    "incomeTaxShare": 0.1086,
+    "corporateTaxShare": 0.0889,
+    "consumptionTaxShare": 0.3411,
+    "socialContributionShare": 0.1491,
+    "tradeTaxShare": 0.0412,
+    "otherRevenueShare": 0.2711
+   },
+   "estimated": [
+    "agricultureEmployment",
+    "consumptionTaxShare",
+    "education",
+    "health",
+    "incomeProfitTaxShare",
+    "industryEmployment",
+    "selfEmployment",
+    "servicesEmployment",
+    "socialContributionShare",
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "KWT",
@@ -1588,8 +3871,34 @@
    "primarySpending": 0.48264,
    "debt": 0.03133,
    "interestRate": 0.0156,
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0195,
+    "industryEmployment": 0.252,
+    "servicesEmployment": 0.7285,
+    "selfEmployment": 0.0293,
+    "elderlyShare": 0.0295,
+    "childShare": 0.186,
+    "gini": 0.323
+   },
+   "budget": {
+    "defense": 0.0428,
+    "education": 0.05026,
+    "health": 0.04395,
+    "incomeTaxShare": 0.1674,
+    "corporateTaxShare": 0.0718,
+    "consumptionTaxShare": 0.2635,
+    "socialContributionShare": 0.2948,
+    "tradeTaxShare": 0.0104,
+    "otherRevenueShare": 0.1921
+   },
    "estimated": [
-    "interest"
+    "consumptionTaxShare",
+    "gini",
+    "incomeProfitTaxShare",
+    "interest",
+    "socialContributionShare",
+    "tradeTaxShare"
    ]
   },
   {
@@ -1606,7 +3915,31 @@
    "primarySpending": 0.15681,
    "debt": 1.08783,
    "interestRate": 0.00697,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.6939,
+    "industryEmployment": 0.0725,
+    "servicesEmployment": 0.2336,
+    "selfEmployment": 0.7766,
+    "elderlyShare": 0.0454,
+    "childShare": 0.3056,
+    "gini": 0.388
+   },
+   "budget": {
+    "defense": 0.01453,
+    "education": 0.01234,
+    "health": 0.00528,
+    "incomeTaxShare": 0.0967,
+    "corporateTaxShare": 0.0967,
+    "consumptionTaxShare": 0.5389,
+    "socialContributionShare": 0.026,
+    "tradeTaxShare": 0.0808,
+    "otherRevenueShare": 0.161
+   },
+   "estimated": [
+    "defense",
+    "socialContributionShare"
+   ]
   },
   {
    "id": "LBN",
@@ -1622,6 +3955,27 @@
    "primarySpending": 0.12976,
    "debt": 1.75563,
    "interestRate": 0.005,
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.0351,
+    "industryEmployment": 0.2012,
+    "servicesEmployment": 0.7636,
+    "selfEmployment": 0.2838,
+    "elderlyShare": 0.0982,
+    "childShare": 0.2672,
+    "gini": 0.355
+   },
+   "budget": {
+    "defense": 0.01202,
+    "education": 0.01504,
+    "health": 0.02113,
+    "incomeTaxShare": 0.1256,
+    "corporateTaxShare": 0.1256,
+    "consumptionTaxShare": 0.349,
+    "socialContributionShare": 0.0133,
+    "tradeTaxShare": 0.0252,
+    "otherRevenueShare": 0.3614
+   },
    "estimated": []
   },
   {
@@ -1638,7 +3992,33 @@
    "primarySpending": 0.28532,
    "debt": 0.5716,
    "interestRate": 0.00673,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LIC",
+    "agricultureEmployment": 0.4259,
+    "industryEmployment": 0.082,
+    "servicesEmployment": 0.4921,
+    "selfEmployment": 0.7888,
+    "elderlyShare": 0.0328,
+    "childShare": 0.4,
+    "gini": 0.353
+   },
+   "budget": {
+    "defense": 0.01424,
+    "education": 0.02267,
+    "health": 0.01301,
+    "incomeTaxShare": 0.1268,
+    "corporateTaxShare": 0.1268,
+    "consumptionTaxShare": 0.299,
+    "socialContributionShare": 0.0556,
+    "tradeTaxShare": 0.0999,
+    "otherRevenueShare": 0.2919
+   },
+   "estimated": [
+    "consumptionTaxShare",
+    "incomeProfitTaxShare",
+    "socialContributionShare",
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "LBY",
@@ -1654,7 +4034,35 @@
    "primarySpending": 0.8,
    "debt": 0.91595,
    "interestRate": 0.005,
-   "estimated": []
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.106,
+    "industryEmployment": 0.1828,
+    "servicesEmployment": 0.7112,
+    "selfEmployment": 0.2648,
+    "elderlyShare": 0.0488,
+    "childShare": 0.2796,
+    "gini": 0.38
+   },
+   "budget": {
+    "defense": 0.03572,
+    "education": 0.0406,
+    "health": 0.06256,
+    "incomeTaxShare": 0.1086,
+    "corporateTaxShare": 0.0889,
+    "consumptionTaxShare": 0.3411,
+    "socialContributionShare": 0.1491,
+    "tradeTaxShare": 0.0412,
+    "otherRevenueShare": 0.2711
+   },
+   "estimated": [
+    "consumptionTaxShare",
+    "education",
+    "gini",
+    "incomeProfitTaxShare",
+    "socialContributionShare",
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "LCA",
@@ -1670,7 +4078,34 @@
    "primarySpending": 0.21498,
    "debt": 0.73974,
    "interestRate": 0.0451,
-   "estimated": []
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.0993,
+    "industryEmployment": 0.1507,
+    "servicesEmployment": 0.75,
+    "selfEmployment": 0.3006,
+    "elderlyShare": 0.093,
+    "childShare": 0.1787,
+    "gini": 0.437
+   },
+   "budget": {
+    "defense": 0.01323,
+    "education": 0.02742,
+    "health": 0.02384,
+    "incomeTaxShare": 0.1086,
+    "corporateTaxShare": 0.0889,
+    "consumptionTaxShare": 0.3411,
+    "socialContributionShare": 0.1491,
+    "tradeTaxShare": 0.0412,
+    "otherRevenueShare": 0.2711
+   },
+   "estimated": [
+    "consumptionTaxShare",
+    "defense",
+    "incomeProfitTaxShare",
+    "socialContributionShare",
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "LIE",
@@ -1686,8 +4121,40 @@
    "primarySpending": 0.24053,
    "debt": 0.00473,
    "interestRate": 0.0156,
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0314,
+    "industryEmployment": 0.2232,
+    "servicesEmployment": 0.7455,
+    "selfEmployment": 0.1349,
+    "elderlyShare": 0.2016,
+    "childShare": 0.1435,
+    "gini": 0.323
+   },
+   "budget": {
+    "defense": 0.01691,
+    "education": 0.04501,
+    "health": 0.03946,
+    "incomeTaxShare": 0.1674,
+    "corporateTaxShare": 0.0718,
+    "consumptionTaxShare": 0.2635,
+    "socialContributionShare": 0.2948,
+    "tradeTaxShare": 0.0104,
+    "otherRevenueShare": 0.1921
+   },
    "estimated": [
-    "interest"
+    "agricultureEmployment",
+    "consumptionTaxShare",
+    "defense",
+    "education",
+    "gini",
+    "incomeProfitTaxShare",
+    "industryEmployment",
+    "interest",
+    "selfEmployment",
+    "servicesEmployment",
+    "socialContributionShare",
+    "tradeTaxShare"
    ]
   },
   {
@@ -1704,6 +4171,27 @@
    "primarySpending": 0.10534,
    "debt": 1.09897,
    "interestRate": 0.08114,
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.2646,
+    "industryEmployment": 0.2626,
+    "servicesEmployment": 0.4728,
+    "selfEmployment": 0.4209,
+    "elderlyShare": 0.1174,
+    "childShare": 0.2236,
+    "gini": 0.377
+   },
+   "budget": {
+    "defense": 0.01323,
+    "education": 0.01828,
+    "health": 0.01237,
+    "incomeTaxShare": 0.163,
+    "corporateTaxShare": 0.1334,
+    "consumptionTaxShare": 0.4608,
+    "socialContributionShare": 0.0118,
+    "tradeTaxShare": 0.1277,
+    "otherRevenueShare": 0.1034
+   },
    "estimated": []
   },
   {
@@ -1720,7 +4208,30 @@
    "primarySpending": 0.47066,
    "debt": 0.60951,
    "interestRate": 0.03165,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.3154,
+    "industryEmployment": 0.3298,
+    "servicesEmployment": 0.3549,
+    "selfEmployment": 0.3874,
+    "elderlyShare": 0.0383,
+    "childShare": 0.3492,
+    "gini": 0.449
+   },
+   "budget": {
+    "defense": 0.01625,
+    "education": 0.0729,
+    "health": 0.05844,
+    "incomeTaxShare": 0.1011,
+    "corporateTaxShare": 0.1011,
+    "consumptionTaxShare": 0.3325,
+    "socialContributionShare": 0.026,
+    "tradeTaxShare": 0.1284,
+    "otherRevenueShare": 0.311
+   },
+   "estimated": [
+    "socialContributionShare"
+   ]
   },
   {
    "id": "LTU",
@@ -1736,7 +4247,30 @@
    "primarySpending": 0.36971,
    "debt": 0.37106,
    "interestRate": 0.00584,
-   "estimated": []
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0506,
+    "industryEmployment": 0.2581,
+    "servicesEmployment": 0.6913,
+    "selfEmployment": 0.1192,
+    "elderlyShare": 0.1986,
+    "childShare": 0.1489,
+    "gini": 0.36
+   },
+   "budget": {
+    "defense": 0.02836,
+    "education": 0.04253,
+    "health": 0.04759,
+    "incomeTaxShare": 0.2074,
+    "corporateTaxShare": 0.0889,
+    "consumptionTaxShare": 0.3135,
+    "socialContributionShare": 0.2972,
+    "tradeTaxShare": 0.0104,
+    "otherRevenueShare": 0.0826
+   },
+   "estimated": [
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "LUX",
@@ -1752,7 +4286,30 @@
    "primarySpending": 0.4639,
    "debt": 0.24682,
    "interestRate": 0.005,
-   "estimated": []
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0095,
+    "industryEmployment": 0.09,
+    "servicesEmployment": 0.9005,
+    "selfEmployment": 0.1031,
+    "elderlyShare": 0.1511,
+    "childShare": 0.1582,
+    "gini": 0.336
+   },
+   "budget": {
+    "defense": 0.00681,
+    "education": 0.03745,
+    "health": 0.05013,
+    "incomeTaxShare": 0.2355,
+    "corporateTaxShare": 0.1009,
+    "consumptionTaxShare": 0.2561,
+    "socialContributionShare": 0.2903,
+    "tradeTaxShare": 0.0104,
+    "otherRevenueShare": 0.1068
+   },
+   "estimated": [
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "LVA",
@@ -1768,7 +4325,30 @@
    "primarySpending": 0.42283,
    "debt": 0.4443,
    "interestRate": 0.01302,
-   "estimated": []
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0584,
+    "industryEmployment": 0.2332,
+    "servicesEmployment": 0.7084,
+    "selfEmployment": 0.1319,
+    "elderlyShare": 0.2133,
+    "childShare": 0.1569,
+    "gini": 0.34
+   },
+   "budget": {
+    "defense": 0.02933,
+    "education": 0.0432,
+    "health": 0.04327,
+    "incomeTaxShare": 0.0606,
+    "corporateTaxShare": 0.026,
+    "consumptionTaxShare": 0.4003,
+    "socialContributionShare": 0.3127,
+    "tradeTaxShare": 0.0104,
+    "otherRevenueShare": 0.1899
+   },
+   "estimated": [
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "MAR",
@@ -1784,7 +4364,30 @@
    "primarySpending": 0.28026,
    "debt": 0.68433,
    "interestRate": 0.03071,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.291,
+    "industryEmployment": 0.2326,
+    "servicesEmployment": 0.4765,
+    "selfEmployment": 0.4068,
+    "elderlyShare": 0.0783,
+    "childShare": 0.2604,
+    "gini": 0.395
+   },
+   "budget": {
+    "defense": 0.03553,
+    "education": 0.06021,
+    "health": 0.03428,
+    "incomeTaxShare": 0.1527,
+    "corporateTaxShare": 0.1527,
+    "consumptionTaxShare": 0.4216,
+    "socialContributionShare": 0.026,
+    "tradeTaxShare": 0.044,
+    "otherRevenueShare": 0.2029
+   },
+   "estimated": [
+    "socialContributionShare"
+   ]
   },
   {
    "id": "MCO",
@@ -1800,11 +4403,42 @@
    "primarySpending": 0.38182,
    "debt": 0.54762,
    "interestRate": 0.01249,
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0314,
+    "industryEmployment": 0.2232,
+    "servicesEmployment": 0.7455,
+    "selfEmployment": 0.1349,
+    "elderlyShare": 0.3636,
+    "childShare": 0.1318,
+    "gini": 0.323
+   },
+   "budget": {
+    "defense": 0.01691,
+    "education": 0.01732,
+    "health": 0.02672,
+    "incomeTaxShare": 0.1674,
+    "corporateTaxShare": 0.0718,
+    "consumptionTaxShare": 0.2635,
+    "socialContributionShare": 0.2948,
+    "tradeTaxShare": 0.0104,
+    "otherRevenueShare": 0.1921
+   },
    "estimated": [
+    "agricultureEmployment",
+    "consumptionTaxShare",
     "debt",
+    "defense",
     "expense",
+    "gini",
+    "incomeProfitTaxShare",
+    "industryEmployment",
     "interest",
     "revenue",
+    "selfEmployment",
+    "servicesEmployment",
+    "socialContributionShare",
+    "tradeTaxShare",
     "unemployment"
    ]
   },
@@ -1822,6 +4456,27 @@
    "primarySpending": 0.37039,
    "debt": 0.34945,
    "interestRate": 0.05125,
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.5112,
+    "industryEmployment": 0.1332,
+    "servicesEmployment": 0.3556,
+    "selfEmployment": 0.5877,
+    "elderlyShare": 0.1561,
+    "childShare": 0.1999,
+    "gini": 0.268
+   },
+   "budget": {
+    "defense": 0.00552,
+    "education": 0.06557,
+    "health": 0.04686,
+    "incomeTaxShare": 0.0681,
+    "corporateTaxShare": 0.0557,
+    "consumptionTaxShare": 0.4436,
+    "socialContributionShare": 0.3074,
+    "tradeTaxShare": 0.0298,
+    "otherRevenueShare": 0.0953
+   },
    "estimated": []
   },
   {
@@ -1838,6 +4493,27 @@
    "primarySpending": 0.17035,
    "debt": 0.52149,
    "interestRate": 0.01338,
+   "society": {
+    "incomeGroup": "LIC",
+    "agricultureEmployment": 0.6989,
+    "industryEmployment": 0.0984,
+    "servicesEmployment": 0.2027,
+    "selfEmployment": 0.887,
+    "elderlyShare": 0.0334,
+    "childShare": 0.3957,
+    "gini": 0.368
+   },
+   "budget": {
+    "defense": 0.00648,
+    "education": 0.03048,
+    "health": 0.00988,
+    "incomeTaxShare": 0.1124,
+    "corporateTaxShare": 0.1124,
+    "consumptionTaxShare": 0.3991,
+    "socialContributionShare": 0.0556,
+    "tradeTaxShare": 0.1134,
+    "otherRevenueShare": 0.2071
+   },
    "estimated": []
   },
   {
@@ -1854,7 +4530,31 @@
    "primarySpending": 0.42819,
    "debt": 1.22434,
    "interestRate": 0.03148,
-   "estimated": []
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.1202,
+    "industryEmployment": 0.1695,
+    "servicesEmployment": 0.7103,
+    "selfEmployment": 0.2061,
+    "elderlyShare": 0.0435,
+    "childShare": 0.2005,
+    "gini": 0.293
+   },
+   "budget": {
+    "defense": 0.01323,
+    "education": 0.05167,
+    "health": 0.07298,
+    "incomeTaxShare": 0.0697,
+    "corporateTaxShare": 0.057,
+    "consumptionTaxShare": 0.4227,
+    "socialContributionShare": 0.1491,
+    "tradeTaxShare": 0.177,
+    "otherRevenueShare": 0.1246
+   },
+   "estimated": [
+    "defense",
+    "socialContributionShare"
+   ]
   },
   {
    "id": "MEX",
@@ -1870,6 +4570,27 @@
    "primarySpending": 0.22783,
    "debt": 0.52745,
    "interestRate": 0.10986,
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.1196,
+    "industryEmployment": 0.2503,
+    "servicesEmployment": 0.63,
+    "selfEmployment": 0.3135,
+    "elderlyShare": 0.0799,
+    "childShare": 0.2492,
+    "gini": 0.435
+   },
+   "budget": {
+    "defense": 0.0066,
+    "education": 0.0406,
+    "health": 0.02676,
+    "incomeTaxShare": 0.2273,
+    "corporateTaxShare": 0.186,
+    "consumptionTaxShare": 0.303,
+    "socialContributionShare": 0.1252,
+    "tradeTaxShare": 0.0169,
+    "otherRevenueShare": 0.1417
+   },
    "estimated": []
   },
   {
@@ -1886,7 +4607,34 @@
    "primarySpending": 0.7017,
    "debt": 0.17154,
    "interestRate": 0.0115,
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.1667,
+    "industryEmployment": 0.2169,
+    "servicesEmployment": 0.6164,
+    "selfEmployment": 0.3249,
+    "elderlyShare": 0.0438,
+    "childShare": 0.3471,
+    "gini": 0.355
+   },
+   "budget": {
+    "defense": 0.01323,
+    "education": 0.07701,
+    "health": 0.1006,
+    "incomeTaxShare": 0.0532,
+    "corporateTaxShare": 0.0435,
+    "consumptionTaxShare": 0.0839,
+    "socialContributionShare": 0.1491,
+    "tradeTaxShare": 0.0541,
+    "otherRevenueShare": 0.6162
+   },
    "estimated": [
+    "agricultureEmployment",
+    "defense",
+    "industryEmployment",
+    "selfEmployment",
+    "servicesEmployment",
+    "socialContributionShare",
     "unemployment"
    ]
   },
@@ -1904,7 +4652,30 @@
    "primarySpending": 0.33852,
    "debt": 0.50587,
    "interestRate": 0.02828,
-   "estimated": []
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.0777,
+    "industryEmployment": 0.3104,
+    "servicesEmployment": 0.6119,
+    "selfEmployment": 0.1593,
+    "elderlyShare": 0.175,
+    "childShare": 0.1707,
+    "gini": 0.335
+   },
+   "budget": {
+    "defense": 0.01768,
+    "education": 0.0406,
+    "health": 0.04276,
+    "incomeTaxShare": 0.0951,
+    "corporateTaxShare": 0.0778,
+    "consumptionTaxShare": 0.3714,
+    "socialContributionShare": 0.3279,
+    "tradeTaxShare": 0.0412,
+    "otherRevenueShare": 0.0865
+   },
+   "estimated": [
+    "education"
+   ]
   },
   {
    "id": "MLI",
@@ -1920,7 +4691,30 @@
    "primarySpending": 0.19855,
    "debt": 0.44242,
    "interestRate": 0.03009,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LIC",
+    "agricultureEmployment": 0.6385,
+    "industryEmployment": 0.0864,
+    "servicesEmployment": 0.2751,
+    "selfEmployment": 0.7705,
+    "elderlyShare": 0.0241,
+    "childShare": 0.4646,
+    "gini": 0.357
+   },
+   "budget": {
+    "defense": 0.03847,
+    "education": 0.04185,
+    "health": 0.01349,
+    "incomeTaxShare": 0.177,
+    "corporateTaxShare": 0.177,
+    "consumptionTaxShare": 0.3927,
+    "socialContributionShare": 0.0556,
+    "tradeTaxShare": 0.1071,
+    "otherRevenueShare": 0.0907
+   },
+   "estimated": [
+    "socialContributionShare"
+   ]
   },
   {
    "id": "MLT",
@@ -1936,7 +4730,30 @@
    "primarySpending": 0.34768,
    "debt": 0.46943,
    "interestRate": 0.02196,
-   "estimated": []
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0111,
+    "industryEmployment": 0.1802,
+    "servicesEmployment": 0.8087,
+    "selfEmployment": 0.1408,
+    "elderlyShare": 0.198,
+    "childShare": 0.1315,
+    "gini": 0.318
+   },
+   "budget": {
+    "defense": 0.00377,
+    "education": 0.04713,
+    "health": 0.05838,
+    "incomeTaxShare": 0.2587,
+    "corporateTaxShare": 0.1109,
+    "consumptionTaxShare": 0.3118,
+    "socialContributionShare": 0.166,
+    "tradeTaxShare": 0.0104,
+    "otherRevenueShare": 0.1422
+   },
+   "estimated": [
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "MMR",
@@ -1952,6 +4769,27 @@
    "primarySpending": 0.18881,
    "debt": 0.53205,
    "interestRate": 0.04702,
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.4525,
+    "industryEmployment": 0.1874,
+    "servicesEmployment": 0.3601,
+    "selfEmployment": 0.654,
+    "elderlyShare": 0.0709,
+    "childShare": 0.2452,
+    "gini": 0.307
+   },
+   "budget": {
+    "defense": 0.03733,
+    "education": 0.02,
+    "health": 0.00495,
+    "incomeTaxShare": 0.0661,
+    "corporateTaxShare": 0.0661,
+    "consumptionTaxShare": 0.2441,
+    "socialContributionShare": 0.0078,
+    "tradeTaxShare": 0.0279,
+    "otherRevenueShare": 0.5879
+   },
    "estimated": []
   },
   {
@@ -1968,7 +4806,34 @@
    "primarySpending": 0.38934,
    "debt": 0.5838,
    "interestRate": 0.03092,
-   "estimated": []
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.0446,
+    "industryEmployment": 0.1843,
+    "servicesEmployment": 0.7711,
+    "selfEmployment": 0.1801,
+    "elderlyShare": 0.1747,
+    "childShare": 0.1833,
+    "gini": 0.343
+   },
+   "budget": {
+    "defense": 0.01496,
+    "education": 0.0406,
+    "health": 0.06694,
+    "incomeTaxShare": 0.1086,
+    "corporateTaxShare": 0.0889,
+    "consumptionTaxShare": 0.3411,
+    "socialContributionShare": 0.1491,
+    "tradeTaxShare": 0.0412,
+    "otherRevenueShare": 0.2711
+   },
+   "estimated": [
+    "consumptionTaxShare",
+    "education",
+    "incomeProfitTaxShare",
+    "socialContributionShare",
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "MNG",
@@ -1984,6 +4849,27 @@
    "primarySpending": 0.30322,
    "debt": 0.46705,
    "interestRate": 0.03352,
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.2839,
+    "industryEmployment": 0.2263,
+    "servicesEmployment": 0.4898,
+    "selfEmployment": 0.4205,
+    "elderlyShare": 0.0486,
+    "childShare": 0.3264,
+    "gini": 0.314
+   },
+   "budget": {
+    "defense": 0.00543,
+    "education": 0.03658,
+    "health": 0.0273,
+    "incomeTaxShare": 0.063,
+    "corporateTaxShare": 0.0516,
+    "consumptionTaxShare": 0.231,
+    "socialContributionShare": 0.1693,
+    "tradeTaxShare": 0.0598,
+    "otherRevenueShare": 0.4254
+   },
    "estimated": []
   },
   {
@@ -2000,6 +4886,27 @@
    "primarySpending": 0.29475,
    "debt": 0.90828,
    "interestRate": 0.04247,
+   "society": {
+    "incomeGroup": "LIC",
+    "agricultureEmployment": 0.7305,
+    "industryEmployment": 0.064,
+    "servicesEmployment": 0.2055,
+    "selfEmployment": 0.8559,
+    "elderlyShare": 0.0277,
+    "childShare": 0.4475,
+    "gini": 0.496
+   },
+   "budget": {
+    "defense": 0.01928,
+    "education": 0.05976,
+    "health": 0.02249,
+    "incomeTaxShare": 0.1915,
+    "corporateTaxShare": 0.1915,
+    "consumptionTaxShare": 0.2844,
+    "socialContributionShare": 0.0034,
+    "tradeTaxShare": 0.052,
+    "otherRevenueShare": 0.2772
+   },
    "estimated": []
   },
   {
@@ -2016,7 +4923,33 @@
    "primarySpending": 0.23843,
    "debt": 0.48599,
    "interestRate": 0.01945,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.3341,
+    "industryEmployment": 0.1483,
+    "servicesEmployment": 0.5177,
+    "selfEmployment": 0.5799,
+    "elderlyShare": 0.0322,
+    "childShare": 0.4304,
+    "gini": 0.32
+   },
+   "budget": {
+    "defense": 0.02591,
+    "education": 0.04715,
+    "health": 0.01484,
+    "incomeTaxShare": 0.1272,
+    "corporateTaxShare": 0.1272,
+    "consumptionTaxShare": 0.3338,
+    "socialContributionShare": 0.026,
+    "tradeTaxShare": 0.0733,
+    "otherRevenueShare": 0.3125
+   },
+   "estimated": [
+    "consumptionTaxShare",
+    "incomeProfitTaxShare",
+    "socialContributionShare",
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "MUS",
@@ -2032,6 +4965,27 @@
    "primarySpending": 0.25845,
    "debt": 0.81451,
    "interestRate": 0.03247,
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.0507,
+    "industryEmployment": 0.2116,
+    "servicesEmployment": 0.7377,
+    "selfEmployment": 0.1846,
+    "elderlyShare": 0.1294,
+    "childShare": 0.1512,
+    "gini": 0.368
+   },
+   "budget": {
+    "defense": 0.00167,
+    "education": 0.04575,
+    "health": 0.02467,
+    "incomeTaxShare": 0.1429,
+    "corporateTaxShare": 0.1169,
+    "consumptionTaxShare": 0.5302,
+    "socialContributionShare": 0.0664,
+    "tradeTaxShare": 0.0114,
+    "otherRevenueShare": 0.1321
+   },
    "estimated": []
   },
   {
@@ -2048,7 +5002,30 @@
    "primarySpending": 0.20572,
    "debt": 0.84529,
    "interestRate": 0.05809,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LIC",
+    "agricultureEmployment": 0.653,
+    "industryEmployment": 0.0733,
+    "servicesEmployment": 0.2737,
+    "selfEmployment": 0.6136,
+    "elderlyShare": 0.0259,
+    "childShare": 0.4132,
+    "gini": 0.385
+   },
+   "budget": {
+    "defense": 0.01165,
+    "education": 0.02749,
+    "health": 0.00838,
+    "incomeTaxShare": 0.1805,
+    "corporateTaxShare": 0.1805,
+    "consumptionTaxShare": 0.299,
+    "socialContributionShare": 0.0556,
+    "tradeTaxShare": 0.0736,
+    "otherRevenueShare": 0.2109
+   },
+   "estimated": [
+    "socialContributionShare"
+   ]
   },
   {
    "id": "MYS",
@@ -2064,7 +5041,30 @@
    "primarySpending": 0.23097,
    "debt": 0.69662,
    "interestRate": 0.02707,
-   "estimated": []
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.0975,
+    "industryEmployment": 0.26,
+    "servicesEmployment": 0.6425,
+    "selfEmployment": 0.2562,
+    "elderlyShare": 0.0745,
+    "childShare": 0.2229,
+    "gini": 0.407
+   },
+   "budget": {
+    "defense": 0.0098,
+    "education": 0.03515,
+    "health": 0.0198,
+    "incomeTaxShare": 0.2717,
+    "corporateTaxShare": 0.2223,
+    "consumptionTaxShare": 0.198,
+    "socialContributionShare": 0.1491,
+    "tradeTaxShare": 0.0161,
+    "otherRevenueShare": 0.1428
+   },
+   "estimated": [
+    "socialContributionShare"
+   ]
   },
   {
    "id": "NAM",
@@ -2080,6 +5080,27 @@
    "primarySpending": 0.31805,
    "debt": 0.67244,
    "interestRate": 0.07234,
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.2294,
+    "industryEmployment": 0.1639,
+    "servicesEmployment": 0.6067,
+    "selfEmployment": 0.3701,
+    "elderlyShare": 0.0357,
+    "childShare": 0.3729,
+    "gini": 0.591
+   },
+   "budget": {
+    "defense": 0.02744,
+    "education": 0.09392,
+    "health": 0.05548,
+    "incomeTaxShare": 0.1857,
+    "corporateTaxShare": 0.1857,
+    "consumptionTaxShare": 0.2424,
+    "socialContributionShare": 0.0061,
+    "tradeTaxShare": 0.3051,
+    "otherRevenueShare": 0.0751
+   },
    "estimated": []
   },
   {
@@ -2096,7 +5117,33 @@
    "primarySpending": 0.14298,
    "debt": 0.51352,
    "interestRate": 0.02673,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LIC",
+    "agricultureEmployment": 0.7419,
+    "industryEmployment": 0.0921,
+    "servicesEmployment": 0.166,
+    "selfEmployment": 0.8995,
+    "elderlyShare": 0.0257,
+    "childShare": 0.4697,
+    "gini": 0.329
+   },
+   "budget": {
+    "defense": 0.01976,
+    "education": 0.04074,
+    "health": 0.00972,
+    "incomeTaxShare": 0.1268,
+    "corporateTaxShare": 0.1268,
+    "consumptionTaxShare": 0.299,
+    "socialContributionShare": 0.0556,
+    "tradeTaxShare": 0.0999,
+    "otherRevenueShare": 0.2919
+   },
+   "estimated": [
+    "consumptionTaxShare",
+    "incomeProfitTaxShare",
+    "socialContributionShare",
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "NGA",
@@ -2112,7 +5159,33 @@
    "primarySpending": 0.07573,
    "debt": 0.36336,
    "interestRate": 0.07817,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.347,
+    "industryEmployment": 0.1682,
+    "servicesEmployment": 0.4847,
+    "selfEmployment": 0.8667,
+    "elderlyShare": 0.0303,
+    "childShare": 0.4149,
+    "gini": 0.339
+   },
+   "budget": {
+    "defense": 0.00843,
+    "education": 0.00319,
+    "health": 0.00601,
+    "incomeTaxShare": 0.1272,
+    "corporateTaxShare": 0.1272,
+    "consumptionTaxShare": 0.3338,
+    "socialContributionShare": 0.026,
+    "tradeTaxShare": 0.0733,
+    "otherRevenueShare": 0.3125
+   },
+   "estimated": [
+    "consumptionTaxShare",
+    "incomeProfitTaxShare",
+    "socialContributionShare",
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "NIC",
@@ -2128,7 +5201,30 @@
    "primarySpending": 0.24523,
    "debt": 0.42391,
    "interestRate": 0.03515,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.31,
+    "industryEmployment": 0.1692,
+    "servicesEmployment": 0.5208,
+    "selfEmployment": 0.4475,
+    "elderlyShare": 0.0538,
+    "childShare": 0.292,
+    "gini": 0.462
+   },
+   "budget": {
+    "defense": 0.00555,
+    "education": 0.0287,
+    "health": 0.04766,
+    "incomeTaxShare": 0.2089,
+    "corporateTaxShare": 0.2089,
+    "consumptionTaxShare": 0.4645,
+    "socialContributionShare": 0.026,
+    "tradeTaxShare": 0.0339,
+    "otherRevenueShare": 0.0578
+   },
+   "estimated": [
+    "socialContributionShare"
+   ]
   },
   {
    "id": "NLD",
@@ -2144,7 +5240,30 @@
    "primarySpending": 0.43624,
    "debt": 0.4585,
    "interestRate": 0.00843,
-   "estimated": []
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0181,
+    "industryEmployment": 0.1433,
+    "servicesEmployment": 0.8386,
+    "selfEmployment": 0.1679,
+    "elderlyShare": 0.2016,
+    "childShare": 0.1517,
+    "gini": 0.257
+   },
+   "budget": {
+    "defense": 0.01441,
+    "education": 0.05179,
+    "health": 0.06722,
+    "incomeTaxShare": 0.2471,
+    "corporateTaxShare": 0.1059,
+    "consumptionTaxShare": 0.2635,
+    "socialContributionShare": 0.3167,
+    "tradeTaxShare": 0.0104,
+    "otherRevenueShare": 0.0565
+   },
+   "estimated": [
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "NOR",
@@ -2160,6 +5279,27 @@
    "primarySpending": 0.44245,
    "debt": 0.42438,
    "interestRate": 0.005,
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.024,
+    "industryEmployment": 0.1872,
+    "servicesEmployment": 0.7889,
+    "selfEmployment": 0.0494,
+    "elderlyShare": 0.1853,
+    "childShare": 0.1651,
+    "gini": 0.265
+   },
+   "budget": {
+    "defense": 0.01822,
+    "education": 0.05432,
+    "health": 0.08119,
+    "incomeTaxShare": 0.2205,
+    "corporateTaxShare": 0.0945,
+    "consumptionTaxShare": 0.1782,
+    "socialContributionShare": 0.1709,
+    "tradeTaxShare": 0.0014,
+    "otherRevenueShare": 0.3344
+   },
    "estimated": []
   },
   {
@@ -2176,7 +5316,30 @@
    "primarySpending": 0.23758,
    "debt": 0.46962,
    "interestRate": 0.02818,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.2395,
+    "industryEmployment": 0.3085,
+    "servicesEmployment": 0.452,
+    "selfEmployment": 0.7909,
+    "elderlyShare": 0.0636,
+    "childShare": 0.2871,
+    "gini": 0.3
+   },
+   "budget": {
+    "defense": 0.01124,
+    "education": 0.03956,
+    "health": 0.01928,
+    "incomeTaxShare": 0.1335,
+    "corporateTaxShare": 0.1335,
+    "consumptionTaxShare": 0.3798,
+    "socialContributionShare": 0.026,
+    "tradeTaxShare": 0.1658,
+    "otherRevenueShare": 0.1614
+   },
+   "estimated": [
+    "socialContributionShare"
+   ]
   },
   {
    "id": "NRU",
@@ -2192,7 +5355,34 @@
    "primarySpending": 0.8,
    "debt": 0.19244,
    "interestRate": 0.005,
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0314,
+    "industryEmployment": 0.2232,
+    "servicesEmployment": 0.7455,
+    "selfEmployment": 0.1349,
+    "elderlyShare": 0.0268,
+    "childShare": 0.3818,
+    "gini": 0.324
+   },
+   "budget": {
+    "defense": 0.01691,
+    "education": 0.05777,
+    "health": 0.15233,
+    "incomeTaxShare": 0.1142,
+    "corporateTaxShare": 0.0489,
+    "consumptionTaxShare": 0.036,
+    "socialContributionShare": 0.2948,
+    "tradeTaxShare": 0.054,
+    "otherRevenueShare": 0.4521
+   },
    "estimated": [
+    "agricultureEmployment",
+    "defense",
+    "industryEmployment",
+    "selfEmployment",
+    "servicesEmployment",
+    "socialContributionShare",
     "unemployment"
    ]
   },
@@ -2210,7 +5400,30 @@
    "primarySpending": 0.40339,
    "debt": 0.47294,
    "interestRate": 0.01446,
-   "estimated": []
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0561,
+    "industryEmployment": 0.2054,
+    "servicesEmployment": 0.7385,
+    "selfEmployment": 0.1884,
+    "elderlyShare": 0.168,
+    "childShare": 0.1837,
+    "gini": 0.323
+   },
+   "budget": {
+    "defense": 0.012,
+    "education": 0.05213,
+    "health": 0.07869,
+    "incomeTaxShare": 0.4001,
+    "corporateTaxShare": 0.1715,
+    "consumptionTaxShare": 0.2693,
+    "socialContributionShare": 0.0204,
+    "tradeTaxShare": 0.0285,
+    "otherRevenueShare": 0.1103
+   },
+   "estimated": [
+    "gini"
+   ]
   },
   {
    "id": "OMN",
@@ -2226,7 +5439,34 @@
    "primarySpending": 0.26942,
    "debt": 0.37392,
    "interestRate": 0.01566,
-   "estimated": []
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0614,
+    "industryEmployment": 0.3972,
+    "servicesEmployment": 0.5414,
+    "selfEmployment": 0.0496,
+    "elderlyShare": 0.0266,
+    "childShare": 0.2523,
+    "gini": 0.323
+   },
+   "budget": {
+    "defense": 0.05511,
+    "education": 0.04383,
+    "health": 0.02979,
+    "incomeTaxShare": 0.1674,
+    "corporateTaxShare": 0.0718,
+    "consumptionTaxShare": 0.2635,
+    "socialContributionShare": 0.2948,
+    "tradeTaxShare": 0.0104,
+    "otherRevenueShare": 0.1921
+   },
+   "estimated": [
+    "consumptionTaxShare",
+    "gini",
+    "incomeProfitTaxShare",
+    "socialContributionShare",
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "PAK",
@@ -2242,7 +5482,33 @@
    "primarySpending": 0.1245,
    "debt": 0.78508,
    "interestRate": 0.08713,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.3677,
+    "industryEmployment": 0.2515,
+    "servicesEmployment": 0.3807,
+    "selfEmployment": 0.5738,
+    "elderlyShare": 0.042,
+    "childShare": 0.3704,
+    "gini": 0.296
+   },
+   "budget": {
+    "defense": 0.02891,
+    "education": 0.01947,
+    "health": 0.009,
+    "incomeTaxShare": 0.1272,
+    "corporateTaxShare": 0.1272,
+    "consumptionTaxShare": 0.3338,
+    "socialContributionShare": 0.026,
+    "tradeTaxShare": 0.0733,
+    "otherRevenueShare": 0.3125
+   },
+   "estimated": [
+    "consumptionTaxShare",
+    "incomeProfitTaxShare",
+    "socialContributionShare",
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "PAN",
@@ -2258,7 +5524,30 @@
    "primarySpending": 0.18849,
    "debt": 0.54418,
    "interestRate": 0.04659,
-   "estimated": []
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.1471,
+    "industryEmployment": 0.1746,
+    "servicesEmployment": 0.6783,
+    "selfEmployment": 0.3891,
+    "elderlyShare": 0.0906,
+    "childShare": 0.2528,
+    "gini": 0.489
+   },
+   "budget": {
+    "defense": 0.0,
+    "education": 0.02472,
+    "health": 0.04267,
+    "incomeTaxShare": 0.2521,
+    "corporateTaxShare": 0.108,
+    "consumptionTaxShare": 0.2841,
+    "socialContributionShare": 0.2948,
+    "tradeTaxShare": 0.0292,
+    "otherRevenueShare": 0.0318
+   },
+   "estimated": [
+    "socialContributionShare"
+   ]
   },
   {
    "id": "PER",
@@ -2274,6 +5563,27 @@
    "primarySpending": 0.20794,
    "debt": 0.32408,
    "interestRate": 0.03926,
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.2397,
+    "industryEmployment": 0.1636,
+    "servicesEmployment": 0.5968,
+    "selfEmployment": 0.526,
+    "elderlyShare": 0.0899,
+    "childShare": 0.2436,
+    "gini": 0.407
+   },
+   "budget": {
+    "defense": 0.01239,
+    "education": 0.04245,
+    "health": 0.03584,
+    "incomeTaxShare": 0.162,
+    "corporateTaxShare": 0.1326,
+    "consumptionTaxShare": 0.3633,
+    "socialContributionShare": 0.0969,
+    "tradeTaxShare": 0.0079,
+    "otherRevenueShare": 0.2374
+   },
    "estimated": []
   },
   {
@@ -2290,7 +5600,30 @@
    "primarySpending": 0.22388,
    "debt": 0.56484,
    "interestRate": 0.04021,
-   "estimated": []
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.2204,
+    "industryEmployment": 0.1894,
+    "servicesEmployment": 0.5902,
+    "selfEmployment": 0.368,
+    "elderlyShare": 0.0526,
+    "childShare": 0.2861,
+    "gini": 0.393
+   },
+   "budget": {
+    "defense": 0.01177,
+    "education": 0.03624,
+    "health": 0.02163,
+    "incomeTaxShare": 0.202,
+    "corporateTaxShare": 0.1653,
+    "consumptionTaxShare": 0.2423,
+    "socialContributionShare": 0.1491,
+    "tradeTaxShare": 0.231,
+    "otherRevenueShare": 0.0103
+   },
+   "estimated": [
+    "socialContributionShare"
+   ]
   },
   {
    "id": "PLW",
@@ -2306,7 +5639,35 @@
    "primarySpending": 0.51368,
    "debt": 0.71199,
    "interestRate": 0.005,
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0314,
+    "industryEmployment": 0.2232,
+    "servicesEmployment": 0.7455,
+    "selfEmployment": 0.1349,
+    "elderlyShare": 0.1085,
+    "childShare": 0.1854,
+    "gini": 0.323
+   },
+   "budget": {
+    "defense": 0.01691,
+    "education": 0.03437,
+    "health": 0.06606,
+    "incomeTaxShare": 0.0616,
+    "corporateTaxShare": 0.0264,
+    "consumptionTaxShare": 0.1415,
+    "socialContributionShare": 0.2948,
+    "tradeTaxShare": 0.1234,
+    "otherRevenueShare": 0.3523
+   },
    "estimated": [
+    "agricultureEmployment",
+    "defense",
+    "gini",
+    "industryEmployment",
+    "selfEmployment",
+    "servicesEmployment",
+    "socialContributionShare",
     "unemployment"
    ]
   },
@@ -2324,7 +5685,31 @@
    "primarySpending": 0.19755,
    "debt": 0.54799,
    "interestRate": 0.04555,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.3808,
+    "industryEmployment": 0.0753,
+    "servicesEmployment": 0.5439,
+    "selfEmployment": 0.79,
+    "elderlyShare": 0.0335,
+    "childShare": 0.338,
+    "gini": 0.3675
+   },
+   "budget": {
+    "defense": 0.00351,
+    "education": 0.00782,
+    "health": 0.02103,
+    "incomeTaxShare": 0.2961,
+    "corporateTaxShare": 0.2961,
+    "consumptionTaxShare": 0.2639,
+    "socialContributionShare": 0.026,
+    "tradeTaxShare": 0.0337,
+    "otherRevenueShare": 0.0843
+   },
+   "estimated": [
+    "gini",
+    "socialContributionShare"
+   ]
   },
   {
    "id": "POL",
@@ -2340,7 +5725,30 @@
    "primarySpending": 0.44787,
    "debt": 0.49521,
    "interestRate": 0.04184,
-   "estimated": []
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0849,
+    "industryEmployment": 0.2954,
+    "servicesEmployment": 0.6198,
+    "selfEmployment": 0.2047,
+    "elderlyShare": 0.1956,
+    "childShare": 0.151,
+    "gini": 0.285
+   },
+   "budget": {
+    "defense": 0.03257,
+    "education": 0.04314,
+    "health": 0.05504,
+    "incomeTaxShare": 0.0945,
+    "corporateTaxShare": 0.0405,
+    "consumptionTaxShare": 0.3535,
+    "socialContributionShare": 0.3954,
+    "tradeTaxShare": 0.0104,
+    "otherRevenueShare": 0.1057
+   },
+   "estimated": [
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "PRK",
@@ -2356,16 +5764,45 @@
    "primarySpending": 0.1955,
    "debt": 0.54483,
    "interestRate": 0.02519,
+   "society": {
+    "incomeGroup": "LIC",
+    "agricultureEmployment": 0.5449,
+    "industryEmployment": 0.2266,
+    "servicesEmployment": 0.2285,
+    "selfEmployment": 0.6218,
+    "elderlyShare": 0.1203,
+    "childShare": 0.1898,
+    "gini": 0.374
+   },
+   "budget": {
+    "defense": 0.01424,
+    "education": 0.02927,
+    "health": 0.00931,
+    "incomeTaxShare": 0.1268,
+    "corporateTaxShare": 0.1268,
+    "consumptionTaxShare": 0.299,
+    "socialContributionShare": 0.0556,
+    "tradeTaxShare": 0.0999,
+    "otherRevenueShare": 0.2919
+   },
    "estimated": [
+    "consumptionTaxShare",
     "debt",
+    "defense",
+    "education",
     "expense",
     "gdp",
+    "gini",
     "growth",
     "growthVolatility",
+    "health",
+    "incomeProfitTaxShare",
     "inflation",
     "interest",
     "potentialGrowth",
-    "revenue"
+    "revenue",
+    "socialContributionShare",
+    "tradeTaxShare"
    ]
   },
   {
@@ -2382,7 +5819,30 @@
    "primarySpending": 0.40251,
    "debt": 0.96869,
    "interestRate": 0.01841,
-   "estimated": []
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0311,
+    "industryEmployment": 0.2548,
+    "servicesEmployment": 0.7142,
+    "selfEmployment": 0.1489,
+    "elderlyShare": 0.2411,
+    "childShare": 0.1289,
+    "gini": 0.339
+   },
+   "budget": {
+    "defense": 0.01208,
+    "education": 0.04552,
+    "health": 0.06161,
+    "incomeTaxShare": 0.178,
+    "corporateTaxShare": 0.0763,
+    "consumptionTaxShare": 0.3089,
+    "socialContributionShare": 0.307,
+    "tradeTaxShare": 0.0104,
+    "otherRevenueShare": 0.1194
+   },
+   "estimated": [
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "PRY",
@@ -2398,6 +5858,27 @@
    "primarySpending": 0.19805,
    "debt": 0.41039,
    "interestRate": 0.04044,
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.1717,
+    "industryEmployment": 0.1801,
+    "servicesEmployment": 0.6482,
+    "selfEmployment": 0.4132,
+    "elderlyShare": 0.0637,
+    "childShare": 0.2878,
+    "gini": 0.442
+   },
+   "budget": {
+    "defense": 0.00922,
+    "education": 0.03394,
+    "health": 0.04632,
+    "incomeTaxShare": 0.0795,
+    "corporateTaxShare": 0.065,
+    "consumptionTaxShare": 0.3584,
+    "socialContributionShare": 0.2296,
+    "tradeTaxShare": 0.0527,
+    "otherRevenueShare": 0.2148
+   },
    "estimated": []
   },
   {
@@ -2414,8 +5895,34 @@
    "primarySpending": 0.27079,
    "debt": 0.46455,
    "interestRate": 0.03725,
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.0634,
+    "industryEmployment": 0.2988,
+    "servicesEmployment": 0.6378,
+    "selfEmployment": 0.2383,
+    "elderlyShare": 0.038,
+    "childShare": 0.3837,
+    "gini": 0.364
+   },
+   "budget": {
+    "defense": 0.01453,
+    "education": 0.05434,
+    "health": 0.04447,
+    "incomeTaxShare": 0.1272,
+    "corporateTaxShare": 0.1272,
+    "consumptionTaxShare": 0.3338,
+    "socialContributionShare": 0.026,
+    "tradeTaxShare": 0.0733,
+    "otherRevenueShare": 0.3125
+   },
    "estimated": [
+    "consumptionTaxShare",
+    "defense",
+    "incomeProfitTaxShare",
     "interest",
+    "socialContributionShare",
+    "tradeTaxShare",
     "unemployment"
    ]
   },
@@ -2433,7 +5940,33 @@
    "primarySpending": 0.253,
    "debt": 0.42806,
    "interestRate": 0.03316,
-   "estimated": []
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0169,
+    "industryEmployment": 0.3896,
+    "servicesEmployment": 0.5935,
+    "selfEmployment": 0.02,
+    "elderlyShare": 0.0157,
+    "childShare": 0.1516,
+    "gini": 0.351
+   },
+   "budget": {
+    "defense": 0.065,
+    "education": 0.03234,
+    "health": 0.02095,
+    "incomeTaxShare": 0.1674,
+    "corporateTaxShare": 0.0718,
+    "consumptionTaxShare": 0.2635,
+    "socialContributionShare": 0.2948,
+    "tradeTaxShare": 0.0104,
+    "otherRevenueShare": 0.1921
+   },
+   "estimated": [
+    "consumptionTaxShare",
+    "incomeProfitTaxShare",
+    "socialContributionShare",
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "ROU",
@@ -2449,6 +5982,27 @@
    "primarySpending": 0.35087,
    "debt": 0.52595,
    "interestRate": 0.03574,
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.1191,
+    "industryEmployment": 0.3316,
+    "servicesEmployment": 0.5492,
+    "selfEmployment": 0.1472,
+    "elderlyShare": 0.1975,
+    "childShare": 0.1588,
+    "gini": 0.298
+   },
+   "budget": {
+    "defense": 0.01617,
+    "education": 0.03279,
+    "health": 0.04331,
+    "incomeTaxShare": 0.1129,
+    "corporateTaxShare": 0.0484,
+    "consumptionTaxShare": 0.3361,
+    "socialContributionShare": 0.3496,
+    "tradeTaxShare": 0.0,
+    "otherRevenueShare": 0.153
+   },
    "estimated": []
   },
   {
@@ -2465,6 +6019,27 @@
    "primarySpending": 0.35877,
    "debt": 0.1519,
    "interestRate": 0.01748,
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0546,
+    "industryEmployment": 0.2594,
+    "servicesEmployment": 0.686,
+    "selfEmployment": 0.0658,
+    "elderlyShare": 0.166,
+    "childShare": 0.1751,
+    "gini": 0.33
+   },
+   "budget": {
+    "defense": 0.05272,
+    "education": 0.04165,
+    "health": 0.04934,
+    "incomeTaxShare": 0.0536,
+    "corporateTaxShare": 0.023,
+    "consumptionTaxShare": 0.2343,
+    "socialContributionShare": 0.2221,
+    "tradeTaxShare": 0.0441,
+    "otherRevenueShare": 0.4229
+   },
    "estimated": []
   },
   {
@@ -2481,6 +6056,27 @@
    "primarySpending": 0.24071,
    "debt": 0.61608,
    "interestRate": 0.03386,
+   "society": {
+    "incomeGroup": "LIC",
+    "agricultureEmployment": 0.5187,
+    "industryEmployment": 0.1423,
+    "servicesEmployment": 0.339,
+    "selfEmployment": 0.4125,
+    "elderlyShare": 0.0382,
+    "childShare": 0.3773,
+    "gini": 0.394
+   },
+   "budget": {
+    "defense": 0.01252,
+    "education": 0.0492,
+    "health": 0.02411,
+    "incomeTaxShare": 0.1276,
+    "corporateTaxShare": 0.1276,
+    "consumptionTaxShare": 0.2586,
+    "socialContributionShare": 0.0879,
+    "tradeTaxShare": 0.0535,
+    "otherRevenueShare": 0.3448
+   },
    "estimated": []
   },
   {
@@ -2497,7 +6093,31 @@
    "primarySpending": 0.283,
    "debt": 0.22984,
    "interestRate": 0.005,
-   "estimated": []
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0274,
+    "industryEmployment": 0.2306,
+    "servicesEmployment": 0.742,
+    "selfEmployment": 0.0501,
+    "elderlyShare": 0.0282,
+    "childShare": 0.241,
+    "gini": 0.323
+   },
+   "budget": {
+    "defense": 0.06382,
+    "education": 0.04481,
+    "health": 0.04423,
+    "incomeTaxShare": 0.0223,
+    "corporateTaxShare": 0.0096,
+    "consumptionTaxShare": 0.2165,
+    "socialContributionShare": 0.2948,
+    "tradeTaxShare": 0.0183,
+    "otherRevenueShare": 0.4385
+   },
+   "estimated": [
+    "gini",
+    "socialContributionShare"
+   ]
   },
   {
    "id": "SDN",
@@ -2513,7 +6133,34 @@
    "primarySpending": 0.08493,
    "debt": 2.86929,
    "interestRate": 0.005,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LIC",
+    "agricultureEmployment": 0.3977,
+    "industryEmployment": 0.1398,
+    "servicesEmployment": 0.4624,
+    "selfEmployment": 0.4652,
+    "elderlyShare": 0.0321,
+    "childShare": 0.4065,
+    "gini": 0.342
+   },
+   "budget": {
+    "defense": 0.00925,
+    "education": 0.02927,
+    "health": 0.00592,
+    "incomeTaxShare": 0.1268,
+    "corporateTaxShare": 0.1268,
+    "consumptionTaxShare": 0.299,
+    "socialContributionShare": 0.0556,
+    "tradeTaxShare": 0.0999,
+    "otherRevenueShare": 0.2919
+   },
+   "estimated": [
+    "consumptionTaxShare",
+    "education",
+    "incomeProfitTaxShare",
+    "socialContributionShare",
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "SDS",
@@ -2529,7 +6176,34 @@
    "primarySpending": 0.20573,
    "debt": 0.60672,
    "interestRate": 0.00576,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LIC",
+    "agricultureEmployment": 0.6376,
+    "industryEmployment": 0.0167,
+    "servicesEmployment": 0.3457,
+    "selfEmployment": 0.8255,
+    "elderlyShare": 0.0291,
+    "childShare": 0.3985,
+    "gini": 0.44
+   },
+   "budget": {
+    "defense": 0.02379,
+    "education": 0.02927,
+    "health": 0.00501,
+    "incomeTaxShare": 0.1268,
+    "corporateTaxShare": 0.1268,
+    "consumptionTaxShare": 0.299,
+    "socialContributionShare": 0.0556,
+    "tradeTaxShare": 0.0999,
+    "otherRevenueShare": 0.2919
+   },
+   "estimated": [
+    "consumptionTaxShare",
+    "education",
+    "incomeProfitTaxShare",
+    "socialContributionShare",
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "SEN",
@@ -2545,6 +6219,27 @@
    "primarySpending": 0.32167,
    "debt": 1.20578,
    "interestRate": 0.0276,
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.3146,
+    "industryEmployment": 0.2225,
+    "servicesEmployment": 0.4628,
+    "selfEmployment": 0.6488,
+    "elderlyShare": 0.0359,
+    "childShare": 0.3863,
+    "gini": 0.362
+   },
+   "budget": {
+    "defense": 0.01477,
+    "education": 0.06163,
+    "health": 0.01192,
+    "incomeTaxShare": 0.1235,
+    "corporateTaxShare": 0.1235,
+    "consumptionTaxShare": 0.4053,
+    "socialContributionShare": 0.0364,
+    "tradeTaxShare": 0.1001,
+    "otherRevenueShare": 0.2113
+   },
    "estimated": []
   },
   {
@@ -2561,7 +6256,32 @@
    "primarySpending": 0.14567,
    "debt": 1.7041,
    "interestRate": 0.005,
-   "estimated": []
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0008,
+    "industryEmployment": 0.1384,
+    "servicesEmployment": 0.8608,
+    "selfEmployment": 0.1222,
+    "elderlyShare": 0.131,
+    "childShare": 0.1179,
+    "gini": 0.323
+   },
+   "budget": {
+    "defense": 0.02765,
+    "education": 0.02104,
+    "health": 0.02626,
+    "incomeTaxShare": 0.2798,
+    "corporateTaxShare": 0.1199,
+    "consumptionTaxShare": 0.2041,
+    "socialContributionShare": 0.2948,
+    "tradeTaxShare": 0.0104,
+    "otherRevenueShare": 0.091
+   },
+   "estimated": [
+    "gini",
+    "socialContributionShare",
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "SLB",
@@ -2577,7 +6297,31 @@
    "primarySpending": 0.43862,
    "debt": 0.23055,
    "interestRate": 0.0142,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.4304,
+    "industryEmployment": 0.0776,
+    "servicesEmployment": 0.492,
+    "selfEmployment": 0.7023,
+    "elderlyShare": 0.0363,
+    "childShare": 0.3736,
+    "gini": 0.371
+   },
+   "budget": {
+    "defense": 0.01453,
+    "education": 0.08293,
+    "health": 0.03374,
+    "incomeTaxShare": 0.1045,
+    "corporateTaxShare": 0.1045,
+    "consumptionTaxShare": 0.2393,
+    "socialContributionShare": 0.026,
+    "tradeTaxShare": 0.1274,
+    "otherRevenueShare": 0.3983
+   },
+   "estimated": [
+    "defense",
+    "socialContributionShare"
+   ]
   },
   {
    "id": "SLE",
@@ -2593,7 +6337,33 @@
    "primarySpending": 0.13087,
    "debt": 0.49444,
    "interestRate": 0.0473,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LIC",
+    "agricultureEmployment": 0.4556,
+    "industryEmployment": 0.1121,
+    "servicesEmployment": 0.4323,
+    "selfEmployment": 0.8926,
+    "elderlyShare": 0.0321,
+    "childShare": 0.3853,
+    "gini": 0.357
+   },
+   "budget": {
+    "defense": 0.00603,
+    "education": 0.02625,
+    "health": 0.00789,
+    "incomeTaxShare": 0.1268,
+    "corporateTaxShare": 0.1268,
+    "consumptionTaxShare": 0.299,
+    "socialContributionShare": 0.0556,
+    "tradeTaxShare": 0.0999,
+    "otherRevenueShare": 0.2919
+   },
+   "estimated": [
+    "consumptionTaxShare",
+    "incomeProfitTaxShare",
+    "socialContributionShare",
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "SLV",
@@ -2609,6 +6379,27 @@
    "primarySpending": 0.26185,
    "debt": 0.83945,
    "interestRate": 0.05482,
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.1423,
+    "industryEmployment": 0.233,
+    "servicesEmployment": 0.6247,
+    "selfEmployment": 0.3634,
+    "elderlyShare": 0.08,
+    "childShare": 0.2521,
+    "gini": 0.398
+   },
+   "budget": {
+    "defense": 0.01343,
+    "education": 0.03187,
+    "health": 0.05623,
+    "incomeTaxShare": 0.1664,
+    "corporateTaxShare": 0.1362,
+    "consumptionTaxShare": 0.3877,
+    "socialContributionShare": 0.0994,
+    "tradeTaxShare": 0.0528,
+    "otherRevenueShare": 0.1575
+   },
    "estimated": []
   },
   {
@@ -2625,7 +6416,35 @@
    "primarySpending": 0.1944,
    "debt": 0.69348,
    "interestRate": 0.03228,
-   "estimated": []
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0314,
+    "industryEmployment": 0.2232,
+    "servicesEmployment": 0.7455,
+    "selfEmployment": 0.1349,
+    "elderlyShare": 0.2168,
+    "childShare": 0.127,
+    "gini": 0.323
+   },
+   "budget": {
+    "defense": 0.01691,
+    "education": 0.02898,
+    "health": 0.05743,
+    "incomeTaxShare": 0.1359,
+    "corporateTaxShare": 0.0583,
+    "consumptionTaxShare": 0.1941,
+    "socialContributionShare": 0.2856,
+    "tradeTaxShare": 0.004,
+    "otherRevenueShare": 0.3222
+   },
+   "estimated": [
+    "agricultureEmployment",
+    "defense",
+    "gini",
+    "industryEmployment",
+    "selfEmployment",
+    "servicesEmployment"
+   ]
   },
   {
    "id": "SOL",
@@ -2641,18 +6460,53 @@
    "primarySpending": 0.1955,
    "debt": 0.54483,
    "interestRate": 0.02519,
+   "society": {
+    "incomeGroup": "LIC",
+    "agricultureEmployment": 0.5946,
+    "industryEmployment": 0.0983,
+    "servicesEmployment": 0.3071,
+    "selfEmployment": 0.8095,
+    "elderlyShare": 0.0291,
+    "childShare": 0.4123,
+    "gini": 0.374
+   },
+   "budget": {
+    "defense": 0.01424,
+    "education": 0.02927,
+    "health": 0.00931,
+    "incomeTaxShare": 0.1268,
+    "corporateTaxShare": 0.1268,
+    "consumptionTaxShare": 0.299,
+    "socialContributionShare": 0.0556,
+    "tradeTaxShare": 0.0999,
+    "otherRevenueShare": 0.2919
+   },
    "estimated": [
+    "agricultureEmployment",
+    "childShare",
+    "consumptionTaxShare",
     "debt",
+    "defense",
+    "education",
+    "elderlyShare",
     "expense",
     "gdp",
+    "gini",
     "growth",
     "growthVolatility",
+    "health",
+    "incomeProfitTaxShare",
+    "industryEmployment",
     "inflation",
     "interest",
     "population",
     "populationGrowth",
     "potentialGrowth",
     "revenue",
+    "selfEmployment",
+    "servicesEmployment",
+    "socialContributionShare",
+    "tradeTaxShare",
     "unemployment"
    ]
   },
@@ -2670,7 +6524,31 @@
    "primarySpending": 0.06454,
    "debt": 0.43378,
    "interestRate": 0.005,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LIC",
+    "agricultureEmployment": 0.3053,
+    "industryEmployment": 0.177,
+    "servicesEmployment": 0.5178,
+    "selfEmployment": 0.523,
+    "elderlyShare": 0.0256,
+    "childShare": 0.4668,
+    "gini": 0.374
+   },
+   "budget": {
+    "defense": 0.01266,
+    "education": 0.0,
+    "health": 0.0053,
+    "incomeTaxShare": 0.005,
+    "corporateTaxShare": 0.005,
+    "consumptionTaxShare": 0.0167,
+    "socialContributionShare": 0.0556,
+    "tradeTaxShare": 0.0635,
+    "otherRevenueShare": 0.8542
+   },
+   "estimated": [
+    "gini",
+    "socialContributionShare"
+   ]
   },
   {
    "id": "SRB",
@@ -2686,6 +6564,27 @@
    "primarySpending": 0.38907,
    "debt": 0.45666,
    "interestRate": 0.03707,
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.1845,
+    "industryEmployment": 0.2762,
+    "servicesEmployment": 0.5392,
+    "selfEmployment": 0.2711,
+    "elderlyShare": 0.2234,
+    "childShare": 0.1435,
+    "gini": 0.328
+   },
+   "budget": {
+    "defense": 0.02208,
+    "education": 0.03404,
+    "health": 0.05264,
+    "incomeTaxShare": 0.0968,
+    "corporateTaxShare": 0.0792,
+    "consumptionTaxShare": 0.4088,
+    "socialContributionShare": 0.2963,
+    "tradeTaxShare": 0.0271,
+    "otherRevenueShare": 0.0917
+   },
    "estimated": []
   },
   {
@@ -2702,7 +6601,34 @@
    "primarySpending": 0.23203,
    "debt": 0.73231,
    "interestRate": 0.00978,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.1248,
+    "industryEmployment": 0.2259,
+    "servicesEmployment": 0.6493,
+    "selfEmployment": 0.4416,
+    "elderlyShare": 0.0387,
+    "childShare": 0.3828,
+    "gini": 0.407
+   },
+   "budget": {
+    "defense": 0.01453,
+    "education": 0.05029,
+    "health": 0.02134,
+    "incomeTaxShare": 0.1272,
+    "corporateTaxShare": 0.1272,
+    "consumptionTaxShare": 0.3338,
+    "socialContributionShare": 0.026,
+    "tradeTaxShare": 0.0733,
+    "otherRevenueShare": 0.3125
+   },
+   "estimated": [
+    "consumptionTaxShare",
+    "defense",
+    "incomeProfitTaxShare",
+    "socialContributionShare",
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "SUR",
@@ -2718,7 +6644,34 @@
    "primarySpending": 0.26039,
    "debt": 0.92283,
    "interestRate": 0.03332,
-   "estimated": []
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.0721,
+    "industryEmployment": 0.2615,
+    "servicesEmployment": 0.6664,
+    "selfEmployment": 0.2294,
+    "elderlyShare": 0.0762,
+    "childShare": 0.2595,
+    "gini": 0.392
+   },
+   "budget": {
+    "defense": 0.01323,
+    "education": 0.02866,
+    "health": 0.03352,
+    "incomeTaxShare": 0.1086,
+    "corporateTaxShare": 0.0889,
+    "consumptionTaxShare": 0.3411,
+    "socialContributionShare": 0.1491,
+    "tradeTaxShare": 0.0412,
+    "otherRevenueShare": 0.2711
+   },
+   "estimated": [
+    "consumptionTaxShare",
+    "defense",
+    "incomeProfitTaxShare",
+    "socialContributionShare",
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "SVK",
@@ -2734,7 +6687,30 @@
    "primarySpending": 0.47768,
    "debt": 0.55758,
    "interestRate": 0.01084,
-   "estimated": []
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0312,
+    "industryEmployment": 0.3468,
+    "servicesEmployment": 0.6219,
+    "selfEmployment": 0.1517,
+    "elderlyShare": 0.1805,
+    "childShare": 0.1591,
+    "gini": 0.238
+   },
+   "budget": {
+    "defense": 0.01736,
+    "education": 0.04657,
+    "health": 0.05805,
+    "incomeTaxShare": 0.1354,
+    "corporateTaxShare": 0.058,
+    "consumptionTaxShare": 0.2896,
+    "socialContributionShare": 0.38,
+    "tradeTaxShare": 0.0104,
+    "otherRevenueShare": 0.1265
+   },
+   "estimated": [
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "SVN",
@@ -2750,7 +6726,30 @@
    "primarySpending": 0.45798,
    "debt": 0.68215,
    "interestRate": 0.01027,
-   "estimated": []
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0402,
+    "industryEmployment": 0.3212,
+    "servicesEmployment": 0.6386,
+    "selfEmployment": 0.143,
+    "elderlyShare": 0.2133,
+    "childShare": 0.1493,
+    "gini": 0.247
+   },
+   "budget": {
+    "defense": 0.01315,
+    "education": 0.05281,
+    "health": 0.06803,
+    "incomeTaxShare": 0.1242,
+    "corporateTaxShare": 0.0532,
+    "consumptionTaxShare": 0.3057,
+    "socialContributionShare": 0.3775,
+    "tradeTaxShare": 0.0104,
+    "otherRevenueShare": 0.1288
+   },
+   "estimated": [
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "SWE",
@@ -2766,7 +6765,30 @@
    "primarySpending": 0.48705,
    "debt": 0.32244,
    "interestRate": 0.00627,
-   "estimated": []
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0177,
+    "industryEmployment": 0.1728,
+    "servicesEmployment": 0.8095,
+    "selfEmployment": 0.104,
+    "elderlyShare": 0.2054,
+    "childShare": 0.1725,
+    "gini": 0.293
+   },
+   "budget": {
+    "defense": 0.01517,
+    "education": 0.07319,
+    "health": 0.09601,
+    "incomeTaxShare": 0.1169,
+    "corporateTaxShare": 0.0501,
+    "consumptionTaxShare": 0.3673,
+    "socialContributionShare": 0.0914,
+    "tradeTaxShare": 0.0104,
+    "otherRevenueShare": 0.3639
+   },
+   "estimated": [
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "SWZ",
@@ -2782,7 +6804,30 @@
    "primarySpending": 0.28602,
    "debt": 0.39448,
    "interestRate": 0.07165,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.1525,
+    "industryEmployment": 0.261,
+    "servicesEmployment": 0.5866,
+    "selfEmployment": 0.3061,
+    "elderlyShare": 0.0415,
+    "childShare": 0.3367,
+    "gini": 0.546
+   },
+   "budget": {
+    "defense": 0.01657,
+    "education": 0.05004,
+    "health": 0.03204,
+    "incomeTaxShare": 0.1719,
+    "corporateTaxShare": 0.1719,
+    "consumptionTaxShare": 0.2578,
+    "socialContributionShare": 0.026,
+    "tradeTaxShare": 0.3549,
+    "otherRevenueShare": 0.0173
+   },
+   "estimated": [
+    "socialContributionShare"
+   ]
   },
   {
    "id": "SYC",
@@ -2798,7 +6843,37 @@
    "primarySpending": 0.30301,
    "debt": 0.55106,
    "interestRate": 0.05087,
-   "estimated": []
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0314,
+    "industryEmployment": 0.2232,
+    "servicesEmployment": 0.7455,
+    "selfEmployment": 0.1349,
+    "elderlyShare": 0.0833,
+    "childShare": 0.2014,
+    "gini": 0.321
+   },
+   "budget": {
+    "defense": 0.01339,
+    "education": 0.04454,
+    "health": 0.0315,
+    "incomeTaxShare": 0.1674,
+    "corporateTaxShare": 0.0718,
+    "consumptionTaxShare": 0.2635,
+    "socialContributionShare": 0.2948,
+    "tradeTaxShare": 0.0104,
+    "otherRevenueShare": 0.1921
+   },
+   "estimated": [
+    "agricultureEmployment",
+    "consumptionTaxShare",
+    "incomeProfitTaxShare",
+    "industryEmployment",
+    "selfEmployment",
+    "servicesEmployment",
+    "socialContributionShare",
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "SYR",
@@ -2814,12 +6889,39 @@
    "primarySpending": 0.1955,
    "debt": 0.54483,
    "interestRate": 0.02519,
+   "society": {
+    "incomeGroup": "LIC",
+    "agricultureEmployment": 0.1657,
+    "industryEmployment": 0.2575,
+    "servicesEmployment": 0.5768,
+    "selfEmployment": 0.4253,
+    "elderlyShare": 0.0469,
+    "childShare": 0.3034,
+    "gini": 0.264
+   },
+   "budget": {
+    "defense": 0.01424,
+    "education": 0.02927,
+    "health": 0.00405,
+    "incomeTaxShare": 0.1268,
+    "corporateTaxShare": 0.1268,
+    "consumptionTaxShare": 0.299,
+    "socialContributionShare": 0.0556,
+    "tradeTaxShare": 0.0999,
+    "otherRevenueShare": 0.2919
+   },
    "estimated": [
+    "consumptionTaxShare",
     "debt",
+    "defense",
+    "education",
     "expense",
     "growth",
+    "incomeProfitTaxShare",
     "interest",
-    "revenue"
+    "revenue",
+    "socialContributionShare",
+    "tradeTaxShare"
    ]
   },
   {
@@ -2836,7 +6938,33 @@
    "primarySpending": 0.15988,
    "debt": 0.32221,
    "interestRate": 0.03438,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LIC",
+    "agricultureEmployment": 0.7193,
+    "industryEmployment": 0.0863,
+    "servicesEmployment": 0.1944,
+    "selfEmployment": 0.9,
+    "elderlyShare": 0.0207,
+    "childShare": 0.4674,
+    "gini": 0.374
+   },
+   "budget": {
+    "defense": 0.02118,
+    "education": 0.03201,
+    "health": 0.01262,
+    "incomeTaxShare": 0.1268,
+    "corporateTaxShare": 0.1268,
+    "consumptionTaxShare": 0.299,
+    "socialContributionShare": 0.0556,
+    "tradeTaxShare": 0.0999,
+    "otherRevenueShare": 0.2919
+   },
+   "estimated": [
+    "consumptionTaxShare",
+    "incomeProfitTaxShare",
+    "socialContributionShare",
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "TGO",
@@ -2852,7 +6980,30 @@
    "primarySpending": 0.22221,
    "debt": 0.64012,
    "interestRate": 0.04053,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.3881,
+    "industryEmployment": 0.1818,
+    "servicesEmployment": 0.4301,
+    "selfEmployment": 0.773,
+    "elderlyShare": 0.036,
+    "childShare": 0.4113,
+    "gini": 0.379
+   },
+   "budget": {
+    "defense": 0.03047,
+    "education": 0.04143,
+    "health": 0.00681,
+    "incomeTaxShare": 0.09,
+    "corporateTaxShare": 0.09,
+    "consumptionTaxShare": 0.4143,
+    "socialContributionShare": 0.026,
+    "tradeTaxShare": 0.1532,
+    "otherRevenueShare": 0.2265
+   },
+   "estimated": [
+    "socialContributionShare"
+   ]
   },
   {
    "id": "THA",
@@ -2868,6 +7019,27 @@
    "primarySpending": 0.21566,
    "debt": 0.62236,
    "interestRate": 0.01867,
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.3022,
+    "industryEmployment": 0.2192,
+    "servicesEmployment": 0.4786,
+    "selfEmployment": 0.521,
+    "elderlyShare": 0.1472,
+    "childShare": 0.1509,
+    "gini": 0.335
+   },
+   "budget": {
+    "defense": 0.01129,
+    "education": 0.02521,
+    "health": 0.03534,
+    "incomeTaxShare": 0.1716,
+    "corporateTaxShare": 0.1404,
+    "consumptionTaxShare": 0.4244,
+    "socialContributionShare": 0.0455,
+    "tradeTaxShare": 0.0322,
+    "otherRevenueShare": 0.1857
+   },
    "estimated": []
   },
   {
@@ -2884,6 +7056,27 @@
    "primarySpending": 0.27265,
    "debt": 0.29947,
    "interestRate": 0.02518,
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.4506,
+    "industryEmployment": 0.1681,
+    "servicesEmployment": 0.3812,
+    "selfEmployment": 0.3184,
+    "elderlyShare": 0.0365,
+    "childShare": 0.3651,
+    "gini": 0.38
+   },
+   "budget": {
+    "defense": 0.02396,
+    "education": 0.05437,
+    "health": 0.01905,
+    "incomeTaxShare": 0.0382,
+    "corporateTaxShare": 0.0382,
+    "consumptionTaxShare": 0.3267,
+    "socialContributionShare": 0.132,
+    "tradeTaxShare": 0.049,
+    "otherRevenueShare": 0.4158
+   },
    "estimated": []
   },
   {
@@ -2900,8 +7093,35 @@
    "primarySpending": 0.1352,
    "debt": 0.05459,
    "interestRate": 0.03435,
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.2226,
+    "industryEmployment": 0.2907,
+    "servicesEmployment": 0.4866,
+    "selfEmployment": 0.3228,
+    "elderlyShare": 0.0427,
+    "childShare": 0.3167,
+    "gini": 0.38
+   },
+   "budget": {
+    "defense": 0.01323,
+    "education": 0.02713,
+    "health": 0.00942,
+    "incomeTaxShare": 0.1086,
+    "corporateTaxShare": 0.0889,
+    "consumptionTaxShare": 0.3411,
+    "socialContributionShare": 0.1491,
+    "tradeTaxShare": 0.0412,
+    "otherRevenueShare": 0.2711
+   },
    "estimated": [
-    "interest"
+    "consumptionTaxShare",
+    "defense",
+    "gini",
+    "incomeProfitTaxShare",
+    "interest",
+    "socialContributionShare",
+    "tradeTaxShare"
    ]
   },
   {
@@ -2918,7 +7138,30 @@
    "primarySpending": 0.7796,
    "debt": 0.1217,
    "interestRate": 0.03201,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.4839,
+    "industryEmployment": 0.031,
+    "servicesEmployment": 0.4851,
+    "selfEmployment": 0.7519,
+    "elderlyShare": 0.0533,
+    "childShare": 0.3423,
+    "gini": 0.287
+   },
+   "budget": {
+    "defense": 0.0265,
+    "education": 0.05241,
+    "health": 0.07458,
+    "incomeTaxShare": 0.1512,
+    "corporateTaxShare": 0.1512,
+    "consumptionTaxShare": 0.0538,
+    "socialContributionShare": 0.026,
+    "tradeTaxShare": 0.0129,
+    "otherRevenueShare": 0.6048
+   },
+   "estimated": [
+    "socialContributionShare"
+   ]
   },
   {
    "id": "TON",
@@ -2934,7 +7177,31 @@
    "primarySpending": 0.40678,
    "debt": 0.36886,
    "interestRate": 0.01551,
-   "estimated": []
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.2478,
+    "industryEmployment": 0.2304,
+    "servicesEmployment": 0.5218,
+    "selfEmployment": 0.4217,
+    "elderlyShare": 0.066,
+    "childShare": 0.3562,
+    "gini": 0.271
+   },
+   "budget": {
+    "defense": 0.01323,
+    "education": 0.0531,
+    "health": 0.03405,
+    "incomeTaxShare": 0.0489,
+    "corporateTaxShare": 0.04,
+    "consumptionTaxShare": 0.2998,
+    "socialContributionShare": 0.1491,
+    "tradeTaxShare": 0.0484,
+    "otherRevenueShare": 0.4139
+   },
+   "estimated": [
+    "defense",
+    "socialContributionShare"
+   ]
   },
   {
    "id": "TTO",
@@ -2950,7 +7217,30 @@
    "primarySpending": 0.29027,
    "debt": 0.77947,
    "interestRate": 0.04227,
-   "estimated": []
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0462,
+    "industryEmployment": 0.248,
+    "servicesEmployment": 0.7058,
+    "selfEmployment": 0.2563,
+    "elderlyShare": 0.1185,
+    "childShare": 0.1803,
+    "gini": 0.323
+   },
+   "budget": {
+    "defense": 0.00959,
+    "education": 0.03234,
+    "health": 0.03641,
+    "incomeTaxShare": 0.1826,
+    "corporateTaxShare": 0.0783,
+    "consumptionTaxShare": 0.2085,
+    "socialContributionShare": 0.1222,
+    "tradeTaxShare": 0.0598,
+    "otherRevenueShare": 0.3487
+   },
+   "estimated": [
+    "gini"
+   ]
   },
   {
    "id": "TUN",
@@ -2966,7 +7256,33 @@
    "primarySpending": 0.32066,
    "debt": 0.83982,
    "interestRate": 0.04603,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.1285,
+    "industryEmployment": 0.3332,
+    "servicesEmployment": 0.5384,
+    "selfEmployment": 0.2515,
+    "elderlyShare": 0.0917,
+    "childShare": 0.2443,
+    "gini": 0.337
+   },
+   "budget": {
+    "defense": 0.02505,
+    "education": 0.06734,
+    "health": 0.04319,
+    "incomeTaxShare": 0.1272,
+    "corporateTaxShare": 0.1272,
+    "consumptionTaxShare": 0.3338,
+    "socialContributionShare": 0.026,
+    "tradeTaxShare": 0.0733,
+    "otherRevenueShare": 0.3125
+   },
+   "estimated": [
+    "consumptionTaxShare",
+    "incomeProfitTaxShare",
+    "socialContributionShare",
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "TUR",
@@ -2982,6 +7298,27 @@
    "primarySpending": 0.31392,
    "debt": 0.28251,
    "interestRate": 0.06009,
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.1464,
+    "industryEmployment": 0.2759,
+    "servicesEmployment": 0.5776,
+    "selfEmployment": 0.286,
+    "elderlyShare": 0.1,
+    "childShare": 0.2184,
+    "gini": 0.437
+   },
+   "budget": {
+    "defense": 0.01685,
+    "education": 0.03096,
+    "health": 0.03246,
+    "incomeTaxShare": 0.0984,
+    "corporateTaxShare": 0.0805,
+    "consumptionTaxShare": 0.3411,
+    "socialContributionShare": 0.186,
+    "tradeTaxShare": 0.0165,
+    "otherRevenueShare": 0.2774
+   },
    "estimated": []
   },
   {
@@ -2998,8 +7335,38 @@
    "primarySpending": 0.8,
    "debt": 0.05798,
    "interestRate": 0.03435,
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.1667,
+    "industryEmployment": 0.2169,
+    "servicesEmployment": 0.6164,
+    "selfEmployment": 0.3249,
+    "elderlyShare": 0.0628,
+    "childShare": 0.326,
+    "gini": 0.391
+   },
+   "budget": {
+    "defense": 0.01323,
+    "education": 0.12846,
+    "health": 0.19723,
+    "incomeTaxShare": 0.1086,
+    "corporateTaxShare": 0.0889,
+    "consumptionTaxShare": 0.3411,
+    "socialContributionShare": 0.1491,
+    "tradeTaxShare": 0.0412,
+    "otherRevenueShare": 0.2711
+   },
    "estimated": [
+    "agricultureEmployment",
+    "consumptionTaxShare",
+    "defense",
+    "incomeProfitTaxShare",
+    "industryEmployment",
     "interest",
+    "selfEmployment",
+    "servicesEmployment",
+    "socialContributionShare",
+    "tradeTaxShare",
     "unemployment"
    ]
   },
@@ -3017,8 +7384,43 @@
    "primarySpending": 0.16409,
    "debt": 0.2902,
    "interestRate": 0.02357,
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.045,
+    "industryEmployment": 0.355,
+    "servicesEmployment": 0.6,
+    "selfEmployment": 0.17,
+    "elderlyShare": 0.1819,
+    "childShare": 0.1601,
+    "gini": 0.323
+   },
+   "budget": {
+    "defense": 0.024,
+    "education": 0.04501,
+    "health": 0.05351,
+    "incomeTaxShare": 0.1674,
+    "corporateTaxShare": 0.0718,
+    "consumptionTaxShare": 0.2635,
+    "socialContributionShare": 0.2948,
+    "tradeTaxShare": 0.0104,
+    "otherRevenueShare": 0.1921
+   },
    "estimated": [
-    "interest"
+    "agricultureEmployment",
+    "childShare",
+    "consumptionTaxShare",
+    "defense",
+    "education",
+    "elderlyShare",
+    "gini",
+    "health",
+    "incomeProfitTaxShare",
+    "industryEmployment",
+    "interest",
+    "selfEmployment",
+    "servicesEmployment",
+    "socialContributionShare",
+    "tradeTaxShare"
    ]
   },
   {
@@ -3035,7 +7437,30 @@
    "primarySpending": 0.16823,
    "debt": 0.47804,
    "interestRate": 0.04572,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.6516,
+    "industryEmployment": 0.0804,
+    "servicesEmployment": 0.2679,
+    "selfEmployment": 0.8573,
+    "elderlyShare": 0.0304,
+    "childShare": 0.4272,
+    "gini": 0.405
+   },
+   "budget": {
+    "defense": 0.01227,
+    "education": 0.03259,
+    "health": 0.00967,
+    "incomeTaxShare": 0.1443,
+    "corporateTaxShare": 0.1443,
+    "consumptionTaxShare": 0.3354,
+    "socialContributionShare": 0.026,
+    "tradeTaxShare": 0.1616,
+    "otherRevenueShare": 0.1883
+   },
+   "estimated": [
+    "socialContributionShare"
+   ]
   },
   {
    "id": "UGA",
@@ -3051,7 +7476,30 @@
    "primarySpending": 0.16092,
    "debt": 0.50356,
    "interestRate": 0.06267,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LIC",
+    "agricultureEmployment": 0.6589,
+    "industryEmployment": 0.0718,
+    "servicesEmployment": 0.2692,
+    "selfEmployment": 0.8095,
+    "elderlyShare": 0.0215,
+    "childShare": 0.4394,
+    "gini": 0.382
+   },
+   "budget": {
+    "defense": 0.01878,
+    "education": 0.02561,
+    "health": 0.00923,
+    "incomeTaxShare": 0.1565,
+    "corporateTaxShare": 0.1565,
+    "consumptionTaxShare": 0.4284,
+    "socialContributionShare": 0.0556,
+    "tradeTaxShare": 0.091,
+    "otherRevenueShare": 0.112
+   },
+   "estimated": [
+    "socialContributionShare"
+   ]
   },
   {
    "id": "UKR",
@@ -3067,6 +7515,27 @@
    "primarySpending": 0.69573,
    "debt": 0.81209,
    "interestRate": 0.04717,
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.1412,
+    "industryEmployment": 0.2522,
+    "servicesEmployment": 0.6067,
+    "selfEmployment": 0.21,
+    "elderlyShare": 0.1856,
+    "childShare": 0.143,
+    "gini": 0.256
+   },
+   "budget": {
+    "defense": 0.36031,
+    "education": 0.0514,
+    "health": 0.04276,
+    "incomeTaxShare": 0.0612,
+    "corporateTaxShare": 0.0501,
+    "consumptionTaxShare": 0.2429,
+    "socialContributionShare": 0.1549,
+    "tradeTaxShare": 0.0129,
+    "otherRevenueShare": 0.478
+   },
    "estimated": []
   },
   {
@@ -3083,6 +7552,27 @@
    "primarySpending": 0.27948,
    "debt": 0.63019,
    "interestRate": 0.03343,
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0857,
+    "industryEmployment": 0.1879,
+    "servicesEmployment": 0.7264,
+    "selfEmployment": 0.2822,
+    "elderlyShare": 0.1581,
+    "childShare": 0.1869,
+    "gini": 0.409
+   },
+   "budget": {
+    "defense": 0.01937,
+    "education": 0.04765,
+    "health": 0.06526,
+    "incomeTaxShare": 0.1399,
+    "corporateTaxShare": 0.06,
+    "consumptionTaxShare": 0.2518,
+    "socialContributionShare": 0.2982,
+    "tradeTaxShare": 0.0291,
+    "otherRevenueShare": 0.2211
+   },
    "estimated": []
   },
   {
@@ -3099,6 +7589,27 @@
    "primarySpending": 0.34461,
    "debt": 1.20048,
    "interestRate": 0.02505,
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0157,
+    "industryEmployment": 0.1934,
+    "servicesEmployment": 0.7909,
+    "selfEmployment": 0.0608,
+    "elderlyShare": 0.1743,
+    "childShare": 0.1759,
+    "gini": 0.418
+   },
+   "budget": {
+    "defense": 0.03294,
+    "education": 0.0542,
+    "health": 0.09007,
+    "incomeTaxShare": 0.3944,
+    "corporateTaxShare": 0.169,
+    "consumptionTaxShare": 0.0196,
+    "socialContributionShare": 0.3669,
+    "tradeTaxShare": 0.0168,
+    "otherRevenueShare": 0.0332
+   },
    "estimated": []
   },
   {
@@ -3115,7 +7626,30 @@
    "primarySpending": 0.28339,
    "debt": 0.30719,
    "interestRate": 0.008,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.2613,
+    "industryEmployment": 0.2413,
+    "servicesEmployment": 0.4974,
+    "selfEmployment": 0.4589,
+    "elderlyShare": 0.057,
+    "childShare": 0.3087,
+    "gini": 0.345
+   },
+   "budget": {
+    "defense": 0.01453,
+    "education": 0.05473,
+    "health": 0.02384,
+    "incomeTaxShare": 0.0939,
+    "corporateTaxShare": 0.0939,
+    "consumptionTaxShare": 0.3169,
+    "socialContributionShare": 0.1536,
+    "tradeTaxShare": 0.044,
+    "otherRevenueShare": 0.2976
+   },
+   "estimated": [
+    "defense"
+   ]
   },
   {
    "id": "VAT",
@@ -3131,18 +7665,53 @@
    "primarySpending": 0.38182,
    "debt": 0.54762,
    "interestRate": 0.01249,
+   "society": {
+    "incomeGroup": "HIC",
+    "agricultureEmployment": 0.0314,
+    "industryEmployment": 0.2232,
+    "servicesEmployment": 0.7455,
+    "selfEmployment": 0.1349,
+    "elderlyShare": 0.1819,
+    "childShare": 0.1601,
+    "gini": 0.323
+   },
+   "budget": {
+    "defense": 0.01691,
+    "education": 0.04501,
+    "health": 0.05351,
+    "incomeTaxShare": 0.1674,
+    "corporateTaxShare": 0.0718,
+    "consumptionTaxShare": 0.2635,
+    "socialContributionShare": 0.2948,
+    "tradeTaxShare": 0.0104,
+    "otherRevenueShare": 0.1921
+   },
    "estimated": [
+    "agricultureEmployment",
+    "childShare",
+    "consumptionTaxShare",
     "debt",
+    "defense",
+    "education",
+    "elderlyShare",
     "expense",
     "gdp",
+    "gini",
     "growth",
     "growthVolatility",
+    "health",
+    "incomeProfitTaxShare",
+    "industryEmployment",
     "inflation",
     "interest",
     "population",
     "populationGrowth",
     "potentialGrowth",
     "revenue",
+    "selfEmployment",
+    "servicesEmployment",
+    "socialContributionShare",
+    "tradeTaxShare",
     "unemployment"
    ]
   },
@@ -3160,7 +7729,35 @@
    "primarySpending": 0.38042,
    "debt": 0.91262,
    "interestRate": 0.01867,
-   "estimated": []
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.0962,
+    "industryEmployment": 0.21,
+    "servicesEmployment": 0.6937,
+    "selfEmployment": 0.2597,
+    "elderlyShare": 0.1156,
+    "childShare": 0.2165,
+    "gini": 0.38
+   },
+   "budget": {
+    "defense": 0.01323,
+    "education": 0.06458,
+    "health": 0.03065,
+    "incomeTaxShare": 0.1086,
+    "corporateTaxShare": 0.0889,
+    "consumptionTaxShare": 0.3411,
+    "socialContributionShare": 0.1491,
+    "tradeTaxShare": 0.0412,
+    "otherRevenueShare": 0.2711
+   },
+   "estimated": [
+    "consumptionTaxShare",
+    "defense",
+    "gini",
+    "incomeProfitTaxShare",
+    "socialContributionShare",
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "VEN",
@@ -3176,8 +7773,36 @@
    "primarySpending": 0.22507,
    "debt": 0.54002,
    "interestRate": 0.005,
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.0918,
+    "industryEmployment": 0.1733,
+    "servicesEmployment": 0.7349,
+    "selfEmployment": 0.4024,
+    "elderlyShare": 0.0933,
+    "childShare": 0.2615,
+    "gini": 0.3675
+   },
+   "budget": {
+    "defense": 0.01453,
+    "education": 0.04018,
+    "health": 0.01198,
+    "incomeTaxShare": 0.1272,
+    "corporateTaxShare": 0.1272,
+    "consumptionTaxShare": 0.3338,
+    "socialContributionShare": 0.026,
+    "tradeTaxShare": 0.0733,
+    "otherRevenueShare": 0.3125
+   },
    "estimated": [
-    "debt"
+    "consumptionTaxShare",
+    "debt",
+    "defense",
+    "education",
+    "gini",
+    "incomeProfitTaxShare",
+    "socialContributionShare",
+    "tradeTaxShare"
    ]
   },
   {
@@ -3194,7 +7819,33 @@
    "primarySpending": 0.17894,
    "debt": 0.34277,
    "interestRate": 0.02525,
-   "estimated": []
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.2698,
+    "industryEmployment": 0.3347,
+    "servicesEmployment": 0.3955,
+    "selfEmployment": 0.5428,
+    "elderlyShare": 0.0862,
+    "childShare": 0.2361,
+    "gini": 0.361
+   },
+   "budget": {
+    "defense": 0.01834,
+    "education": 0.02887,
+    "health": 0.02021,
+    "incomeTaxShare": 0.1086,
+    "corporateTaxShare": 0.0889,
+    "consumptionTaxShare": 0.3411,
+    "socialContributionShare": 0.1491,
+    "tradeTaxShare": 0.0412,
+    "otherRevenueShare": 0.2711
+   },
+   "estimated": [
+    "consumptionTaxShare",
+    "incomeProfitTaxShare",
+    "socialContributionShare",
+    "tradeTaxShare"
+   ]
   },
   {
    "id": "VUT",
@@ -3210,7 +7861,31 @@
    "primarySpending": 0.38072,
    "debt": 0.39239,
    "interestRate": 0.02226,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.4463,
+    "industryEmployment": 0.1057,
+    "servicesEmployment": 0.448,
+    "selfEmployment": 0.6061,
+    "elderlyShare": 0.0422,
+    "childShare": 0.3861,
+    "gini": 0.323
+   },
+   "budget": {
+    "defense": 0.01453,
+    "education": 0.07581,
+    "health": 0.0233,
+    "incomeTaxShare": 0.0012,
+    "corporateTaxShare": 0.0012,
+    "consumptionTaxShare": 0.3901,
+    "socialContributionShare": 0.026,
+    "tradeTaxShare": 0.1065,
+    "otherRevenueShare": 0.4751
+   },
+   "estimated": [
+    "defense",
+    "socialContributionShare"
+   ]
   },
   {
    "id": "WSM",
@@ -3226,7 +7901,30 @@
    "primarySpending": 0.2842,
    "debt": 0.31808,
    "interestRate": 0.01202,
-   "estimated": []
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.2919,
+    "industryEmployment": 0.1418,
+    "servicesEmployment": 0.5663,
+    "selfEmployment": 0.449,
+    "elderlyShare": 0.0571,
+    "childShare": 0.3873,
+    "gini": 0.387
+   },
+   "budget": {
+    "defense": 0.01323,
+    "education": 0.0611,
+    "health": 0.04695,
+    "incomeTaxShare": 0.0757,
+    "corporateTaxShare": 0.0619,
+    "consumptionTaxShare": 0.4513,
+    "socialContributionShare": 0.0134,
+    "tradeTaxShare": 0.0824,
+    "otherRevenueShare": 0.3153
+   },
+   "estimated": [
+    "defense"
+   ]
   },
   {
    "id": "YEM",
@@ -3242,8 +7940,35 @@
    "primarySpending": 0.2094,
    "debt": 0.54483,
    "interestRate": 0.06307,
+   "society": {
+    "incomeGroup": "LIC",
+    "agricultureEmployment": 0.3196,
+    "industryEmployment": 0.1161,
+    "servicesEmployment": 0.5642,
+    "selfEmployment": 0.5249,
+    "elderlyShare": 0.0251,
+    "childShare": 0.4123,
+    "gini": 0.367
+   },
+   "budget": {
+    "defense": 0.01424,
+    "education": 0.02927,
+    "health": 0.00819,
+    "incomeTaxShare": 0.1268,
+    "corporateTaxShare": 0.1268,
+    "consumptionTaxShare": 0.299,
+    "socialContributionShare": 0.0556,
+    "tradeTaxShare": 0.0999,
+    "otherRevenueShare": 0.2919
+   },
    "estimated": [
-    "debt"
+    "consumptionTaxShare",
+    "debt",
+    "defense",
+    "education",
+    "incomeProfitTaxShare",
+    "socialContributionShare",
+    "tradeTaxShare"
    ]
   },
   {
@@ -3260,6 +7985,27 @@
    "primarySpending": 0.27597,
    "debt": 0.7322,
    "interestRate": 0.06712,
+   "society": {
+    "incomeGroup": "UMC",
+    "agricultureEmployment": 0.055,
+    "industryEmployment": 0.2058,
+    "servicesEmployment": 0.7393,
+    "selfEmployment": 0.1631,
+    "elderlyShare": 0.0652,
+    "childShare": 0.2608,
+    "gini": 0.541
+   },
+   "budget": {
+    "defense": 0.00802,
+    "education": 0.06123,
+    "health": 0.0549,
+    "incomeTaxShare": 0.2631,
+    "corporateTaxShare": 0.2152,
+    "consumptionTaxShare": 0.3225,
+    "socialContributionShare": 0.0175,
+    "tradeTaxShare": 0.0342,
+    "otherRevenueShare": 0.1476
+   },
    "estimated": []
   },
   {
@@ -3276,7 +8022,30 @@
    "primarySpending": 0.21295,
    "debt": 1.36803,
    "interestRate": 0.04451,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.5597,
+    "industryEmployment": 0.0992,
+    "servicesEmployment": 0.3411,
+    "selfEmployment": 0.723,
+    "elderlyShare": 0.019,
+    "childShare": 0.4196,
+    "gini": 0.515
+   },
+   "budget": {
+    "defense": 0.01339,
+    "education": 0.04074,
+    "health": 0.02434,
+    "incomeTaxShare": 0.1532,
+    "corporateTaxShare": 0.1532,
+    "consumptionTaxShare": 0.2862,
+    "socialContributionShare": 0.026,
+    "tradeTaxShare": 0.0447,
+    "otherRevenueShare": 0.3367
+   },
+   "estimated": [
+    "socialContributionShare"
+   ]
   },
   {
    "id": "ZWE",
@@ -3292,7 +8061,33 @@
    "primarySpending": 0.20755,
    "debt": 0.76128,
    "interestRate": 0.00637,
-   "estimated": []
+   "society": {
+    "incomeGroup": "LMC",
+    "agricultureEmployment": 0.5545,
+    "industryEmployment": 0.1139,
+    "servicesEmployment": 0.3316,
+    "selfEmployment": 0.7099,
+    "elderlyShare": 0.0362,
+    "childShare": 0.4132,
+    "gini": 0.503
+   },
+   "budget": {
+    "defense": 0.0021,
+    "education": 0.00385,
+    "health": 0.00947,
+    "incomeTaxShare": 0.1272,
+    "corporateTaxShare": 0.1272,
+    "consumptionTaxShare": 0.3338,
+    "socialContributionShare": 0.026,
+    "tradeTaxShare": 0.0733,
+    "otherRevenueShare": 0.3125
+   },
+   "estimated": [
+    "consumptionTaxShare",
+    "incomeProfitTaxShare",
+    "socialContributionShare",
+    "tradeTaxShare"
+   ]
   }
  ]
 }
