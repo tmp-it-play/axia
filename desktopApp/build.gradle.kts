@@ -29,6 +29,7 @@ compose.resources {
 compose.desktop {
     application {
         mainClass = "team.themoment.axia.MainKt"
+        jvmArgs += listOf("--enable-native-access=ALL-UNNAMED")
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi)
