@@ -3,10 +3,12 @@ package team.themoment.axia.simulation
 import team.themoment.axia.simulation.economy.EconomyData
 import team.themoment.axia.simulation.economy.EconomySnapshot
 import team.themoment.axia.simulation.economy.WorldEconomy
+import team.themoment.axia.simulation.nation.BudgetItem
 import team.themoment.axia.simulation.nation.Nation
 import team.themoment.axia.simulation.nation.NationSnapshot
-import team.themoment.axia.simulation.nation.SpendingKind
-import team.themoment.axia.simulation.nation.TaxKind
+import team.themoment.axia.simulation.politics.PoliticalProfile
+import team.themoment.axia.simulation.politics.Politics
+import team.themoment.axia.simulation.politics.PoliticsSnapshot
 import team.themoment.axia.simulation.world.World
 import java.time.LocalDate
 import java.time.YearMonth
@@ -28,31 +30,48 @@ class Simulation(
     private val nation = Nation(data.country(playerCountryId), YearMonth.from(startDate))
     private val economy = WorldEconomy(data, mapOf(playerCountryId to nation.budget), YearMonth.from(startDate))
 
+    private val politics = Politics(PoliticalProfile.forCountry(playerCountryId), nation.budget)
+
     var date: LocalDate = startDate
         private set
 
     init {
-        nation.start(economy.country(playerCountryId))
+        val player = economy.country(playerCountryId)
+        nation.start(player)
+        politics.updateConstituencies(nation.groupSnapshots(player))
     }
 
-    /** 하루를 진행하고, 경제가 갱신됐으면 true를 돌려준다. */
-    fun advanceDay(): Boolean {
+    data class DayUpdate(
+        val newMonth: Boolean,
+        val budgetPassed: Boolean,
+    )
+
+    fun advanceDay(): DayUpdate {
         date = date.plusDays(1)
-        if (date.dayOfMonth != 1) return false
-        economy.advanceMonth(random)
-        nation.advanceMonth(economy.country(playerCountryId))
-        return true
+        val newMonth = date.dayOfMonth == 1
+        if (newMonth) {
+            economy.advanceMonth(random)
+            val player = economy.country(playerCountryId)
+            nation.advanceMonth(player)
+            politics.updateConstituencies(nation.groupSnapshots(player))
+        }
+        return DayUpdate(newMonth, politics.advanceDay(date))
     }
 
-    fun setTaxRate(
-        kind: TaxKind,
-        rate: Double,
-    ) = nation.budget.setTaxTarget(kind, rate)
+    fun editBudgetDraft(
+        item: BudgetItem,
+        target: Double,
+    ) = politics.edit(item, target)
 
-    fun setSpending(
-        kind: SpendingKind,
-        level: Double,
-    ) = nation.budget.setSpendingTarget(kind, level)
+    fun negotiateBudgetWith(party: String?) = politics.negotiate(party)
+
+    fun clearBudgetDraft() = politics.clearDraft()
+
+    fun reviseStalledBudget() = politics.reviseStalledBill()
+
+    fun introduceBudget() = politics.introduce(date)
+
+    fun politicsSnapshot(): PoliticsSnapshot = politics.snapshot()
 
     fun economySnapshot(): EconomySnapshot = economy.snapshot(date)
 

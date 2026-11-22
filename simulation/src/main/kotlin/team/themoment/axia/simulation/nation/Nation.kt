@@ -85,25 +85,13 @@ class Nation internal constructor(
     }
 
     internal fun snapshot(economy: CountryEconomy): NationSnapshot {
-        val adults = economy.populationCount * adultShare
-        val dollarPerReal = economy.dollarGdp / (economy.realGdpPerCapita * economy.populationCount)
         val gdp = economy.nominalGdp
         return NationSnapshot(
             countryId = countryId,
             approval = approval(),
             baseline = baseline,
             approvalFactors = SatisfactionFactor.entries.associateWith { factor -> weighted { it.factor(factor) } },
-            groups =
-                groups.map { state ->
-                    GroupSnapshot(
-                        group = state.group,
-                        population = adults * state.share,
-                        share = state.share,
-                        income = state.realIncome * dollarPerReal,
-                        satisfaction = state.satisfaction(baseline),
-                        factors = SatisfactionFactor.entries.associateWith(state::factor),
-                    )
-                },
+            groups = groupSnapshots(economy),
             budget =
                 BudgetSnapshot(
                     taxes = budget.taxLines(),
@@ -123,6 +111,21 @@ class Nation internal constructor(
                     satisfaction = satisfactionSeries.mapValues { it.value.toList() },
                 ),
         )
+    }
+
+    internal fun groupSnapshots(economy: CountryEconomy): List<GroupSnapshot> {
+        val adults = economy.populationCount * adultShare
+        val dollarPerReal = economy.dollarGdp / (economy.realGdpPerCapita * economy.populationCount)
+        return groups.map { state ->
+            GroupSnapshot(
+                group = state.group,
+                population = adults * state.share,
+                share = state.share,
+                income = state.realIncome * dollarPerReal,
+                satisfaction = state.satisfaction(baseline),
+                factors = SatisfactionFactor.entries.associateWith(state::factor),
+            )
+        }
     }
 
     private fun update(

@@ -4,17 +4,22 @@ import team.themoment.axia.simulation.economy.FiscalPolicy
 import team.themoment.axia.simulation.economy.FiscalShares
 import team.themoment.axia.simulation.economy.InitialEconomy
 
+sealed interface BudgetItem {
+    val label: String
+    val maxTarget: Double
+}
+
 /**
  * 세목. 세입 = 실효세율 × 과세 기반(GDP 대비 [baseShare]).
  * 과세 기반은 경기에 [cyclicality]만큼 반응하고, 세율을 시작보다 올리면 [behavior]만큼 줄어든다(회피, 위축).
  */
 enum class TaxKind(
-    val label: String,
+    override val label: String,
     val baseShare: Double,
     val cyclicality: Double,
     val behavior: Double,
-    val maxRate: Double,
-) {
+    override val maxTarget: Double,
+) : BudgetItem {
     INCOME("소득세", 0.6, 1.2, 0.3, 0.5),
     CORPORATE("법인세", 0.15, 2.5, 0.4, 0.5),
     CONSUMPTION("부가가치세·소비세", 0.6, 1.0, 0.1, 0.3),
@@ -23,14 +28,17 @@ enum class TaxKind(
 }
 
 enum class SpendingKind(
-    val label: String,
-) {
+    override val label: String,
+) : BudgetItem {
     DEFENSE("국방"),
     EDUCATION("교육"),
     HEALTH("보건"),
     SOCIAL("사회보장"),
     ORDER("치안·행정"),
     ECONOMY("경제·인프라"),
+    ;
+
+    override val maxTarget: Double get() = 0.4
 }
 
 data class TaxLine(
@@ -67,7 +75,7 @@ internal class PlayerBudget(
             TaxKind.CONSUMPTION to budget.consumptionTaxShare,
             TaxKind.SOCIAL to budget.socialContributionShare,
             TaxKind.TARIFF to budget.tradeTaxShare,
-        ).mapValues { (kind, share) -> (share * initial.revenue / kind.baseShare).coerceIn(0.0, kind.maxRate) }
+        ).mapValues { (kind, share) -> (share * initial.revenue / kind.baseShare).coerceIn(0.0, kind.maxTarget) }
 
     /** 조정할 수 없는 기타 세입(자원 수입, 공기업 이익 등)의 GDP 대비 비중. */
     val otherRevenue = budget.otherRevenueShare * initial.revenue
@@ -103,18 +111,21 @@ internal class PlayerBudget(
     private var corporateLagged = initialRates.getValue(TaxKind.CORPORATE)
     private var consumptionLagged = initialRates.getValue(TaxKind.CONSUMPTION)
 
-    fun setTaxTarget(
-        kind: TaxKind,
-        rate: Double,
-    ) {
-        targetRates[kind] = rate.coerceIn(0.0, kind.maxRate)
-    }
+    fun target(item: BudgetItem): Double =
+        when (item) {
+            is TaxKind -> targetRates.getValue(item)
+            is SpendingKind -> targetLevels.getValue(item)
+        }
 
-    fun setSpendingTarget(
-        kind: SpendingKind,
-        level: Double,
+    fun enact(
+        item: BudgetItem,
+        target: Double,
     ) {
-        targetLevels[kind] = level.coerceIn(0.0, MAX_SPENDING)
+        require(target in 0.0..item.maxTarget)
+        when (item) {
+            is TaxKind -> targetRates[item] = target
+            is SpendingKind -> targetLevels[item] = target
+        }
     }
 
     fun rate(kind: TaxKind): Double = rates.getValue(kind)
@@ -170,7 +181,6 @@ internal class PlayerBudget(
         SpendingKind.entries.map { SpendingLine(it, initialLevels.getValue(it), targetLevels.getValue(it), levels.getValue(it)) }
 
     companion object {
-        const val MAX_SPENDING = 0.4
         const val PHASE_IN_MONTHS = 6.0
         private const val MIN_BASE_FACTOR = 0.3
         private const val EDUCATION_LAG_MONTHS = 60.0
