@@ -1,6 +1,7 @@
 package team.themoment.axia.simulation.economy
 
 import java.time.LocalDate
+import java.time.YearMonth
 
 /** 한 국가의 경제 지표 스냅숏. 비율은 모두 소수(0.031 = 3.1%)다. */
 data class EconomyIndicators(
@@ -20,7 +21,26 @@ data class EconomyIndicators(
     val gdpPerCapita: Double get() = if (population > 0.0) gdp / population else 0.0
 }
 
+enum class EconomySeries {
+    GDP,
+    GDP_PER_CAPITA,
+    GROWTH,
+    INFLATION,
+    UNEMPLOYMENT,
+    BUDGET_BALANCE,
+    DEBT,
+}
+
+/** 국가별 월간 기록. [start]는 첫 값의 연월이다. */
+data class CountryHistory(
+    val start: YearMonth,
+    val series: Map<EconomySeries, List<Double>>,
+) {
+    operator fun get(series: EconomySeries): List<Double> = this.series.getValue(series)
+}
+
 data class EconomySnapshot(
     val date: LocalDate,
     val countries: Map<String, EconomyIndicators>,
+    val history: Map<String, CountryHistory>,
 )
