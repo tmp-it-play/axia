@@ -12,6 +12,7 @@ kotlin {
 }
 
 dependencies {
+    implementation(project(":simulation"))
     implementation(compose.desktop.currentOs)
     implementation(libs.compose.runtime)
     implementation(libs.compose.foundation)
