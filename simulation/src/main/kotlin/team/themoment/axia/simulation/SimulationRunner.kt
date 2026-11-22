@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.selects.onTimeout
 import kotlinx.coroutines.selects.select
+import team.themoment.axia.simulation.economy.EconomySnapshot
 import team.themoment.axia.simulation.time.GameSpeed
 import java.time.LocalDate
 import kotlin.time.TimeSource
@@ -36,8 +37,12 @@ class SimulationRunner(
     private var paused = true
     private var speed = GameSpeed.NORMAL
     private val mutableClock = MutableStateFlow(currentClock())
+    private val mutableEconomy = MutableStateFlow(simulation.economySnapshot())
 
     val clock: StateFlow<ClockState> = mutableClock.asStateFlow()
+
+    /** 경제가 갱신될 때(매월 1일)마다 바뀐다. */
+    val economy: StateFlow<EconomySnapshot> = mutableEconomy.asStateFlow()
 
     init {
         scope.launch(dispatcher) { run() }
@@ -74,7 +79,7 @@ class SimulationRunner(
                 apply(command)
                 continue
             }
-            simulation.advanceDay()
+            stepDay()
             val nextDayStart = dayStartedAt + dayDuration
             dayStartedAt = if (nextDayStart.elapsedNow() > dayDuration) TimeSource.Monotonic.markNow() else nextDayStart
             publish()
@@ -85,9 +90,15 @@ class SimulationRunner(
         when (command) {
             Command.TogglePause -> paused = !paused
             is Command.SetSpeed -> speed = command.speed
-            Command.AdvanceDay -> if (paused) simulation.advanceDay()
+            Command.AdvanceDay -> if (paused) stepDay()
         }
         publish()
+    }
+
+    private fun stepDay() {
+        if (simulation.advanceDay()) {
+            mutableEconomy.value = simulation.economySnapshot()
+        }
     }
 
     private fun publish() {
