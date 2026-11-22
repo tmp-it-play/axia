@@ -1,38 +1,112 @@
 package team.themoment.axia.theme
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
-import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.sp
 import org.jetbrains.compose.resources.Font
 import team.themoment.axia.resources.Res
+import team.themoment.axia.resources.nanum_myeongjo_extrabold
 import team.themoment.axia.resources.pretendard_variable
+
+/** 서류철 UI의 색. 책상 위에 놓인 마닐라 폴더와 종이, 잉크, 도장. */
+object DossierColors {
+    val desk = Color(0xFF1C2024)
+    val deskRaised = Color(0xFF2A3036)
+    val deskText = Color(0xFFE8DFC9)
+    val deskTextMuted = Color(0xFFA9A08C)
+    val folder = Color(0xFFCDB37C)
+    val folderShade = Color(0xFFB59B63)
+    val folderEdge = Color(0xFF8C7547)
+    val paper = Color(0xFFF3EAD3)
+    val paperShade = Color(0xFFE7DBBE)
+    val paperLine = Color(0xFFDCCDA9)
+    val ink = Color(0xFF2A241D)
+    val inkMuted = Color(0xFF6B5F50)
+    val blueInk = Color(0xFF2F4B66)
+    val stamp = Color(0xFF9E2B25)
+    val positive = Color(0xFF3D6A38)
+    val negative = Color(0xFF9E2B25)
+    val metal = Color(0xFF8A8F94)
+}
+
+private val LocalTitleFont = staticCompositionLocalOf<FontFamily> { FontFamily.Serif }
+private val LocalBodyFont = staticCompositionLocalOf<FontFamily> { FontFamily.SansSerif }
+
+/** 제목은 나눔명조, 본문과 지도 국가명은 Pretendard, 숫자는 Pretendard 고정폭 숫자(tnum). */
+object DossierType {
+    val titleFont: FontFamily
+        @Composable @ReadOnlyComposable
+        get() = LocalTitleFont.current
+
+    @Composable
+    @ReadOnlyComposable
+    fun title(size: TextUnit = 16.sp): TextStyle =
+        TextStyle(fontFamily = LocalTitleFont.current, fontWeight = FontWeight.ExtraBold, fontSize = size)
+
+    /** 지도 국가명. HOI4 지도 글꼴(RGFX White Map Font)처럼 굵은 고딕. */
+    @Composable
+    @ReadOnlyComposable
+    fun mapLabel(size: TextUnit): TextStyle =
+        TextStyle(fontFamily = LocalBodyFont.current, fontWeight = FontWeight.ExtraBold, fontSize = size)
+
+    @Composable
+    @ReadOnlyComposable
+    fun number(
+        size: TextUnit = 14.sp,
+        weight: FontWeight = FontWeight.Medium,
+    ): TextStyle = TextStyle(fontFamily = LocalBodyFont.current, fontWeight = weight, fontSize = size, fontFeatureSettings = "tnum")
+}
+
+private val dossierColorScheme =
+    lightColorScheme(
+        primary = DossierColors.blueInk,
+        onPrimary = DossierColors.paper,
+        secondary = DossierColors.folderEdge,
+        onSecondary = DossierColors.paper,
+        tertiary = DossierColors.stamp,
+        background = DossierColors.desk,
+        onBackground = DossierColors.deskText,
+        surface = DossierColors.paper,
+        onSurface = DossierColors.ink,
+        surfaceVariant = DossierColors.paperShade,
+        onSurfaceVariant = DossierColors.inkMuted,
+        surfaceContainer = DossierColors.paper,
+        surfaceContainerHigh = DossierColors.paper,
+        surfaceContainerHighest = DossierColors.paperShade,
+        outline = DossierColors.folderEdge,
+        outlineVariant = DossierColors.paperLine,
+        error = DossierColors.stamp,
+    )
 
 @Composable
 fun AxiaTheme(content: @Composable () -> Unit) {
-    MaterialTheme(
-        colorScheme = if (isSystemInDarkTheme()) darkColorScheme() else lightColorScheme(),
-        typography = rememberPretendardTypography(),
-        content = content,
-    )
+    val pretendard = rememberPretendard()
+    val myeongjo = FontFamily(Font(resource = Res.font.nanum_myeongjo_extrabold, weight = FontWeight.ExtraBold))
+    val typography = remember(pretendard) { Typography().withFontFamily(pretendard) }
+    MaterialTheme(colorScheme = dossierColorScheme, typography = typography) {
+        CompositionLocalProvider(LocalTitleFont provides myeongjo, LocalBodyFont provides pretendard, content = content)
+    }
 }
 
 @Composable
-private fun rememberPretendardTypography(): Typography {
+private fun rememberPretendard(): FontFamily {
     val regular = Font(resource = Res.font.pretendard_variable, weight = FontWeight.Normal)
     val medium = Font(resource = Res.font.pretendard_variable, weight = FontWeight.Medium)
     val semiBold = Font(resource = Res.font.pretendard_variable, weight = FontWeight.SemiBold)
     val bold = Font(resource = Res.font.pretendard_variable, weight = FontWeight.Bold)
-    return remember(regular, medium, semiBold, bold) {
-        val pretendard = FontFamily(regular, medium, semiBold, bold)
-        Typography().withFontFamily(pretendard)
-    }
+    val extraBold = Font(resource = Res.font.pretendard_variable, weight = FontWeight.ExtraBold)
+    return remember(regular, medium, semiBold, bold, extraBold) { FontFamily(regular, medium, semiBold, bold, extraBold) }
 }
 
 private fun Typography.withFontFamily(fontFamily: FontFamily): Typography {
