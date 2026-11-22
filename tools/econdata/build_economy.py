@@ -1,0 +1,308 @@
+"""IMF 세계경제전망(WEO)과 World Bank 지표로 2024년 1월 1일 시작 시점의 국가별 경제 초기 상태(economy.json)를 만든다.
+
+사용법:
+    python3 tools/econdata/build_economy.py [--cache-dir <원본 응답 저장 폴더>]
+
+기준 연도는 2023년이다. 항목마다 IMF WEO, World Bank 순으로 값을 찾고, 둘 다 없으면 같은 소득 그룹의 중앙값으로
+채운 뒤 estimated 목록에 기록한다. 두 출처 모두에 없는 국가는 MANUAL 표의 대략적인 값을 쓴다.
+다운로드는 시스템 인증서를 쓰는 curl로 한다.
+"""
+
+import argparse
+import json
+import statistics
+import subprocess
+import xml.etree.ElementTree as ElementTree
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
+WORLD = ROOT / "simulation/src/main/resources/world/world.json"
+OUT = ROOT / "simulation/src/main/resources/world/economy.json"
+
+BASE_YEAR = 2023
+FIRST_YEAR = 2010
+RECENT_YEARS = range(2019, BASE_YEAR + 1)
+POTENTIAL_YEARS = [2015, 2016, 2017, 2018, 2019, 2023]
+VOLATILITY_YEARS = range(2010, 2020)
+
+IMF_INDICATORS = {
+    "gdp": "NGDPD",  # 명목 GDP, 달러
+    "growth": "NGDP_RPCH",  # 실질 성장률, %
+    "inflation": "PCPIPCH",  # 소비자물가 상승률(연평균), %
+    "unemployment": "LUR",  # 실업률, %
+    "population": "LP",  # 인구, 명
+    "revenue": "GGR_NGDP",  # 일반정부 세입, GDP 대비 %
+    "expense": "GGX_NGDP",  # 일반정부 세출, GDP 대비 %
+    "debt": "GGXWDG_NGDP",  # 일반정부 총부채, GDP 대비 %
+    "primaryBalance": "GGXONLB_NGDP",  # 기초재정수지, GDP 대비 %
+    "balance": "GGXCNL_NGDP",  # 재정수지, GDP 대비 %
+}
+
+WORLD_BANK_INDICATORS = {
+    "gdp": "NY.GDP.MKTP.CD",
+    "growth": "NY.GDP.MKTP.KD.ZG",
+    "population": "SP.POP.TOTL",
+    "populationGrowth": "SP.POP.GROW",
+    "cpi": "FP.CPI.TOTL.ZG",
+    "deflator": "NY.GDP.DEFL.KD.ZG",
+    "unemployment": "SL.UEM.TOTL.ZS",
+    "revenue": "GC.REV.XGRT.GD.ZS",
+    "expense": "GC.XPN.TOTL.GD.ZS",
+    "debt": "GC.DOD.TOTL.GD.ZS",
+    "interestOfRevenue": "GC.XPN.INTP.RV.ZS",
+}
+
+# 우리 국가 코드(Natural Earth ADM0_A3)와 출처 코드가 다른 경우.
+SOURCE_CODES = {"KOS": ["KOS", "XKX"], "PSX": ["PSE", "WBG"], "SDS": ["SSD"]}
+
+# World Bank 소득 그룹에 없는 국가.
+INCOME_OVERRIDES = {"TWN": "HIC", "CYN": "UMC", "SOL": "LIC", "VAT": "HIC"}
+
+# IMF와 World Bank 모두에 없는 값. 각국 공식 통계와 국제기구 추정을 바탕으로 한 2023년 대략값.
+MANUAL = {
+    "CYN": {"gdp": 4.5e9, "growth": 0.04, "population": 0.39e6, "inflation": 0.6, "unemployment": 0.07},
+    "SOL": {"gdp": 3.4e9, "growth": 0.03, "population": 5.7e6, "inflation": 0.05, "unemployment": 0.2},
+    "VAT": {"gdp": 0.03e9, "growth": 0.0, "population": 800, "inflation": 0.02, "unemployment": 0.0},
+    "PRK": {"gdp": 30e9},
+    "ERI": {"gdp": 2.3e9},
+}
+
+FIELDS = [
+    "gdp",
+    "population",
+    "growth",
+    "populationGrowth",
+    "inflation",
+    "unemployment",
+    "revenue",
+    "expense",
+    "debt",
+    "interest",
+    "potentialGrowth",
+    "growthVolatility",
+]
+REQUIRED = {"gdp", "population"}
+MIN_DEBT_FOR_RATE = 0.1
+
+
+def download(url, cache_file):
+    if cache_file is not None and cache_file.exists():
+        return cache_file.read_bytes()
+    data = subprocess.run(["curl", "-sfL", "-m", "180", url], check=True, capture_output=True).stdout
+    if cache_file is not None:
+        cache_file.write_bytes(data)
+    return data
+
+
+def load_imf(cache_dir):
+    """IMF WEO 지표. OBS_VALUE는 기본 단위(달러, 명, %)이며 SCALE 속성은 표시용이다."""
+    series = {}
+    for key, code in IMF_INDICATORS.items():
+        url = f"https://api.imf.org/external/sdmx/2.1/data/IMF.RES,WEO/.{code}.A?startPeriod={FIRST_YEAR}&endPeriod={BASE_YEAR}"
+        root = ElementTree.fromstring(download(url, cache_dir / f"imf-{code}.xml" if cache_dir else None))
+        values = {}
+        for element in root.iter():
+            if element.tag.endswith("Series"):
+                country = element.get("COUNTRY")
+                for observation in element:
+                    value = observation.get("OBS_VALUE")
+                    if value not in (None, "", "NaN"):
+                        values.setdefault(country, {})[int(observation.get("TIME_PERIOD"))] = float(value)
+        series[key] = values
+    return series
+
+
+def load_world_bank(cache_dir):
+    series = {}
+    for key, code in WORLD_BANK_INDICATORS.items():
+        url = f"https://api.worldbank.org/v2/country/all/indicator/{code}?format=json&date={FIRST_YEAR}:{BASE_YEAR}&per_page=20000"
+        data = json.loads(download(url, cache_dir / f"{code}.json" if cache_dir else None))
+        values = {}
+        for row in data[1] or []:
+            if row["value"] is not None:
+                values.setdefault(row["countryiso3code"], {})[int(row["date"])] = float(row["value"])
+        series[key] = values
+    income_data = json.loads(download("https://api.worldbank.org/v2/country?format=json&per_page=400", cache_dir / "countries.json" if cache_dir else None))
+    income = {row["id"]: row["incomeLevel"]["id"] for row in income_data[1] if row["region"]["value"] != "Aggregates"}
+    return series, income
+
+
+def latest(values, years):
+    for year in sorted(years, reverse=True):
+        if year in values:
+            return values[year]
+    return None
+
+
+def pct(value):
+    return None if value is None else value / 100.0
+
+
+def history_stats(history):
+    potential = [history[year] for year in POTENTIAL_YEARS if year in history]
+    volatility = [history[year] for year in VOLATILITY_YEARS if year in history]
+    return (
+        pct(statistics.median(potential)) if len(potential) >= 3 else None,
+        pct(statistics.pstdev(volatility)) if len(volatility) >= 5 else None,
+    )
+
+
+def from_imf(codes, series):
+    def pick(key):
+        for code in codes:
+            if code in series[key]:
+                return series[key][code]
+        return {}
+
+    def get(key, years=RECENT_YEARS):
+        return latest(pick(key), years)
+
+    population = pick("population")
+    population_growth = None
+    if BASE_YEAR in population and BASE_YEAR - 1 in population and population[BASE_YEAR - 1] > 0:
+        population_growth = population[BASE_YEAR] / population[BASE_YEAR - 1] - 1
+    primary_balance, balance = get("primaryBalance"), get("balance")
+    potential, volatility = history_stats(pick("growth"))
+    return {
+        "gdp": get("gdp"),
+        "population": get("population", [BASE_YEAR]),
+        "growth": pct(get("growth", [BASE_YEAR])),
+        "populationGrowth": population_growth,
+        "inflation": pct(get("inflation", [BASE_YEAR])),
+        "unemployment": pct(get("unemployment", [BASE_YEAR])),
+        "revenue": pct(get("revenue")),
+        "expense": pct(get("expense")),
+        "debt": pct(get("debt")),
+        "interest": pct(primary_balance - balance) if primary_balance is not None and balance is not None else None,
+        "potentialGrowth": potential,
+        "growthVolatility": volatility,
+    }
+
+
+def from_world_bank(codes, series):
+    def pick(key):
+        for code in codes:
+            if code in series[key]:
+                return series[key][code]
+        return {}
+
+    def get(key, years=RECENT_YEARS):
+        return latest(pick(key), years)
+
+    revenue, interest_of_revenue = get("revenue"), get("interestOfRevenue")
+    inflation = get("cpi", [BASE_YEAR]) or get("deflator", [BASE_YEAR]) or get("cpi") or get("deflator")
+    potential, volatility = history_stats(pick("growth"))
+    return {
+        "gdp": get("gdp"),
+        "population": get("population", [BASE_YEAR]),
+        "growth": pct(get("growth", [BASE_YEAR])),
+        "populationGrowth": pct(get("populationGrowth", [BASE_YEAR])),
+        "inflation": pct(inflation),
+        "unemployment": pct(get("unemployment", [BASE_YEAR])),
+        "revenue": pct(revenue),
+        "expense": pct(get("expense")),
+        "debt": pct(get("debt")),
+        "interest": pct(interest_of_revenue * revenue / 100.0) if revenue is not None and interest_of_revenue is not None else None,
+        "potentialGrowth": potential,
+        "growthVolatility": volatility,
+    }
+
+
+def clamp(value, low, high):
+    return max(low, min(high, value))
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--cache-dir", type=Path)
+    args = parser.parse_args()
+    if args.cache_dir:
+        args.cache_dir.mkdir(parents=True, exist_ok=True)
+
+    world = json.loads(WORLD.read_text(encoding="utf-8"))
+    states = [country["id"] for country in world["countries"] if country["kind"] == "STATE"]
+    imf = load_imf(args.cache_dir)
+    world_bank, income = load_world_bank(args.cache_dir)
+
+    merged, sources, groups = {}, {}, {}
+    for country in states:
+        codes = SOURCE_CODES.get(country, [country])
+        candidates = [("imf", from_imf(codes, imf)), ("wb", from_world_bank(codes, world_bank)), ("manual", MANUAL.get(country, {}))]
+        merged[country], sources[country] = {}, {}
+        for field in FIELDS:
+            for source, values in candidates:
+                if values.get(field) is not None:
+                    merged[country][field] = values[field]
+                    sources[country][field] = source
+                    break
+            else:
+                merged[country][field] = None
+        groups[country] = INCOME_OVERRIDES.get(country) or next((income[code] for code in codes if code in income), None)
+        missing = [field for field in REQUIRED if merged[country][field] is None]
+        if missing or groups[country] is None:
+            raise SystemExit(f"{country}: 필수 값 {missing} 또는 소득 그룹이 없습니다. MANUAL 또는 INCOME_OVERRIDES에 추가하세요.")
+
+    medians = {}
+    for field in FIELDS:
+        by_group = {}
+        for country, values in merged.items():
+            if values[field] is not None:
+                by_group.setdefault(groups[country], []).append(values[field])
+        everyone = [value for values in by_group.values() for value in values]
+        medians[field] = {group: statistics.median(values) for group, values in by_group.items()}
+        medians[field][None] = statistics.median(everyone)
+
+    # 부채가 아주 작으면 이자 ÷ 부채로 구한 실효금리가 불안정하므로, 그런 국가는 소득 그룹 중앙값을 쓴다.
+    rates = {}
+    for country, values in merged.items():
+        if values["debt"] is not None and values["interest"] is not None and values["debt"] >= MIN_DEBT_FOR_RATE:
+            rates.setdefault(groups[country], []).append(values["interest"] / values["debt"])
+    median_rates = {group: statistics.median(values) for group, values in rates.items()}
+    median_rates[None] = statistics.median([rate for values in rates.values() for rate in values])
+
+    entries = []
+    for country in states:
+        values = merged[country]
+        estimated = {field for field in FIELDS if values[field] is None}
+        for field in estimated:
+            values[field] = medians[field].get(groups[country], medians[field][None])
+        estimated |= {field for field, source in sources[country].items() if source == "manual"}
+
+        debt = clamp(values["debt"], 0.0, 3.0)
+        interest = clamp(values["interest"], 0.0, 0.2)
+        if debt >= MIN_DEBT_FOR_RATE:
+            interest_rate = interest / debt
+        else:
+            interest_rate = median_rates.get(groups[country], median_rates[None])
+            interest = interest_rate * debt
+            estimated.add("interest")
+        entries.append(
+            {
+                "id": country,
+                "population": round(values["population"]),
+                "populationGrowth": round(clamp(values["populationGrowth"], -0.05, 0.06), 5),
+                "gdp": round(values["gdp"]),
+                "growth": round(clamp(values["growth"], -0.3, 0.3), 5),
+                "potentialGrowth": round(clamp(values["potentialGrowth"], -0.01, 0.07), 5),
+                "growthVolatility": round(clamp(values["growthVolatility"], 0.005, 0.05), 5),
+                "inflation": round(clamp(values["inflation"], -0.02, 3.0), 5),
+                "unemployment": round(clamp(values["unemployment"], 0.005, 0.4), 5),
+                "revenue": round(clamp(values["revenue"], 0.03, 0.7), 5),
+                "primarySpending": round(clamp(values["expense"] - interest, 0.03, 0.8), 5),
+                "debt": round(debt, 5),
+                "interestRate": round(clamp(interest_rate, 0.005, 0.25), 5),
+                "estimated": sorted(estimated),
+            },
+        )
+
+    OUT.write_text(json.dumps({"baseYear": BASE_YEAR, "countries": entries}, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    print(f"countries={len(entries)} fully measured={sum(1 for entry in entries if not entry['estimated'])}")
+    for field in FIELDS:
+        from_imf_count = sum(1 for country in states if sources[country].get(field) == "imf")
+        estimated_count = sum(1 for entry in entries if field in entry["estimated"])
+        print(f"  {field}: imf={from_imf_count} estimated={estimated_count}")
+    print(f"economy: {OUT.relative_to(ROOT)}")
+
+
+if __name__ == "__main__":
+    main()
