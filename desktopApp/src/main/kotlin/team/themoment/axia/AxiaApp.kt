@@ -1,81 +1,50 @@
 package team.themoment.axia
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import team.themoment.axia.map.MapLegend
-import team.themoment.axia.map.MapMode
-import team.themoment.axia.map.MapModeBar
-import team.themoment.axia.map.WorldMap
+import team.themoment.axia.game.GameScreen
 import team.themoment.axia.map.WorldMapModel
-import team.themoment.axia.selection.SelectionPanel
+import team.themoment.axia.newgame.NewGameScreen
 import team.themoment.axia.simulation.SimulationRunner
+import team.themoment.axia.simulation.economy.EconomyData
+import team.themoment.axia.simulation.world.Country
 import team.themoment.axia.simulation.world.World
-import team.themoment.axia.time.TimeControlBar
 import team.themoment.axia.update.AppUpdater
 import team.themoment.axia.update.UpdateNotice
 
+/** 게임이 시작되기 전에는 국가 선택 화면, 시작한 뒤에는 게임 화면. 업데이트 알림은 두 화면 위에 띄운다. */
 @Composable
 fun AxiaApp(
     world: World,
+    data: EconomyData,
+    playable: List<Country>,
     mapModel: WorldMapModel,
-    runner: SimulationRunner,
+    runner: SimulationRunner?,
+    onStart: (String) -> Unit,
     updater: AppUpdater?,
     onInstallerLaunched: () -> Unit,
 ) {
-    val clock by runner.clock.collectAsState()
-    val economy by runner.economy.collectAsState()
-    var selectedRegionId by remember { mutableStateOf<String?>(null) }
-    var mapMode by remember { mutableStateOf(MapMode.POLITICAL) }
-    Column(modifier = Modifier.fillMaxSize()) {
-        TimeControlBar(
-            clock = clock,
-            onTogglePause = runner::togglePause,
-            onSpeedSelect = runner::setSpeed,
-            onAdvanceDay = runner::advanceDay,
-        )
-        Box(modifier = Modifier.fillMaxWidth().weight(1f)) {
-            WorldMap(
-                model = mapModel,
-                fillColor = { fill -> mapMode.colorOf(fill, economy) },
-                selectedRegionId = selectedRegionId,
-                onRegionClick = { selectedRegionId = it },
-                modifier = Modifier.fillMaxSize(),
+    Box(Modifier.fillMaxSize()) {
+        if (runner == null) {
+            NewGameScreen(data = data, playable = playable, onStart = onStart)
+        } else {
+            GameScreen(world = world, mapModel = mapModel, runner = runner)
+        }
+        updater?.let {
+            val updateState by it.state.collectAsState()
+            UpdateNotice(
+                state = updateState,
+                onInstall = { installer -> it.install(installer, onInstallerLaunched) },
+                onDismiss = it::dismiss,
+                modifier = Modifier.align(Alignment.TopCenter).padding(top = 64.dp),
             )
-            MapModeBar(
-                selected = mapMode,
-                onSelect = { mapMode = it },
-                modifier = Modifier.align(Alignment.TopStart).padding(12.dp),
-            )
-            updater?.let {
-                val updateState by it.state.collectAsState()
-                UpdateNotice(
-                    state = updateState,
-                    onInstall = { installer -> it.install(installer, onInstallerLaunched) },
-                    onDismiss = it::dismiss,
-                    modifier = Modifier.align(Alignment.TopEnd).padding(12.dp),
-                )
-            }
-            MapLegend(mode = mapMode, modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp))
-            selectedRegionId?.let { regionId ->
-                SelectionPanel(
-                    world = world,
-                    regionId = regionId,
-                    economy = economy.countries[world.region(regionId).countryId],
-                    modifier = Modifier.align(Alignment.BottomStart).padding(16.dp),
-                )
-            }
         }
     }
 }

@@ -3,6 +3,7 @@ package team.themoment.axia.ui.dossier
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -193,5 +194,56 @@ fun DossierSlider(
                     inactiveTrackColor = DossierColors.paperLine,
                 ),
         )
+    }
+}
+
+/** 어두운 띠 위의 종이 꼬리표. 지표 요약이나 버튼에 쓴다. */
+@Composable
+fun PaperTag(
+    text: String,
+    modifier: Modifier = Modifier,
+    selected: Boolean = false,
+    enabled: Boolean = true,
+    onClick: (() -> Unit)? = null,
+) {
+    val background =
+        when {
+            !enabled -> DossierColors.deskRaised
+            selected -> DossierColors.folder
+            else -> DossierColors.paper
+        }
+    Box(
+        modifier =
+            modifier
+                .clip(RoundedCornerShape(3.dp))
+                .background(background)
+                .then(if (onClick != null && enabled) Modifier.clickable(onClick = onClick) else Modifier)
+                .padding(horizontal = 10.dp, vertical = 5.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = text,
+            style = DossierType.number(13.sp, weight = if (selected) FontWeight.Bold else FontWeight.Medium),
+            color = if (enabled) DossierColors.ink else DossierColors.deskTextMuted,
+        )
+    }
+}
+
+/** 그룹이나 범례 색 표시가 붙은 작은 라벨. */
+@Composable
+fun Swatch(
+    color: Color,
+    label: String,
+    modifier: Modifier = Modifier,
+) {
+    Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+        Box(
+            Modifier
+                .width(10.dp)
+                .height(10.dp)
+                .background(color)
+                .border(1.dp, DossierColors.inkMuted.copy(alpha = 0.4f)),
+        )
+        Text(text = label, style = DossierType.number(11.sp, weight = FontWeight.Normal), color = DossierColors.inkMuted)
     }
 }

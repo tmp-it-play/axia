@@ -1,6 +1,10 @@
 package team.themoment.axia
 
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.input.key.KeyEventType
@@ -20,6 +24,8 @@ import team.themoment.axia.simulation.Simulation
 import team.themoment.axia.simulation.SimulationRunner
 import team.themoment.axia.simulation.economy.EconomyData
 import team.themoment.axia.simulation.time.GameSpeed
+import team.themoment.axia.simulation.world.PlayableCountries
+import team.themoment.axia.simulation.world.World
 import team.themoment.axia.simulation.world.WorldLoader
 import team.themoment.axia.theme.AxiaTheme
 import team.themoment.axia.update.AppUpdater
@@ -28,30 +34,52 @@ import java.awt.Dimension
 
 private val SPEED_KEYS = listOf(Key.One, Key.Two, Key.Three, Key.Four, Key.Five).zip(GameSpeed.all).toMap()
 
+/** 진행 중인 한 판. 시뮬레이션 코루틴의 수명을 함께 관리한다. */
+private class GameSession(
+    world: World,
+    data: EconomyData,
+    playerCountryId: String,
+) {
+    private val scope = CoroutineScope(SupervisorJob())
+    val runner = SimulationRunner(Simulation(world, data, playerCountryId), scope)
+
+    fun close() = scope.cancel()
+}
+
 fun main() {
     System.setProperty("apple.awt.application.name", "Axia")
     val world = WorldLoader.loadDefault()
+    val data = EconomyData.loadDefault(world)
+    val playable = PlayableCountries.loadDefault(world, data)
     val mapModel = WorldMapModel(world, MapGeometry.loadDefault())
-    val simulationScope = CoroutineScope(SupervisorJob())
-    val runner = SimulationRunner(Simulation(world, EconomyData.loadDefault(world), playerCountryId = "KOR"), simulationScope)
     val updateScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     val updater = Installation.current()?.let { AppUpdater(it, updateScope) }
     updater?.checkForUpdate()
     application {
+        var session by remember { mutableStateOf<GameSession?>(null) }
         val exit = {
-            simulationScope.cancel()
+            session?.close()
             updateScope.cancel()
             exitApplication()
         }
         Window(
             onCloseRequest = exit,
             title = "Axia",
-            state = rememberWindowState(width = 1280.dp, height = 800.dp),
-            onPreviewKeyEvent = { event -> handleTimeKey(event, runner) },
+            state = rememberWindowState(width = 1440.dp, height = 900.dp),
+            onPreviewKeyEvent = { event -> session?.let { handleTimeKey(event, it.runner) } ?: false },
         ) {
-            LaunchedEffect(window) { window.minimumSize = Dimension(960, 600) }
+            LaunchedEffect(window) { window.minimumSize = Dimension(1100, 700) }
             AxiaTheme {
-                AxiaApp(world = world, mapModel = mapModel, runner = runner, updater = updater, onInstallerLaunched = exit)
+                AxiaApp(
+                    world = world,
+                    data = data,
+                    playable = playable,
+                    mapModel = mapModel,
+                    runner = session?.runner,
+                    onStart = { countryId -> session = GameSession(world, data, countryId) },
+                    updater = updater,
+                    onInstallerLaunched = exit,
+                )
             }
         }
     }

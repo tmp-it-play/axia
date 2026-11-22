@@ -64,11 +64,16 @@ fun LineChart(
         fun x(index: Int) = left + if (values.size == 1) plotWidth / 2f else index * plotWidth / (values.size - 1)
 
         val dash = PathEffect.dashPathEffect(floatArrayOf(3.dp.toPx(), 3.dp.toPx()))
+        val labeled = mutableSetOf<String>()
         listOf(high, (high + low) / 2.0, low).forEach { tick ->
             val ty = y(tick)
             drawLine(DossierColors.paperLine, Offset(left, ty), Offset(left + plotWidth, ty), strokeWidth = 1f, pathEffect = dash)
-            val layout = measurer.measure(format(tick), labelStyle)
-            drawText(layout, topLeft = Offset(left - layout.size.width - 6.dp.toPx(), ty - layout.size.height / 2f))
+            // 범위가 좁으면 반올림한 눈금 라벨이 겹치므로 같은 라벨은 한 번만 쓴다.
+            val label = format(tick)
+            if (labeled.add(label)) {
+                val layout = measurer.measure(label, labelStyle)
+                drawText(layout, topLeft = Offset(left - layout.size.width - 6.dp.toPx(), ty - layout.size.height / 2f))
+            }
         }
         if (zeroLine && low < 0.0 && high > 0.0) {
             drawLine(DossierColors.inkMuted, Offset(left, y(0.0)), Offset(left + plotWidth, y(0.0)), strokeWidth = 1f)

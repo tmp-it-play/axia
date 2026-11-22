@@ -14,7 +14,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -33,12 +35,16 @@ import team.themoment.axia.theme.DossierType
 private val TAB_SHAPE = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp)
 private val FOLDER_SHAPE = RoundedCornerShape(topEnd = 6.dp, bottomStart = 6.dp, bottomEnd = 6.dp)
 
-/** 탭 라벨이 달린 마닐라 폴더 안에 클립으로 고정한 종이 한 장. */
+/**
+ * 탭 라벨이 달린 마닐라 폴더 안에 클립으로 고정한 종이 한 장.
+ * [scrollable]이면 높이가 정해진 자리에서 종이 내용을 스크롤한다.
+ */
 @Composable
 fun DossierPanel(
     title: String,
     modifier: Modifier = Modifier,
     onClose: (() -> Unit)? = null,
+    scrollable: Boolean = false,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     Column(modifier = modifier) {
@@ -56,6 +62,7 @@ fun DossierPanel(
             modifier =
                 Modifier
                     .fillMaxWidth()
+                    .then(if (scrollable) Modifier.weight(1f, fill = false) else Modifier)
                     .shadow(8.dp, FOLDER_SHAPE)
                     .background(DossierColors.folder, FOLDER_SHAPE)
                     .border(1.dp, DossierColors.folderEdge.copy(alpha = 0.5f), FOLDER_SHAPE)
@@ -68,6 +75,7 @@ fun DossierPanel(
                         .background(DossierColors.paper)
                         .border(1.dp, DossierColors.paperLine)
                         .ruledPaper()
+                        .then(if (scrollable) Modifier.verticalScroll(rememberScrollState()) else Modifier)
                         .padding(start = 16.dp, end = 16.dp, top = 18.dp, bottom = 16.dp),
                 content = content,
             )

@@ -67,3 +67,11 @@ fun formatPercent(
     val pattern = if (signed) "%+.${digits}f%%" else "%.${digits}f%%"
     return String.format(Locale.KOREA, pattern, percent)
 }
+
+/** 차트 눈금처럼 좁은 자리에 쓰는 짧은 금액. 예: 1.8조 달러, 304억 달러 */
+fun formatCompactDollars(value: Double): String =
+    when {
+        abs(value) >= JO -> String.format(Locale.KOREA, "%.1f조 달러", value / JO)
+        abs(value) >= EOK -> String.format(Locale.KOREA, "%,.0f억 달러", value / EOK)
+        else -> String.format(Locale.KOREA, "%,.0f달러", value)
+    }
