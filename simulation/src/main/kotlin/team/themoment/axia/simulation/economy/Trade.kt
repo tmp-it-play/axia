@@ -57,6 +57,9 @@ internal data class ExternalConditions(
     val partnerGap: Double = 0.0,
     /** 유가의 전년 대비 로그 변화. */
     val oilChange: Double = 0.0,
+    /** 이번 달 곡물 가격지수(시작 = 100)와 국내 실제 생산량(톤). */
+    val grainPrice: Double = 100.0,
+    val grainProduction: Double = 0.0,
     /** 전쟁 동원·피란으로 생긴 구조적 실업 변화의 목표(시작 대비). */
     val warUnemployment: Double = 0.0,
 ) {
@@ -207,6 +210,8 @@ internal class TradeNetwork(
                     potentialLevel = tradeLevel[i] * (1.0 - state.occupied(id) * OCCUPATION_OUTPUT),
                     partnerGap = partnerGap,
                     oilChange = oil.yearlyLogChange,
+                    grainPrice = grain.priceIndex,
+                    grainProduction = food.production,
                     warUnemployment = WAR_UNEMPLOYMENT * state.warIntensity(id),
                 )
         }

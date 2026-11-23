@@ -136,6 +136,10 @@ internal class CountryEconomy(
         private set
     var monthlyPrimarySpending = initial.primarySpending * initial.gdp / 12.0
         private set
+
+    /** 실제 지급한 이번 달 곡물 농가 지원금(2023년 실질 달러). */
+    var monthlyProducerPayment = 0.0
+        private set
     var monthlyInterest = initial.debt * initial.interestRate * initial.gdp / 12.0
         private set
     private val monthlyBalance get() = monthlyRevenue - monthlyPrimarySpending - monthlyInterest
@@ -181,7 +185,8 @@ internal class CountryEconomy(
 
         // 기초재정수지가 나빠지면(지출 증가, 감세) 수요가 늘어 산출 갭이 커진다.
         val shares = fiscalPolicy.advanceMonth(startDebtRatio, outputGap)
-        val primaryBalanceShare = shares.revenue - shares.primarySpending
+        monthlyProducerPayment = fiscalPolicy.grainSupport?.settle(external.grainPrice, external.grainProduction, realGdp) ?: 0.0
+        val primaryBalanceShare = shares.revenue - shares.primarySpending - monthlyProducerPayment * 12.0 / realGdp
         val fiscalImpulse = FISCAL_MULTIPLIER * (lastPrimaryBalanceShare - primaryBalanceShare)
         lastPrimaryBalanceShare = primaryBalanceShare
 
@@ -247,7 +252,7 @@ internal class CountryEconomy(
 
         val gdp = nominalGdp
         monthlyRevenue = shares.revenue * gdp / 12.0
-        monthlyPrimarySpending = shares.primarySpending * (1.0 - STABILIZER * outputGap) * gdp / 12.0
+        monthlyPrimarySpending = shares.primarySpending * (1.0 - STABILIZER * outputGap) * gdp / 12.0 + monthlyProducerPayment * priceLevel
         monthlyInterest = debt.annualInterest(if (debt.balance >= 0.0) interestRate else minOf(interestRate, MAX_ASSET_RETURN)) / 12.0
         return debt.closeMonth(gdp, monthlyRevenue, monthlyPrimarySpending, monthlyInterest, interestRate)
     }
@@ -286,6 +291,7 @@ internal class CountryEconomy(
             realExchange = realExchange,
             outputGap = outputGap,
             estimated = estimated,
+            supportedGrainTonnes = fiscalPolicy.grainSupport?.paidTonnes,
         )
     }
 

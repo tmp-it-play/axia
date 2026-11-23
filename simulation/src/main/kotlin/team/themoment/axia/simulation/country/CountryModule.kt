@@ -1,5 +1,6 @@
 package team.themoment.axia.simulation.country
 
+import team.themoment.axia.simulation.country.bra.BrazilModule
 import team.themoment.axia.simulation.country.chn.ChinaModule
 import team.themoment.axia.simulation.country.deu.GermanyModule
 import team.themoment.axia.simulation.country.fra.FranceModule
@@ -34,6 +35,9 @@ interface CountryModule {
 
     /** 준공된 주택 공급으로 낮아지는 균형 집값의 로그 변화량(시작 대비). */
     val housingSupply: Double get() = 0.0
+
+    /** 최근 시장 상황에서 정책 강도 한 단위가 늘릴 것으로 예상되는 연간 지출(GDP 대비). */
+    fun estimatedSpendingPerUnit(item: CountryPolicyItem): Double = item.spendingPerUnit
 
     /** 고유 정책의 현재 값(0~1). */
     fun policyValue(item: CountryPolicyItem): Double = error("${item.key} is not a policy of $countryId")
@@ -82,6 +86,7 @@ object CountryModules {
             UkraineModule.ID,
             IndiaModule.ID,
             NorthKoreaModule.ID,
+            BrazilModule.ID,
         ) + HousingModule.countryIds
 
     fun create(
@@ -103,6 +108,7 @@ object CountryModules {
             UkraineModule.ID -> UkraineModule()
             IndiaModule.ID -> IndiaModule(random)
             NorthKoreaModule.ID -> NorthKoreaModule(random)
+            BrazilModule.ID -> BrazilModule()
             in HousingModule.countryIds -> HousingModule.create(countryId)
             else -> DefaultCountryModule(countryId)
         }

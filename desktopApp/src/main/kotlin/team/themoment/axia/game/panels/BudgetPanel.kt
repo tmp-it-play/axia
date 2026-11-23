@@ -52,6 +52,10 @@ fun BudgetPanel(
         val share = String.format(java.util.Locale.KOREA, "%+.3f%%", budget.housingSpendingChange * 100.0)
         StatRow("주택 정책 지출 증감 (경기 보정 전)", "$share · ${money(budget.housingSpendingChange)}")
     }
+    budget.grainProducerPayment?.let { payment ->
+        val share = String.format(java.util.Locale.KOREA, "%.4f%%", payment * 100.0)
+        StatRow("곡물 농가 보조금 (실제 집행 · 연율)", "$share · ${money(payment)}")
+    }
     DebtSection(budget)
     DraftControls(
         politics = politics,

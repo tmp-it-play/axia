@@ -26,6 +26,8 @@ data class EconomyIndicators(
     val outputGap: Double,
     /** 실측값이 없어 추정한 초기 항목. */
     val estimated: Set<String>,
+    /** 정산된 국내 생산 중 농가 가격차 보조를 받은 톤수. 해당 사업이 있는 나라에만 표시한다. */
+    val supportedGrainTonnes: Double?,
 ) {
     val gdpPerCapita: Double get() = if (population > 0.0) gdp / population else 0.0
 }

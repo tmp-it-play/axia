@@ -700,7 +700,7 @@ internal class Politics(
                 when (val item = change.item) {
                     is TaxKind -> -change.delta * item.baseShare
                     is SpendingKind -> change.delta
-                    is CountryPolicyItem -> change.delta * item.spendingPerUnit
+                    is CountryPolicyItem -> change.delta * module.estimatedSpendingPerUnit(item)
                     is InstitutionItem, is RegulationItem -> 0.0
                 }
             }

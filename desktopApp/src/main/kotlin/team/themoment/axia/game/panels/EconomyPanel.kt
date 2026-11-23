@@ -59,7 +59,7 @@ fun EconomyPanel(
         )
     }
     Hint("부가가치 비중은 World Bank 2023년 구성에서 나눈 추정입니다. 성장률은 실질 부가가치의 전년 대비 증가율입니다.")
-    CommoditySection(countryId, trade.commodities, date, countryName)
+    CommoditySection(countryId, trade.commodities, date, indicators.supportedGrainTonnes, countryName)
     SectionTitle("경제성장률")
     LineChart(history[EconomySeries.GROWTH], history.start, signedPercentFormat, zeroLine = true)
     SectionTitle("물가상승률")

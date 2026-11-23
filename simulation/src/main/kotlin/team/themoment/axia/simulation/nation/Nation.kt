@@ -9,6 +9,7 @@ import team.themoment.axia.simulation.economy.CountryEconomy
 import team.themoment.axia.simulation.economy.DebtWorkoutSnapshot
 import team.themoment.axia.simulation.economy.FiscalPolicy
 import team.themoment.axia.simulation.economy.FiscalShares
+import team.themoment.axia.simulation.economy.GrainProducerSupport
 import team.themoment.axia.simulation.economy.InitialEconomy
 import team.themoment.axia.simulation.economy.Sector
 import team.themoment.axia.simulation.events.EventEffects
@@ -63,6 +64,8 @@ data class BudgetSnapshot(
     /** 조직 보조금(GDP 대비 연간). 기초지출에 포함돼 있다. */
     val organizationSubsidies: Double,
     val housingSpendingChange: Double,
+    /** 실제 정산한 농가 보조금(연율 GDP 비중). 사업이 없는 경우 null. */
+    val grainProducerPayment: Double?,
 )
 
 data class IdentitySnapshot(
@@ -171,7 +174,7 @@ class Nation internal constructor(
     internal val regulations = Regulations(initial.society.incomeGroup, identityBase.civilLiberties)
 
     /** 거시 모델에 넘기는 플레이어 국가의 재정·구조 정책. */
-    internal val policy: FiscalPolicy = PlayerPolicy(budget, regulations) { demography.laborGrowthEffect }
+    internal val policy: FiscalPolicy = PlayerPolicy(budget, regulations, module as? GrainProducerSupport) { demography.laborGrowthEffect }
     private val indicators = SocialIndicators(initial.society.industryEmployment)
     private val demography = Demography(initial, structure)
 
@@ -473,6 +476,12 @@ class Nation internal constructor(
                     gdp = economy.dollarGdp,
                     organizationSubsidies = budget.organizationSubsidies,
                     housingSpendingChange = budget.housingSpendingChange,
+                    grainProducerPayment =
+                        if (policy.grainSupport != null) {
+                            economy.monthlyProducerPayment * 12.0 / (economy.realGdpPerCapita * economy.populationCount)
+                        } else {
+                            null
+                        },
                 ),
             society = civilSociety.snapshot(date),
             demography = demography.snapshot(economy.realGdpPerCapita / initialRealGdpPerCapita),
@@ -549,10 +558,17 @@ class Nation internal constructor(
                         weights.values.sum()
                 }
                     ?: 1.0
+            val producerIncome =
+                if (group == PopulationGroup.FARMERS && state.share > 0.0) {
+                    economy.monthlyProducerPayment * 12.0 / (economy.populationCount * adultShare * state.share)
+                } else {
+                    0.0
+                }
             state.updateIncome(
                 incomeIndex * sectorIndex,
                 burden,
                 (1.0 + group.transferWeight * socialChange) * regulations.incomeEffect(group),
+                producerIncome,
             )
             val excessInflation = economy.inflation - INFLATION_COMFORT
             val targets =
@@ -671,10 +687,11 @@ class Nation internal constructor(
             incomeIndex: Double,
             burden: Double,
             transfer: Double,
+            producerIncome: Double,
         ) {
             incomeHistory[historyIndex] = preTaxIncome
             historyIndex = (historyIndex + 1) % incomeHistory.size
-            preTaxIncome = initialIncome * incomeIndex * transfer
+            preTaxIncome = initialIncome * incomeIndex * transfer + producerIncome
             realIncome = preTaxIncome * (1.0 - burden) / (1.0 - initialBurden)
         }
 
@@ -774,6 +791,7 @@ class Nation internal constructor(
 private class PlayerPolicy(
     private val budget: PlayerBudget,
     private val regulations: Regulations,
+    override val grainSupport: GrainProducerSupport?,
     private val laborGrowth: () -> Double,
 ) : FiscalPolicy {
     override fun advanceMonth(

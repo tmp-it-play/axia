@@ -29,6 +29,7 @@ internal fun CommoditySection(
     countryId: String,
     quotes: Map<Commodity, CommodityQuote>,
     date: LocalDate,
+    supportedGrainTonnes: Double?,
     countryName: (String) -> String,
 ) {
     var selected by remember(countryId) { mutableStateOf(Commodity.GRAIN) }
@@ -51,6 +52,9 @@ internal fun CommoditySection(
     Hint("${date.year}년 ${date.monthValue}월 1일 정산 · 단위 ${selected.unit}")
     StatRow("기초 재고", quantity(balance.openingStock))
     StatRow("생산", quantity(balance.production), note = if (countryId in quote.unreportedProduction) "기준연도 생산 미보고" else null)
+    if (selected == Commodity.GRAIN && supportedGrainTonnes != null) {
+        StatRow("생산 중 농가 가격차 보조 물량", quantity(supportedGrainTonnes))
+    }
     StatRow("수입", quantity(balance.imports))
     StatRow("수출", quantity(balance.exports))
     StatRow("수요", quantity(balance.demand))

@@ -80,7 +80,7 @@ fun SelectionPanel(
         if (economy != null) {
             SectionTitle("국가 경제 지표")
             KeyIndicatorRows(economy)
-            CommoditySection(id, snapshot.trade.commodities, snapshot.date) { world.country(it).name }
+            CommoditySection(id, snapshot.trade.commodities, snapshot.date, economy.supportedGrainTonnes) { world.country(it).name }
         }
     }
 }

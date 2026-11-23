@@ -8,11 +8,24 @@ data class FiscalShares(
     val primarySpending: Double,
 )
 
+/** 정산된 곡물 가격과 국내 생산량에 따라 농가에 지급할 월 보조금(2023년 실질 달러). */
+interface GrainProducerSupport {
+    val paidTonnes: Double
+
+    fun settle(
+        priceIndex: Double,
+        productionTonnes: Double,
+        annualRealGdp: Double,
+    ): Double
+}
+
 /**
  * 한 국가의 재정과 구조 정책을 정하는 주체. AI 국가는 [AutomaticFiscalPolicy], 플레이어 국가는 플레이어 예산과 규제를 쓴다.
  * 매월 거시 모델이 [advanceMonth]를 한 번 호출한다.
  */
 interface FiscalPolicy {
+    val grainSupport: GrainProducerSupport? get() = null
+
     fun advanceMonth(
         debtRatio: Double,
         outputGap: Double,
