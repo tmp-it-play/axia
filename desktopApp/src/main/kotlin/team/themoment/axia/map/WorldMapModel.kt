@@ -77,7 +77,7 @@ class CountryLabel(
 /** 세계 정의와 지도 형상을 합쳐 그리기와 클릭 판정에 필요한 구조를 만든다. Path는 UI 스레드에서 처음 그릴 때 만든다. */
 class WorldMapModel(
     private val world: World,
-    geometry: MapGeometry,
+    private val geometry: MapGeometry,
 ) {
     private val regions = geometry.regions
     private val regionsById = regions.associateBy(RegionShape::id)
@@ -109,12 +109,73 @@ class WorldMapModel(
             .map { CountryLabel(it.id, world.country(it.id).name, it.labelCurve) }
             .sortedByDescending { it.length * it.thickness }
 
-    val regionBorders: List<RegionBorders> by lazy {
-        geometry.borders
-            .filter { it.kind == BorderKind.REGION }
-            .groupBy { requireNotNull(it.ownerId) }
-            .map { (countryId, lines) ->
-                val shapes = regionsByCountry.getValue(countryId)
+    class PoliticalBorders(
+        val countries: List<BorderTile>,
+        val regions: List<RegionBorders>,
+    )
+
+    private fun borderTiles(lines: List<BorderLine>): List<BorderTile> =
+        lines.groupBy { tileKey(it.bounds.center) }.values.map { tileLines ->
+            BorderTile(
+                bounds = tileLines.map(BorderLine::bounds).reduce(::unionOf),
+                path = Path().apply { tileLines.forEach { addPolyline(it.points) } },
+            )
+        }
+
+    val coasts: List<BorderTile> by lazy { borderTiles(geometry.borders.filter { it.kind == BorderKind.COAST }) }
+
+    // 지도 생성기가 같은 경계 조각을 양쪽 행정구역의 고리에 넣는다. 첫 변으로 원래 조각의 양쪽 지역을 찾아 둔다.
+    private data class Edge(
+        val low: Long,
+        val high: Long,
+    )
+
+    private fun edge(
+        points: FloatArray,
+        i: Int,
+        j: Int,
+    ): Edge {
+        fun vertex(k: Int) = (points[k].toRawBits().toLong() shl 32) or (points[k + 1].toRawBits().toLong() and 0xffffffffL)
+        val a = vertex(i)
+        val b = vertex(j)
+        return if (a < b) Edge(a, b) else Edge(b, a)
+    }
+
+    private val landBorders = geometry.borders.filter { it.kind != BorderKind.COAST }
+    private val adjacentRegions by lazy {
+        val byEdge = landBorders.associate { edge(it.points, 0, 2) to mutableSetOf<String>() }
+        regions.forEach { shape ->
+            shape.rings.forEach { ring ->
+                for (i in ring.indices step 2) {
+                    byEdge[edge(ring, i, (i + 2) % ring.size)]?.add(shape.id)
+                }
+            }
+        }
+        landBorders.associateWith { line ->
+            byEdge.getValue(edge(line.points, 0, 2)).also { require(it.size >= 2) { "A land boundary needs two regions" } }
+        }
+    }
+
+    fun politicalBorders(owners: Map<String, String>): PoliticalBorders {
+        val domestic = mutableMapOf<String, MutableList<BorderLine>>()
+        val international = mutableListOf<BorderLine>()
+        landBorders.forEach { line ->
+            val owner =
+                if (owners.isEmpty()) {
+                    line.ownerId
+                } else {
+                    adjacentRegions
+                        .getValue(line)
+                        .map { owners[it] ?: countryOf(it) }
+                        .distinct()
+                        .singleOrNull()
+                }
+            if (owner == null) international += line else domestic.getOrPut(owner) { mutableListOf() } += line
+        }
+        val regionalShapes = if (owners.isEmpty()) regionsByCountry else regions.groupBy { owners[it.id] ?: countryOf(it.id) }
+        val borders =
+            domestic.map { (owner, lines) ->
+                val shapes = regionalShapes.getValue(owner)
                 val area = abs(shapes.sumOf { shape -> shape.rings.sumOf(::signedArea) })
                 RegionBorders(
                     bounds = lines.map(BorderLine::bounds).reduce(::unionOf),
@@ -122,23 +183,7 @@ class WorldMapModel(
                     path = Path().apply { lines.forEach { addPolyline(it.points) } },
                 )
             }
-    }
-
-    val borderTiles: Map<BorderKind, List<BorderTile>> by lazy {
-        geometry.borders
-            .filter { it.kind != BorderKind.REGION }
-            .groupBy(BorderLine::kind)
-            .mapValues { (_, lines) ->
-                lines
-                    .groupBy { tileKey(it.bounds.center) }
-                    .values
-                    .map { tileLines ->
-                        BorderTile(
-                            bounds = tileLines.map(BorderLine::bounds).reduce(::unionOf),
-                            path = Path().apply { tileLines.forEach { addPolyline(it.points) } },
-                        )
-                    }
-            }
+        return PoliticalBorders(borderTiles(international), borders)
     }
 
     fun countryHighlight(countryId: String): Path =

@@ -54,6 +54,7 @@ fun PoliticsPanel(
     onIntroduce: () -> Unit,
     onCallEarlyElection: () -> Unit,
     onRenamePerson: (Int, String) -> Unit,
+    onOppositionVeto: (Boolean) -> Unit,
 ) {
     val profile = politics.profile
     SectionTitle("현 정부")
@@ -87,9 +88,13 @@ fun PoliticsPanel(
             PaperTag("이 변경안 발의", selected = true, onClick = onIntroduce)
         }
     } else {
-        SectionTitle("심의 중인 재정안")
-        if (pending.stage == BillStage.STALLED) PaperTag("철회하고 수정", onClick = onRevise)
+        SectionTitle(if (pending.sponsor == null) "심의 중인 재정안" else "야당 발의 법안")
+        if (pending.sponsor == null && pending.stage == BillStage.STALLED) PaperTag("철회하고 수정", onClick = onRevise)
         BillDetails(pending)
+        if (pending.stage == BillStage.SIGNATURE) {
+            PaperTag("공포", selected = !pending.vetoRequested, onClick = { onOppositionVeto(false) })
+            PaperTag("재의 요구", selected = pending.vetoRequested, onClick = { onOppositionVeto(true) })
+        }
     }
     politics.lastDecision?.let {
         SectionTitle("최근 결정")
@@ -203,7 +208,8 @@ private fun Negotiation(
 
 @Composable
 private fun BillDetails(bill: FiscalBill) {
-    val open = bill.stage == BillStage.REVIEW || bill.stage == BillStage.STALLED || bill.stage == BillStage.FINAL_REVIEW
+    val open = bill.stage != BillStage.PASSED && bill.stage != BillStage.REJECTED
+    bill.sponsor?.let { StatRow("발의 정당", it) }
     StatRow("처리 상태", bill.stage.label + if (bill.delayed) " · 지연됨" else "")
     bill.blockedBy?.let { StatRow("좌초시킨 기관", it, valueColor = DossierColors.negative) }
     StatRow("발의일", bill.introduced.toString())
@@ -218,6 +224,8 @@ private fun BillDetails(bill: FiscalBill) {
         val vote = bill.support.rollCall
         val rule =
             when {
+                bill.stage == BillStage.SIGNATURE -> "기한까지 재의를 요구하지 않으면 법안이 공포됩니다."
+                bill.stage == BillStage.OVERRIDE -> "의회가 원안을 재표결합니다."
                 bill.stage == BillStage.FINAL_REVIEW -> "하원을 통과해 상원·대통령 등 후속 심사를 기다립니다."
                 bill.stage == BillStage.STALLED -> "4주 뒤 재심의에서도 가결선에 미달하면 좌초됩니다."
                 vote != null -> "가결선까지 부족한 표가 전체 표결권의 10% 이내이면 4주 뒤 재심의합니다."
@@ -257,7 +265,8 @@ private fun BillAssessment(
     }
     SectionTitle(if (vote == null) "기관 심의 점수" else "법안 지지 기반")
     StatRow("집단별 지지의 가중 평균", billScore(support.constituency))
-    StatRow("행정부 추진력", formatPoints(support.executiveBacking))
+    if (support.executiveBacking != 0.0) StatRow("행정부 추진력", formatPoints(support.executiveBacking))
+    if (support.oppositionBacking != 0.0) StatRow("야당 발의와 정부 평가", formatPoints(support.oppositionBacking))
     StatRow("추가 적자 부담", formatPoints(0.0 - support.fundingPenalty))
     if (support.organizationPositions.isNotEmpty()) StatRow("조직 입장", formatPoints(support.organizationLobby))
     if (support.institutionalResistance > 0.0) StatRow("제도 변경 저항 (견제 장치)", formatPoints(0.0 - support.institutionalResistance))
@@ -378,6 +387,21 @@ private fun LastElection(result: ElectionResult) {
     }
     if (result.billLapsed) {
         Text("총선으로 심의가 종료되어 재정안이 초안으로 돌아갔습니다.", style = DossierType.number(12.sp), color = DossierColors.stamp)
+    }
+    if (result.districts.isNotEmpty()) {
+        var showDistricts by remember(result) { mutableStateOf(false) }
+        PaperTag("지역구별 당선 결과", selected = showDistricts, onClick = { showDistricts = !showDistricts })
+        if (showDistricts) {
+            result.districts.forEach { region ->
+                val counts =
+                    region.winners
+                        .groupingBy { it }
+                        .eachCount()
+                        .entries
+                        .sortedByDescending { it.value }
+                StatRow(region.regionName, counts.joinToString(" · ") { "${it.key} ${it.value}석" })
+            }
+        }
     }
     result.parties?.let { parties ->
         val ranked = parties.sortedByDescending { it.seatsAfter }

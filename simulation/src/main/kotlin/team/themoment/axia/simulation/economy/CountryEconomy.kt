@@ -37,6 +37,34 @@ internal class CountryEconomy(
             structure.exportShare,
         )
     private val pendingSectorShocks = Sector.entries.associateWith { 0.0 }.toMutableMap()
+    val externalAccount = ExternalAccount(initial.gdp, (structure.tradeOpenness - structure.exportShare).coerceAtLeast(0.0))
+    var reconstructionShare = 0.0
+
+    fun applyMigration(net: Double) {
+        require(net.isFinite() && population + net > 0.0)
+        population += net
+    }
+
+    val realOutput: Double get() = realGdp
+
+    /** 영토 귀속 변경. 인구와 현재 생산의 같은 실물량이 양 당사국 사이를 이동한다. */
+    fun transferTerritory(
+        residents: Double,
+        production: Double,
+    ) {
+        require(production.isFinite() && realGdp + production > 0.0)
+        applyMigration(residents)
+        realGdp += production
+        potentialGdp = realGdp / (1.0 + outputGap)
+    }
+
+    fun setLegislatedFiscalTargets(
+        revenue: Double,
+        spending: Double,
+    ) {
+        (fiscalPolicy as AutomaticFiscalPolicy).enact(revenue, spending)
+    }
+
     private val initialRealGdpPerCapita = initial.gdp / initial.population
 
     /** 다음 달 한 부문 경기에 더할 충격(가뭄 → 농업 등). */
@@ -186,7 +214,7 @@ internal class CountryEconomy(
         // 기초재정수지가 나빠지면(지출 증가, 감세) 수요가 늘어 산출 갭이 커진다.
         val shares = fiscalPolicy.advanceMonth(startDebtRatio, outputGap)
         monthlyProducerPayment = fiscalPolicy.grainSupport?.settle(external.grainPrice, external.grainProduction, realGdp) ?: 0.0
-        val primaryBalanceShare = shares.revenue - shares.primarySpending - monthlyProducerPayment * 12.0 / realGdp
+        val primaryBalanceShare = shares.revenue - shares.primarySpending - reconstructionShare - monthlyProducerPayment * 12.0 / realGdp
         val fiscalImpulse = FISCAL_MULTIPLIER * (lastPrimaryBalanceShare - primaryBalanceShare)
         lastPrimaryBalanceShare = primaryBalanceShare
 
@@ -252,7 +280,9 @@ internal class CountryEconomy(
 
         val gdp = nominalGdp
         monthlyRevenue = shares.revenue * gdp / 12.0
-        monthlyPrimarySpending = shares.primarySpending * (1.0 - STABILIZER * outputGap) * gdp / 12.0 + monthlyProducerPayment * priceLevel
+        monthlyPrimarySpending =
+            (shares.primarySpending * (1.0 - STABILIZER * outputGap) + reconstructionShare) * gdp / 12.0 +
+            monthlyProducerPayment * priceLevel
         monthlyInterest = debt.annualInterest(if (debt.balance >= 0.0) interestRate else minOf(interestRate, MAX_ASSET_RETURN)) / 12.0
         return debt.closeMonth(gdp, monthlyRevenue, monthlyPrimarySpending, monthlyInterest, interestRate)
     }
@@ -273,8 +303,13 @@ internal class CountryEconomy(
         // 초고물가국은 기대 물가가 내려가며 실질금리가 수십 %p 움직이므로, 환율에 전하는 금리 차는 ±5%p로 묶는다.
         realExchange +=
             CARRY * (gap - start).coerceIn(-MAX_CARRY_GAP, MAX_CARRY_GAP) / 12.0 - realExchange / EXCHANGE_REVERSION_MONTHS +
-            exchange.noise * EXCHANGE_VOLATILITY
+            exchange.noise * EXCHANGE_VOLATILITY + exchange.paymentsPressure
         realExchange = realExchange.coerceIn(-MAX_EXCHANGE, MAX_EXCHANGE)
+    }
+
+    fun devalueAfterPeg() {
+        realExchange = (realExchange - 0.15).coerceAtLeast(-MAX_EXCHANGE)
+        addOutputGapShock(-0.01)
     }
 
     fun indicators(): EconomyIndicators {
@@ -374,6 +409,7 @@ internal data class ExchangeInputs(
     val anchor: Double?,
     /** 표준정규분포 충격. */
     val noise: Double,
+    val paymentsPressure: Double = 0.0,
 ) {
     companion object {
         val FIXED_TO_DOLLAR = ExchangeInputs(0.0, 0.0, 0.0)

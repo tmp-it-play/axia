@@ -88,6 +88,7 @@ fun GameScreen(
                     model = mapModel,
                     fillColor = { fill -> mapMode.colorOf(fill, mapData) },
                     selectedRegionId = selectedRegionId,
+                    regionOwners = worldState.military.regionOwners,
                     onRegionClick = { selectedRegionId = it },
                     regionOverlay = nation.countryId to { regionId -> mapMode.regionColor(regionId, mapData) },
                     modifier = Modifier.fillMaxSize(),
@@ -119,6 +120,11 @@ fun GameScreen(
                                     indicators = playerIndicators,
                                     history = playerHistory,
                                     sectors = economy.sectors.getValue(nation.countryId),
+                                    externalAccount = economy.externalAccounts.getValue(nation.countryId),
+                                    companies = economy.companies.getValue(nation.countryId),
+                                    closures = economy.companyClosures.getValue(nation.countryId),
+                                    onRenameCompany = runner::renameCompany,
+                                    onRequestImf = runner::requestImfProgram,
                                     trade = worldState.trade,
                                     date = worldState.date,
                                     monetary = economy.monetary.getValue(nation.countryId),
@@ -171,6 +177,7 @@ fun GameScreen(
                                     politics,
                                     today = clock.date,
                                     onCallEarlyElection = runner::callEarlyElection,
+                                    onOppositionVeto = runner::setOppositionVeto,
                                     onBudget = { panel = GamePanel.BUDGET },
                                     onNegotiate = runner::negotiateBudgetWith,
                                     onIntroduce = runner::introduceBudget,
@@ -183,7 +190,13 @@ fun GameScreen(
                             }
 
                             GamePanel.DIPLOMACY -> {
-                                DiplomacyPanel(worldState, nation.society.politicalCapital, countryName, runner::diplomaticAction)
+                                DiplomacyPanel(
+                                    worldState,
+                                    nation.society.politicalCapital,
+                                    countryName,
+                                    runner::diplomaticAction,
+                                    runner::changeMembership,
+                                )
                             }
 
                             GamePanel.MILITARY -> {
@@ -193,6 +206,8 @@ fun GameScreen(
                                     nation.society.politicalCapital,
                                     countryName,
                                     onMobilize = runner::setMobilization,
+                                    onReconstruction = runner::setReconstructionEffort,
+                                    onRegionTreaty = runner::negotiateRegion,
                                     onAction = runner::militaryAction,
                                 )
                             }
@@ -225,9 +240,18 @@ fun GameScreen(
                         SelectionPanel(
                             world = world,
                             regionId = regionId,
-                            economy = economy.countries[world.region(regionId).countryId],
+                            economy = economy.countries[worldState.military.regionOwners[regionId] ?: world.region(regionId).countryId],
+                            controllerId = worldState.military.regionOwners[regionId],
+                            onRegionalProgram = runner::setRegionalProgram,
                             snapshot = worldState,
-                            playerRegion = mapData.regions[regionId],
+                            playerRegion =
+                                mapData.regions[regionId]?.takeIf {
+                                    (
+                                        worldState.military.regionOwners[regionId]
+                                            ?: nation.countryId
+                                    ) ==
+                                        nation.countryId
+                                },
                             playerId = nation.countryId,
                             onClose = { selectedRegionId = null },
                             modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp),

@@ -118,6 +118,7 @@ internal class PlayerBudget(
     private val revenues = TaxKind.entries.associateWith { 0.0 }.toMutableMap()
 
     /** 조직 보조금(GDP 대비 연간). 예산 항목 밖에서 기초지출에 더한다. */
+    var regionalSpending = 0.0
     var organizationSubsidies = 0.0
 
     /** 이번 달 예산에 반영된 주택 정책 지출의 기준 대비 변화(경기 보정 전). */
@@ -184,7 +185,7 @@ internal class PlayerBudget(
         return FiscalShares(
             revenue = revenues.values.sum() + otherRevenue,
             primarySpending =
-                levels.values.sum() + organizationSubsidies + foreignAid + mobilizationCost + housingSpendingChange,
+                levels.values.sum() + organizationSubsidies + regionalSpending + foreignAid + mobilizationCost + housingSpendingChange,
         )
     }
 

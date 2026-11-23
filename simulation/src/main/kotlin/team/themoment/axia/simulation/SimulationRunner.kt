@@ -1,5 +1,6 @@
 package team.themoment.axia.simulation
 
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -11,13 +12,19 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.selects.onTimeout
 import kotlinx.coroutines.selects.select
+import team.themoment.axia.simulation.campaign.CampaignAction
+import team.themoment.axia.simulation.campaign.CampaignSave
+import team.themoment.axia.simulation.campaign.DatedAction
+import team.themoment.axia.simulation.campaign.campaignKey
 import team.themoment.axia.simulation.diplomacy.DiplomaticAction
 import team.themoment.axia.simulation.economy.EconomySnapshot
 import team.themoment.axia.simulation.events.EventCategory
 import team.themoment.axia.simulation.military.MilitaryAction
 import team.themoment.axia.simulation.military.Mobilization
+import team.themoment.axia.simulation.military.ReconstructionEffort
 import team.themoment.axia.simulation.nation.NationSnapshot
 import team.themoment.axia.simulation.nation.PolicyItem
+import team.themoment.axia.simulation.nation.RegionalProgram
 import team.themoment.axia.simulation.politics.PoliticsSnapshot
 import team.themoment.axia.simulation.society.GovernmentAction
 import team.themoment.axia.simulation.time.GameSpeed
@@ -40,11 +47,18 @@ data class ClockState(
 class SimulationRunner(
     private val simulation: Simulation,
     scope: CoroutineScope,
+    initial: CampaignSave,
+    private val autosave: suspend (CampaignSave) -> Unit,
     dispatcher: CoroutineDispatcher = Dispatchers.Default.limitedParallelism(1),
 ) {
-    private val commands = Channel<Command>(Channel.UNLIMITED)
+    private val commands =
+        Channel<Command>(Channel.UNLIMITED) { command ->
+            if (command is Command.Checkpoint) command.result.completeExceptionally(IllegalStateException("종료된 캠페인입니다."))
+        }
+    private val start = initial.start
+    private val journal = initial.actions.toMutableList()
     private var paused = true
-    private var speed = GameSpeed.NORMAL
+    private var speed = GameSpeed(initial.speed)
     private val mutableClock = MutableStateFlow(currentClock())
     private val mutableEconomy = MutableStateFlow(simulation.economySnapshot())
     private val mutableNation = MutableStateFlow(simulation.nationSnapshot())
@@ -55,7 +69,7 @@ class SimulationRunner(
     val world: StateFlow<WorldSnapshot> = mutableWorld.asStateFlow()
 
     /** 자동 일시정지할 사건 분류. 선거와 선택지가 있는 사건은 항상 멈춘다. */
-    private var pauseCategories: Set<EventCategory> = EventCategory.entries.filter { it.pauseByDefault }.toSet()
+    private var pauseCategories: Set<EventCategory> = initial.pauseCategories
     private val mutablePauseSettings = MutableStateFlow(pauseCategories)
     val pauseSettings: StateFlow<Set<EventCategory>> = mutablePauseSettings.asStateFlow()
 
@@ -71,7 +85,8 @@ class SimulationRunner(
     val nation: StateFlow<NationSnapshot> = mutableNation.asStateFlow()
 
     init {
-        scope.launch(dispatcher) { run() }
+        require(initial.date == simulation.date && start.countryId == simulation.playerCountryId)
+        scope.launch(dispatcher) { run() }.invokeOnCompletion { commands.cancel() }
     }
 
     fun togglePause() = send(Command.TogglePause)
@@ -81,55 +96,92 @@ class SimulationRunner(
     /** 일시정지 상태에서만 하루를 진행한다. */
     fun advanceDay() = send(Command.AdvanceDay)
 
+    fun perform(action: CampaignAction) = send(Command.Perform(action))
+
     fun editBudgetDraft(
         item: PolicyItem,
         target: Double,
-    ) = send(Command.EditBudgetDraft(item, target))
+    ) = perform(CampaignAction.EditBudget(item.campaignKey(), target))
 
-    fun negotiateBudgetWith(party: String?) = send(Command.NegotiateBudget(party))
+    fun negotiateBudgetWith(party: String?) = perform(CampaignAction.NegotiateBudget(party))
 
-    fun clearBudgetDraft() = send(Command.ClearBudgetDraft)
+    fun clearBudgetDraft() = perform(CampaignAction.ClearBudget)
 
-    fun reviseStalledBudget() = send(Command.ReviseStalledBudget)
+    fun reviseStalledBudget() = perform(CampaignAction.ReviseBudget)
 
-    fun introduceBudget() = send(Command.IntroduceBudget)
+    fun introduceBudget() = perform(CampaignAction.IntroduceBudget)
 
-    /** 조건을 만족하면 6주 뒤 조기 총선을 치른다. */
-    fun callEarlyElection() = send(Command.CallEarlyElection)
+    fun callEarlyElection() = perform(CampaignAction.EarlyElection)
 
-    fun directPolicyRate(rate: Double) = send(Command.DirectPolicyRate(rate))
+    fun directPolicyRate(rate: Double) = perform(CampaignAction.DirectRate(rate))
 
     fun actOnOrganization(
         organizationId: Int,
         action: GovernmentAction,
-    ) = send(Command.ActOnOrganization(organizationId, action))
+    ) = perform(CampaignAction.ActOnOrganization(organizationId, action))
 
     fun renameOrganization(
         organizationId: Int,
         name: String,
-    ) = send(Command.RenameOrganization(organizationId, name))
+    ) = perform(CampaignAction.RenameOrganization(organizationId, name))
 
     fun renamePerson(
         personId: Int,
         name: String,
-    ) = send(Command.RenamePerson(personId, name))
+    ) = perform(CampaignAction.RenamePerson(personId, name))
 
     fun diplomaticAction(
         target: String,
         action: DiplomaticAction,
-    ) = send(Command.Diplomatic(target, action))
+    ) = perform(CampaignAction.Diplomatic(target, action))
 
     fun militaryAction(
         target: String,
         action: MilitaryAction,
-    ) = send(Command.Military(target, action))
+    ) = perform(CampaignAction.Military(target, action))
 
-    fun setMobilization(level: Mobilization) = send(Command.SetMobilization(level))
+    fun setMobilization(level: Mobilization) = perform(CampaignAction.Mobilize(level))
 
     fun chooseEventOption(
         eventId: Int,
         index: Int,
-    ) = send(Command.ChooseEvent(eventId, index))
+    ) = perform(CampaignAction.ChooseEvent(eventId, index))
+
+    fun setRegionalProgram(
+        regionId: String,
+        program: RegionalProgram,
+    ) = perform(CampaignAction.SetRegionalProgram(regionId, program))
+
+    fun setOppositionVeto(veto: Boolean) = perform(CampaignAction.SetOppositionVeto(veto))
+
+    fun requestImfProgram() = perform(CampaignAction.RequestImf)
+
+    fun renameCompany(
+        id: Int,
+        name: String,
+    ) = perform(CampaignAction.RenameCompany(id, name))
+
+    fun negotiateRegion(
+        target: String,
+        regionId: String,
+    ) = perform(CampaignAction.NegotiateRegion(target, regionId))
+
+    fun setReconstructionEffort(effort: ReconstructionEffort) = perform(CampaignAction.SetReconstructionEffort(effort))
+
+    fun changeMembership(
+        id: String,
+        join: Boolean,
+    ) = perform(CampaignAction.ChangeMembership(id, join))
+
+    /** 앞서 큐에 들어온 모든 조작까지 포함한 일관된 저장 시점을 얻는다. */
+    suspend fun checkpoint(pause: Boolean = false): CampaignSave {
+        val result = CompletableDeferred<CampaignSave>()
+        send(Command.Checkpoint(pause, result))
+        return result.await()
+    }
+
+    private fun capture() =
+        CampaignSave(CampaignSave.CURRENT_VERSION, start, simulation.date, journal.toList(), speed.multiplier, pauseCategories)
 
     fun setAutoPause(
         category: EventCategory,
@@ -167,7 +219,7 @@ class SimulationRunner(
         }
     }
 
-    private fun apply(command: Command) {
+    private suspend fun apply(command: Command) {
         when (command) {
             Command.TogglePause -> {
                 paused = !paused
@@ -181,67 +233,35 @@ class SimulationRunner(
                 if (paused) stepDay()
             }
 
-            is Command.EditBudgetDraft -> {
-                simulation.editBudgetDraft(command.item, command.target)
+            is Command.Perform -> {
+                val action = command.action
+                action.applyTo(simulation)
+                journal += DatedAction(simulation.date, action)
+                when (action) {
+                    is CampaignAction.EditBudget, is CampaignAction.NegotiateBudget, CampaignAction.ClearBudget,
+                    CampaignAction.ReviseBudget, CampaignAction.IntroduceBudget, CampaignAction.EarlyElection,
+                    is CampaignAction.SetOppositionVeto,
+                        -> {
+                            // 예산 초안과 표결 상태는 아래 publish()가 갱신한다.
+                        }
+
+                    is CampaignAction.RenameOrganization, is CampaignAction.ActOnOrganization -> {
+                        mutableNation.value = simulation.nationSnapshot()
+                    }
+
+                    is CampaignAction.RenamePerson -> {
+                        mutableWorld.value = simulation.worldSnapshot()
+                    }
+
+                    else -> {
+                        refreshAll()
+                    }
+                }
             }
 
-            is Command.NegotiateBudget -> {
-                simulation.negotiateBudgetWith(command.party)
-            }
-
-            Command.ClearBudgetDraft -> {
-                simulation.clearBudgetDraft()
-            }
-
-            Command.ReviseStalledBudget -> {
-                simulation.reviseStalledBudget()
-            }
-
-            Command.IntroduceBudget -> {
-                simulation.introduceBudget()
-            }
-
-            Command.CallEarlyElection -> {
-                simulation.callEarlyElection()
-            }
-
-            is Command.DirectPolicyRate -> {
-                simulation.directPolicyRate(command.rate)
-            }
-
-            is Command.ActOnOrganization -> {
-                simulation.actOnOrganization(command.organizationId, command.action)
-                mutableNation.value = simulation.nationSnapshot()
-            }
-
-            is Command.RenameOrganization -> {
-                simulation.renameOrganization(command.organizationId, command.name)
-                mutableNation.value = simulation.nationSnapshot()
-            }
-
-            is Command.RenamePerson -> {
-                simulation.renamePerson(command.personId, command.name)
-                mutableWorld.value = simulation.worldSnapshot()
-            }
-
-            is Command.Diplomatic -> {
-                simulation.diplomaticAction(command.target, command.action)
-                refreshAll()
-            }
-
-            is Command.Military -> {
-                simulation.militaryAction(command.target, command.action)
-                refreshAll()
-            }
-
-            is Command.SetMobilization -> {
-                simulation.setMobilization(command.level)
-                refreshAll()
-            }
-
-            is Command.ChooseEvent -> {
-                simulation.chooseEventOption(command.eventId, command.index)
-                refreshAll()
+            is Command.Checkpoint -> {
+                if (command.pause) paused = true
+                command.result.complete(capture())
             }
 
             is Command.SetAutoPause -> {
@@ -252,7 +272,7 @@ class SimulationRunner(
         publish()
     }
 
-    private fun stepDay() {
+    private suspend fun stepDay() {
         val update = simulation.advanceDay()
         if (update.newMonth || update.decisionExpired) mutableEconomy.value = simulation.economySnapshot()
         val eventful = update.pauseFor.isNotEmpty() || update.decisionNeeded || update.decisionExpired
@@ -261,6 +281,7 @@ class SimulationRunner(
         if (update.newMonth || eventful || simulation.date.dayOfWeek == DayOfWeek.MONDAY) mutableWorld.value = simulation.worldSnapshot()
         // 선거 결과와 선택지가 있는 사건은 플레이어가 놓치지 않도록 자동으로 일시정지한다.
         if (update.electionHeld || update.decisionNeeded || update.pauseFor.any { it in pauseCategories }) paused = true
+        if (update.newMonth) autosave(capture())
     }
 
     private fun refreshAll() {
@@ -285,59 +306,13 @@ class SimulationRunner(
 
         data object AdvanceDay : Command
 
-        data class EditBudgetDraft(
-            val item: PolicyItem,
-            val target: Double,
+        data class Perform(
+            val action: CampaignAction,
         ) : Command
 
-        data class NegotiateBudget(
-            val party: String?,
-        ) : Command
-
-        data object ClearBudgetDraft : Command
-
-        data object ReviseStalledBudget : Command
-
-        data object IntroduceBudget : Command
-
-        data object CallEarlyElection : Command
-
-        data class DirectPolicyRate(
-            val rate: Double,
-        ) : Command
-
-        data class ActOnOrganization(
-            val organizationId: Int,
-            val action: GovernmentAction,
-        ) : Command
-
-        data class RenameOrganization(
-            val organizationId: Int,
-            val name: String,
-        ) : Command
-
-        data class RenamePerson(
-            val personId: Int,
-            val name: String,
-        ) : Command
-
-        data class Diplomatic(
-            val target: String,
-            val action: DiplomaticAction,
-        ) : Command
-
-        data class Military(
-            val target: String,
-            val action: MilitaryAction,
-        ) : Command
-
-        data class SetMobilization(
-            val level: Mobilization,
-        ) : Command
-
-        data class ChooseEvent(
-            val eventId: Int,
-            val index: Int,
+        data class Checkpoint(
+            val pause: Boolean,
+            val result: CompletableDeferred<CampaignSave>,
         ) : Command
 
         data class SetAutoPause(

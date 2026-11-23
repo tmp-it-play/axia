@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -27,11 +28,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import team.themoment.axia.CampaignSlot
+import team.themoment.axia.SavedCampaign
 import team.themoment.axia.format.formatDollars
 import team.themoment.axia.format.formatPercent
 import team.themoment.axia.format.formatPopulation
 import team.themoment.axia.format.formatWholeDollars
 import team.themoment.axia.simulation.Simulation
+import team.themoment.axia.simulation.campaign.CampaignScenario
 import team.themoment.axia.simulation.economy.EconomyData
 import team.themoment.axia.simulation.economy.InitialEconomy
 import team.themoment.axia.simulation.world.Country
@@ -48,12 +52,15 @@ private const val ESTIMATED_STAMP_THRESHOLD = 5
 
 /** 책상 위에 놓인 국가별 서류철에서 플레이할 나라를 고른다. */
 @Composable
-fun NewGameScreen(
+internal fun NewGameScreen(
     data: EconomyData,
     playable: List<Country>,
-    onStart: (String) -> Unit,
+    slots: Map<CampaignSlot, SavedCampaign?>,
+    onStart: (String, CampaignScenario) -> Unit,
+    onLoad: (CampaignSlot) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    var scenario by remember { mutableStateOf(CampaignScenario.HISTORICAL) }
     var selected by remember { mutableStateOf<String?>(null) }
     Column(modifier = modifier.fillMaxSize().background(DossierColors.desk).padding(horizontal = 32.dp, vertical = 24.dp)) {
         Text(text = "AXIA", style = DossierType.title(40.sp), color = DossierColors.deskText)
@@ -62,6 +69,27 @@ fun NewGameScreen(
             style = DossierType.number(15.sp),
             color = DossierColors.deskTextMuted,
         )
+        if (slots.isNotEmpty()) {
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text("이어하기", style = DossierType.title(16.sp), color = DossierColors.deskText)
+                CampaignSlot.entries.filter { it in slots }.forEach { slot ->
+                    val saved = slots[slot]
+                    val detail =
+                        saved?.let { state ->
+                            val country = playable.firstOrNull { it.id == state.countryId }
+                            val scenarioName = if (state.scenario == CampaignScenario.HISTORICAL) "" else " · ${state.scenario.label}"
+                            "${country?.name ?: state.countryId} · ${state.date}$scenarioName"
+                        } ?: "파일 확인 필요"
+                    PaperTag("${slot.label} · $detail", onClick = { onLoad(slot) })
+                }
+            }
+        }
+        Row(modifier = Modifier.padding(top = 12.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            CampaignScenario.entries.forEach { choice ->
+                PaperTag(choice.label, selected = scenario == choice, onClick = { scenario = choice })
+            }
+        }
+        Text(scenario.description, style = DossierType.number(13.sp), color = DossierColors.deskTextMuted)
         LazyVerticalGrid(
             columns = GridCells.Adaptive(240.dp),
             modifier = Modifier.weight(1f).padding(top = 20.dp),
@@ -72,7 +100,7 @@ fun NewGameScreen(
             items(playable, key = Country::id) { country ->
                 CountryCard(
                     country = country,
-                    economy = data.country(country.id),
+                    economy = scenario.startingEconomy(data.country(country.id)),
                     selected = country.id == selected,
                     onClick = { selected = country.id },
                 )
@@ -86,7 +114,7 @@ fun NewGameScreen(
                 color = DossierColors.deskText,
             )
             Spacer(Modifier.weight(1f))
-            PaperTag(text = "이 국가로 집무 시작", enabled = chosen != null, onClick = { chosen?.let { onStart(it.id) } })
+            PaperTag(text = "이 국가로 집무 시작", enabled = chosen != null, onClick = { chosen?.let { onStart(it.id, scenario) } })
         }
     }
 }

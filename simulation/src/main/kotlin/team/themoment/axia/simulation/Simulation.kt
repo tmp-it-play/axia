@@ -6,6 +6,7 @@ import team.themoment.axia.simulation.diplomacy.Diplomacy
 import team.themoment.axia.simulation.diplomacy.DiplomaticAction
 import team.themoment.axia.simulation.economy.CentralBank
 import team.themoment.axia.simulation.economy.CentralBankData
+import team.themoment.axia.simulation.economy.CurrencyNotice
 import team.themoment.axia.simulation.economy.DebtNotice
 import team.themoment.axia.simulation.economy.DebtPlan
 import team.themoment.axia.simulation.economy.EconomyData
@@ -23,12 +24,16 @@ import team.themoment.axia.simulation.military.DefenseInputs
 import team.themoment.axia.simulation.military.Military
 import team.themoment.axia.simulation.military.MilitaryAction
 import team.themoment.axia.simulation.military.Mobilization
+import team.themoment.axia.simulation.military.ReconstructionEffort
+import team.themoment.axia.simulation.nation.CountryPolicyItem
 import team.themoment.axia.simulation.nation.InstitutionItem
 import team.themoment.axia.simulation.nation.Nation
 import team.themoment.axia.simulation.nation.NationSnapshot
 import team.themoment.axia.simulation.nation.PolicyItem
+import team.themoment.axia.simulation.nation.RegionalProgram
 import team.themoment.axia.simulation.nation.RegulationItem
 import team.themoment.axia.simulation.nation.SpendingKind
+import team.themoment.axia.simulation.nation.TerritorialAccounts
 import team.themoment.axia.simulation.people.LeadershipState
 import team.themoment.axia.simulation.people.PeopleRegistry
 import team.themoment.axia.simulation.people.Person
@@ -105,6 +110,7 @@ class Simulation(
             mapOf(playerCountryId to nation.policy),
             playerCountryId,
             YearMonth.from(startDate),
+            seed,
         )
     private val centralBank = economy.monetary.banks.getValue(playerCountryId)
     private val institutions = PlayerInstitutions(centralBank)
@@ -143,7 +149,11 @@ class Simulation(
             Random(seed xor MILITARY_SEED_SALT),
             allied = diplomacy::allied,
             relation = diplomacy::relation,
+            transit = diplomacy::hasTransitAccess,
+            regions = world.regions,
         )
+    private val territorialAccounts = TerritorialAccounts(world, data) { id -> economy.country(id).sectorLines() }
+    private var settledRegionOwners = emptyMap<String, String>()
     private val events = EventSystem(Random(seed xor EVENT_SEED_SALT), ::countryName)
     private val trends = WorldTrends()
     private val worldNews = ArrayDeque<WorldNews>()
@@ -174,8 +184,9 @@ class Simulation(
         economy.setStartingTradePolicy(international)
         val player = economy.country(playerCountryId)
         nation.start(player)
-        politics.updateConstituencies(nation.groupSnapshots(player), nation.opinion(), nation.approval())
+        politics.updateConstituencies(nation.groupSnapshots(player), nation.opinion(), nation.approval(), nation.electoralRegions())
         military.advanceMonth(date, defenseInputs())
+        applyMilitaryOutcomes()
     }
 
     /**
@@ -219,20 +230,38 @@ class Simulation(
         if (politics.takeMandateRenewal()) nation.renewMandate()
         politics.drainNews().forEach { nation.report(date, it.source, it.text, it.major) }
         (diplomacy.drainNews() + military.drainNews()).forEach(::addWorldNews)
+        val signature = politics.takeSignatureNotice()
         return DayUpdate(
             newMonth,
             passed,
             electionHeld,
             pauseFor,
-            offered || happened.any { it.choices.isNotEmpty() },
+            signature || offered || happened.any { it.choices.isNotEmpty() },
             expired.isNotEmpty(),
         )
     }
 
     /** @return 플레이어가 결정해야 할 제안이 새로 생겼는지 */
     private fun advanceMonth(pauseFor: MutableSet<EventCategory>): Boolean {
-        val debtNotices = economy.advanceMonth(random, international, YearMonth.from(date).minusMonths(1))
+        val recovery = military.advanceRecovery(states.associateWith { economy.country(it).populationCount })
+        recovery.netMigration.forEach { (id, change) -> economy.country(id).applyMigration(change) }
+        states.forEach { economy.country(it).reconstructionShare = recovery.reconstructionShares[it] ?: 0.0 }
+        val debtNotices = economy.advanceMonth(random, international, YearMonth.from(date).minusMonths(1)) { diplomacy.isMember(it, "IMF") }
         processDebtNotices(debtNotices)
+        economy.currencyNotices.forEach { (id, notice) ->
+            val text =
+                when (notice) {
+                    CurrencyNotice.PEG_ENDED -> "외환보유액이 줄어 중앙은행이 고정환율 방어를 중단했다."
+                    CurrencyNotice.IMF_AVAILABLE -> "외환보유액이 수입 대금 1.5개월분 아래로 떨어졌다. 경제 화면에서 IMF 긴급 대출을 신청할 수 있다."
+                    CurrencyNotice.IMF_DISBURSED -> "국제통화기금에서 긴급 외화 대출을 받았다."
+                }
+            if (id == playerCountryId) {
+                nation.report(date, "외환", text, major = true)
+                pauseFor += EventCategory.FINANCIAL
+            } else {
+                addWorldNews(WorldNews(date, id, "외환", text, major = notice == CurrencyNotice.PEG_ENDED))
+            }
+        }
         val debtDecision = debtNotices[playerCountryId] == DebtNotice.DEFAULT
         if (debtDecision) pauseFor += EventCategory.FINANCIAL
         val player = economy.country(playerCountryId)
@@ -244,16 +273,17 @@ class Simulation(
         applyWarWeariness()
         nation.setExternalSpending(aid = diplomacy.aidSpending + military.aidSpending, mobilization = military.mobilization.cost)
 
-        val indicators = economy.snapshot(date).countries
-        worldPolitics.advanceMonth(indicators, date).forEach(::addWorldNews)
-        states.forEach { a -> states.filter { it > a }.forEach { b -> diplomacy.setWar(a, b, military.atWar(a, b)) } }
+        val indicators = economy.indicators()
+        worldPolitics.advanceMonth(indicators, date, economy::setLegislatedFiscalTargets).forEach(::addWorldNews)
         diplomacy.advanceMonth(date)
         military.advanceMonth(date, defenseInputs())
+        applyMilitaryOutcomes()
         military.updateDisputes()
         military.aiWarDecisions(date, ::democratic, diplomacy::allies).forEach { (attacker, defender) ->
             diplomacy.setWar(attacker, defender, true)
             diplomacy.onWarStarted(attacker, defender, date)
         }
+        diplomacy.syncWars(military.hostilePairs())
         val proposals = diplomacy.aiDecisions(date, military::atWar, playable)
         val worldGdp = states.sumOf { economy.country(it).dollarGdp }
         trends.advanceMonth(
@@ -262,7 +292,7 @@ class Simulation(
             playerCut = ENVIRONMENT_CUT * nation.regulations.change(RegulationItem.ENVIRONMENT).coerceAtLeast(0.0),
         )
         rollWorldEvents(pauseFor)
-        politics.updateConstituencies(nation.groupSnapshots(player), nation.opinion(), nation.approval())
+        politics.updateConstituencies(nation.groupSnapshots(player), nation.opinion(), nation.approval(), nation.electoralRegions())
         politics.monthlyReview(date)
         proposals.forEach { proposal ->
             pendingProposals[proposal.from] = proposal
@@ -341,7 +371,10 @@ class Simulation(
     private fun applyChoice(choice: EventChoice) {
         nation.applyEvent(economy.country(playerCountryId), choice.effects)
         choice.action?.let { action ->
-            if (action.startsWith(PEACE_ACTION)) military.acceptPeace(action.removePrefix(PEACE_ACTION).toInt(), date)
+            if (action.startsWith(PEACE_ACTION)) {
+                military.acceptPeace(action.removePrefix(PEACE_ACTION).toInt(), date)
+                diplomacy.syncWars(military.hostilePairs())
+            }
             if (action.startsWith(PROPOSAL_ACTION)) {
                 pendingProposals.remove(action.removePrefix(PROPOSAL_ACTION))?.let { diplomacy.acceptProposal(it, date) }
             }
@@ -475,6 +508,7 @@ class Simulation(
 
     /** 플레이 가능 국가는 정치 자료, 나머지는 V-Dem 체제 분류로 본다. 자료가 없으면 null. */
     private fun democratic(countryId: String): Boolean? {
+        if ((countryId == playerCountryId && politics.hasInterimGovernment) || worldPolitics.hasInterimGovernment(countryId)) return false
         val regime = if (countryId in playable) PoliticalProfile.forCountry(countryId).regime else Regimes.of(countryId)
         return regime?.let { !it.autocratic }
     }
@@ -485,6 +519,52 @@ class Simulation(
         worldNews.addFirst(news)
         while (worldNews.size > MAX_WORLD_NEWS) worldNews.removeLast()
     }
+
+    private fun applyMilitaryOutcomes() {
+        diplomacy.syncWars(military.hostilePairs())
+        settleRegionOwnership()
+        military.drainCivilVictories().forEach { (country, rebels) ->
+            if (country == playerCountryId) {
+                politics.installRebelGovernment(rebels, date)
+            } else {
+                worldPolitics.installRebelGovernment(country, rebels, date)
+            }
+        }
+    }
+
+    internal fun countryPolicy(key: String): CountryPolicyItem = module.policies.single { it.key == key }
+
+    fun setRegionalProgram(
+        regionId: String,
+        program: RegionalProgram,
+    ) {
+        nation.setRegionalProgram(regionId, program)
+    }
+
+    fun setOppositionVeto(veto: Boolean) = politics.setOppositionVeto(veto)
+
+    fun setReconstructionEffort(effort: ReconstructionEffort) = military.setReconstructionEffort(effort)
+
+    fun changeMembership(
+        id: String,
+        join: Boolean,
+    ): Boolean {
+        if (!diplomacy.changeMembership(id, join, date)) return false
+        if (id == "IMF") economy.country(playerCountryId).externalAccount.member = join
+        return true
+    }
+
+    fun requestImfProgram(): Boolean {
+        if (!diplomacy.isMember(playerCountryId, "IMF")) return false
+        val approved = economy.country(playerCountryId).externalAccount.request()
+        if (approved) nation.report(date, "국제통화기금", "외화 대출을 인출했다. 36개월간 외환보유액에서 원리금을 상환한다.", major = true)
+        return approved
+    }
+
+    fun renameCompany(
+        id: Int,
+        name: String,
+    ) = economy.renameCompany(id, name)
 
     /** 조건을 만족하면 6주 뒤 조기 총선을 치른다. */
     fun callEarlyElection() = politics.callEarlyElection(date)
@@ -563,6 +643,63 @@ class Simulation(
         return true
     }
 
+    fun negotiateRegion(
+        target: String,
+        regionId: String,
+    ): Boolean {
+        val cost = military.regionTreatyCost(target, regionId) ?: return false
+        if (!nation.spendCapital(cost)) return false
+        if (!military.negotiateRegion(target, regionId, date)) {
+            nation.applyEvent(economy.country(playerCountryId), EventEffects(politicalCapital = cost))
+            nation.report(date, "평화협상", "${countryName(target).josa("이", "가")} ${world.region(regionId).name}의 귀속 조건을 거절했다.", major = false)
+            return false
+        }
+        updateAfterTreaty()
+        military.drainNews().forEach(::addWorldNews)
+        return true
+    }
+
+    private fun settleRegionOwnership() {
+        val owners = military.regionOwners
+        if (owners == settledRegionOwners) return
+        val changes =
+            (owners.keys + settledRegionOwners.keys).groupBy { regionId ->
+                val original = world.region(regionId).countryId
+                (settledRegionOwners[regionId] ?: original) to (owners[regionId] ?: original)
+            }
+        changes.forEach { (route, ids) ->
+            val (from, to) = route
+            if (from == to) return@forEach
+            val source = economy.country(from)
+            val destination = economy.country(to)
+            val transferred =
+                territorialAccounts.transfer(
+                    ids.toSet(),
+                    from,
+                    to,
+                    source.populationCount,
+                    source.realOutput,
+                    destination.populationCount,
+                    destination.realOutput,
+                )
+            source.transferTerritory(-transferred.population, -transferred.gdp)
+            destination.transferTerritory(transferred.population, transferred.gdp)
+        }
+        settledRegionOwners = owners
+        nation.updateRegionOwners(owners, territorialAccounts.shares(playerCountryId))
+    }
+
+    private fun updateAfterTreaty() {
+        diplomacy.syncWars(military.hostilePairs())
+        settleRegionOwnership()
+        politics.updateConstituencies(
+            nation.groupSnapshots(economy.country(playerCountryId)),
+            nation.opinion(),
+            nation.approval(),
+            nation.electoralRegions(),
+        )
+    }
+
     fun militaryAction(
         target: String,
         action: MilitaryAction,
@@ -574,6 +711,7 @@ class Simulation(
             nation.report(date, "군사", "${countryName(target).josa("이", "가")} ${action.label.josa("을", "를")} 거절했다.", major = false)
             return false
         }
+        updateAfterTreaty()
         if (action == MilitaryAction.DECLARE_WAR) {
             // 선전포고는 민주국가 전체와의 관계를 해친다.
             states

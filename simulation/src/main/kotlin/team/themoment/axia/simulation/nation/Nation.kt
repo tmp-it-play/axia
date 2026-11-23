@@ -63,6 +63,8 @@ data class BudgetSnapshot(
     val gdp: Double,
     /** 조직 보조금(GDP 대비 연간). 기초지출에 포함돼 있다. */
     val organizationSubsidies: Double,
+    val regionalSpending: Double,
+    val reconstructionSpending: Double,
     val housingSpendingChange: Double,
     /** 실제 정산한 농가 보조금(연율 GDP 비중). 사업이 없는 경우 null. */
     val grainProducerPayment: Double?,
@@ -174,7 +176,8 @@ class Nation internal constructor(
     internal val regulations = Regulations(initial.society.incomeGroup, identityBase.civilLiberties)
 
     /** 거시 모델에 넘기는 플레이어 국가의 재정·구조 정책. */
-    internal val policy: FiscalPolicy = PlayerPolicy(budget, regulations, module as? GrainProducerSupport) { demography.laborGrowthEffect }
+    internal val policy: FiscalPolicy =
+        PlayerPolicy(budget, regulations, module as? GrainProducerSupport, { regions.employmentEffect }) { demography.laborGrowthEffect }
     private val indicators = SocialIndicators(initial.society.industryEmployment)
     private val demography = Demography(initial, structure)
 
@@ -250,6 +253,7 @@ class Nation internal constructor(
         date: LocalDate,
     ) {
         months++
+        regions.advanceMonth()
         val incomeIndex = economy.realGdpPerCapita / initialRealGdpPerCapita
         demography.advanceMonth(
             DemographyInputs(
@@ -476,6 +480,8 @@ class Nation internal constructor(
                     gdp = economy.dollarGdp,
                     organizationSubsidies = budget.organizationSubsidies,
                     housingSpendingChange = budget.housingSpendingChange,
+                    regionalSpending = budget.regionalSpending,
+                    reconstructionSpending = economy.reconstructionShare,
                     grainProducerPayment =
                         if (policy.grainSupport != null) {
                             economy.monthlyProducerPayment * 12.0 / (economy.realGdpPerCapita * economy.populationCount)
@@ -513,6 +519,33 @@ class Nation internal constructor(
                 ),
         )
     }
+
+    internal fun updateRegionOwners(
+        owners: Map<String, String>,
+        shares: Map<String, TerritorialShare> = emptyMap(),
+    ) {
+        regions.updateOwners(owners, shares)
+        budget.regionalSpending = regions.spending
+    }
+
+    internal fun setRegionalProgram(
+        regionId: String,
+        program: RegionalProgram,
+    ) {
+        regions.assign(regionId, program)
+        budget.regionalSpending = regions.spending
+    }
+
+    internal fun electoralRegions(): List<ElectoralRegion> =
+        regions.electoralRegions(
+            constituents.groupShares,
+            approval(),
+            approvalWeights.groups,
+            groups.associate {
+                it.group to
+                    it.satisfaction(baseline)
+            },
+        )
 
     internal fun groupSnapshots(economy: CountryEconomy): List<GroupSnapshot> {
         val adults = economy.populationCount * demography.adultShare
@@ -794,6 +827,7 @@ private class PlayerPolicy(
     private val budget: PlayerBudget,
     private val regulations: Regulations,
     override val grainSupport: GrainProducerSupport?,
+    private val placementEffect: () -> Double,
     private val laborGrowth: () -> Double,
 ) : FiscalPolicy {
     override fun advanceMonth(
@@ -809,7 +843,7 @@ private class PlayerPolicy(
 
     override val inflationImpulse: Double get() = budget.inflationImpulse
 
-    override val naturalUnemploymentShift: Double get() = regulations.naturalUnemploymentShift
+    override val naturalUnemploymentShift: Double get() = regulations.naturalUnemploymentShift - placementEffect()
 
     override val populationGrowthShift: Double get() = regulations.populationGrowthShift
 

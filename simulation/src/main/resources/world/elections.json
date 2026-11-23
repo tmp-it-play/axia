@@ -5,6 +5,7 @@
    "next": "2024-04-10",
    "termYears": 4,
    "seats": 300,
+   "constituencySeats": 254,
    "electoralSystem": "MIXED",
    "earlyDissolution": false
   },
@@ -41,6 +42,7 @@
    "next": "2025-10-26",
    "termYears": 4,
    "seats": 465,
+   "constituencySeats": 289,
    "electoralSystem": "MIXED",
    "earlyDissolution": true
   },
@@ -90,6 +92,7 @@
    "next": "2026-09-20",
    "termYears": 5,
    "seats": 450,
+   "constituencySeats": 225,
    "electoralSystem": "MIXED",
    "earlyDissolution": false
   },
@@ -98,7 +101,7 @@
    "termYears": 6,
    "title": "대통령"
   },
-  "sourceNote": "대통령 선거 2024-03-15~17(마지막 날 사용), 국가두마 정기 선거 2026년 9월 셋째 일요일. https://en.wikipedia.org/wiki/2024_Russian_presidential_election"
+  "sourceNote": "소선거구 225석. https://data.ipu.org/parliament/RU/RU-LC01/election/RU-LC01-E20210919/ 대통령 선거 2024-03-15~17(마지막 날 사용), 국가두마 정기 선거 2026년 9월 셋째 일요일. https://en.wikipedia.org/wiki/2024_Russian_presidential_election"
  },
  "UKR": {
   "system": "SEMI_PRESIDENTIAL",
@@ -180,10 +183,11 @@
    "next": "2027-12-19",
    "termYears": 5,
    "seats": 400,
+   "constituencySeats": 147,
    "electoralSystem": "MIXED",
    "earlyDissolution": true
   },
-  "sourceNote": "제19대 의회(2022-10-13 개회) 임기 만료 2027-10-12, 해산 후 70일 안 선거. 법정 최종 기한에 가까운 일요일 사용. https://en.wikipedia.org/wiki/Next_Italian_general_election"
+  "sourceNote": "국내 소선거구 147석. 해외 선거구 8석은 나머지 전국 배분에 합산한다. https://temi.camera.it/leg19/temi/elezioni-e-referendum 제19대 의회(2022-10-13 개회) 임기 만료 2027-10-12, 해산 후 70일 안 선거. 법정 최종 기한에 가까운 일요일 사용. https://en.wikipedia.org/wiki/Next_Italian_general_election"
  },
  "FIN": {
   "system": "PARLIAMENTARY",
@@ -224,6 +228,7 @@
    "next": "2024-10-13",
    "termYears": 4,
    "seats": 141,
+   "constituencySeats": 71,
    "electoralSystem": "MIXED",
    "earlyDissolution": false
   },
@@ -232,7 +237,7 @@
    "termYears": 5,
    "title": "대통령"
   },
-  "sourceNote": "세이마스 정기 선거 2024-10-13(1차), 대통령 선거 2024-05-12(1차). https://en.wikipedia.org/wiki/2024_Lithuanian_parliamentary_election"
+  "sourceNote": "소선거구 71석. https://data.ipu.org/parliament/LT/LT-LC01/election/LT-LC01-E20201011/ 세이마스 정기 선거 2024-10-13(1차), 대통령 선거 2024-05-12(1차). https://en.wikipedia.org/wiki/2024_Lithuanian_parliamentary_election"
  },
  "TUR": {
   "system": "PRESIDENTIAL",
@@ -282,10 +287,11 @@
    "next": "2025-12-14",
    "termYears": 5,
    "seats": 596,
+   "constituencySeats": 284,
    "electoralSystem": "MIXED",
    "earlyDissolution": false
   },
-  "sourceNote": "하원 임기(2021-01-12 개회) 만료 전 60일 안 선거. 정원 596석(선출 568·임명 28). 대통령은 정당 소속이 아니어서 대통령 선거는 다루지 않는다. https://en.wikipedia.org/wiki/2025_Egyptian_parliamentary_election"
+  "sourceNote": "개별 후보 선출 284석은 모형 소선거구로 배분한다. 명부 284석·임명 28석은 전국 배분으로 단순화한다. https://data.ipu.org/parliament/EG/EG-LC01/election/EG-LC01-E20201024/ 하원 임기(2021-01-12 개회) 만료 전 60일 안 선거. 정원 596석(선출 568·임명 28). 대통령은 정당 소속이 아니어서 대통령 선거는 다루지 않는다. https://en.wikipedia.org/wiki/2025_Egyptian_parliamentary_election"
  },
  "ZAF": {
   "system": "PARLIAMENTARY",
@@ -304,6 +310,7 @@
    "next": "2024-01-13",
    "termYears": 4,
    "seats": 113,
+   "constituencySeats": 73,
    "electoralSystem": "MIXED",
    "earlyDissolution": false
   },
@@ -312,7 +319,7 @@
    "termYears": 4,
    "title": "총통"
   },
-  "sourceNote": "총통·입법위원 동시 선거 2024-01-13, 입법원 정원 113석. https://en.wikipedia.org/wiki/2024_Taiwanese_general_election"
+  "sourceNote": "지역구 73석. 원주민 6석과 전국 명부 34석은 모형에서 전국 단위로 함께 배분한다. https://web.cec.gov.tw/english/article/23101 총통·입법위원 동시 선거 2024-01-13, 입법원 정원 113석. https://en.wikipedia.org/wiki/2024_Taiwanese_general_election"
  },
  "IDN": {
   "system": "PRESIDENTIAL",
@@ -340,10 +347,11 @@
    "next": "2027-06-27",
    "termYears": 4,
    "seats": 500,
+   "constituencySeats": 400,
    "electoralSystem": "MIXED",
    "earlyDissolution": true
   },
-  "sourceNote": "하원 임기(2023-05-14 선거) 만료 2027-05-13 후 45일 안 선거. 법정 최종 기한에 가까운 일요일 사용. https://en.wikipedia.org/wiki/Next_Thai_general_election"
+  "sourceNote": "소선거구 400석. https://thailand.prd.go.th/en/content/category/detail/id/48/iid/190994 하원 임기(2023-05-14 선거) 만료 2027-05-13 후 45일 안 선거. 법정 최종 기한에 가까운 일요일 사용. https://en.wikipedia.org/wiki/Next_Thai_general_election"
  },
  "RWA": {
   "system": "PRESIDENTIAL",

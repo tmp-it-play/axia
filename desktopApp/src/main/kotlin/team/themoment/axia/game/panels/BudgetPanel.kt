@@ -45,6 +45,12 @@ fun BudgetPanel(
         valueColor = if (budget.balance >= 0.0) DossierColors.positive else DossierColors.negative,
     )
     StatRow("국가부채", formatPercent(budget.debtRatio))
+    if (budget.reconstructionSpending > 0.0) {
+        StatRow("전후 재건 집행액", "${formatPercent(budget.reconstructionSpending)} · ${money(budget.reconstructionSpending)}")
+    }
+    if (budget.regionalSpending > 0.0) {
+        StatRow("지역 사업 예산", "${formatPercent(budget.regionalSpending)} · ${money(budget.regionalSpending)}")
+    }
     if (budget.organizationSubsidies > 0.0) {
         StatRow("조직 보조금 (기초지출에 포함)", "${formatPercent(budget.organizationSubsidies)} · ${money(budget.organizationSubsidies)}")
     }

@@ -38,6 +38,7 @@ fun DiplomacyPanel(
     politicalCapital: Double,
     countryName: (String) -> String,
     onAction: (String, DiplomaticAction) -> Unit,
+    onMembership: (String, Boolean) -> Unit,
 ) {
     val diplomacy = world.diplomacy
     SectionTitle("외교 역량")
@@ -59,6 +60,26 @@ fun DiplomacyPanel(
     SectionTitle("가입한 국제기구")
     if (diplomacy.organizations.isEmpty()) Hint("가입한 기구가 없습니다.")
     diplomacy.organizations.forEach { StatRow(it.name, it.kind.label) }
+    var manageMembership by remember { mutableStateOf(false) }
+    PaperTag(if (manageMembership) "기구 목록 접기" else "기구 가입·탈퇴", onClick = { manageMembership = !manageMembership })
+    if (manageMembership) {
+        Hint("가입 심사에서 회원국과의 관계가 찬반을 결정합니다. 군사동맹은 만장일치, 그 밖의 기구는 3분의 2 찬성이 필요합니다.")
+        diplomacy.membershipDecisions.forEach { decision ->
+            val org = decision.organization
+            val status =
+                when {
+                    decision.member -> "회원국"
+                    decision.atWarWithMember -> "회원국과 교전 중"
+                    else -> "예상 찬성 ${decision.votes} · 필요 ${decision.required}"
+                }
+            StatRow(org.name, status)
+            PaperTag(
+                if (decision.member) "탈퇴" else "가입 신청",
+                enabled = decision.member || decision.canJoin,
+                onClick = { onMembership(org.id, !decision.member) },
+            )
+        }
+    }
     SectionTitle("양자 관계 (눌러서 행위 보기)")
     Hint("플레이 가능 국가와 동맹국, 관계가 아주 좋거나 나쁜 나라를 보여 줍니다.")
     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -99,6 +120,7 @@ private fun PartnerCard(
                 color = relationColor(partner.relation),
             )
         }
+        if (partner.transit) StatRow("군사 통행", "상호 통행권 발효 중")
         if (partner.sanctionedByUs > 0.0) StatRow("우리 제재", "강도 ${(partner.sanctionedByUs * 100).roundToInt()}")
         if (partner.sanctioningUs >
             0.0

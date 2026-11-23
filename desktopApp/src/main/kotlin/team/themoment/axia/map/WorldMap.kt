@@ -60,8 +60,10 @@ fun WorldMap(
     modifier: Modifier = Modifier,
     /** 지역 단위로 다시 칠할 나라와 지역 색. 색이 null이면 나라 색을 그대로 둔다. */
     regionOverlay: Pair<String, (String) -> Color?>? = null,
+    regionOwners: Map<String, String> = emptyMap(),
 ) {
     val viewport = remember { MapViewport() }
+    val borders = remember(model, regionOwners) { model.politicalBorders(regionOwners) }
     val currentOnRegionClick by rememberUpdatedState(onRegionClick)
     val textMeasurer = rememberTextMeasurer()
     val labelStyle = DossierType.mapLabel(LABEL_BASE_SIZE_SP.sp)
@@ -87,7 +89,9 @@ fun WorldMap(
         drawRect(MapPalette.ocean)
         if (viewport.zoom > 0f) {
             val copies = visibleCopies(viewport)
-            copies.forEach { shift -> drawWorldCopy(model, viewport, shift, fillColor, selectedRegionId, regionOverlay) }
+            copies.forEach { shift ->
+                drawWorldCopy(model, viewport, shift, fillColor, selectedRegionId, regionOverlay, regionOwners, borders)
+            }
             drawLabels(model, viewport, copies, labelLayouts)
         }
     }
@@ -108,6 +112,8 @@ private fun DrawScope.drawWorldCopy(
     fillColor: (CountryFill) -> Color,
     selectedRegionId: String?,
     regionOverlay: Pair<String, (String) -> Color?>?,
+    regionOwners: Map<String, String>,
+    borders: WorldMapModel.PoliticalBorders,
 ) {
     val zoom = viewport.zoom
     val pixelsPerDp = density
@@ -117,7 +123,7 @@ private fun DrawScope.drawWorldCopy(
     val regionStroke = Stroke(width = 0.6f * pixelsPerDp / zoom)
     val selectionStroke = Stroke(width = 1.8f * pixelsPerDp / zoom)
     val regionBorderMinSize = REGION_BORDER_MIN_SIZE_DP * pixelsPerDp / zoom
-    val selectedCountryId = selectedRegionId?.let(model::countryOf)
+    val selectedCountryId = selectedRegionId?.let { regionOwners[it] ?: model.countryOf(it) }
 
     withTransform({
         translate(left = size.width / 2f - (viewport.center.x - shift) * zoom, top = size.height / 2f - viewport.center.y * zoom)
@@ -136,13 +142,20 @@ private fun DrawScope.drawWorldCopy(
         if (selectedCountryId != null) {
             drawPath(model.countryHighlight(selectedCountryId), MapPalette.selectedCountry)
         }
-        model.regionBorders.forEach { borders ->
-            if (borders.typicalRegionSize >= regionBorderMinSize && borders.bounds.overlaps(area)) {
-                drawPath(borders.path, MapPalette.regionBorder, style = regionStroke)
+        regionOwners.forEach { (regionId, owner) ->
+            val path = model.regionHighlight(regionId)
+            val fill = model.countryFills.first { it.countryId == owner }
+            val overlay = regionOverlay?.takeIf { it.first == owner }?.second?.invoke(regionId)
+            drawPath(path, overlay ?: fillColor(fill))
+            if (selectedCountryId == owner) drawPath(path, MapPalette.selectedCountry)
+        }
+        borders.regions.forEach { region ->
+            if (region.typicalRegionSize >= regionBorderMinSize && region.bounds.overlaps(area)) {
+                drawPath(region.path, MapPalette.regionBorder, style = regionStroke)
             }
         }
-        drawBorderTiles(model, BorderKind.COUNTRY, area, MapPalette.countryBorder, countryStroke)
-        drawBorderTiles(model, BorderKind.COAST, area, MapPalette.coast, coastStroke)
+        drawBorderTiles(borders.countries, area, MapPalette.countryBorder, countryStroke)
+        drawBorderTiles(model.coasts, area, MapPalette.coast, coastStroke)
         if (selectedRegionId != null) {
             val region = model.regionHighlight(selectedRegionId)
             drawPath(region, MapPalette.selectedRegion)
@@ -152,13 +165,12 @@ private fun DrawScope.drawWorldCopy(
 }
 
 private fun DrawScope.drawBorderTiles(
-    model: WorldMapModel,
-    kind: BorderKind,
+    tiles: List<BorderTile>,
     area: Rect,
     color: Color,
     stroke: Stroke,
 ) {
-    model.borderTiles[kind].orEmpty().forEach { tile ->
+    tiles.forEach { tile ->
         if (tile.bounds.overlaps(area)) {
             drawPath(tile.path, color, style = stroke)
         }

@@ -182,7 +182,9 @@
    "tension": 70
   },
   {
-   "name": "크림반도·우크라이나 점령지",
+   "name": "크림반도·세바스토폴",
+   "note": "협정의 행정구역 범위는 크림과 세바스토폴이다. 나머지 우크라이나 점령은 전선의 통제 비율로 다룬다.",
+   "treatyRegions": ["RUS-283", "RUS-5482"],
    "claimants": [
     "UKR",
     "RUS"
@@ -233,6 +235,7 @@
   },
   {
    "name": "포클랜드 제도",
+   "treatyRegions": ["FLK-5152"],
    "claimants": [
     "ARG",
     "GBR"
@@ -288,6 +291,7 @@
   },
   {
    "name": "아루나찰프라데시",
+   "treatyRegions": ["IND-3299"],
    "claimants": [
     "IND",
     "CHN"
@@ -315,6 +319,7 @@
   },
   {
    "name": "지브롤터",
+   "treatyRegions": ["GIB+00?"],
    "claimants": [
     "ESP",
     "GBR"

@@ -63,6 +63,8 @@ internal data class ExternalConditions(
     val grainProduction: Double = 0.0,
     /** 전쟁 동원·피란으로 생긴 구조적 실업 변화의 목표(시작 대비). */
     val warUnemployment: Double = 0.0,
+    val exports: Double = 0.0,
+    val imports: Double = 0.0,
 ) {
     companion object {
         val NONE = ExternalConditions(0.0, 0.0, 1.0)
@@ -112,6 +114,7 @@ internal class TradeNetwork(
     private val tradeLevel = DoubleArray(n) { 1.0 }
     private val startFactor = DoubleArray(n * n) { 1.0 }
     private val fundamentals = CommodityFundamentals(ids.map(initial::country))
+    private val payments: TradePayments
     private val market: CommodityMarket
 
     init {
@@ -135,6 +138,7 @@ internal class TradeNetwork(
             val total = (0 until n).sumOf { baseShare[i * n + it] }
             for (j in 0 until n) baseShare[i * n + j] /= total
         }
+        payments = TradePayments(exportShare, openness, startGdp, baseShare)
         baseShare.copyInto(shares)
         market = CommodityMarket(ids, fundamentals.baseline, baseShare, startMonth)
     }
@@ -187,6 +191,7 @@ internal class TradeNetwork(
             policy[i] = policySum
         }
 
+        payments.settle(countries, routeFactors)
         market.advanceMonth(fundamentals.monthlyInputs(countries, state), routeFactors, period)
         val quotes = market.snapshot()
         val oil = quotes.getValue(Commodity.CRUDE_OIL)
@@ -215,6 +220,8 @@ internal class TradeNetwork(
                     potentialLevel = tradeLevel[i] * (1.0 - state.occupied(id) * OCCUPATION_OUTPUT),
                     partnerGap = partnerGap,
                     oilChange = oil.yearlyLogChange,
+                    exports = payments.exports[i],
+                    imports = payments.imports[i],
                     grainPrice = grain.priceIndex,
                     grainProduction = food.production,
                     warUnemployment = WAR_UNEMPLOYMENT * state.warIntensity(id),

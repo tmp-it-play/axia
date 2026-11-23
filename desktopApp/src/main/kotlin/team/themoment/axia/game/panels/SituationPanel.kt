@@ -11,6 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.dp
 import team.themoment.axia.format.formatPercent
+import team.themoment.axia.format.formatPopulation
 import team.themoment.axia.simulation.WorldSnapshot
 import team.themoment.axia.simulation.events.EventCategory
 import team.themoment.axia.theme.DossierColors
@@ -53,6 +54,20 @@ fun SituationPanel(
             "${shortDate(requireNotNull(it.ended))} 종결",
             valueColor = DossierColors.inkMuted,
         )
+    }
+
+    val recovery = military.recovery
+    if (recovery.refugees.isNotEmpty() || recovery.returned.isNotEmpty() || recovery.reconstructionShares.isNotEmpty()) {
+        SectionTitle("피란과 전후 복구")
+        var allRoutes by remember { mutableStateOf(false) }
+        val routes = recovery.refugees.sortedByDescending { it.people }
+        StatRow("국외 피란 인구", formatPopulation(routes.sumOf { it.people }), note = "게임 시작 이후")
+        (if (allRoutes) routes else routes.take(5)).forEach { route ->
+            StatRow("${countryName(route.origin)} → ${countryName(route.host)}", formatPopulation(route.people))
+        }
+        if (routes.size > 5) PaperTag(if (allRoutes) "경로 접기" else "전체 피란 경로", onClick = { allRoutes = !allRoutes })
+        recovery.returned.forEach { (id, count) -> StatRow("${countryName(id)} 귀환", formatPopulation(count)) }
+        recovery.reconstructionShares.forEach { (id, share) -> StatRow("${countryName(id)} 재건 지출", "연율 GDP의 ${formatPercent(share)}") }
     }
 
     SectionTitle("영토 분쟁")

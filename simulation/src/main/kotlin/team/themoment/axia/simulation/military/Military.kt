@@ -5,6 +5,7 @@ import kotlinx.serialization.json.Json
 import team.themoment.axia.simulation.politics.WorldNews
 import team.themoment.axia.simulation.text.josa
 import team.themoment.axia.simulation.world.Geography
+import team.themoment.axia.simulation.world.Region
 import team.themoment.axia.simulation.world.StructureData
 import java.time.LocalDate
 import kotlin.math.pow
@@ -38,6 +39,9 @@ enum class MilitaryAction(
 ) {
     DECLARE_WAR("선전포고", 30.0, "인접국이거나 해군력이 있으면 전쟁을 시작한다. 상대 동맹국이 참전하고 국제 관계가 나빠진다."),
     PROPOSE_PEACE("평화 제안", 5.0, "상대가 지쳤거나 불리하면 현재 전선에서 휴전한다."),
+    WITHDRAWAL_TREATY("상호 철수 협정", 5.0, "점령지에서 상호 철수하고 전쟁을 종결한다."),
+    OFFER_TERRITORY("분쟁지 양도 협정", 5.0, "분쟁지의 관할을 상대에게 넘기고 양측이 나머지 점령지에서 철수한다."),
+    REQUEST_TERRITORY("분쟁지 반환 협정", 8.0, "상대에게 분쟁지 관할 이전을 요구한다. 상대가 크게 지치고 불리한 경우에 수락한다."),
     MILITARY_AID("군사 지원", 4.0, "1년 동안 GDP의 0.2%를 들여 전쟁 중인 나라의 전력을 보탠다."),
     JOIN_WAR("참전", 20.0, "동맹국이나 관계가 좋은 나라 편으로 전쟁에 들어간다."),
 }
@@ -76,6 +80,8 @@ internal data class CivilWarRecord(
 data class Dispute(
     val name: String,
     val claimants: List<String>,
+    /** 조약으로 이관할 때 지도에서 전체 경계를 구분할 수 있는 지역. */
+    val treatyRegions: List<String> = emptyList(),
     val controller: String,
     val tension: Double,
     val note: String? = null,
@@ -121,6 +127,19 @@ data class FrontSnapshot(
     val trend: Double,
 )
 
+data class TreatyRegion(
+    val id: String,
+    val name: String,
+    val owner: String,
+)
+
+data class PeaceTreaty(
+    val date: LocalDate,
+    val territory: String? = null,
+    val from: String? = null,
+    val to: String? = null,
+)
+
 data class WarSnapshot(
     val id: Int,
     val name: String,
@@ -133,6 +152,7 @@ data class WarSnapshot(
     val intensity: Double,
     val weariness: Map<String, Double>,
     val ceasefire: LocalDate?,
+    val treaty: PeaceTreaty?,
 )
 
 data class CivilWarSnapshot(
@@ -150,6 +170,10 @@ data class MilitarySnapshot(
     val civilWars: List<CivilWarSnapshot>,
     val disputes: List<Dispute>,
     val mobilization: Mobilization,
+    val regionOwners: Map<String, String>,
+    val negotiableRegions: Map<String, List<TreatyRegion>>,
+    val recovery: WarRecoverySnapshot,
+    val reconstructionEffort: ReconstructionEffort,
     /** 플레이어가 지원 중인 나라와 종료일. */
     val aid: Map<String, LocalDate>,
 )
@@ -178,6 +202,8 @@ internal class Military(
     private val random: kotlin.random.Random,
     private val allied: (String, String) -> Boolean,
     private val relation: (String, String) -> Double,
+    private val regions: Map<String, Region>,
+    private val transit: (String, String) -> Boolean = { _, _ -> false },
     data: MilitaryFile = MilitaryFile.default,
 ) {
     private val ids = states.sorted()
@@ -196,6 +222,16 @@ internal class Military(
     private val wars = mutableListOf<War>()
     private val civilWars = mutableListOf<CivilWar>()
     private val disputes = data.disputes.toMutableList()
+    private val bundledRegions = disputes.flatMap { it.treatyRegions }.toSet()
+    private val regionCount =
+        regions.values
+            .groupingBy(Region::countryId)
+            .eachCount()
+            .toMutableMap()
+    var regionOwners: Map<String, String> = emptyMap()
+        private set
+    private val civilVictories = mutableListOf<Pair<String, String>>()
+    private val recovery = WarRecovery(playerId)
     private val startOccupied = HashMap<String, Double>()
     private val startIntensity = HashMap<String, Double>()
     private val news = mutableListOf<WorldNews>()
@@ -226,8 +262,19 @@ internal class Military(
         var intensity: Double,
         val weariness: HashMap<String, Double> = HashMap(),
         var ceasefire: LocalDate? = null,
+        var treaty: PeaceTreaty? = null,
     ) {
         val active: Boolean get() = ceasefire == null
+
+        val principalA = sideA.first()
+        val principalB = sideB.first()
+
+        fun oppositePrincipal(country: String): String? =
+            when (country) {
+                principalA -> principalB
+                principalB -> principalA
+                else -> null
+            }
 
         fun side(country: String): Int =
             when (country) {
@@ -249,6 +296,11 @@ internal class Military(
 
     init {
         val all = ids.toSet()
+        disputes.forEach { dispute ->
+            require(
+                dispute.treatyRegions.all { regions[it]?.countryId == dispute.controller },
+            ) { "Invalid treaty area for ${dispute.name}" }
+        }
         data.wars.forEach { record ->
             (record.sideA + record.sideB + record.supportA + record.supportB).forEach {
                 require(
@@ -364,20 +416,39 @@ internal class Military(
         inputs: Map<String, DefenseInputs>,
     ) {
         wars.filter { it.active }.forEach { war ->
-            // 국토 대부분을 잃으면 항복한다.
-            war.fronts.firstOrNull { kotlin.math.abs(it.control) >= it.capitulation }?.let { front ->
-                val loser = if (front.control > 0) front.defender else front.attacker
-                ceasefire(war, date, "${name(loser)}의 항복으로 ${war.name}이 끝났다.")
+            // 각 진영의 주전국만 전체 진영을 대표한다. 동맹국의 단독 항복이나 국내 여론은 종전 결정이 될 수 없다.
+            val capitulating =
+                war.fronts.firstNotNullOfOrNull { front ->
+                    val loser = if (front.control > 0.0) front.defender else front.attacker
+                    loser.takeIf { kotlin.math.abs(front.control) >= front.capitulation && war.oppositePrincipal(it) != null }
+                }
+            if (capitulating != null) {
+                val winner = requireNotNull(war.oppositePrincipal(capitulating))
+                ceasefire(war, date, "${name(capitulating)}의 항복으로 ${war.name}이 끝났다.")
+                signTreaty(war, date, cedable(capitulating, winner), winner)
                 return@forEach
             }
-            if (war.sideA.contains(playerId) || war.sideB.contains(playerId)) return@forEach
-            val tiredA = war.sideA.maxOf { war.weariness[it] ?: 0.0 }
-            val tiredB = war.sideB.maxOf { war.weariness[it] ?: 0.0 }
-            val unpopular = (war.sideA + war.sideB).any { (inputs[it]?.approval ?: 50.0) < 25.0 }
+            if (war.oppositePrincipal(playerId) != null) return@forEach
+            val tiredA = war.weariness[war.principalA] ?: 0.0
+            val tiredB = war.weariness[war.principalB] ?: 0.0
+            val unpopular = listOf(war.principalA, war.principalB).any { inputs.getValue(it).approval < 25.0 }
             if (((tiredA > PEACE_WEARINESS && tiredB > PEACE_WEARINESS) || unpopular) && random.nextDouble() < PEACE_CHANCE) {
                 ceasefire(war, date, "${war.name}의 교전 당사국들이 휴전에 합의했다.")
             }
         }
+        wars
+            .filter {
+                it.ceasefire?.plusYears(1)?.let { review -> date >= review } == true && it.treaty == null &&
+                    it.oppositePrincipal(playerId) == null
+            }.forEach { war ->
+                // 재개전으로 옛 휴전선을 승계한 상대가 있으면 이전 협정으로 그 전선을 바꿀 수 없다.
+                val resumed =
+                    wars.any { later ->
+                        later.id > war.id &&
+                            war.sideA.any { a -> war.sideB.any { b -> later.side(a) != 0 && later.side(a) == -later.side(b) } }
+                    }
+                if (!resumed) signTreaty(war, date, null, war.sideA.first())
+            }
     }
 
     private fun ceasefire(
@@ -386,6 +457,7 @@ internal class Military(
         text: String,
     ) {
         war.ceasefire = date
+        pendingOffers.remove(war.id)
         news += WorldNews(date, war.sideA.first(), war.name, text, major = true)
     }
 
@@ -403,6 +475,7 @@ internal class Military(
 
                 war.control > CIVIL_VICTORY -> {
                     war.ended = date
+                    civilVictories += war.country to war.rebels
                     news += WorldNews(date, war.country, "내전", "${war.rebels} 세력이 수도를 장악하고 정권을 무너뜨렸다.", major = true)
                 }
             }
@@ -451,15 +524,16 @@ internal class Military(
         wars.filter { it.active }.flatMap { war -> war.sideA.flatMap { a -> war.sideB.map { b -> a to b } } }
 
     private val offerCooldown = HashMap<Int, LocalDate>()
+    private val pendingOffers = HashMap<Int, LocalDate>()
 
     /** 플레이어와 싸우는 상대가 지쳤으면 휴전을 제안한다. (전쟁 번호, 제안국) 목록. */
     fun peaceOffers(date: LocalDate): List<Pair<Int, String>> =
-        wars.filter { it.active && it.side(playerId) != 0 }.mapNotNull { war ->
-            val enemies = if (war.side(playerId) == 1) war.sideB else war.sideA
-            val enemy = enemies.maxBy { war.weariness[it] ?: 0.0 }
+        wars.filter { it.active }.mapNotNull { war ->
+            val enemy = war.oppositePrincipal(playerId) ?: return@mapNotNull null
             val ready = offerCooldown[war.id]?.let { date >= it } ?: true
             if (ready && (war.weariness[enemy] ?: 0.0) > OFFER_WEARINESS && random.nextDouble() < OFFER_CHANCE) {
                 offerCooldown[war.id] = date.plusMonths(OFFER_COOLDOWN_MONTHS)
+                pendingOffers[war.id] = date
                 war.id to enemy
             } else {
                 null
@@ -470,7 +544,9 @@ internal class Military(
         warId: Int,
         date: LocalDate,
     ) {
-        val war = wars.firstOrNull { it.id == warId && it.active } ?: return
+        val war = wars.firstOrNull { it.id == warId && it.active && it.oppositePrincipal(playerId) != null } ?: return
+        val offered = pendingOffers.remove(warId) ?: return
+        if (date < offered || date > offered.plusDays(14)) return
         ceasefire(war, date, "${war.name}에서 휴전이 성립했다.")
     }
 
@@ -487,6 +563,15 @@ internal class Military(
         return true
     }
 
+    fun drainCivilVictories(): List<Pair<String, String>> = civilVictories.toList().also { civilVictories.clear() }
+
+    fun setReconstructionEffort(effort: ReconstructionEffort) {
+        recovery.effort = effort
+    }
+
+    fun advanceRecovery(population: Map<String, Double>): RecoveryMonth =
+        recovery.advance(population, ids.associateWith(::intensityAbsolute), ::atWar)
+
     fun setMobilization(level: Mobilization) {
         mobilization = level
     }
@@ -494,13 +579,21 @@ internal class Military(
     val aidSpending: Double get() = aid.size * AID_SHARE
 
     fun available(target: String): Set<MilitaryAction> {
-        if (target == playerId) return emptySet()
+        if (target == playerId || target !in startOccupied) return emptySet()
         val enemies = atWar(playerId, target)
         val targetAtWar = wars.any { it.active && it.side(target) != 0 }
-        val reachable = geography.neighbors(playerId, target) || (geography.of(playerId).coastal && geography.of(target).coastal)
+        val reachable =
+            geography.neighbors(playerId, target) || (geography.of(playerId).coastal && geography.of(target).coastal) ||
+                geography.of(playerId).neighbors.any { host -> transit(playerId, host) && geography.neighbors(host, target) }
+        val negotiating = negotiatingWar(target)
         return buildSet {
             if (!enemies && reachable && !allied(playerId, target)) add(MilitaryAction.DECLARE_WAR)
-            if (enemies) add(MilitaryAction.PROPOSE_PEACE)
+            if (negotiating?.active == true) add(MilitaryAction.PROPOSE_PEACE)
+            if (negotiating != null) {
+                add(MilitaryAction.WITHDRAWAL_TREATY)
+                if (cedable(playerId, target) != null) add(MilitaryAction.OFFER_TERRITORY)
+                if (cedable(target, playerId) != null) add(MilitaryAction.REQUEST_TERRITORY)
+            }
             if (targetAtWar && !enemies && target !in aid) add(MilitaryAction.MILITARY_AID)
             if (targetAtWar && !enemies && wars.none { it.active && it.side(playerId) != 0 && it.side(target) != 0 } &&
                 (allied(playerId, target) || relation(playerId, target) >= JOIN_RELATION)
@@ -522,12 +615,29 @@ internal class Military(
             }
 
             MilitaryAction.PROPOSE_PEACE -> {
-                val war = wars.first { it.active && it.side(playerId) != 0 && it.side(target) != 0 }
+                val war = requireNotNull(negotiatingWar(target))
                 val theirs = war.weariness[target] ?: 0.0
                 val losing =
                     war.fronts.any { (it.defender == target && it.control > 0.1) || (it.attacker == target && it.control < -0.1) }
                 if (theirs < PEACE_ACCEPT_WEARINESS && !losing) return false
                 ceasefire(war, date, "${war.name}에서 휴전이 성립했다.")
+            }
+
+            MilitaryAction.WITHDRAWAL_TREATY, MilitaryAction.OFFER_TERRITORY, MilitaryAction.REQUEST_TERRITORY -> {
+                val war = requireNotNull(negotiatingWar(target))
+                val offered = action == MilitaryAction.OFFER_TERRITORY
+                val winner = if (offered) target else playerId
+                val loser = if (offered) playerId else target
+                val area = if (action == MilitaryAction.WITHDRAWAL_TREATY) null else cedable(loser, winner) ?: return false
+                val pressure = occupationPressure(war, target)
+                val weary = war.weariness[target] ?: 0.0
+                if (action == MilitaryAction.REQUEST_TERRITORY && (pressure < 0.15 || weary < PEACE_ACCEPT_WEARINESS)) return false
+                if (action == MilitaryAction.WITHDRAWAL_TREATY && war.active && weary < PEACE_ACCEPT_WEARINESS &&
+                    pressure < 0.1
+                ) {
+                    return false
+                }
+                signTreaty(war, date, area, winner)
             }
 
             MilitaryAction.MILITARY_AID -> {
@@ -547,6 +657,119 @@ internal class Military(
             }
         }
         return true
+    }
+
+    private fun occupationPressure(
+        war: War,
+        target: String,
+    ): Double =
+        war.fronts.maxOfOrNull { front ->
+            when (target) {
+                front.defender -> front.control
+                front.attacker -> -front.control
+                else -> 0.0
+            }
+        } ?: 0.0
+
+    private fun owner(region: Region): String = regionOwners[region.id] ?: region.countryId
+
+    fun regionTreatyCost(
+        target: String,
+        regionId: String,
+    ): Double? {
+        val region = regions[regionId] ?: return null
+        val holder = owner(region)
+        if (regionId in bundledRegions || regionCount.getOrDefault(holder, 0) <= 1 || negotiatingWar(target) == null) return null
+        return when (holder) {
+            playerId -> MilitaryAction.OFFER_TERRITORY.cost
+            target -> MilitaryAction.REQUEST_TERRITORY.cost
+            else -> null
+        }
+    }
+
+    fun negotiateRegion(
+        target: String,
+        regionId: String,
+        date: LocalDate,
+    ): Boolean {
+        if (regionTreatyCost(target, regionId) == null) return false
+        val war = requireNotNull(negotiatingWar(target))
+        val region = regions.getValue(regionId)
+        val winner = if (owner(region) == playerId) target else playerId
+        if (winner == playerId &&
+            (occupationPressure(war, target) < 0.15 || (war.weariness[target] ?: 0.0) < PEACE_ACCEPT_WEARINESS)
+        ) {
+            return false
+        }
+        signTreaty(war, date, null, winner, region)
+        return true
+    }
+
+    private fun negotiableRegions(): Map<String, List<TreatyRegion>> {
+        val partners = ids.filter { negotiatingWar(it) != null }
+        if (partners.isEmpty()) return emptyMap()
+        val participants = partners.toSet() + playerId
+        return regions.values
+            .mapNotNull { region ->
+                val holder = owner(region)
+                if (holder in participants && region.id !in bundledRegions && regionCount.getValue(holder) > 1) {
+                    TreatyRegion(region.id, region.name, holder)
+                } else {
+                    null
+                }
+            }.sortedWith(compareBy(TreatyRegion::name, TreatyRegion::id))
+            .groupBy(TreatyRegion::owner)
+    }
+
+    private fun negotiatingWar(target: String): War? =
+        wars.lastOrNull { it.side(playerId) != 0 && it.side(playerId) == -it.side(target) }?.takeIf {
+            it.treaty == null &&
+                it.oppositePrincipal(playerId) == target
+        }
+
+    private fun cedable(
+        from: String,
+        to: String,
+    ): Dispute? =
+        disputes.firstOrNull {
+            it.controller == from && to in it.claimants && it.claimants.size == 2 && it.treatyRegions.isNotEmpty() &&
+                it.treatyRegions.size < regionCount.getOrDefault(from, 0)
+        }
+
+    private fun signTreaty(
+        war: War,
+        date: LocalDate,
+        area: Dispute?,
+        winner: String,
+        region: Region? = null,
+    ) {
+        check(war.treaty == null)
+        if (war.active) war.ceasefire = date
+        pendingOffers.remove(war.id)
+        val transferred = area?.treatyRegions ?: listOfNotNull(region?.id)
+        val from = area?.controller ?: region?.let(::owner)
+        val title = area?.name ?: region?.name
+        war.treaty = PeaceTreaty(date, title, from, from?.let { winner })
+        war.fronts.forEach { front ->
+            front.control = 0.0
+            front.trend = 0.0
+        }
+        val terms =
+            if (from == null) {
+                "교전국들이 점령지에서 상호 철수하는 평화협정을 체결했다."
+            } else {
+                if (area != null) disputes[disputes.indexOf(area)] = area.copy(controller = winner, tension = area.tension * 0.25)
+                regionCount[from] = regionCount.getValue(from) - transferred.size
+                regionCount[winner] = regionCount.getOrDefault(winner, 0) + transferred.size
+                regionOwners =
+                    regionOwners.toMutableMap().apply {
+                        transferred.forEach { id ->
+                            if (regions.getValue(id).countryId == winner) remove(id) else put(id, winner)
+                        }
+                    }
+                "$title 관할이 ${name(winner)}에 귀속됐다. 나머지 점령지에서는 철수한다."
+            }
+        news += WorldNews(date, winner, war.name, terms, major = true)
     }
 
     /**
@@ -706,11 +929,16 @@ internal class Military(
                         intensity = war.intensity,
                         weariness = war.weariness.toMap(),
                         ceasefire = war.ceasefire,
+                        treaty = war.treaty,
                     )
                 },
             civilWars = civilWars.map { CivilWarSnapshot(it.country, it.rebels, it.started, it.control, it.intensity, it.ended) },
             disputes = disputes.toList(),
             mobilization = mobilization,
+            regionOwners = regionOwners,
+            negotiableRegions = negotiableRegions(),
+            recovery = recovery.snapshot,
+            reconstructionEffort = recovery.effort,
             aid = aid.toMap(),
         )
 

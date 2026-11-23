@@ -4,15 +4,21 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import team.themoment.axia.format.formatCompactDollars
 import team.themoment.axia.format.formatPercent
 import team.themoment.axia.format.formatRate
 import team.themoment.axia.game.note
+import team.themoment.axia.simulation.economy.Company
 import team.themoment.axia.simulation.economy.CountryHistory
 import team.themoment.axia.simulation.economy.EconomyIndicators
 import team.themoment.axia.simulation.economy.EconomySeries
+import team.themoment.axia.simulation.economy.ExternalAccountSnapshot
 import team.themoment.axia.simulation.economy.MonetaryFramework
 import team.themoment.axia.simulation.economy.MonetaryPolicy
 import team.themoment.axia.simulation.economy.MonetaryStance
@@ -39,6 +45,11 @@ fun EconomyPanel(
     indicators: EconomyIndicators,
     history: CountryHistory,
     sectors: List<SectorLine>,
+    externalAccount: ExternalAccountSnapshot,
+    companies: List<Company>,
+    closures: Int,
+    onRenameCompany: (Int, String) -> Unit,
+    onRequestImf: () -> Unit,
     trade: TradeSnapshot,
     date: LocalDate,
     monetary: MonetaryPolicy,
@@ -50,6 +61,34 @@ fun EconomyPanel(
     SectionTitle("현재 지표")
     KeyIndicatorRows(indicators)
     MonetarySection(countryName(countryId), indicators, history, monetary, politics, onDirectRate, onDraftIndependence, onViewBill)
+    SectionTitle("대외 거래와 외환")
+    if (externalAccount.settled) {
+        StatRow("월 수출 · 수입", "${formatCompactDollars(externalAccount.exports)} · ${formatCompactDollars(externalAccount.imports)}")
+        StatRow("월 경상수지", formatCompactDollars(externalAccount.currentAccount))
+    }
+    StatRow("외환보유액", formatCompactDollars(externalAccount.reserves))
+    externalAccount.importCover?.let { StatRow("수입 대금 충당 기간", "%.1f개월".format(java.util.Locale.KOREA, it)) }
+    if (externalAccount.pegFailed) Hint("외환보유액 부족으로 고정환율 방어가 종료됐습니다.")
+    if (externalAccount.tradeArrears > 0.0) StatRow("미결제 대외 지급액", formatCompactDollars(externalAccount.tradeArrears))
+    if (externalAccount.imfCredit > 0.0) {
+        StatRow("IMF 대출 잔액", formatCompactDollars(externalAccount.imfCredit))
+        StatRow("상환 상태", if (externalAccount.imfMonthsLeft > 0) "만기까지 ${externalAccount.imfMonthsLeft}개월" else "만기 경과 · 미상환 원금")
+    }
+    if (externalAccount.canRequestAssistance) {
+        Hint("외화를 즉시 차입합니다. 다음 달부터 연 3% 이자와 36개월 분할 원금을 보유액에서 지급합니다.")
+        PaperTag("IMF 긴급 대출 신청", onClick = onRequestImf)
+    }
+    SectionTitle("기업")
+    StatRow("생성 기업 · 누적 폐업", "${companies.size}곳 · ${closures}곳")
+    var showCompanies by remember { mutableStateOf(false) }
+    if (companies.isNotEmpty()) PaperTag(if (showCompanies) "목록 접기" else "기업 목록", onClick = { showCompanies = !showCompanies })
+    if (showCompanies) {
+        companies.forEach { company ->
+            StatRow(company.name, company.sector.label)
+            Hint("${company.founded} 설립 · 연간 부가가치 ${formatCompactDollars(company.annualValueAdded)}")
+            RenameControl(company.id, company.name) { onRenameCompany(company.id, it) }
+        }
+    }
     SectionTitle("산업 구조 (부가가치 · 성장 · 고용)")
     sectors.sortedByDescending { it.share }.forEach { line ->
         StatRow(

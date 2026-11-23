@@ -60,14 +60,26 @@ internal class AutomaticFiscalPolicy(
     private var revenueShare = initial.revenue
     private var primarySpendingShare = initial.primarySpending
 
+    private var legislativeRevenue = 0.0
+    private var legislativeSpending = 0.0
+
+    fun enact(
+        revenue: Double,
+        spending: Double,
+    ) {
+        require(revenue.isFinite() && spending.isFinite())
+        legislativeRevenue = revenue
+        legislativeSpending = spending
+    }
+
     override fun advanceMonth(
         debtRatio: Double,
         outputGap: Double,
     ): FiscalShares {
         val debtGap = debtRatio - initialDebtRatio
         val easing = if (debtRatio < 0.0) NET_ASSET_EASING else FISCAL_EASING
-        val spendingTarget = initialPrimarySpendingShare - debtGap * if (debtGap > 0.0) FISCAL_RESPONSE else easing
-        val revenueTarget = initialRevenueShare + max(0.0, debtGap) * TAX_RESPONSE
+        val spendingTarget = initialPrimarySpendingShare + legislativeSpending - debtGap * if (debtGap > 0.0) FISCAL_RESPONSE else easing
+        val revenueTarget = initialRevenueShare + legislativeRevenue + max(0.0, debtGap) * TAX_RESPONSE
         primarySpendingShare += (spendingTarget.coerceAtLeast(MIN_SPENDING_SHARE) - primarySpendingShare) / ADJUSTMENT_MONTHS
         revenueShare += (revenueTarget.coerceAtMost(max(initialRevenueShare, MAX_REVENUE_SHARE)) - revenueShare) / ADJUSTMENT_MONTHS
         return FiscalShares(revenueShare, primarySpendingShare)

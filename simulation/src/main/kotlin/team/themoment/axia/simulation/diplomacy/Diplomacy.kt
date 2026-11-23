@@ -14,6 +14,7 @@ enum class OrganizationType(
     ALLIANCE("군사동맹"),
     TRADE("무역·경제통합"),
     ECONOMIC("경제"),
+    FINANCIAL("금융"),
 }
 
 @Serializable
@@ -76,6 +77,8 @@ enum class DiplomaticAction(
     LIFT_SANCTION("제재 해제", 4.0, "우리가 건 제재를 푼다."),
     TRADE_AGREEMENT("무역협정 제안", 10.0, "관계가 25 이상이면 상대가 받아들인다. 교역이 늘어난다."),
     ALLIANCE("방위조약 제안", 15.0, "관계가 55 이상이고 공동의 적이 있거나 체제가 비슷하면 받아들인다. 전쟁에 함께 휘말린다."),
+    TRANSIT_TREATY("상호 통행권", 6.0, "상호 군사 통행권을 맺는다. 관계가 25 이상이어야 하며 상대국과 전쟁이 시작되면 만료된다."),
+    END_TRANSIT("통행권 종료", 2.0, "상호 군사 통행권을 종료한다."),
     EXPEL_DIPLOMATS("외교관 추방", 3.0, "관계가 크게 떨어진다."),
 }
 
@@ -86,6 +89,7 @@ data class BilateralSnapshot(
     val allied: Boolean,
     val alliance: String?,
     val tradeAgreement: Boolean,
+    val transit: Boolean,
     /** 우리가 건 제재 강도. */
     val sanctionedByUs: Double,
     /** 상대가 우리에게 건 제재 강도. */
@@ -94,9 +98,20 @@ data class BilateralSnapshot(
     val available: Set<DiplomaticAction>,
 )
 
+data class MembershipDecision(
+    val organization: InternationalOrganization,
+    val member: Boolean,
+    val votes: Int,
+    val required: Int,
+    val atWarWithMember: Boolean,
+) {
+    val canJoin: Boolean get() = !member && !atWarWithMember && votes >= required
+}
+
 data class DiplomacySnapshot(
     val playerId: String,
     val organizations: List<InternationalOrganization>,
+    val membershipDecisions: List<MembershipDecision>,
     /** 플레이 가능 국가와 플레이어와 관계가 크게 좋거나 나쁜 나라. */
     val partners: List<BilateralSnapshot>,
     val relations: Map<String, Double>,
@@ -133,19 +148,17 @@ internal class Diplomacy(
     private val summitReady = HashMap<String, LocalDate>()
     private val aidUntil = HashMap<String, LocalDate>()
     private val news = mutableListOf<WorldNews>()
-    private val membership: Map<String, List<InternationalOrganization>>
+    private val organizations = data.organizations.associateBy { it.id }.toMutableMap()
+    private var membership = emptyMap<String, List<InternationalOrganization>>()
+    private val organizationAlliances = HashMap<Pair<String, String>, String>()
+    private val organizationTrade = HashSet<Pair<String, String>>()
+    private val transitTreaties = HashSet<Pair<String, String>>()
 
     init {
         data.organizations.forEach { org -> org.members.forEach { require(it in index) { "${org.id} has unknown member $it" } } }
-        membership = ids.associateWith { id -> data.organizations.filter { id in it.members } }
+        indexOrganizations()
         data.alliances.forEach { record ->
             record.members.forEach { a -> record.members.filter { it != a }.forEach { b -> alliances[pair(a, b)] = record.name } }
-        }
-        data.organizations.filter { it.kind == OrganizationType.ALLIANCE }.forEach { org ->
-            org.members.forEach { a -> org.members.filter { it > a }.forEach { b -> alliances.putIfAbsent(pair(a, b), org.name) } }
-        }
-        data.organizations.filter { it.kind == OrganizationType.TRADE }.forEach { org ->
-            org.members.forEach { a -> org.members.filter { it > a }.forEach { b -> tradePairs += pair(a, b) } }
         }
         data.sanctions.forEach {
             require(it.intensity in 0.0..1.0)
@@ -182,6 +195,58 @@ internal class Diplomacy(
         array[j * n + i] = value
     }
 
+    private fun indexOrganizations() {
+        membership = ids.associateWith { id -> organizations.values.filter { id in it.members } }
+        organizationAlliances.clear()
+        organizationTrade.clear()
+        organizations.values.filter { it.kind == OrganizationType.ALLIANCE || it.kind == OrganizationType.TRADE }.forEach { org ->
+            org.members.forEach { a ->
+                org.members.filter { it > a }.forEach { b ->
+                    if (org.kind == OrganizationType.ALLIANCE) organizationAlliances[a to b] = org.name else organizationTrade += a to b
+                }
+            }
+        }
+    }
+
+    // 가입 심사는 회원국과의 관계를 이용한 게임 규칙이다. 군사동맹은 만장일치, 다른 기구는 2/3 찬성을 요구한다.
+    private fun membershipDecision(org: InternationalOrganization): MembershipDecision {
+        val members = org.members.filter { it != playerId }
+        val militaryAlliance = org.kind == OrganizationType.ALLIANCE
+        val threshold =
+            when {
+                militaryAlliance -> 25.0
+                org.id == "UN" || org.kind == OrganizationType.FINANCIAL -> -10.0
+                else -> 5.0
+            }
+        return MembershipDecision(
+            organization = org,
+            member = playerId in org.members,
+            votes = members.count { relation(playerId, it) >= threshold },
+            required = if (militaryAlliance) members.size else (2 * members.size + 2) / 3,
+            atWarWithMember = members.any { pair(playerId, it) in wars },
+        )
+    }
+
+    fun changeMembership(
+        id: String,
+        join: Boolean,
+        date: LocalDate,
+    ): Boolean {
+        val org = organizations[id] ?: return false
+        if (join == (playerId in org.members) || (join && !membershipDecision(org).canJoin)) return false
+        val members = if (join) (org.members + playerId).sorted() else org.members - playerId
+        organizations[id] = org.copy(members = members)
+        indexOrganizations()
+        val action = if (join) "가입" else "탈퇴"
+        report(date, playerId, org.name, "${org.name} $action 결정이 발효됐다.", major = true)
+        return true
+    }
+
+    fun hasTransitAccess(
+        a: String,
+        b: String,
+    ): Boolean = pair(a, b) in transitTreaties
+
     fun relation(
         a: String,
         b: String,
@@ -190,14 +255,14 @@ internal class Diplomacy(
     fun allied(
         a: String,
         b: String,
-    ): Boolean = pair(a, b) in alliances
+    ): Boolean = pair(a, b).let { it in alliances || it in organizationAlliances }
 
     fun allies(id: String): List<String> = ids.filter { it != id && allied(id, it) }
 
     fun tradeAgreement(
         a: String,
         b: String,
-    ): Boolean = pair(a, b) in tradePairs
+    ): Boolean = pair(a, b).let { it in tradePairs || it in organizationTrade }
 
     /** [by]가 [target]에 건 제재 강도. */
     fun sanction(
@@ -207,13 +272,29 @@ internal class Diplomacy(
 
     fun sanctionsSnapshot(): Map<Pair<String, String>, Double> = sanctions.toMap()
 
+    fun syncWars(hostilePairs: List<Pair<String, String>>) {
+        wars.clear()
+        hostilePairs.forEach { (a, b) -> setWar(a, b, active = true) }
+    }
+
     fun setWar(
         a: String,
         b: String,
         active: Boolean,
     ) {
-        if (active) wars += pair(a, b) else wars -= pair(a, b)
+        val key = pair(a, b)
+        if (active) {
+            wars += key
+            transitTreaties.remove(key)
+        } else {
+            wars -= key
+        }
     }
+
+    fun isMember(
+        country: String,
+        organization: String,
+    ): Boolean = membership[country].orEmpty().any { it.id == organization }
 
     fun organizationsOf(id: String): List<InternationalOrganization> = membership[id].orEmpty()
 
@@ -225,9 +306,12 @@ internal class Diplomacy(
         var value = 0.0
         if (allied(a, b)) value += ALLIANCE_BONUS
         val shared =
-            membership.getValue(a).count { org -> org.id != "UN" && org.kind != OrganizationType.ALLIANCE && b in org.members }
+            membership.getValue(a).count { org ->
+                org.id != "UN" && org.kind != OrganizationType.ALLIANCE && org.kind != OrganizationType.FINANCIAL && b in org.members
+            }
         value += (shared * SHARED_ORG_BONUS).coerceAtMost(MAX_SHARED_ORG_BONUS)
         if (tradeAgreement(a, b)) value += TRADE_BONUS
+        if (hasTransitAccess(a, b)) value += 6.0
         value += (TRADE_TIES * (tradeShare(a, b) + tradeShare(b, a))).coerceAtMost(MAX_TRADE_TIES)
         value -= SANCTION_PENALTY * maxOf(sanction(a, b), sanction(b, a))
         if (pair(a, b) in wars) value -= WAR_PENALTY
@@ -280,7 +364,7 @@ internal class Diplomacy(
         target: String,
         date: LocalDate,
     ): Set<DiplomaticAction> {
-        if (target == playerId) return emptySet()
+        if (target == playerId || target !in index) return emptySet()
         val atWar = pair(playerId, target) in wars
         return DiplomaticAction.entries.filterTo(mutableSetOf()) { action ->
             when (action) {
@@ -291,6 +375,8 @@ internal class Diplomacy(
                 DiplomaticAction.LIFT_SANCTION -> sanction(playerId, target) > 0.0
                 DiplomaticAction.TRADE_AGREEMENT -> !atWar && !tradeAgreement(playerId, target)
                 DiplomaticAction.ALLIANCE -> !atWar && !allied(playerId, target)
+                DiplomaticAction.TRANSIT_TREATY -> !atWar && !hasTransitAccess(playerId, target)
+                DiplomaticAction.END_TRANSIT -> hasTransitAccess(playerId, target)
             }
         }
     }
@@ -341,6 +427,17 @@ internal class Diplomacy(
                 if (current < TRADE_ACCEPT) return false
                 tradePairs += pair(playerId, target)
                 report(date, target, "무역협정", "우리나라와 무역협정에 서명했다.", major = true)
+            }
+
+            DiplomaticAction.TRANSIT_TREATY -> {
+                if (current < TRADE_ACCEPT) return false
+                transitTreaties += pair(playerId, target)
+                report(date, target, "상호 통행권", "우리나라와 상호 군사 통행권을 맺었다.", major = false)
+            }
+
+            DiplomaticAction.END_TRANSIT -> {
+                transitTreaties -= pair(playerId, target)
+                report(date, target, "통행권 종료", "우리나라와 맺었던 상호 군사 통행권이 종료됐다.", major = false)
             }
 
             DiplomaticAction.ALLIANCE -> {
@@ -493,13 +590,15 @@ internal class Diplomacy(
         return DiplomacySnapshot(
             playerId = playerId,
             organizations = organizationsOf(playerId),
+            membershipDecisions = organizations.values.map(::membershipDecision),
             partners =
                 notable.sortedByDescending { relations.getValue(it) }.map { id ->
                     BilateralSnapshot(
                         countryId = id,
                         relation = relations.getValue(id),
                         allied = allied(playerId, id),
-                        alliance = alliances[pair(playerId, id)],
+                        alliance = alliances[pair(playerId, id)] ?: organizationAlliances[pair(playerId, id)],
+                        transit = hasTransitAccess(playerId, id),
                         tradeAgreement = tradeAgreement(playerId, id),
                         sanctionedByUs = sanction(playerId, id),
                         sanctioningUs = sanction(id, playerId),

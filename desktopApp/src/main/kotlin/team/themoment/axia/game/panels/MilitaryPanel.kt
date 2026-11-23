@@ -9,6 +9,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -18,6 +22,8 @@ import team.themoment.axia.format.formatPopulation
 import team.themoment.axia.simulation.WorldSnapshot
 import team.themoment.axia.simulation.military.MilitaryAction
 import team.themoment.axia.simulation.military.Mobilization
+import team.themoment.axia.simulation.military.ReconstructionEffort
+import team.themoment.axia.simulation.military.TreatyRegion
 import team.themoment.axia.simulation.military.WarSnapshot
 import team.themoment.axia.simulation.text.josa
 import team.themoment.axia.simulation.world.Geography
@@ -38,6 +44,8 @@ fun MilitaryPanel(
     countryName: (String) -> String,
     onMobilize: (Mobilization) -> Unit,
     onAction: (String, MilitaryAction) -> Unit,
+    onReconstruction: (ReconstructionEffort) -> Unit,
+    onRegionTreaty: (String, String) -> Unit,
 ) {
     val military = world.military
     val forces = military.forces.getValue(playerId)
@@ -70,13 +78,28 @@ fun MilitaryPanel(
         military.aid.forEach { (id, until) -> StatRow(countryName(id), "${shortDate(until)}까지") }
     }
 
+    SectionTitle("전후 재건 예산")
+    val rebuilding = military.recovery
+    StatRow("남은 복구 수요", "GDP의 ${formatPercent(rebuilding.damage[playerId] ?: 0.0)}")
+    StatRow("이번 달 재건 지출 (연율)", "GDP의 ${formatPercent(rebuilding.reconstructionShares[playerId] ?: 0.0)}")
+    FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+        ReconstructionEffort.entries.forEach { effort ->
+            PaperTag(
+                "${effort.label} · ${formatPercent(effort.annualShare)}",
+                selected = effort == military.reconstructionEffort,
+                onClick = { onReconstruction(effort) },
+            )
+        }
+    }
+    Hint("교전이 끝나면 남은 피해만큼 매달 예산을 집행합니다. 복구를 앞당기면 귀환도 빨라집니다.")
+
     val ours = military.wars.filter { it.ceasefire == null && (playerId in it.sideA || playerId in it.sideB) }
     SectionTitle("우리나라의 전쟁")
     if (ours.isEmpty()) Hint("치르고 있는 전쟁이 없습니다.")
     ours.forEach { WarCard(it, countryName, playerId) }
 
     SectionTitle("군사 행위")
-    Hint("인접국, 관계가 -30 미만인 나라, 전쟁 중인 나라를 보여 줍니다. 선전포고는 인접국이거나 양쪽 모두 해안이 있어야 하고, 상대 동맹국이 참전하며 민주국가와의 관계가 나빠집니다.")
+    Hint("인접국, 관계가 -30 미만인 나라, 전쟁 중인 나라를 보여 줍니다. 양측 주전국이 진영을 대표해 휴전·평화협정을 제안합니다. 양측의 행정구역을 선택해 관할 이관을 제안할 수 있습니다. 마지막 행정구역은 이관할 수 없습니다.")
     val targets = world.militaryActions.entries.sortedBy { countryName(it.key) }
     val neighbors =
         Geography.default
@@ -91,12 +114,36 @@ fun MilitaryPanel(
                 Text(countryName(id), style = DossierType.title(13.sp), color = DossierColors.ink)
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     actions.forEach { action ->
+                        val claims =
+                            military.disputes.firstOrNull { dispute ->
+                                val holder = if (action == MilitaryAction.OFFER_TERRITORY) playerId else id
+                                dispute.controller == holder && dispute.treatyRegions.isNotEmpty() &&
+                                    dispute.claimants.containsAll(listOf(id, playerId))
+                            }
+                        val area =
+                            if (action == MilitaryAction.OFFER_TERRITORY ||
+                                action == MilitaryAction.REQUEST_TERRITORY
+                            ) {
+                                claims?.name
+                            } else {
+                                null
+                            }
+                        val actionLabel = if (area != null) "$area · ${action.label}" else action.label
                         PaperTag(
-                            "${action.label} · ${action.cost.roundToInt()}",
+                            "$actionLabel · ${action.cost.roundToInt()}",
                             enabled = politicalCapital >= action.cost,
                             onClick = { onAction(id, action) },
                         )
                     }
+                }
+                if (MilitaryAction.WITHDRAWAL_TREATY in actions) {
+                    RegionTreatyForm(
+                        target = id,
+                        ours = military.negotiableRegions[playerId].orEmpty(),
+                        theirs = military.negotiableRegions[id].orEmpty(),
+                        capital = politicalCapital,
+                        onSubmit = onRegionTreaty,
+                    )
                 }
             }
     }
@@ -107,6 +154,47 @@ fun MilitaryPanel(
         StatRow(countryName(it.countryId), "%.1f$nuclear".format(it.power))
     }
 }
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun RegionTreatyForm(
+    target: String,
+    ours: List<TreatyRegion>,
+    theirs: List<TreatyRegion>,
+    capital: Double,
+    onSubmit: (String, String) -> Unit,
+) {
+    if (ours.isEmpty() && theirs.isEmpty()) return
+    var opened by remember(target) { mutableStateOf(false) }
+    PaperTag(if (opened) "지역 협상 접기" else "행정구역 이관 협상", onClick = { opened = !opened })
+    if (!opened) return
+    var offer by remember(target) { mutableStateOf(ours.isNotEmpty()) }
+    val choices = if (offer) ours else theirs
+    var selected by remember(target, offer) { mutableStateOf<TreatyRegion?>(null) }
+    var page by remember(target, offer) { mutableStateOf(0) }
+    FlowRow(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+        PaperTag("우리 지역 양도", selected = offer, enabled = ours.isNotEmpty(), onClick = { offer = true })
+        PaperTag("상대 지역 요구", selected = !offer, enabled = theirs.isNotEmpty(), onClick = { offer = false })
+    }
+    val start = page.coerceAtMost((choices.size - 1).coerceAtLeast(0) / REGIONS_PER_PAGE) * REGIONS_PER_PAGE
+    FlowRow(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+        choices.drop(start).take(REGIONS_PER_PAGE).forEach { region ->
+            PaperTag(region.name, selected = region == selected, onClick = { selected = region })
+        }
+    }
+    if (choices.size > REGIONS_PER_PAGE) {
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+            PaperTag("이전", enabled = start > 0, onClick = { page-- })
+            PaperTag("다음", enabled = start + REGIONS_PER_PAGE < choices.size, onClick = { page++ })
+        }
+    }
+    selected?.takeIf { it in choices }?.let { region ->
+        val cost = if (offer) MilitaryAction.OFFER_TERRITORY.cost else MilitaryAction.REQUEST_TERRITORY.cost
+        PaperTag("${region.name} 이관 제안 · ${cost.roundToInt()}", enabled = capital >= cost, onClick = { onSubmit(target, region.id) })
+    }
+}
+
+private const val REGIONS_PER_PAGE = 8
 
 /** 전쟁 하나. 교전국, 지원국, 전선 통제, 피로도. */
 @Composable
@@ -129,6 +217,11 @@ internal fun WarCard(
             style = DossierType.number(11.sp),
             color = DossierColors.inkMuted,
         )
+        war.treaty?.let { treaty ->
+            val terms = treaty.territory?.let { "$it → ${countryName(requireNotNull(treaty.to))}" } ?: "상호 철수"
+            StatRow("평화협정 · ${shortDate(treaty.date)}", terms)
+        }
+        StatRow("협상 대표", "${countryName(war.sideA.first())} · ${countryName(war.sideB.first())}")
         StatRow("한쪽", war.sideA.joinToString(", ", transform = countryName))
         StatRow("다른 쪽", war.sideB.joinToString(", ", transform = countryName))
         if (war.supportA.isNotEmpty() || war.supportB.isNotEmpty()) {

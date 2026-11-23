@@ -63,13 +63,22 @@ data class Legislature(
         constituencyMean: Double,
         groupScores: Map<PopulationGroup, Double>,
         negotiatingWith: String?,
+        sponsor: String? = null,
     ): RollCall {
         val rows =
             groups.map { party ->
                 val interest = party.constituency?.let { groupScores.getValue(it) - constituencyMean } ?: 0.0
                 // 협의는 표결을 2주 늦춘다. 정책에 호의적인 지지 기반일수록 협의로 더 많은 표를 얻는다.
                 val concession = if (party.name == negotiatingWith) (10.0 + interest * 0.5).coerceIn(0.0, 20.0) else 0.0
-                val support = policyScore + party.role.backing + interest * 0.5
+                val backing =
+                    when {
+                        sponsor == null -> party.role.backing
+                        party.name == sponsor -> PartyRole.LEAD.backing
+                        party.role == PartyRole.OPPOSITION -> PartyRole.SUPPLY.backing
+                        party.role == PartyRole.OTHER -> 0.0
+                        else -> -party.role.backing
+                    }
+                val support = policyScore + backing + interest * 0.5
 
                 fun seatsWith(points: Double): Int = (party.votingSeats * points.coerceIn(0.0, 100.0) / 100).roundToInt()
                 val yes = seatsWith(support + concession)

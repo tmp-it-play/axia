@@ -7,6 +7,7 @@ import team.themoment.axia.simulation.nation.PopulationGroup
 import team.themoment.axia.simulation.people.Leadership
 import team.themoment.axia.simulation.people.LeadershipState
 import team.themoment.axia.simulation.people.PeopleRegistry
+import team.themoment.axia.simulation.people.retires
 import team.themoment.axia.simulation.text.josa
 import java.time.LocalDate
 import kotlin.math.PI
@@ -25,6 +26,8 @@ data class CountryPoliticsSnapshot(
     val legislature: Legislature?,
     val nextElection: LocalDate?,
     val lastElection: ElectionResult?,
+    val pendingBill: AiFiscalBill?,
+    val lastBill: AiFiscalBill?,
 )
 
 /** 세계에서 일어난 일 한 줄. */
@@ -55,6 +58,7 @@ internal class AiCountryPolitics(
     private var nextLegislative: LocalDate? = rules.legislature?.next
     private var nextExecutive: LocalDate? = rules.executive?.next
     private var lastElection: ElectionResult? = null
+    private val legislation = AiLegislation()
     private var monthsInOffice = 0
 
     /** 지지율이 돌아가는 기준. 시작 정부는 2024년 1월 여론조사, 새 정부는 50이다. */
@@ -70,6 +74,8 @@ internal class AiCountryPolitics(
 
     /** 쿠데타로 군부가 정권을 잡는다. 선거가 정지된다. */
     fun coup(date: LocalDate) {
+        rebelGovernment = null
+        legislation.dissolve()
         leadership.installJunta(date)
         juntaSince = date
         legislature = null
@@ -77,12 +83,31 @@ internal class AiCountryPolitics(
         nextExecutive = null
     }
 
+    fun installRebelGovernment(
+        rebels: String,
+        date: LocalDate,
+    ) {
+        leadership.installRebelGovernment(rebels, date)
+        rebelGovernment = rebels
+        juntaSince = null
+        legislature = null
+        nextLegislative = null
+        nextExecutive = null
+        legislation.dissolve()
+        monthsInOffice = 0
+        base = BASELINE
+        approval = BASELINE
+    }
+
     private var juntaSince: LocalDate? = null
+    private var rebelGovernment: String? = null
+    val hasInterimGovernment: Boolean get() = rebelGovernment != null || juntaSince != null
 
     fun advanceMonth(
         indicators: EconomyIndicators,
         date: LocalDate,
-    ): WorldNews? {
+        enact: (String, Double, Double) -> Unit,
+    ): List<WorldNews> {
         val departure = leadership.checkMortality(date, random)
         val start = initial ?: indicators.also { initial = it }
         monthsInOffice++
@@ -94,7 +119,10 @@ internal class AiCountryPolitics(
         val fatigue = -(monthsInOffice * FATIGUE_PER_MONTH).coerceAtMost(MAX_FATIGUE)
         val target = base + damping * (jobs + prices + growth + fatigue)
         approval = (approval + (target - approval) * SMOOTHING + random.nextGaussian() * APPROVAL_NOISE).coerceIn(5.0, 95.0)
-        return departure?.let { WorldNews(date, countryId, "지도자 교체", it, major = true) }
+        return listOfNotNull(
+            departure?.let { WorldNews(date, countryId, "지도자 교체", it, major = true) },
+            legislation.advance(date, countryId, government(), legislature, indicators, approval, enact),
+        )
     }
 
     /** 오늘 선거가 있으면 치르고 소식을 돌려준다. */
@@ -103,6 +131,7 @@ internal class AiCountryPolitics(
         val executiveDue = nextExecutive?.let { it <= date } == true
         if (!legislativeDue && !executiveDue) return emptyList()
         val before = government()
+        val billLapsed = legislativeDue && legislation.dissolve()
         var parties: List<PartyResult>? = null
         if (legislativeDue) {
             parties = electLegislature(date)
@@ -111,7 +140,7 @@ internal class AiCountryPolitics(
         val executive = if (executiveDue) electExecutive(date) else null
         if (executiveDue) nextExecutive = date.plusYears(requireNotNull(rules.executive).termYears.toLong())
         val after = government()
-        lastElection = ElectionResult(date, early = false, parties, executive, before, after, billLapsed = false)
+        lastElection = ElectionResult(date, early = false, parties, executive, before, after, billLapsed = billLapsed)
         val kind = if (executiveDue) "${rules.executive?.title} 선거" else "총선"
         val text =
             if (before != after) {
@@ -129,6 +158,7 @@ internal class AiCountryPolitics(
 
     private fun government(): String =
         when {
+            rebelGovernment != null -> "$rebelGovernment 과도정부 · ${leadership.current().leader.name}"
             juntaSince != null -> "군사평의회 · ${leadership.current().leader.name}"
             else -> leadership.governmentLabel(profile.initialGovernment, rules.system == GovernmentSystem.SEMI_PRESIDENTIAL)
         }
@@ -205,13 +235,15 @@ internal class AiCountryPolitics(
     fun snapshot(): CountryPoliticsSnapshot =
         CountryPoliticsSnapshot(
             countryId = countryId,
-            regime = profile.regime,
+            regime = if (hasInterimGovernment) Regime.CLOSED_AUTOCRACY else profile.regime,
             government = government(),
             leadership = leadership.current(),
             approval = approval,
             legislature = legislature,
             nextElection = listOfNotNull(nextLegislative, nextExecutive).minOrNull(),
             lastElection = lastElection,
+            pendingBill = legislation.pending,
+            lastBill = legislation.lastDecision,
         )
 
     private companion object {
@@ -235,7 +267,7 @@ internal class AiCountryPolitics(
 /** 플레이어 국가를 뺀 플레이 가능 국가의 정치. 국가 순서와 난수 순서가 고정돼 결정론을 지킨다. */
 internal class WorldPolitics(
     countryIds: List<String>,
-    people: PeopleRegistry,
+    private val people: PeopleRegistry,
     start: LocalDate,
     seed: Long,
 ) {
@@ -252,18 +284,72 @@ internal class WorldPolitics(
         }
     private val byId = countries.associateBy { it.countryId }
 
+    private data class InterimState(
+        val faction: String,
+        var leaderId: Int,
+        val legislation: AiLegislation = AiLegislation(),
+    )
+
+    private val interim = sortedMapOf<String, InterimState>()
+    private val interimRandom = Random(seed xor 0x40726cL)
+
+    fun installRebelGovernment(
+        country: String,
+        rebels: String,
+        date: LocalDate,
+    ) {
+        val existing = byId[country]
+        if (existing != null) {
+            existing.installRebelGovernment(rebels, date)
+        } else {
+            val leader = people.generate(country, "과도정부 수반", rebels, date)
+            interim[country] = InterimState(rebels, leader.id)
+        }
+    }
+
+    fun hasInterimGovernment(id: String): Boolean = id in interim || byId[id]?.hasInterimGovernment == true
+
     fun advanceMonth(
         indicators: Map<String, EconomyIndicators>,
         date: LocalDate,
-    ): List<WorldNews> = countries.mapNotNull { it.advanceMonth(indicators.getValue(it.countryId), date) }
+        enact: (String, Double, Double) -> Unit,
+    ): List<WorldNews> =
+        buildList {
+            countries.forEach { addAll(it.advanceMonth(indicators.getValue(it.countryId), date, enact)) }
+            interim.forEach { (id, state) ->
+                val leader = requireNotNull(people.get(state.leaderId))
+                if (leader.retires(date, interimRandom)) {
+                    val successor = people.generate(id, leader.title, state.faction, date)
+                    state.leaderId = successor.id
+                    add(WorldNews(date, id, state.faction, "${successor.name} 과도정부 수반 취임", major = true))
+                }
+                state.legislation.advance(date, id, state.faction, null, indicators.getValue(id), 50.0, enact)?.let(::add)
+            }
+        }
 
     fun holdElections(date: LocalDate): List<WorldNews> = countries.flatMap { it.holdElections(date) }
 
-    fun approval(countryId: String): Double? = byId[countryId]?.approval
+    fun approval(countryId: String): Double? = byId[countryId]?.approval ?: interim[countryId]?.let { 50.0 }
 
     fun country(countryId: String): AiCountryPolitics? = byId[countryId]
 
-    fun snapshot(): Map<String, CountryPoliticsSnapshot> = countries.associate { it.countryId to it.snapshot() }
+    fun snapshot(): Map<String, CountryPoliticsSnapshot> =
+        countries.associate { it.countryId to it.snapshot() } +
+            interim.mapValues { (id, state) ->
+                val leader = requireNotNull(people.get(state.leaderId))
+                CountryPoliticsSnapshot(
+                    id,
+                    Regime.CLOSED_AUTOCRACY,
+                    "${state.faction} 과도정부 · ${leader.name}",
+                    Leadership(leader, null, false),
+                    50.0,
+                    null,
+                    null,
+                    null,
+                    state.legislation.pending,
+                    state.legislation.lastDecision,
+                )
+            }
 }
 
 /** 국가 모듈과 정치 계산의 소식을 세계 소식으로 바꾼다. */

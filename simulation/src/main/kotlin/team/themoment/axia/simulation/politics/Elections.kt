@@ -36,6 +36,7 @@ data class ElectionResult(
     val governmentAfter: String,
     /** 의회 해산으로 폐기돼 초안으로 돌아간 재정안이 있었는지. */
     val billLapsed: Boolean,
+    val districts: List<DistrictResult> = emptyList(),
 ) {
     val governmentChanged: Boolean get() = governmentBefore != governmentAfter
 }
@@ -51,6 +52,7 @@ data class SeatProjection(
 internal data class LegislativeSeats(
     val direct: Map<String, Int>,
     val reserved: Map<String, Int> = emptyMap(),
+    val districts: List<DistrictResult> = emptyList(),
 ) {
     fun total(name: String): Int = direct.getValue(name) + reserved.getOrDefault(name, 0)
 }
@@ -59,6 +61,7 @@ internal data class LegislativeSeats(
 internal data class OpeningElection(
     val legislature: Legislature,
     val parties: List<PartyResult>,
+    val districts: List<DistrictResult>,
 )
 
 /**
@@ -80,10 +83,11 @@ internal object ElectionModel {
         regime: Regime,
         approval: Double,
         satisfaction: Map<PopulationGroup, Double>,
+        lastVote: Map<String, Double> = emptyMap(),
         noise: (ParliamentaryGroup) -> Double,
     ): Map<String, Double> {
         val totalSeats = groups.sumOf { it.directSeats }.toDouble()
-        val implied = groups.associate { it.name to (it.directSeats / totalSeats).pow(1.0 / system.seatExponent) }
+        val implied = groups.associate { it.name to (lastVote[it.name] ?: (it.directSeats / totalSeats).pow(1.0 / system.seatExponent)) }
         // 권위주의 체제의 집권 우위는 이미 현재 의석에 담겨 있다. 가점을 더하면 선거마다 누적되므로,
         // 대신 지지율, 불만, 무작위 변동이 덜 반영되게만 한다.
         val damping = if (regime.autocratic) AUTOCRATIC_DAMPING else 1.0
@@ -119,6 +123,7 @@ internal object ElectionModel {
     fun openingElection(
         rule: LegislativeElectionRule,
         regime: Regime,
+        electorate: DistrictElectorate? = null,
         noise: () -> Double,
     ): OpeningElection {
         val opening = requireNotNull(rule.openingContest)
@@ -126,7 +131,7 @@ internal object ElectionModel {
         val weights = opening.parties.associate { it.name to it.votes * exp(noise() * damping) }
         val total = weights.values.sum()
         val shares = weights.mapValues { it.value / total }
-        val seats = legislativeSeats(shares, rule)
+        val seats = legislativeSeats(shares, rule, electorate)
         val elected =
             opening.parties.mapNotNull { party ->
                 val count = seats.total(party.name)
@@ -149,22 +154,32 @@ internal object ElectionModel {
                 val role = roles[party.name] ?: if (party.other) PartyRole.OTHER else PartyRole.OPPOSITION
                 PartyResult(party.name, role, shares.getValue(party.name), null, seats.total(party.name))
             }
-        return OpeningElection(chamber.withGroups(governed), results)
+        return OpeningElection(chamber.withGroups(governed), results, seats.districts)
     }
 
     /** 일반 의석을 먼저 채우고, 유보석이 있는 의회는 정당이 얻은 일반 의석에 비례해 나머지를 배분한다. */
     fun legislativeSeats(
         shares: Map<String, Double>,
         rule: LegislativeElectionRule,
+        electorate: DistrictElectorate? = null,
     ): LegislativeSeats {
-        val direct = allocateSeats(shares, rule.electoralSystem, rule.seats - rule.reservedSeats)
-        if (rule.reservedSeats == 0) return LegislativeSeats(direct)
+        val openSeats = rule.seats - rule.reservedSeats
+        val districts = electorate?.elect(shares, openSeats, rule.electoralSystem, rule.constituencySeats).orEmpty()
+        val direct =
+            if (districts.isEmpty()) {
+                allocateSeats(shares, rule.electoralSystem, openSeats)
+            } else {
+                val winners = districts.flatMap { it.winners }.groupingBy { it }.eachCount()
+                val listSeats = openSeats - winners.values.sum()
+                allocateSeats(shares, ElectoralSystem.PROPORTIONAL, listSeats).mapValues { (name, count) -> count + (winners[name] ?: 0) }
+            }
+        if (rule.reservedSeats == 0) return LegislativeSeats(direct, districts = districts)
         val candidates = rule.openingContest?.parties.orEmpty()
         val independents = candidates.filter { it.other }.map { it.name }.toSet()
         val eligible = direct.filter { (name, seats) -> name !in independents && seats > 0 }
-        if (eligible.isEmpty()) return LegislativeSeats(direct)
+        if (eligible.isEmpty()) return LegislativeSeats(direct, districts = districts)
         val reserved = allocateSeats(eligible.mapValues { it.value.toDouble() }, ElectoralSystem.PROPORTIONAL, rule.reservedSeats)
-        return LegislativeSeats(direct, reserved)
+        return LegislativeSeats(direct, reserved, districts)
     }
 
     /** 최대잉여법. 의석 비중 ∝ 득표율^지수. */

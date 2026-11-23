@@ -10,6 +10,8 @@ import kotlin.math.ln
 import kotlin.math.sqrt
 import kotlin.random.Random
 
+internal enum class CurrencyNotice { PEG_ENDED, IMF_AVAILABLE, IMF_DISBURSED }
+
 /**
  * 모든 주권국의 거시경제. 매월 같은 모델로 갱신하고 지표를 기록한다.
  * [fiscalPolicies]에 없는 국가는 AI 재정 대응([AutomaticFiscalPolicy])을 쓴다.
@@ -18,8 +20,9 @@ class WorldEconomy internal constructor(
     data: EconomyData,
     centralBanks: CentralBankData,
     fiscalPolicies: Map<String, FiscalPolicy>,
-    playerCountryId: String?,
+    private val playerCountryId: String?,
     private val startMonth: YearMonth,
+    seed: Long,
 ) {
     internal val monetary = MonetarySystem(centralBanks, data.countries.values, playerCountryId)
     private val countries =
@@ -36,8 +39,24 @@ class WorldEconomy internal constructor(
                 )
             }
     private val countriesById = countries.associateBy(CountryEconomy::id)
+    private val companies = countries.associate { it.id to Companies(it.id, Random(seed xor it.id.hashCode().toLong())) }
+
+    fun renameCompany(
+        id: Int,
+        name: String,
+    ) {
+        companies[playerCountryId]?.rename(id, name)
+    }
+
+    internal fun setLegislatedFiscalTargets(
+        countryId: String,
+        revenue: Double,
+        spending: Double,
+    ) = country(countryId).setLegislatedFiscalTargets(revenue, spending)
+
     private val reserveCurrencyIssuer = countriesById.getValue(RESERVE_CURRENCY_ISSUER)
     private val trade = TradeNetwork(countries, data, startMonth)
+    internal val currencyNotices = mutableListOf<Pair<String, CurrencyNotice>>()
     private val histories = countries.associate { country -> country.id to EconomySeries.entries.associateWith { MonthlySeries() } }
 
     init {
@@ -50,7 +69,9 @@ class WorldEconomy internal constructor(
         random: Random,
         international: InternationalState,
         period: YearMonth,
+        imfMember: (String) -> Boolean,
     ): Map<String, DebtNotice> {
+        currencyNotices.clear()
         val dollarInflation = reserveCurrencyIssuer.inflation
         val external = trade.advanceMonth(international, period)
         monetary.decide(countriesById)
@@ -59,7 +80,35 @@ class WorldEconomy internal constructor(
         val euroExchange = countriesById.getValue(EURO_REFERENCE).realExchange
         val debtNotices = mutableMapOf<String, DebtNotice>()
         countries.forEach { country ->
+            val bank = monetary.banks.getValue(country.id)
+            val defendsPeg = bank.framework == MonetaryFramework.CURRENCY_PEG && country.id in ADJUSTABLE_PEGS
+            val payments = country.externalAccount
+            val hasFailed = payments.pegFailed
+            val wasEligible = payments.canRequest
+            val flows = external.getValue(country.id)
+            val pressure =
+                payments.closeMonth(
+                    flows,
+                    country.dollarGdp,
+                    country.debtRatio,
+                    country.inflation,
+                    imfMember(country.id),
+                    defendsPeg,
+                )
+            if (!hasFailed && payments.pegFailed) {
+                currencyNotices += country.id to CurrencyNotice.PEG_ENDED
+                bank.abandonPeg()
+                country.devalueAfterPeg()
+            }
             val conditions = monetary.conditions(country.id)
+            if (payments.canRequest) {
+                if (country.id != playerCountryId) {
+                    payments.request()
+                    currencyNotices += country.id to CurrencyNotice.IMF_DISBURSED
+                } else if (!wasEligible) {
+                    currencyNotices += country.id to CurrencyNotice.IMF_AVAILABLE
+                }
+            }
             val anchor =
                 when {
                     country.id == RESERVE_CURRENCY_ISSUER -> 0.0
@@ -73,8 +122,15 @@ class WorldEconomy internal constructor(
                     dollarInflation,
                     conditions,
                     external.getValue(country.id),
-                    ExchangeInputs(usRealRate, anchor, random.nextGaussian()),
+                    ExchangeInputs(usRealRate, anchor, random.nextGaussian(), pressure),
                 )?.let { debtNotices[country.id] = it }
+            companies.getValue(country.id).advance(
+                period,
+                country.sectorLines(),
+                country.dollarGdp,
+                country.policyRate - country.expectedInflation,
+                country::addSectorShock,
+            )
         }
         record()
         return debtNotices
@@ -92,10 +148,12 @@ class WorldEconomy internal constructor(
 
     internal fun country(id: String): CountryEconomy = countriesById.getValue(id)
 
+    fun indicators(): Map<String, EconomyIndicators> = countries.associate { it.id to it.indicators() }
+
     fun snapshot(date: LocalDate): EconomySnapshot =
         EconomySnapshot(
             date = date,
-            countries = countries.associate { it.id to it.indicators() },
+            countries = indicators(),
             history =
                 histories.mapValues { (_, series) ->
                     val dropped = series.getValue(EconomySeries.GDP).dropped
@@ -103,6 +161,9 @@ class WorldEconomy internal constructor(
                 },
             monetary = countries.associate { it.id to monetary.policy(it.id, it.expectedInflation) },
             sectors = countries.associate { it.id to it.sectorLines() },
+            externalAccounts = countries.associate { it.id to it.externalAccount.snapshot() },
+            companies = companies.mapValues { it.value.current },
+            companyClosures = companies.mapValues { it.value.closures },
         )
 
     private fun record() {
@@ -126,5 +187,8 @@ class WorldEconomy internal constructor(
 
         /** 유로에 고정한 나라가 따라가는 유로권 실질환율의 대표국. */
         const val EURO_REFERENCE = "DEU"
+
+        // 자국 통화를 방어하는 단일국 페그. 공동·타국 통화 사용국은 단독으로 페그를 포기할 수 없다.
+        val ADJUSTABLE_PEGS = setOf("SAU", "ARE", "QAT", "BHR", "OMN", "JOR", "DNK", "BGR", "BIH")
     }
 }

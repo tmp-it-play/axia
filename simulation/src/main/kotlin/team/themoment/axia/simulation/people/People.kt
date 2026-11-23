@@ -264,9 +264,7 @@ internal class LeadershipState(
         random: Random,
     ): String? {
         for (person in current().all()) {
-            val age = date.year - person.born
-            val yearly = (MORTALITY_BASE * kotlin.math.exp(MORTALITY_SLOPE * (age - 30))).coerceAtMost(0.5)
-            if (random.nextDouble() >= yearly / 12.0) continue
+            if (!person.retires(date, random)) continue
             val successor = registry.generate(countryId, person.title, person.party, date)
             if (person.id == headOfStateId) headOfStateId = successor.id else headOfGovernmentId = successor.id
             return "${person.title} ${person.name.josa("이", "가")} 건강 문제로 물러나고 ${successor.name.josa("이", "가")} 뒤를 이었다."
@@ -275,8 +273,19 @@ internal class LeadershipState(
     }
 
     /** 쿠데타로 군사평의회가 국가원수와 정부를 모두 장악한다. */
-    fun installJunta(date: LocalDate): Person {
-        val leader = registry.generate(countryId, JUNTA_TITLE, null, date)
+    fun installJunta(date: LocalDate): Person = installCouncil(JUNTA_TITLE, null, date)
+
+    fun installRebelGovernment(
+        rebels: String,
+        date: LocalDate,
+    ): Person = installCouncil("과도정부 수반", rebels, date)
+
+    private fun installCouncil(
+        title: String,
+        faction: String?,
+        date: LocalDate,
+    ): Person {
+        val leader = registry.generate(countryId, title, faction, date)
         headOfStateId = leader.id
         headOfGovernmentId = null
         return leader
@@ -306,7 +315,16 @@ internal class LeadershipState(
 
         /** 임기 제한이 없어도 세 번 연임한 지도자는 다음 선거 전에 당내에서 교체된다. */
         const val RETIREMENT_TERMS = 3
-        const val MORTALITY_BASE = 0.0005
-        const val MORTALITY_SLOPE = 0.085
     }
 }
+
+internal fun Person.retires(
+    date: LocalDate,
+    random: Random,
+): Boolean {
+    val yearly = (MORTALITY_BASE * kotlin.math.exp(MORTALITY_SLOPE * (date.year - born - 30))).coerceAtMost(0.5)
+    return random.nextDouble() < yearly / 12.0
+}
+
+private const val MORTALITY_BASE = 0.0005
+private const val MORTALITY_SLOPE = 0.085

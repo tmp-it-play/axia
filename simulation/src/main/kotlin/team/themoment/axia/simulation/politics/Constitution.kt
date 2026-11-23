@@ -37,11 +37,17 @@ data class UpperHouse(
     val otherSeats: Int get() = seats - governmentSeats - oppositionSeats
 
     /** 공통 지지 기반 [score]에서 예상한 찬성표. 하원과 같은 정부·야당 가점을 쓴다. */
-    fun forecast(score: Double): Int {
+    fun forecast(
+        score: Double,
+        oppositionBill: Boolean = false,
+    ): Int {
+        val governmentBacking = if (oppositionBill) PartyRole.OPPOSITION.backing else PartyRole.LEAD.backing
+        val oppositionBacking = if (oppositionBill) PartyRole.LEAD.backing else PartyRole.OPPOSITION.backing
+
         fun share(points: Double) = points.coerceIn(0.0, 100.0) / 100.0
         return (
-            governmentSeats * share(score + PartyRole.LEAD.backing) +
-                oppositionSeats * share(score + PartyRole.OPPOSITION.backing) +
+            governmentSeats * share(score + governmentBacking) +
+                oppositionSeats * share(score + oppositionBacking) +
                 otherSeats * share(score)
         ).roundToInt()
     }
@@ -122,8 +128,9 @@ internal object ConstitutionalReview {
     fun upperHouseCheck(
         house: UpperHouse,
         score: Double,
+        oppositionBill: Boolean = false,
     ): BillCheck {
-        val yes = house.forecast(score)
+        val yes = house.forecast(score, oppositionBill)
         val required = house.seats / 2 + 1
         val delay = if (house.power == ChamberPower.DELAY) UPPER_HOUSE_DELAY_DAYS else 0
         return BillCheck(house.name, yes >= required, "예상 찬성 $yes / 가결 ${required}표 · ${house.power.label}", delay)

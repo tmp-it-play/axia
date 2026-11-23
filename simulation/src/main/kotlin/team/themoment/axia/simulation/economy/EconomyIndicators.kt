@@ -58,4 +58,7 @@ data class EconomySnapshot(
     val monetary: Map<String, MonetaryPolicy>,
     /** 나라별 산업 부문 현황. */
     val sectors: Map<String, List<SectorLine>>,
+    val externalAccounts: Map<String, ExternalAccountSnapshot>,
+    val companies: Map<String, List<Company>>,
+    val companyClosures: Map<String, Int>,
 )

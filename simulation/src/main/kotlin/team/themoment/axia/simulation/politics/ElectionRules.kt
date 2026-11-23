@@ -72,10 +72,14 @@ data class LegislativeElectionRule(
     val earlyDissolution: Boolean,
     /** 정원 중 지역구 당선 정당에 비례해 따로 배분할 의석. */
     val reservedSeats: Int = 0,
+    /** 혼합제에서 지역 단위로 선출하는 정원. */
+    val constituencySeats: Int? = null,
     val openingContest: OpeningContest? = null,
 ) {
     init {
         require(termYears in 1..7 && seats > 0 && reservedSeats in 0 until seats)
+        require((electoralSystem == ElectoralSystem.MIXED) == (constituencySeats != null))
+        require(constituencySeats == null || constituencySeats in 1..(seats - reservedSeats))
     }
 }
 

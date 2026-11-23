@@ -258,9 +258,11 @@ internal class CentralBank(
     val setter: RateSetter,
     val estimated: Boolean,
     val unionId: String?,
-    val pegAnchor: String?,
+    pegAnchor: String?,
     val pegSpread: Double,
 ) {
+    var pegAnchor = pegAnchor
+        private set
     var framework = framework
         private set
     var independent = independent
@@ -307,6 +309,14 @@ internal class CentralBank(
         directedRate = null
         directiveMonths = 0
         credibilityGoal = maxOf(baseCredibility, INDEPENDENT_CREDIBILITY)
+    }
+
+    fun abandonPeg() {
+        check(framework == MonetaryFramework.CURRENCY_PEG)
+        framework = if (independent) MonetaryFramework.INFLATION_TARGETING else MonetaryFramework.GOVERNMENT_DIRECTED
+        pegAnchor = null
+        credibility *= 0.75
+        pendingShock += 0.01
     }
 
     fun recover() {
@@ -498,7 +508,7 @@ internal class MonetarySystem(
             neutralRealRate = setter.neutralRealRate,
             estimated = bank.estimated,
             unionBank = bank.unionId?.let { unions.getValue(it).name },
-            anchorCurrency = bank.unionId?.let { unions.getValue(it).currency } ?: pegCurrency[countryId],
+            anchorCurrency = bank.unionId?.let { unions.getValue(it).currency } ?: bank.pegAnchor?.let { pegCurrency[countryId] },
             directable = bank.countryId == playerCountryId && bank.framework == MonetaryFramework.GOVERNMENT_DIRECTED,
         )
     }

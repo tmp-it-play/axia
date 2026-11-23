@@ -59,6 +59,13 @@ class EconomyData private constructor(
 ) {
     fun country(id: String): InitialEconomy = countries.getValue(id)
 
+    internal fun mapInitial(transform: (InitialEconomy) -> InitialEconomy): EconomyData =
+        EconomyData(
+            countries.mapValues {
+                transform(it.value)
+            },
+        )
+
     companion object {
         private const val DEFAULT_DATA = "/world/economy.json"
         private val json = Json { ignoreUnknownKeys = false }

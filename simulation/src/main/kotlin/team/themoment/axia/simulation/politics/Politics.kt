@@ -7,6 +7,7 @@ import team.themoment.axia.simulation.country.CountryNews
 import team.themoment.axia.simulation.math.nextGaussian
 import team.themoment.axia.simulation.nation.BudgetItem
 import team.themoment.axia.simulation.nation.CountryPolicyItem
+import team.themoment.axia.simulation.nation.ElectoralRegion
 import team.themoment.axia.simulation.nation.GroupSnapshot
 import team.themoment.axia.simulation.nation.InstitutionItem
 import team.themoment.axia.simulation.nation.Opinion
@@ -45,6 +46,7 @@ data class BillSupport(
     val identityScores: Map<Identity, Double>,
     val constituency: Double,
     val executiveBacking: Double,
+    val oppositionBacking: Double,
     val fundingPenalty: Double,
     /** 견제 장치가 강한 나라에서 독립 기관을 정부 아래로 두려 할 때의 저항(사법부, 언론, 시장). */
     val institutionalResistance: Double,
@@ -61,7 +63,11 @@ data class BillSupport(
     val score: Double
         get() {
             val total =
-                (constituency + executiveBacking - fundingPenalty - institutionalResistance + organizationLobby).coerceIn(0.0, 100.0)
+                (constituency + executiveBacking + oppositionBacking - fundingPenalty - institutionalResistance + organizationLobby)
+                    .coerceIn(
+                        0.0,
+                        100.0,
+                    )
             return (total * 10).roundToInt() / 10.0
         }
 }
@@ -77,6 +83,8 @@ enum class BillStage(
     REVIEW("심의 중"),
     STALLED("정체 · 재심의"),
     FINAL_REVIEW("후속 심사"),
+    SIGNATURE("대통령 공포 대기"),
+    OVERRIDE("거부권 재의결"),
     PASSED("통과"),
     REJECTED("좌초"),
 }
@@ -93,6 +101,8 @@ data class FiscalBill(
     val blockedBy: String? = null,
     /** 지연 권한만 있는 기관이 부결해 시행이 늦춰졌는지. */
     val delayed: Boolean = false,
+    val sponsor: String? = null,
+    val vetoRequested: Boolean = false,
 )
 
 /** 다음 선거 일정과 조기 총선 가능 여부. */
@@ -150,16 +160,24 @@ internal class Politics(
     private var groups: List<GroupSnapshot> = emptyList()
     private lateinit var opinion: Opinion
     private var approval = 50.0
+    private var regions: List<ElectoralRegion> = emptyList()
+    private var lastDistricts: List<DistrictResult> = emptyList()
+    private var lastDistrictVote: Map<String, Double> = emptyMap()
     private val draft = linkedMapOf<PolicyItem, PolicyChange>()
     private var negotiatingWith: String? = null
     private var pending: FiscalBill? = null
     private var lastDecision: FiscalBill? = null
+    private var signatureNotice = false
+
+    fun takeSignatureNotice(): Boolean = signatureNotice.also { signatureNotice = false }
 
     private var legislature: Legislature? = profile.legislature
     private val government: String = profile.initialGovernment
 
     /** 쿠데타로 군사평의회가 들어선 날. 의회와 선거가 정지된다. */
     private var juntaSince: LocalDate? = null
+    private var rebelGovernment: String? = null
+    val hasInterimGovernment: Boolean get() = rebelGovernment != null || juntaSince != null
 
     private var nextLegislative: LocalDate? = rules.legislature?.next
     private var nextExecutive: LocalDate? = rules.executive?.next
@@ -186,11 +204,13 @@ internal class Politics(
         latest: List<GroupSnapshot>,
         latestOpinion: Opinion,
         latestApproval: Double,
+        electoralRegions: List<ElectoralRegion> = emptyList(),
     ) {
         groups = latest
         opinion = latestOpinion
         approval = latestApproval
-        pending = pending?.let { it.copy(support = assess(it.changes, it.support.rollCall?.negotiatingWith)) }
+        regions = electoralRegions
+        pending = pending?.let { it.copy(support = assess(it.changes, it.support.rollCall?.negotiatingWith, it.sponsor)) }
         projection = project()
     }
 
@@ -222,7 +242,7 @@ internal class Politics(
 
     fun reviseStalledBill() {
         val bill = pending ?: return
-        if (bill.stage != BillStage.STALLED) return
+        if (bill.stage != BillStage.STALLED || bill.sponsor != null) return
         bill.changes.associateByTo(draft) { it.item }
         negotiatingWith = bill.support.rollCall?.negotiatingWith
         pending = null
@@ -235,6 +255,32 @@ internal class Politics(
         val days = 21 + negotiationDays + (35 * profile.legislativeConstraints).roundToLong()
         pending = FiscalBill(changes, date, BillStage.REVIEW, date.plusDays(days), assess(changes, negotiatingWith))
         clearDraft()
+    }
+
+    /** 국회에서 올라온 야당 법안의 공포 기한까지 거부 의사를 설정한다. */
+    fun setOppositionVeto(veto: Boolean) {
+        val bill = pending ?: return
+        if (bill.stage == BillStage.SIGNATURE) pending = bill.copy(vetoRequested = veto)
+    }
+
+    private fun proposeOppositionBill(date: LocalDate) {
+        if (pending != null || draft.isNotEmpty() || date.monthValue % 3 != 0) return
+        val opposition = legislature?.groups?.filter { it.role == PartyRole.OPPOSITION && it.votingSeats > 0 }.orEmpty()
+        if (opposition.isEmpty()) return
+        val sponsor =
+            opposition.sortedByDescending { it.votingSeats }.let { parties ->
+                parties[Math.floorMod(date.year + date.monthValue / 3, minOf(3, parties.size))]
+            }
+        val topics = listOf(RegulationItem.LABOR, RegulationItem.ENVIRONMENT, RegulationItem.CIVIL_LIBERTIES)
+        val topic = topics[Math.floorMod(sponsor.name.hashCode() + date.year + date.monthValue / 3, topics.size)]
+        val from = regulations.target(topic)
+        val preferred = if (sponsor.constituency == PopulationGroup.CAPITALISTS) 0.25 else 0.85
+        val to = from + (preferred - from).coerceIn(-0.08, 0.08)
+        if (abs(to - from) < 0.005) return
+        val changes = listOf(PolicyChange(topic, from, to))
+        pending =
+            FiscalBill(changes, date, BillStage.REVIEW, date.plusDays(28), assess(changes, null, sponsor.name), sponsor = sponsor.name)
+        news += CountryNews(sponsor.name, "${topic.label} 조정안을 발의했다.", major = false)
     }
 
     private fun currentValue(item: PolicyItem): Double =
@@ -256,6 +302,7 @@ internal class Politics(
 
     /** 쿠데타 성공. 의회를 해산하고 선거를 무기한 정지하며, 이후 법안은 기관 심의(50점 이상 통과)로 처리한다. */
     fun coup(date: LocalDate) {
+        rebelGovernment = null
         dissolveForElection()
         val leader = leadership.installJunta(date)
         juntaSince = date
@@ -264,6 +311,25 @@ internal class Politics(
         nextExecutive = null
         projection = null
         news += CountryNews("군부", "군부가 정권을 장악하고 의회를 해산했다. ${leader.name.josa("이", "가")} 국가재건평의회 의장에 올랐다.", major = true)
+    }
+
+    fun installRebelGovernment(
+        rebels: String,
+        date: LocalDate,
+    ) {
+        dissolveForElection()
+        val leader = leadership.installRebelGovernment(rebels, date)
+        rebelGovernment = rebels
+        juntaSince = null
+        legislature = null
+        nextLegislative = null
+        nextExecutive = null
+        earlyCalled = false
+        newParties.clear()
+        cases.clear()
+        projection = null
+        newGovernment()
+        news += CountryNews(rebels, "과도정부가 출범했다. ${leader.name.josa("이", "가")} 정부 수반이 되고 의회와 선거는 정지됐다.", major = true)
     }
 
     /** 조기 해산이 가능한 나라에서 직전 선거 후 1년이 지났고 정기 선거가 6개월 넘게 남았으면 6주 뒤 총선을 치른다. */
@@ -299,17 +365,27 @@ internal class Politics(
         }
         val executive = if (executiveDue) electExecutive(date) else null
         if (executiveDue) nextExecutive = date.plusYears(requireNotNull(rules.executive).termYears.toLong())
-        lastElection = ElectionResult(date, wasEarly && legislativeDue, parties, executive, before, snapshotGovernment(), lapsed)
+        lastElection =
+            ElectionResult(
+                date,
+                wasEarly && legislativeDue,
+                parties,
+                executive,
+                before,
+                snapshotGovernment(),
+                lapsed,
+                if (legislativeDue) lastDistricts else emptyList(),
+            )
         if (lastElection?.governmentChanged == true) newGovernment()
         projection = project()
-        pending = pending?.let { it.copy(support = assess(it.changes, it.support.rollCall?.negotiatingWith)) }
+        pending = pending?.let { it.copy(support = assess(it.changes, it.support.rollCall?.negotiatingWith, it.sponsor)) }
         return true
     }
 
     /** 의회 해산으로 심의 중인 재정안은 폐기되고, 같은 내용이 초안으로 돌아간다. */
     private fun dissolveForElection(): Boolean {
         val bill = pending ?: return false
-        bill.changes.associateByTo(draft) { it.item }
+        if (bill.sponsor == null) bill.changes.associateByTo(draft) { it.item }
         negotiatingWith = null
         pending = null
         return true
@@ -365,11 +441,16 @@ internal class Politics(
 
     private fun provisionalGroups(): List<ParliamentaryGroup> = newParties.map { ParliamentaryGroup(it.name, 1, PartyRole.OPPOSITION) }
 
+    private fun districtElectorate(): DistrictElectorate =
+        DistrictElectorate(regions, legislature?.groups.orEmpty().associate { it.name to it.role }, approval)
+
     private fun electLegislature(date: LocalDate): List<PartyResult> {
         val rule = requireNotNull(rules.legislature)
         val chamber = legislature
         if (chamber == null) {
-            val result = ElectionModel.openingElection(rule, profile.regime) { random.nextGaussian() * VOTE_NOISE }
+            val result = ElectionModel.openingElection(rule, profile.regime, districtElectorate()) { random.nextGaussian() * VOTE_NOISE }
+            lastDistricts = result.districts
+            lastDistrictVote = result.parties.associate { it.name to it.voteShare }
             legislature = result.legislature
             val lead = result.legislature.groups.firstOrNull { it.role == PartyRole.LEAD }
             if (lead != null) {
@@ -379,7 +460,9 @@ internal class Politics(
             return result.parties
         }
         val shares = withNewParties(voteShares(chamber.groups) { random.nextGaussian() * VOTE_NOISE })
-        val seats = ElectionModel.legislativeSeats(shares, rule)
+        val seats = ElectionModel.legislativeSeats(shares, rule, districtElectorate())
+        lastDistricts = seats.districts
+        lastDistrictVote = if (lastDistricts.isEmpty()) emptyMap() else shares
         val contenders = chamber.groups + provisionalGroups()
         val previousRoles = contenders.associate { it.name to it.role }
         newParties.clear()
@@ -448,6 +531,7 @@ internal class Politics(
             regime = profile.regime,
             approval = approval,
             satisfaction = groups.associate { it.group to it.satisfaction },
+            lastVote = lastDistrictVote,
             noise = noise,
         )
 
@@ -456,11 +540,11 @@ internal class Politics(
         if (groups.isEmpty() || nextLegislative == null) return null
         val chamber = legislature
         if (chamber == null) {
-            val result = ElectionModel.openingElection(rule, profile.regime) { 0.0 }
+            val result = ElectionModel.openingElection(rule, profile.regime, districtElectorate()) { 0.0 }
             return result.parties.map { SeatProjection(it.name, null, it.seatsAfter, it.voteShare) }
         }
         val shares = withNewParties(voteShares(chamber.groups) { 0.0 })
-        val seats = ElectionModel.legislativeSeats(shares, rule)
+        val seats = ElectionModel.legislativeSeats(shares, rule, districtElectorate())
         return (chamber.groups + provisionalGroups()).map {
             val current = chamber.groups.firstOrNull { group -> group.name == it.name }?.seats ?: 0
             SeatProjection(it.name, current, seats.total(it.name), shares.getValue(it.name))
@@ -475,11 +559,18 @@ internal class Politics(
         ruleOnCases(date)
         val bill = pending ?: return false
         if (date < bill.decisionDate) return false
+        if (bill.stage == BillStage.SIGNATURE) {
+            if (!bill.vetoRequested) return pass(bill, date)
+            pending = bill.copy(stage = BillStage.OVERRIDE, decisionDate = date.plusDays(14))
+            news += CountryNews("대통령", "${bill.sponsor} 법안의 재의를 요구했다.", major = true)
+            return false
+        }
+        if (bill.stage == BillStage.OVERRIDE) return overrideVote(bill, date)
         if (bill.stage == BillStage.FINAL_REVIEW) return finalReview(bill, date)
         val support = bill.support
         val voted = support.rollCall?.passes ?: (support.score >= 50.0)
         // 표결에서 졌어도 국가별 제도(예: 프랑스 49조 3항)로 강행할 수 있다.
-        val forced = if (voted) null else module.forceThrough(review(bill.changes, support))
+        val forced = if (voted || bill.sponsor != null) null else module.forceThrough(review(bill.changes, support))
         forced?.let { news += CountryNews(it, "정부가 ${it.josa("으로", "로")} 표결 없이 법안을 채택했다.", major = true) }
         val passes = voted || forced != null
         val close = support.rollCall?.close ?: (support.score >= 40.0)
@@ -490,7 +581,7 @@ internal class Politics(
             }
 
             passes -> {
-                return pass(bill, date)
+                return submitForSignature(bill, date)
             }
 
             close && bill.stage == BillStage.REVIEW -> {
@@ -523,7 +614,40 @@ internal class Politics(
             news += CountryNews(failed.first().body, "${failed.first().body.josa("이", "가")} 법안을 부결해 시행이 ${delay}일 늦춰졌다.", major = false)
             return false
         }
-        return pass(bill, date)
+        return submitForSignature(bill, date)
+    }
+
+    private fun submitForSignature(
+        bill: FiscalBill,
+        date: LocalDate,
+    ): Boolean {
+        if (bill.sponsor == null || rules.system != GovernmentSystem.PRESIDENTIAL || profile.id in setOf("IDN", "IRN")) {
+            return pass(bill, date)
+        }
+        signatureNotice = true
+        pending = bill.copy(stage = BillStage.SIGNATURE, decisionDate = date.plusDays(14))
+        news += CountryNews("의회", "${bill.sponsor} 법안이 대통령에게 이송됐다. 14일 안에 재의를 요구할 수 있다.", major = true)
+        return false
+    }
+
+    private fun overrideVote(
+        bill: FiscalBill,
+        date: LocalDate,
+    ): Boolean {
+        val chamber = requireNotNull(legislature)
+
+        // 출석은 표결권 의석 전원으로 간주한다. 대만은 행정원의 재의 요구를 대통령 결정으로 단순화한다.
+        fun required(seats: Int): Int = if (profile.id in setOf("BRA", "TUR", "TWN")) seats / 2 + 1 else (2 * seats + 2) / 3
+        val vote = requireNotNull(bill.support.rollCall)
+        val house = constitution.upperHouse?.takeIf { it.power == ChamberPower.VETO }
+        val upperPasses = house == null || house.forecast(bill.support.score, oppositionBill = true) >= required(house.seats)
+        if (vote.yes >= required(chamber.votingSeats) && upperPasses) {
+            news += CountryNews(chamber.name, "재의결로 대통령 거부권을 넘었다.", major = true)
+            return pass(bill, date)
+        }
+        pending = null
+        lastDecision = bill.copy(stage = BillStage.REJECTED, decisionDate = date, blockedBy = "대통령 거부권 · 재의결 미달")
+        return false
     }
 
     private fun pass(
@@ -579,6 +703,7 @@ internal class Politics(
      * 정부가 과반을 잃고 지지율이 낮으면 불신임안이 통과해 선거 없이 정부가 다시 구성된다.
      */
     fun monthlyReview(date: LocalDate) {
+        proposeOppositionBill(date)
         leadership.checkMortality(date, random)?.let { news += CountryNews("정부", it, major = true) }
         considerNewParties(date)
         if (!constitution.noConfidence) return
@@ -634,13 +759,14 @@ internal class Politics(
         if (groupsNow != chamber.groups) {
             legislature = chamber.withGroups(groupsNow)
             projection = project()
-            pending = pending?.let { it.copy(support = assess(it.changes, it.support.rollCall?.negotiatingWith)) }
+            pending = pending?.let { it.copy(support = assess(it.changes, it.support.rollCall?.negotiatingWith, it.sponsor)) }
         }
     }
 
     /** 지금 정부 표기. 지도자나 군사평의회가 바뀌면 함께 바뀐다. */
     private fun snapshotGovernment(): String =
         when {
+            rebelGovernment != null -> "$rebelGovernment 과도정부 · ${leadership.current().leader.name}"
             juntaSince != null -> "군사평의회 · ${leadership.current().leader.name}"
             else -> leadership.governmentLabel(government, rules.system == GovernmentSystem.SEMI_PRESIDENTIAL)
         }
@@ -662,6 +788,7 @@ internal class Politics(
             profile = profile,
             reviewBody =
                 when {
+                    rebelGovernment != null -> "과도정부 평의회"
                     juntaSince != null -> "국가재건평의회"
                     rules.legislature?.openingContest != null -> legislature?.name ?: profile.reviewBody
                     else -> profile.reviewBody
@@ -676,7 +803,12 @@ internal class Politics(
                     executiveTitle = rules.executive?.title,
                     earlyCalled = earlyCalled,
                     canCallEarly = canCallEarlyElection(date),
-                    suspended = if (juntaSince != null) "군사정권 아래 선거 정지" else rules.suspended,
+                    suspended =
+                        when {
+                            rebelGovernment != null -> "과도정부 아래 선거 정지"
+                            juntaSince != null -> "군사정권 아래 선거 정지"
+                            else -> rules.suspended
+                        },
                 ),
             projection = projection,
             lastElection = lastElection,
@@ -692,6 +824,7 @@ internal class Politics(
     private fun assess(
         changes: Collection<PolicyChange>,
         partner: String?,
+        sponsor: String? = null,
     ): BillSupport {
         val scores =
             groups.associate { state ->
@@ -726,7 +859,9 @@ internal class Politics(
                     is InstitutionItem, is RegulationItem -> 0.0
                 }
             }
-        val executiveBacking = 4.0 + 12.0 * (1.0 - profile.legislativeConstraints)
+        val executiveBacking = if (sponsor != null) 0.0 else 4.0 + 12.0 * (1.0 - profile.legislativeConstraints)
+        // 정부에 대한 낮은 지지율은 야당 발의 안건에는 반대 방향의 정치 동원 효과를 낸다.
+        val oppositionBacking = if (sponsor == null) 0.0 else 1.2 * (50.0 - approval)
         val fundingPenalty = addedDeficit.coerceAtLeast(0.0) * 180.0
         val institutionalResistance =
             changes.sumOf { change ->
@@ -751,32 +886,34 @@ internal class Politics(
                 }
             }
         val lobby = positions.sumOf { it.points }
-        val net = constituency + executiveBacking - fundingPenalty - institutionalResistance + lobby
-        val rollCall = legislature?.forecast(net, constituency, scores, partner)
+        val net = constituency + executiveBacking + oppositionBacking - fundingPenalty - institutionalResistance + lobby
+        val rollCall = legislature?.forecast(net, constituency, scores, partner, sponsor)
         val base =
             BillSupport(
                 groupScores = scores,
                 identityScores = identityScores,
                 constituency = constituency,
                 executiveBacking = executiveBacking,
+                oppositionBacking = oppositionBacking,
                 fundingPenalty = fundingPenalty,
                 institutionalResistance = institutionalResistance,
                 organizationPositions = positions,
                 rollCall = rollCall,
             )
         val withDeficit = base.copy(addedDeficit = addedDeficit)
-        return withDeficit.copy(checks = checks(changes.toList(), withDeficit))
+        return withDeficit.copy(checks = checks(changes.toList(), withDeficit, sponsor != null))
     }
 
     private fun review(
         changes: List<PolicyChange>,
         support: BillSupport,
+        oppositionBill: Boolean = false,
     ): BillReview {
         val house = constitution.upperHouse
         return BillReview(
             changes = changes,
             score = support.score,
-            upperHouseYes = house?.forecast(support.score),
+            upperHouseYes = house?.forecast(support.score, oppositionBill),
             upperHouseSeats = house?.seats,
             lowerHouseYes = support.rollCall?.yes,
             lowerHouseSeats = legislature?.votingSeats,
@@ -788,11 +925,13 @@ internal class Politics(
     private fun checks(
         changes: List<PolicyChange>,
         support: BillSupport,
+        oppositionBill: Boolean,
     ): List<BillCheck> {
+        if (rebelGovernment != null || juntaSince != null) return emptyList()
         val house = constitution.upperHouse
-        val upper = house?.let { ConstitutionalReview.upperHouseCheck(it, support.score) }
+        val upper = house?.let { ConstitutionalReview.upperHouseCheck(it, support.score, oppositionBill) }
         val veto = constitution.presidentialVeto?.let { ConstitutionalReview.vetoCheck(it, legislature, support) }
-        val special = module.billChecks(review(changes, support))
+        val special = module.billChecks(review(changes, support, oppositionBill))
         // 미국처럼 국가 모듈이 상원 규칙을 직접 판정하면 공통 상원 판정은 뺀다.
         val replacesUpper = special.any { it.body.startsWith("상원") }
         return listOfNotNull(upper.takeUnless { replacesUpper }, veto) + special
