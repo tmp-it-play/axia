@@ -368,8 +368,8 @@ internal class Politics(
         val rule = requireNotNull(rules.legislature)
         val shares = withNewParties(voteShares(chamber.groups) { random.nextGaussian() * VOTE_NOISE })
         val seats = ElectionModel.allocateSeats(shares, rule.electoralSystem, rule.seats)
-        val previousRoles = chamber.groups.associate { it.name to it.role }
         val contenders = chamber.groups + provisionalGroups()
+        val previousRoles = contenders.associate { it.name to it.role }
         newParties.clear()
         val reseated = chamber.withGroups(ElectionModel.reseat(contenders, seats))
         val governed =
