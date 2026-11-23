@@ -20,6 +20,8 @@ internal data class CommodityBaseline(
     val demand: Double,
     val productionReported: Boolean,
     val harvest: GrainHarvest?,
+    /** FAO 수급표에 있는 기준 연도의 곡물 국내 공급량. 원유와 미수록 국가는 null이다. */
+    val domesticSupplyTonnes: Double?,
 )
 
 /** 이번 달 생산 능력과 수요의 기준 대비 배율. */
@@ -53,6 +55,7 @@ data class CommodityQuote(
     val shipments: List<CommodityShipment>,
     /** 기준 연도에 별도 생산 통계가 없어 모형에서 생산을 배정하지 않은 국가. */
     val unreportedProduction: Set<String>,
+    val cerealDomesticSupplyTonnes: Map<String, Double>,
     /** 월초에 정산한 직전 달. 시작 재고 스냅숏에는 결산이 없다. */
     val period: YearMonth?,
 )
@@ -111,6 +114,7 @@ internal class CommodityMarket(
             DoubleArray(count) { baseline[it].demand * reserveMonths + (harvest?.stock(it, startMonth.month.minus(1)) ?: 0.0) }
         private val history = ArrayDeque(List(12) { BASE_PRICE * seasonalPrice(startMonth.month.plus(it.toLong())) })
         private val unreported = ids.indices.filter { !baseline[it].productionReported }.mapTo(mutableSetOf()) { ids[it] }
+        private val domesticSupply = ids.indices.mapNotNull { i -> baseline[i].domesticSupplyTonnes?.let { ids[i] to it } }.toMap()
         var quote =
             CommodityQuote(
                 BASE_PRICE,
@@ -120,6 +124,7 @@ internal class CommodityMarket(
                 },
                 emptyList(),
                 unreported,
+                domesticSupply,
                 period = null,
             )
             private set
@@ -228,6 +233,7 @@ internal class CommodityMarket(
                     balances,
                     shipments.map { (route, quantity) -> CommodityShipment(ids[route / count], ids[route % count], quantity) },
                     unreported,
+                    domesticSupply,
                     period,
                 )
         }

@@ -9,6 +9,7 @@ import kotlin.math.pow
 private data class CommodityRecord(
     val id: String,
     val cerealTonnes: Double?,
+    val cerealDomesticSupplyTonnes: Double?,
     val crudeBarrels: Double?,
     val oilDemandWeight: Double,
 )
@@ -30,6 +31,11 @@ internal class CommodityFundamentals(
     init {
         val observations = records
         require(initial.map { it.id }.toSet() == observations.keys) { "Commodity and economy country IDs must match" }
+        val withCerealBalance = initial.filter { observations.getValue(it.id).cerealDomesticSupplyTonnes != null }
+        require(withCerealBalance.isNotEmpty())
+        val cerealPerPerson =
+            withCerealBalance.sumOf { requireNotNull(observations.getValue(it.id).cerealDomesticSupplyTonnes) } /
+                withCerealBalance.sumOf { it.population }
         // 자료가 없는 나라에는 별도 국내 생산을 배정하지 않고 수요·재고·수입은 계산한다.
         baseline =
             Commodity.entries.associateWith { commodity ->
@@ -44,7 +50,7 @@ internal class CommodityFundamentals(
                 val demandWeights =
                     initial.map {
                         when (commodity) {
-                            Commodity.GRAIN -> it.population
+                            Commodity.GRAIN -> observations.getValue(it.id).cerealDomesticSupplyTonnes ?: it.population * cerealPerPerson
                             Commodity.CRUDE_OIL -> observations.getValue(it.id).oilDemandWeight
                         }
                     }
@@ -57,6 +63,8 @@ internal class CommodityFundamentals(
                         totalSupply * (demandWeights[i] / totalWeight),
                         productionReported = production[i] != null,
                         harvest = if (commodity == Commodity.GRAIN) GrainHarvest.forCountry(initial[i].id) else null,
+                        domesticSupplyTonnes =
+                            if (commodity == Commodity.GRAIN) observations.getValue(initial[i].id).cerealDomesticSupplyTonnes else null,
                     )
                 }
             }
@@ -113,9 +121,8 @@ internal class CommodityFundamentals(
             require(file.baseYear == 2023)
             require(
                 file.countries.all { row ->
-                    (row.cerealTonnes == null || (row.cerealTonnes.isFinite() && row.cerealTonnes >= 0.0)) &&
-                        (row.crudeBarrels == null || (row.crudeBarrels.isFinite() && row.crudeBarrels >= 0.0)) &&
-                        row.oilDemandWeight.isFinite() && row.oilDemandWeight >= 0.0
+                    listOfNotNull(row.cerealTonnes, row.cerealDomesticSupplyTonnes, row.crudeBarrels, row.oilDemandWeight)
+                        .all { it.isFinite() && it >= 0.0 }
                 },
             )
             file.countries.associateBy { it.id }.also { require(it.size == file.countries.size) { "Duplicate commodity country ID" } }

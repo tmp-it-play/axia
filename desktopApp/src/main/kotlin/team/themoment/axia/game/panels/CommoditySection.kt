@@ -42,6 +42,15 @@ internal fun CommoditySection(
         }
     }
     StatRow("국제 가격지수 (시작 = 100)", String.format(Locale.KOREA, "%.1f", quote.priceIndex))
+    if (selected == Commodity.GRAIN) {
+        val domesticSupply = quote.cerealDomesticSupplyTonnes[countryId]
+        if (domesticSupply != null) {
+            StatRow("FAO 곡물 국내 공급 (2023년)", quantity(domesticSupply, "톤"))
+            Hint("식용·사료·가공 등 전체 용도를 포함한 연간 추계입니다. 시작 수요는 이 공급 비중을 게임의 세계 생산량에 맞춰 배분합니다.")
+        } else {
+            Hint("2023년 FAO 곡물 국내 공급 자료가 없어 수록국의 평균 1인당 공급량과 이 나라 인구로 시작 수요를 추정합니다.")
+        }
+    }
     val period = quote.period
     if (period == null) {
         StatRow("시작 재고", quantity(balance.openingStock, selected.unit))
