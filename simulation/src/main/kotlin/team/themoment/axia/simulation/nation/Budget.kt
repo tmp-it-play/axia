@@ -80,7 +80,7 @@ data class SpendingLine(
  */
 internal class PlayerBudget(
     initial: InitialEconomy,
-    private val housingPolicyCost: () -> Double,
+    private val countryPolicyCost: () -> Double,
 ) : FiscalPolicy {
     private val budget = initial.budget
     private val initialRates: Map<TaxKind, Double> =
@@ -121,8 +121,8 @@ internal class PlayerBudget(
     var regionalSpending = 0.0
     var organizationSubsidies = 0.0
 
-    /** 이번 달 예산에 반영된 주택 정책 지출의 기준 대비 변화(경기 보정 전). */
-    var housingSpendingChange = 0.0
+    /** 이번 달 예산에 반영된 국가별 정책 지출의 기준 대비 변화(경기 보정 전). */
+    var countrySpendingChange = 0.0
         private set
 
     /** 대외 원조(경제 원조와 군사 지원, GDP 대비 연간). */
@@ -181,11 +181,11 @@ internal class PlayerBudget(
         consumptionLagged += (rates.getValue(TaxKind.CONSUMPTION) - consumptionLagged) / PRICE_PASS_THROUGH_MONTHS
 
         updateRevenues(outputGap)
-        housingSpendingChange = housingPolicyCost()
+        countrySpendingChange = countryPolicyCost()
         return FiscalShares(
             revenue = revenues.values.sum() + otherRevenue,
             primarySpending =
-                levels.values.sum() + organizationSubsidies + regionalSpending + foreignAid + mobilizationCost + housingSpendingChange,
+                levels.values.sum() + organizationSubsidies + regionalSpending + foreignAid + mobilizationCost + countrySpendingChange,
         )
     }
 

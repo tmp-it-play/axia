@@ -80,7 +80,13 @@ fun SocietyPanel(nation: NationSnapshot) {
                     )
                 }
                 if (expanded == group.group) {
-                    Column(Modifier.padding(start = 8.dp, top = 4.dp)) { FactorBars(group.factors) }
+                    Column(Modifier.padding(start = 8.dp, top = 4.dp)) {
+                        if (group.group != PopulationGroup.RETIREES) {
+                            val direction = if (group.netJobMoves < 0.0) "순유출" else "순유입"
+                            StatRow("이번 달 직업 이동", "${formatPopulation(kotlin.math.abs(group.netJobMoves))} $direction")
+                        }
+                        FactorBars(group.factors)
+                    }
                 }
             }
         }
@@ -100,6 +106,7 @@ private fun IdentitySection(nation: NationSnapshot) {
                 SatisfactionRow("${identity.identity.label} ${formatPercent(identity.memberShare)}", identity.satisfaction)
                 if (expanded == identity.identity) {
                     Column(Modifier.padding(start = 8.dp, top = 4.dp)) {
+                        StatRow("시작 대비 소속률", formatPoints(100.0 * (identity.memberShare - identity.initialShare)) + "%p")
                         ContributionBars(
                             contributions =
                                 listOf(

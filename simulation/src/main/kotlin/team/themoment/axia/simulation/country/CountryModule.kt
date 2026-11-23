@@ -14,6 +14,8 @@ import team.themoment.axia.simulation.country.rus.RussiaModule
 import team.themoment.axia.simulation.country.twn.TaiwanModule
 import team.themoment.axia.simulation.country.ukr.UkraineModule
 import team.themoment.axia.simulation.country.usa.UnitedStatesModule
+import team.themoment.axia.simulation.economy.Commodity
+import team.themoment.axia.simulation.economy.CommodityQuote
 import team.themoment.axia.simulation.economy.Sector
 import team.themoment.axia.simulation.nation.CountryPolicyItem
 import team.themoment.axia.simulation.politics.PolicyChange
@@ -35,6 +37,9 @@ interface CountryModule {
 
     /** 준공된 주택 공급으로 낮아지는 균형 집값의 로그 변화량(시작 대비). */
     val housingSupply: Double get() = 0.0
+
+    /** 현재 집행 계획이 다음 월 결산에 반영할 변동 지출의 시작 정책 대비 연율 GDP 비중. */
+    val executionSpendingChange: Double get() = 0.0
 
     /** 최근 시장 상황에서 정책 강도 한 단위가 늘릴 것으로 예상되는 연간 지출(GDP 대비). */
     fun estimatedSpendingPerUnit(item: CountryPolicyItem): Double = item.spendingPerUnit
@@ -87,7 +92,7 @@ object CountryModules {
             IndiaModule.ID,
             NorthKoreaModule.ID,
             BrazilModule.ID,
-        ) + HousingModule.countryIds
+        ) + HousingModule.countryIds + NationalProgramModule.countryIds
 
     fun create(
         countryId: String,
@@ -110,6 +115,7 @@ object CountryModules {
             NorthKoreaModule.ID -> NorthKoreaModule(random)
             BrazilModule.ID -> BrazilModule()
             in HousingModule.countryIds -> HousingModule.create(countryId)
+            in NationalProgramModule.countryIds -> NationalProgramModule.create(countryId)
             else -> DefaultCountryModule(countryId)
         }
 }
@@ -153,6 +159,8 @@ data class CountryMonthContext(
     val defenseChange: Double,
     /** 플레이어 국가와 다른 나라의 관계(-100~100). 외교 시스템이 채운다. */
     val relations: (String) -> Double,
+    /** 직전 달 상품 시장 결산. */
+    val commodities: Map<Commodity, CommodityQuote>,
 )
 
 data class CountryNews(

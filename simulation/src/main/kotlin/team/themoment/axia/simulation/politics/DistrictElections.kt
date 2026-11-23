@@ -58,16 +58,18 @@ internal class DistrictElectorate(
         }
     }
 
-    /** SplitMix64에서 얻은 고정 분위수. 월간 전망을 계산해도 게임 난수 상태는 변하지 않는다. */
-    private fun localAffinity(
-        region: String,
-        district: Int,
-        party: String,
-    ): Double {
-        var bits = (region.hashCode().toLong() * 0x1f1f1f1f + district) * 0x369dea0f + party.hashCode()
-        bits = (bits xor (bits ushr 30)) * -4658895280553007687L
-        bits = (bits xor (bits ushr 27)) * -7723592293110705685L
-        val bucket = (bits xor (bits ushr 31)) ushr 12
-        return (bucket + 0.5) / 4503599627370496.0
+    companion object {
+        /** SplitMix64에서 얻은 고정 분위수. 월간 전망을 계산해도 게임 난수 상태는 변하지 않는다. */
+        internal fun localAffinity(
+            region: String,
+            district: Int,
+            party: String,
+        ): Double {
+            var bits = (region.hashCode().toLong() * 0x1f1f1f1f + district) * 0x369dea0f + party.hashCode()
+            bits = (bits xor (bits ushr 30)) * -4658895280553007687L
+            bits = (bits xor (bits ushr 27)) * -7723592293110705685L
+            val bucket = (bits xor (bits ushr 31)) ushr 12
+            return (bucket + 0.5) / 4503599627370496.0
+        }
     }
 }

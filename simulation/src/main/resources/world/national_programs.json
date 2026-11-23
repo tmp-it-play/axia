@@ -1,0 +1,494 @@
+{
+ "POL": {
+  "key": "pol.family_800",
+  "label": "가족 800+ 아동수당",
+  "low": "급여 중단",
+  "high": "시작 급여의 두 배",
+  "description": "자녀당 월 지급액을 정한다. 시작 급여는 800즈워티다. 물가가 오르면 같은 명목 급여로 살 수 있는 양이 줄고 가계 소비가 시차를 두고 따라간다.",
+  "initial": 0.5,
+  "costShare": 0.035,
+  "identityReactions": {
+   "PARENTS": 8,
+   "FREE_MARKET": -4
+  },
+  "groupReactions": {
+   "OFFICE": 2,
+   "WORKERS": 3
+  },
+  "deliveryMetric": {
+   "label": "수당으로 뒷받침한 소비 지수",
+   "description": "3개월에 걸쳐 실질 수당에 적응한다. 시작 시점은 50이다."
+  },
+  "activityMetric": {
+   "label": "아동당 실질 수당 지수",
+   "description": "시작 시점 구매력으로 월 800즈워티가 50이다."
+  },
+  "deliverySectors": {
+   "SERVICES": 0.005
+  },
+  "activitySectors": {},
+  "deliveryMood": {
+   "PARENTS": 0.7
+  },
+  "priceResponse": 0
+ },
+ "ITA": {
+  "key": "ita.recovery_milestones",
+  "label": "국가회복계획 사업 집행",
+  "low": "추가 착수 중단",
+  "high": "집행 가속",
+  "description": "2026년 8월까지 회복계획 사업을 집행한다. 공사비를 먼저 부담하고 모델의 반기 심사에서 완료된 물량에 대한 보조금 몫을 정산한다.",
+  "initial": 0.55,
+  "costShare": 0.012,
+  "identityReactions": {
+   "EGALITARIANS": 3,
+   "FREE_MARKET": -2
+  },
+  "groupReactions": {
+   "WORKERS": 4
+  },
+  "deliveryMetric": {
+   "label": "검수 완료 사업 비중",
+   "description": "모형에 배정한 사업 전체를 100으로 본다. 6월·12월 및 최종 기한에 완료 물량을 검수한다."
+  },
+  "activityMetric": {
+   "label": "월별 공사 집행 지수",
+   "description": "최대 속도로 한 달 시공할 물량이 100이다."
+  },
+  "deliverySectors": {
+   "PUBLIC": 0.003
+  },
+  "activitySectors": {
+   "CONSTRUCTION": 0.008
+  },
+  "deliveryMood": {
+   "UNIONISTS": 0.2
+  },
+  "priceResponse": 0
+ },
+ "FIN": {
+  "key": "fin.housing_first",
+  "label": "주거 우선 입주·정착 지원",
+  "low": "신규 지원 축소",
+  "high": "주택·인력 확충",
+  "description": "주거 우선 사업의 주택과 정착 지원 인력을 확보한다. 입주자는 예산을 줄여도 즉시 퇴거하지 않으며 빈 주택에 대기 가구가 입주한다.",
+  "initial": 0.45,
+  "costShare": 0.003,
+  "identityReactions": {
+   "EGALITARIANS": 6,
+   "FREE_MARKET": -3
+  },
+  "groupReactions": {
+   "PUBLIC_SECTOR": 3
+  },
+  "deliveryMetric": {
+   "label": "지원주택 입주 가구 지수",
+   "description": "모형의 표준 지원주택 수를 100으로 삼은 입주 가구 수다."
+  },
+  "activityMetric": {
+   "label": "입주 대기 가구 지수",
+   "description": "같은 표준 주택 수와 비교한 대기 가구 수다. 실업이 높으면 대기 신청이 늘어난다."
+  },
+  "deliverySectors": {
+   "PUBLIC": 0.004
+  },
+  "activitySectors": {},
+  "deliveryMood": {
+   "EGALITARIANS": 0.6
+  },
+  "priceResponse": 0
+ },
+ "EST": {
+  "key": "est.e_residency",
+  "label": "전자영주권 심사 인력",
+  "low": "최소 인력",
+  "high": "심사 인력 확충",
+  "description": "전자영주권 신청을 심사한다. 승인된 신청자 일부는 석 달 뒤 법인을 세우며 활동 법인이 민간 서비스 수요를 만든다.",
+  "initial": 0.5,
+  "costShare": 0.0008,
+  "identityReactions": {
+   "FREE_MARKET": 4
+  },
+  "groupReactions": {
+   "PROFESSIONALS": 4
+  },
+  "deliveryMetric": {
+   "label": "활동 법인 지수",
+   "description": "전자영주권을 통해 설립한 모형 법인 재고다. 시작 재고는 45다."
+  },
+  "activityMetric": {
+   "label": "미처리 신청 지수",
+   "description": "접수 후 승인 또는 이탈을 기다리는 신청 규모다. 초기 대기열은 8이다."
+  },
+  "deliverySectors": {
+   "SERVICES": 0.004,
+   "FINANCE": 0.002
+  },
+  "activitySectors": {},
+  "deliveryMood": {
+   "FREE_MARKET": 0.3
+  },
+  "priceResponse": 0
+ },
+ "LVA": {
+  "key": "lva.apartment_renovation",
+  "label": "ALTUM 공동주택 에너지 개보수",
+  "low": "접수 중단",
+  "high": "개보수 확대",
+  "description": "단열 개보수 대상을 승인한다. 9개월 뒤 준공된 주택에 보조금을 지급하며 겨울철 연료 가격과 난방 수요에 따라 비용 절감 폭이 변한다.",
+  "initial": 0.4,
+  "costShare": 0.003,
+  "identityReactions": {
+   "ENVIRONMENTALISTS": 5,
+   "FREE_MARKET": -2
+  },
+  "groupReactions": {
+   "WORKERS": 3
+  },
+  "deliveryMetric": {
+   "label": "난방비 절감 지수",
+   "description": "모든 대상 주택을 개보수한 겨울에 시작 연료가격이면 100이다. 원유 지수로 연료가격을 근사한다."
+  },
+  "activityMetric": {
+   "label": "개보수 착공 지수",
+   "description": "한 달 최대 착공 속도가 100이다. 대상 주택을 모두 배정하면 신규 승인도 끝난다."
+  },
+  "deliverySectors": {
+   "SERVICES": 0.002
+  },
+  "activitySectors": {
+   "CONSTRUCTION": 0.007
+  },
+  "deliveryMood": {
+   "ENVIRONMENTALISTS": 0.3
+  },
+  "priceResponse": -0.002
+ },
+ "LTU": {
+  "key": "ltu.lng_capacity",
+  "label": "클라이페다 LNG 인수 용량 예약",
+  "low": "신규 예약 중단",
+  "high": "최대 예약",
+  "description": "매월 연간 슬롯 일부를 새로 예약한다. 겨울이나 연료가격 급등기에는 확보된 수입 용량이 에너지 공급을 지지하며 사용하지 않은 슬롯도 예약비가 든다.",
+  "initial": 0.5,
+  "costShare": 0.0025,
+  "identityReactions": {
+   "PATRIOTS": 4,
+   "FREE_MARKET": -2
+  },
+  "groupReactions": {
+   "WORKERS": 2
+  },
+  "deliveryMetric": {
+   "label": "사용한 인수 용량 지수",
+   "description": "모형의 최대 예약 용량이 100이다. 계절과 국제 원유 지수로 가스 수요 압력을 추정한다."
+  },
+  "activityMetric": {
+   "label": "미사용 예약 용량 지수",
+   "description": "이미 예약해 비용은 지불하지만 이번 달 수요를 초과한 몫이다."
+  },
+  "deliverySectors": {
+   "ENERGY": 0.006,
+   "HEAVY_INDUSTRY": 0.002
+  },
+  "activitySectors": {},
+  "deliveryMood": {
+   "PATRIOTS": 0.35
+  },
+  "priceResponse": -0.0015
+ },
+ "TUR": {
+  "key": "tur.earthquake_rehousing",
+  "label": "지진 피해 주택 복구",
+  "low": "신규 발주 중단",
+  "high": "신규 발주 가속",
+  "description": "2023년 지진 피해 지역 복구 물량을 배정한다. 발주 때와 12개월 뒤 인도 때 비용을 분할 지급한다. 모든 대상 가구가 배정되면 신규 발주는 끝난다.",
+  "initial": 0.55,
+  "costShare": 0.012,
+  "identityReactions": {
+   "EGALITARIANS": 3,
+   "PARENTS": 3
+  },
+  "groupReactions": {
+   "WORKERS": 4
+  },
+  "deliveryMetric": {
+   "label": "복구 주택 인도 비중",
+   "description": "모형의 복구 대상 가구가 모두 주택을 인도받으면 100이다."
+  },
+  "activityMetric": {
+   "label": "월별 신규 발주 지수",
+   "description": "최대 속도로 한 달 발주할 수 있는 물량이 100이다."
+  },
+  "deliverySectors": {
+   "SERVICES": 0.002
+  },
+  "activitySectors": {
+   "CONSTRUCTION": 0.009
+  },
+  "deliveryMood": {
+   "PARENTS": 0.5
+  },
+  "priceResponse": 0
+ },
+ "SAU": {
+  "key": "sau.tourism_guarantees",
+  "label": "관광개발기금 대출 보증",
+  "low": "신규 보증 중단",
+  "high": "보증 확대",
+  "description": "관광 투자에 대한 보증 한도를 정한다. 24개월 뒤 개장하는 사업은 서비스업을 확대하고, 부실 사업은 경기 상황에 따른 보증 손실을 국고에 남긴다.",
+  "initial": 0.5,
+  "costShare": 0.009,
+  "identityReactions": {
+   "FREE_MARKET": 2
+  },
+  "groupReactions": {
+   "SELF_EMPLOYED": 4
+  },
+  "deliveryMetric": {
+   "label": "가동 중인 관광 사업 지수",
+   "description": "장기적으로 표준 보증 규모를 유지하고 부실이 없을 때의 영업 재고를 100으로 본다."
+  },
+  "activityMetric": {
+   "label": "월 보증 대위변제 지수",
+   "description": "표준 월 신규 보증 원금이 100이다. 경기 하강기에 만기 보증의 대위변제가 늘어난다."
+  },
+  "deliverySectors": {
+   "SERVICES": 0.007
+  },
+  "activitySectors": {
+   "FINANCE": -0.004
+  },
+  "deliveryMood": {
+   "FREE_MARKET": 0.25
+  },
+  "priceResponse": 0
+ },
+ "EGY": {
+  "key": "egy.baladi_bread",
+  "label": "발라디 빵 보조 공급",
+  "low": "지원 중단",
+  "high": "공급 대상 확대",
+  "description": "보조 빵 공급 비중을 정한다. 곡물 장부의 실제 소비 가능 비율이 배급을 제한하고 국제 곡물 가격이 제분비에 반영되면 같은 양을 보조하는 데 드는 돈도 달라진다.",
+  "initial": 0.65,
+  "costShare": 0.016,
+  "identityReactions": {
+   "EGALITARIANS": 6,
+   "FREE_MARKET": -4
+  },
+  "groupReactions": {
+   "WORKERS": 5
+  },
+  "deliveryMetric": {
+   "label": "가계 빵값 보전 지수",
+   "description": "시작 제분원가로 표준 물량 전체를 지원하면 100이다. 원가가 오르면 같은 배급량의 보조 가치도 늘어난다."
+  },
+  "activityMetric": {
+   "label": "실제 보조 공급 지수",
+   "description": "표준 물량 대비 공급량이다. 국가 곡물 결산에서 수요를 충족하지 못하면 지원 물량도 줄어든다."
+  },
+  "deliverySectors": {
+   "SERVICES": 0.003
+  },
+  "activitySectors": {},
+  "deliveryMood": {
+   "EGALITARIANS": 0.6
+  },
+  "priceResponse": -0.005
+ },
+ "ZAF": {
+  "key": "zaf.generation_maintenance",
+  "label": "에스콤 계획 정비",
+  "low": "정비 최소화",
+  "high": "집중 정비",
+  "description": "정비를 늘리면 일부 발전기가 즉시 정지한다. 3개월 뒤 정비를 마친 설비가 돌아오면서 장기 고장률이 낮아진다.",
+  "initial": 0.4,
+  "costShare": 0.006,
+  "identityReactions": {
+   "UNIONISTS": 2
+  },
+  "groupReactions": {
+   "WORKERS": 3
+  },
+  "deliveryMetric": {
+   "label": "계통 공급 여력 지수",
+   "description": "표준 최대 공급 여력을 100으로 둔다. 계획 정지와 동절기 부하를 가용 발전력에서 차감한다."
+  },
+  "activityMetric": {
+   "label": "계획 정지 지수",
+   "description": "표준 발전 용량 중 정비를 위해 정지시킨 몫이다."
+  },
+  "deliverySectors": {
+   "ENERGY": 0.012,
+   "HEAVY_INDUSTRY": 0.007
+  },
+  "activitySectors": {
+   "PUBLIC": 0.002
+  },
+  "deliveryMood": {
+   "UNIONISTS": 0.4
+  },
+  "priceResponse": -0.002
+ },
+ "IDN": {
+  "key": "idn.nickel_processing",
+  "label": "니켈 제련 투자 인허가·지원",
+  "low": "신규 지원 중단",
+  "high": "제련단지 확대",
+  "description": "신규 제련단지를 승인하고 기반시설을 지원한다. 18개월 뒤 가동할 수 있으며 국내 전력 수요가 높으면 설비가 있어도 생산하지 못한다.",
+  "initial": 0.5,
+  "costShare": 0.004,
+  "identityReactions": {
+   "ENVIRONMENTALISTS": -5,
+   "PATRIOTS": 3
+  },
+  "groupReactions": {
+   "WORKERS": 4
+  },
+  "deliveryMetric": {
+   "label": "실제 제련 생산 지수",
+   "description": "준공 설비와 사용 가능한 전력 중 작은 쪽이 가동 규모를 결정한다."
+  },
+  "activityMetric": {
+   "label": "전력 제약 유휴 설비 지수",
+   "description": "표준 설비를 100으로 했을 때 전력이 부족해 가동하지 못하는 몫이다."
+  },
+  "deliverySectors": {
+   "HEAVY_INDUSTRY": 0.009,
+   "ENERGY": 0.004
+  },
+  "activitySectors": {},
+  "deliveryMood": {
+   "ENVIRONMENTALISTS": -0.4
+  },
+  "priceResponse": 0
+ },
+ "VNM": {
+  "key": "vnm.mekong_rice",
+  "label": "메콩 저배출 쌀 전환",
+  "low": "신규 등록 중단",
+  "high": "농가 등록 확대",
+  "description": "2030년까지 작기마다 농가를 등록하고 4개월간 전환을 지원한다. 교육을 마친 논은 이후 작기부터 농업 부문의 생산·비용 절감에 기여한다.",
+  "initial": 0.5,
+  "costShare": 0.002,
+  "identityReactions": {
+   "ENVIRONMENTALISTS": 5
+  },
+  "groupReactions": {
+   "FARMERS": 6
+  },
+  "deliveryMetric": {
+   "label": "작기별 생산 효과 지수",
+   "description": "목표 면적 전체가 전환된 주 수확기에 효과가 100이다. 월별 작기는 게임 가정이다."
+  },
+  "activityMetric": {
+   "label": "전환 완료 면적 비중",
+   "description": "공식 사업 목표 100만 헥타르를 100으로 삼는다. 배정과 전환 실적은 게임에서 결정된다."
+  },
+  "deliverySectors": {
+   "AGRICULTURE": 0.009
+  },
+  "activitySectors": {},
+  "deliveryMood": {
+   "ENVIRONMENTALISTS": 0.45
+  },
+  "priceResponse": 0
+ },
+ "THA": {
+  "key": "tha.ucs_primary_care",
+  "label": "보편의료보장 일차 진료 배정",
+  "low": "최소 배정",
+  "high": "지역 진료 확대",
+  "description": "일차 진료 예산으로 지역 진료 역량을 늘린다. 남은 대기 환자의 일부가 다음 달 병원으로 의뢰되며 별도 비용을 발생시킨다.",
+  "initial": 0.55,
+  "costShare": 0.009,
+  "identityReactions": {
+   "EGALITARIANS": 5,
+   "FREE_MARKET": -3
+  },
+  "groupReactions": {
+   "PUBLIC_SECTOR": 4
+  },
+  "deliveryMetric": {
+   "label": "일차 진료 처리 지수",
+   "description": "표준 월 진료 수요를 100으로 삼은 실제 처리량이다. 인력 증원은 여러 달에 걸쳐 반영된다."
+  },
+  "activityMetric": {
+   "label": "병원 의뢰 지수",
+   "description": "같은 단위로 표시한 상급병원 의뢰 물량이다. 미처리 환자가 많을수록 커진다."
+  },
+  "deliverySectors": {
+   "PUBLIC": 0.006
+  },
+  "activitySectors": {
+   "PUBLIC": 0.001
+  },
+  "deliveryMood": {
+   "EGALITARIANS": 0.6
+  },
+  "priceResponse": 0
+ },
+ "RWA": {
+  "key": "rwa.girinka",
+  "label": "기린카 젖소 분양",
+  "low": "신규 매입 중단",
+  "high": "취약 농가 분양 확대",
+  "description": "정부가 젖소를 취약 가구에 분양한다. 수혜 농가의 첫 암송아지가 성장하면 다른 가구로 넘기므로 신규 매입을 줄여도 재분양은 이어진다.",
+  "initial": 0.5,
+  "costShare": 0.0025,
+  "identityReactions": {
+   "EGALITARIANS": 5
+  },
+  "groupReactions": {
+   "FARMERS": 6
+  },
+  "deliveryMetric": {
+   "label": "가축 분양 가구 비중",
+   "description": "이번 모형에서 선정한 대상 가구가 모두 젖소를 받으면 100이다. 기존 사업 수혜 가구는 기준 예산에 있다."
+  },
+  "activityMetric": {
+   "label": "송아지 재분양 지수",
+   "description": "표준 월 매입량을 100으로 삼은 가구 간 무상 재분양이다. 같은 가구에 중복 배정하지 않는다."
+  },
+  "deliverySectors": {
+   "AGRICULTURE": 0.008
+  },
+  "activitySectors": {},
+  "deliveryMood": {
+   "EGALITARIANS": 0.55
+  },
+  "priceResponse": 0
+ },
+ "PAK": {
+  "key": "pak.kafaalat",
+  "label": "베나지르 카팔라트 가구 등록",
+  "low": "신규 권리 축소",
+  "high": "등록 확대",
+  "description": "자격을 확인한 취약 가구가 월별 지급 권리를 쌓고 분기말에 현금을 받는다. 이미 쌓인 권리는 정책을 축소한 뒤에도 지급한다.",
+  "initial": 0.5,
+  "costShare": 0.013,
+  "identityReactions": {
+   "EGALITARIANS": 6,
+   "FREE_MARKET": -3
+  },
+  "groupReactions": {
+   "WORKERS": 4
+  },
+  "deliveryMetric": {
+   "label": "현금 급여 가계 소비 지수",
+   "description": "지급 직후 상승하고 다음 지급 전까지 낮아지는 실효 가계 소비 지원이다."
+  },
+  "activityMetric": {
+   "label": "이번 달 지급 지수",
+   "description": "표준 월 급여가 100이다. 분기말에는 그동안 적립한 월별 급여를 합산해 100을 넘을 수 있다."
+  },
+  "deliverySectors": {
+   "SERVICES": 0.005
+  },
+  "activitySectors": {},
+  "deliveryMood": {
+   "EGALITARIANS": 0.6
+  },
+  "priceResponse": 0
+ }
+}

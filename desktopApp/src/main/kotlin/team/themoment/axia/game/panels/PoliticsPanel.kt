@@ -53,6 +53,7 @@ fun PoliticsPanel(
     onNegotiate: (String?) -> Unit,
     onIntroduce: () -> Unit,
     onCallEarlyElection: () -> Unit,
+    onCoalitionPartner: (String?) -> Unit,
     onRenamePerson: (Int, String) -> Unit,
     onOppositionVeto: (Boolean) -> Unit,
 ) {
@@ -70,6 +71,28 @@ fun PoliticsPanel(
     }
     chamber?.let { ChamberComposition(it) }
     ElectionSection(politics, today, onCallEarlyElection)
+    if (chamber != null && politics.schedule.legislative != null && profile.elections.coalitionNegotiations &&
+        chamber.groups.any { it.role == PartyRole.LEAD }
+    ) {
+        val eligible = chamber.groups.filter { it.role != PartyRole.LEAD && it.role != PartyRole.OTHER && it.votingSeats > 0 }
+        if (eligible.isNotEmpty()) {
+            var choosing by remember { mutableStateOf(false) }
+            SectionTitle("다음 총선 연정 교섭")
+            StatRow("우선 교섭 상대", politics.coalitionPreference?.partner ?: "자동 협상")
+            PaperTag(if (choosing) "목록 접기" else "우선 상대 선택", onClick = { choosing = !choosing })
+            if (choosing) {
+                Hint("현 정부가 선거 뒤 연정을 구성하면 선택한 정당에 먼저 제안합니다. 이념 차이가 크면 협상이 결렬될 수 있습니다.")
+                PaperTag("자동 협상", selected = politics.coalitionPreference == null, onClick = { onCoalitionPartner(null) })
+                eligible.forEach { party ->
+                    PaperTag(
+                        party.name,
+                        selected = politics.coalitionPreference?.partner == party.name,
+                        onClick = { onCoalitionPartner(party.name) },
+                    )
+                }
+            }
+        }
+    }
     if (politics.newParties.isNotEmpty()) {
         SectionTitle("신생 정당 (다음 총선 출마)")
         politics.newParties.forEach { party ->
@@ -174,7 +197,10 @@ private fun ChamberComposition(chamber: Legislature) {
         chamber.groups.forEach { party ->
             val excluded = if (party.nonVoting > 0) " · 불참 ${party.nonVoting}" else ""
             val allocation = if (party.reservedSeats > 0) " (유보 ${party.reservedSeats})" else ""
-            StatRow(party.name, "${party.role.label} · ${party.seats}석$allocation$excluded")
+            StatRow(
+                party.name,
+                "${party.role.label} · ${party.seats}석$allocation$excluded" + party.identity?.let { " · ${it.label}" }.orEmpty(),
+            )
         }
     }
 }
@@ -211,6 +237,10 @@ private fun BillDetails(bill: FiscalBill) {
     val open = bill.stage != BillStage.PASSED && bill.stage != BillStage.REJECTED
     bill.sponsor?.let { StatRow("발의 정당", it) }
     StatRow("처리 상태", bill.stage.label + if (bill.delayed) " · 지연됨" else "")
+    bill.originalChanges?.let { original ->
+        StatRow("양원 협의회", "연속 항목 변경 폭 50% · 가부 결정 조항 제외")
+        original.forEach { StatRow("원안 · ${it.item.label}", it.describe()) }
+    }
     bill.blockedBy?.let { StatRow("좌초시킨 기관", it, valueColor = DossierColors.negative) }
     StatRow("발의일", bill.introduced.toString())
     StatRow(if (open) "다음 심의일" else "결정일", bill.decisionDate.toString())
@@ -224,6 +254,7 @@ private fun BillDetails(bill: FiscalBill) {
         val vote = bill.support.rollCall
         val rule =
             when {
+                bill.stage == BillStage.CONFERENCE -> "양원이 같은 절충안을 재표결합니다."
                 bill.stage == BillStage.SIGNATURE -> "기한까지 재의를 요구하지 않으면 법안이 공포됩니다."
                 bill.stage == BillStage.OVERRIDE -> "의회가 원안을 재표결합니다."
                 bill.stage == BillStage.FINAL_REVIEW -> "하원을 통과해 상원·대통령 등 후속 심사를 기다립니다."
@@ -344,6 +375,19 @@ private fun ElectionSection(
             schedule.executive?.let { date -> StatRow("다음 ${schedule.executiveTitle} 선거", "$date · ${dDay(today, date)}") }
         }
     }
+    politics.executiveCampaign?.let { campaign ->
+        campaign.runoffDate?.let { StatRow("결선 투표", it.toString()) }
+        if (campaign.runoffDate != null) {
+            campaign.firstBallot.take(2).forEach { vote ->
+                StatRow(vote.person.party ?: "무소속 후보", "${vote.person.name} · 1차 ${formatPercent(vote.share)}")
+            }
+        } else {
+            campaign.nominations.forEach { entry ->
+                val primary = entry.primaryShare?.let { " · 경선 ${formatPercent(it)} (상대 ${entry.rival?.name})" }.orEmpty()
+                StatRow(entry.nominee.party ?: "무소속 후보", entry.nominee.name + primary)
+            }
+        }
+    }
     if (schedule.canCallEarly) {
         Text(
             "조기 총선을 소집하면 6주 뒤 선거를 치릅니다. 심의 중인 재정안은 선거일에 폐기되고 초안으로 돌아갑니다.",
@@ -376,15 +420,27 @@ private fun LastElection(result: ElectionResult) {
     var expanded by remember(result) { mutableStateOf(false) }
     SectionTitle("최근 선거 · ${result.date}${if (result.early) " (조기 총선)" else ""}")
     Stamp(
-        text = if (result.governmentChanged) "정권 교체" else "정부 유지",
+        text =
+            if (result.executive?.campaign?.runoffDate != null &&
+                result.executive?.winner == null
+            ) {
+                "결선 확정"
+            } else if (result.governmentChanged) {
+                "정권 교체"
+            } else {
+                "정부 유지"
+            },
         color = if (result.governmentChanged) DossierColors.stamp else DossierColors.blueInk,
     )
     if (result.governmentChanged) StatRow("새 정부", result.governmentAfter)
     result.executive?.let { race ->
-        val challenger = race.challenger?.let { " vs $it ${formatPercent(1.0 - race.incumbentShare)}" }.orEmpty()
-        StatRow("${race.title} 선거", "${race.incumbent} ${formatPercent(race.incumbentShare)}$challenger")
-        StatRow("당선", race.winner)
+        race.ballot.forEach { vote ->
+            StatRow("${race.title} ${race.round}차 · ${vote.person.name}", "${vote.person.party ?: "무소속"} · ${formatPercent(vote.share)}")
+        }
+        race.winner?.let { StatRow("당선", it.name) }
+        if (race.winner == null) StatRow("결선 예정", race.campaign.runoffDate.toString())
     }
+    result.coalitionReport?.let { StatRow("우선 교섭 결과", it) }
     if (result.billLapsed) {
         Text("총선으로 심의가 종료되어 재정안이 초안으로 돌아갔습니다.", style = DossierType.number(12.sp), color = DossierColors.stamp)
     }

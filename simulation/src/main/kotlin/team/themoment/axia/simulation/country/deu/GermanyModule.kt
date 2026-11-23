@@ -23,6 +23,7 @@ internal class GermanyModule : CountryModule {
 
     private val emergency =
         CountryPolicyItem(
+            binary = true,
             key = "deu.debt_brake_emergency",
             label = "부채 브레이크 비상 예외",
             lowLabel = "한도 준수",

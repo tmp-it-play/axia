@@ -256,7 +256,8 @@ internal class CivilSociety(
                 val grievance = (-mood / 30.0).coerceIn(-1.0, 1.0)
                 org.membership =
                     (org.membership * (1.0 + MEMBERSHIP_GROWTH * grievance * org.capacity))
-                        .coerceIn(MIN_MEMBERSHIP, baseShares(org.kind) * MAX_REACH)
+                        .coerceAtLeast(MIN_MEMBERSHIP)
+                        .coerceAtMost(baseShares(org.kind) * MAX_REACH)
                 act(org, date, inputs.civilLiberties)?.let { effect ->
                     crime += effect.crime
                     gapShock += effect.outputGapShock

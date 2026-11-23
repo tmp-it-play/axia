@@ -4,15 +4,18 @@ import team.themoment.axia.simulation.country.CountryEffects
 import team.themoment.axia.simulation.country.CountryModules
 import team.themoment.axia.simulation.diplomacy.Diplomacy
 import team.themoment.axia.simulation.diplomacy.DiplomaticAction
+import team.themoment.axia.simulation.economy.BankLeadership
+import team.themoment.axia.simulation.economy.BankPressure
 import team.themoment.axia.simulation.economy.CentralBank
 import team.themoment.axia.simulation.economy.CentralBankData
+import team.themoment.axia.simulation.economy.Creditor
 import team.themoment.axia.simulation.economy.CurrencyNotice
 import team.themoment.axia.simulation.economy.DebtNotice
 import team.themoment.axia.simulation.economy.DebtPlan
 import team.themoment.axia.simulation.economy.EconomyData
 import team.themoment.axia.simulation.economy.EconomySnapshot
+import team.themoment.axia.simulation.economy.GovernorMandate
 import team.themoment.axia.simulation.economy.InternationalState
-import team.themoment.axia.simulation.economy.SovereignDebt
 import team.themoment.axia.simulation.economy.WorldEconomy
 import team.themoment.axia.simulation.events.EventCategory
 import team.themoment.axia.simulation.events.EventChoice
@@ -21,6 +24,7 @@ import team.themoment.axia.simulation.events.EventEffects
 import team.themoment.axia.simulation.events.EventSystem
 import team.themoment.axia.simulation.events.GameEvent
 import team.themoment.axia.simulation.military.DefenseInputs
+import team.themoment.axia.simulation.military.MaritimeRestriction
 import team.themoment.axia.simulation.military.Military
 import team.themoment.axia.simulation.military.MilitaryAction
 import team.themoment.axia.simulation.military.Mobilization
@@ -172,6 +176,11 @@ class Simulation(
                 b: String,
             ) = diplomacy.tradeAgreement(a, b)
 
+            override fun routeAvailability(
+                a: String,
+                b: String,
+            ) = military.maritime.availability(a, b)
+
             override fun warIntensity(country: String) = military.intensityChange(country)
 
             override fun occupied(country: String) = military.occupiedChange(country)
@@ -200,6 +209,7 @@ class Simulation(
         val pauseFor: Set<EventCategory> = emptySet(),
         val decisionNeeded: Boolean = false,
         val decisionExpired: Boolean = false,
+        val worldElectionNews: Boolean = false,
     )
 
     fun advanceDay(): DayUpdate {
@@ -222,7 +232,8 @@ class Simulation(
         }
 
         val electionHeld = politics.holdElections(date)
-        worldPolitics.holdElections(date).forEach(::addWorldNews)
+        val foreignElections = worldPolitics.holdElections(date)
+        foreignElections.forEach(::addWorldNews)
         val passed = politics.advanceDay(date)
         if (passed) {
             politics.snapshot(date).lastDecision?.let { bill -> nation.onPolicyEnacted(bill.changes.map { it.item to it.delta }, date) }
@@ -238,6 +249,7 @@ class Simulation(
             pauseFor,
             signature || offered || happened.any { it.choices.isNotEmpty() },
             expired.isNotEmpty(),
+            foreignElections.isNotEmpty(),
         )
     }
 
@@ -267,7 +279,7 @@ class Simulation(
         val player = economy.country(playerCountryId)
         nation.advanceMonth(player, institutions.changes(), date)
         nation
-            .advanceCountryModule(player, date) { diplomacy.relation(playerCountryId, it) }
+            .advanceCountryModule(player, date, economy.commodityQuotes()) { diplomacy.relation(playerCountryId, it) }
             .relationShifts
             .forEach { (other, points) -> diplomacy.nudge(playerCountryId, other, points) }
         applyWarWeariness()
@@ -342,14 +354,12 @@ class Simulation(
                             return@forEach
                         }
                         applyAiEvent(id, event.effects)
-                        val canExtend = need <= SovereignDebt.EXTENSION_CAPACITY
-                        val plan = if (canExtend) DebtPlan.MATURITY_EXTENSION else DebtPlan.PRINCIPAL_REDUCTION
-                        country.debt.negotiate(plan)
-                        "${event.text} 채권단과 ${plan.label} 협상을 시작했다."
+                        country.debt.negotiateByCapacity(need)
+                        "${event.text} 채권자별 교환 조건을 제시했다."
                     }
 
                     DebtNotice.COUNTEROFFER -> {
-                        "만기를 늘려도 조달 부담이 커서 채권단이 원금 감면을 포함한 교환안을 요구했다."
+                        "만기를 늘려도 조달 부담이 커서 일부 채권자가 원금 감면을 요구했다. 채권자별 변경안은 재정 화면에서 확인할 수 있다."
                     }
 
                     DebtNotice.SETTLEMENT -> {
@@ -569,12 +579,50 @@ class Simulation(
     /** 조건을 만족하면 6주 뒤 조기 총선을 치른다. */
     fun callEarlyElection() = politics.callEarlyElection(date)
 
+    fun preferCoalitionPartner(party: String?) = politics.preferCoalitionPartner(party)
+
     fun editBudgetDraft(
         item: PolicyItem,
         target: Double,
     ) = politics.edit(item, target)
 
     /** 정부가 금리를 정하는 나라에서만 받아들인다. 다음 달 1일부터 적용된다. */
+    fun appointGovernor(mandate: GovernorMandate): Boolean {
+        if (centralBank.unionId != null || !nation.spendCapital(centralBank.leadership.replacementCost)) return false
+        centralBank.appoint(mandate)
+        nation.report(date, "중앙은행", "${centralBank.leadership.snapshot().name} 총재 취임 · ${mandate.label}", major = false)
+        return true
+    }
+
+    fun pressureBank(direction: BankPressure): Boolean {
+        if (!centralBank.adjustableIndependence || centralBank.leadership.pressure != null || centralBank.directiveMonths > 0 ||
+            !nation.spendCapital(BankLeadership.PRESSURE_COST)
+        ) {
+            return false
+        }
+        centralBank.pressure(direction)
+        nation.report(date, "중앙은행", "정부가 중앙은행에 ${direction.label} 의견을 전달했다.", major = false)
+        return true
+    }
+
+    fun setCreditorTerms(
+        creditor: Creditor,
+        terms: DebtPlan?,
+    ) = economy.country(playerCountryId).debt.setTerms(creditor, terms)
+
+    fun setTradeRoute(
+        target: String,
+        partner: String,
+        restrict: Boolean,
+    ): Boolean {
+        if (!military.routeChangeAllowed(target, partner, restrict)) return false
+        if (restrict && !nation.spendCapital(MaritimeRestriction.ROUTE_COST)) return false
+        military.maritime.set(MaritimeRestriction(playerCountryId, target, partner), restrict)
+        val change = if (restrict) "선적 중단" else "선적 재개"
+        nation.report(date, "해상 교역", "${countryName(target)} ↔ ${countryName(partner)} · $change", major = false)
+        return true
+    }
+
     fun directPolicyRate(rate: Double) = centralBank.direct(rate)
 
     fun negotiateBudgetWith(party: String?) = politics.negotiate(party)

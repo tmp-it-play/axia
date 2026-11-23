@@ -12,7 +12,8 @@
   "executive": {
    "next": "2027-03-03",
    "termYears": 5,
-   "title": "대통령"
+   "title": "대통령",
+   "partyPrimary": true
   },
   "sourceNote": "2024-01-01 기준 법정 일정. 제22대 국회의원 선거 2024-04-10(지역구 254·비례 46), 제21대 대통령 선거 법정일 2027-03-03. https://en.wikipedia.org/wiki/2024_South_Korean_legislative_election"
  },
@@ -28,9 +29,10 @@
   "executive": {
    "next": "2024-11-05",
    "termYears": 4,
-   "title": "대통령"
+   "title": "대통령",
+   "partyPrimary": true
   },
-  "sourceNote": "연방법상 선거일(11월 첫 월요일 다음 화요일) 2024-11-05. 하원 435석 전원·대통령. https://en.wikipedia.org/wiki/2024_United_States_elections"
+  "sourceNote": "연방법상 선거일(11월 첫 월요일 다음 화요일) 2024-11-05. 하원 435석 전원·대통령. https://en.wikipedia.org/wiki/2024_United_States_elections 경선·코커스는 전국 단일 공천 경선으로 근사한다. https://www.usa.gov/primaries-caucuses"
  },
  "CHN": {
   "system": "NON_COMPETITIVE",
@@ -80,11 +82,12 @@
    "earlyDissolution": true
   },
   "executive": {
-   "next": "2027-04-25",
+   "next": "2027-04-11",
    "termYears": 5,
-   "title": "대통령"
+   "title": "대통령",
+   "runoffDays": 14
   },
-  "sourceNote": "2022년 6월 구성된 국민의회의 정기 총선(결선) 2027년 6월, 대통령 임기 만료 2027-05-13 전 결선 2027년 4월. 대통령은 1년에 한 번 국민의회를 해산할 수 있다. https://en.wikipedia.org/wiki/Next_French_presidential_election"
+  "sourceNote": "2022년 6월 구성된 국민의회의 정기 총선(결선) 2027년 6월, 대통령 임기 만료 2027-05-13 전 결선 2027년 4월. 대통령은 1년에 한 번 국민의회를 해산할 수 있다. https://en.wikipedia.org/wiki/Next_French_presidential_election 게임 첫 투표일은 기존 결선 예상일 14일 전이며 이후 임기도 1차 투표에서 센다. https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006527466"
  },
  "RUS": {
   "system": "PRESIDENTIAL",
@@ -99,7 +102,8 @@
   "executive": {
    "next": "2024-03-17",
    "termYears": 6,
-   "title": "대통령"
+   "title": "대통령",
+   "runoffDays": 21
   },
   "sourceNote": "소선거구 225석. https://data.ipu.org/parliament/RU/RU-LC01/election/RU-LC01-E20210919/ 대통령 선거 2024-03-15~17(마지막 날 사용), 국가두마 정기 선거 2026년 9월 셋째 일요일. https://en.wikipedia.org/wiki/2024_Russian_presidential_election"
  },
@@ -131,9 +135,11 @@
   "executive": {
    "next": "2026-10-04",
    "termYears": 4,
-   "title": "대통령"
+   "title": "대통령",
+   "runoffDays": 21,
+   "lastSundayRunoff": true
   },
-  "sourceNote": "헌법상 10월 첫 일요일 총선 2026-10-04(대통령 결선은 단순화해 1차 투표일로 처리). https://en.wikipedia.org/wiki/2026_Brazilian_general_election"
+  "sourceNote": "헌법상 10월 첫 일요일 총선 2026-10-04(대통령 과반 미달 시 같은 달 마지막 일요일에 결선). https://en.wikipedia.org/wiki/2026_Brazilian_general_election https://international.tse.jus.br/en/elections/elections"
  },
  "CAN": {
   "system": "PARLIAMENTARY",
@@ -173,7 +179,8 @@
   "executive": {
    "next": "2025-05-18",
    "termYears": 5,
-   "title": "대통령"
+   "title": "대통령",
+   "runoffDays": 14
   },
   "sourceNote": "헌법 98조: 세임 임기(2023-11-13 개회) 종료 전 30일 안의 휴일 선거, 최종 일요일 2027-11-07. 대통령 임기 만료 2025-08-06 전 100~75일 사이 1차 투표 2025년 5월. https://en.wikipedia.org/wiki/Next_Polish_parliamentary_election"
  },
@@ -198,7 +205,13 @@
    "electoralSystem": "PROPORTIONAL",
    "earlyDissolution": true
   },
-  "sourceNote": "선거법상 4월 셋째 일요일 2027-04-18. https://en.wikipedia.org/wiki/Next_Finnish_parliamentary_election"
+  "executive": {
+   "next": "2024-01-28",
+   "termYears": 6,
+   "title": "대통령",
+   "runoffDays": 14
+  },
+  "sourceNote": "선거법상 4월 셋째 일요일 2027-04-18. https://en.wikipedia.org/wiki/Next_Finnish_parliamentary_election 대통령 선거는 2024-01-28, 과반 미달 시 2024-02-11에 결선한다. https://valtioneuvosto.fi/en/-/1410853/presidential-election-on-sunday-28-january-2024"
  },
  "EST": {
   "system": "PARLIAMENTARY",
@@ -235,7 +248,8 @@
   "executive": {
    "next": "2024-05-12",
    "termYears": 5,
-   "title": "대통령"
+   "title": "대통령",
+   "runoffDays": 14
   },
   "sourceNote": "소선거구 71석. https://data.ipu.org/parliament/LT/LT-LC01/election/LT-LC01-E20201011/ 세이마스 정기 선거 2024-10-13(1차), 대통령 선거 2024-05-12(1차). https://en.wikipedia.org/wiki/2024_Lithuanian_parliamentary_election"
  },
@@ -251,7 +265,8 @@
   "executive": {
    "next": "2028-05-14",
    "termYears": 5,
-   "title": "대통령"
+   "title": "대통령",
+   "runoffDays": 14
   },
   "sourceNote": "2023-05-14 동시 선거 후 5년 임기. 다음 동시 선거 2028년 5월. https://en.wikipedia.org/wiki/Next_Turkish_presidential_election"
  },
@@ -275,7 +290,14 @@
    "electoralSystem": "MAJORITARIAN",
    "earlyDissolution": false
   },
-  "sourceNote": "제12대 이슬람 의회 선거 2024-03-01, 정원 290석. 후보 자격은 헌법수호위원회가 심사한다. 대통령은 정당 소속이 아니어서 대통령 선거는 다루지 않는다. https://en.wikipedia.org/wiki/2024_Iranian_legislative_election"
+  "sourceNote": "제12대 이슬람 의회 선거 2024-03-01, 정원 290석. 후보 자격은 헌법수호위원회가 심사한다. 무당적 대통령 후보를 인물로 선출한다. 2024년 1월 시점에서 직전 정기 선거와 임기로 산정한 모형 선거일이다. https://en.wikipedia.org/wiki/2024_Iranian_legislative_election",
+  "executive": {
+   "next": "2025-06-20",
+   "termYears": 4,
+   "title": "대통령",
+   "nonpartisan": true,
+   "runoffDays": 7
+  }
  },
  "SAU": {
   "system": "NON_COMPETITIVE",
@@ -291,7 +313,14 @@
    "electoralSystem": "MIXED",
    "earlyDissolution": false
   },
-  "sourceNote": "개별 후보 선출 284석은 모형 소선거구로 배분한다. 명부 284석·임명 28석은 전국 배분으로 단순화한다. https://data.ipu.org/parliament/EG/EG-LC01/election/EG-LC01-E20201024/ 하원 임기(2021-01-12 개회) 만료 전 60일 안 선거. 정원 596석(선출 568·임명 28). 대통령은 정당 소속이 아니어서 대통령 선거는 다루지 않는다. https://en.wikipedia.org/wiki/2025_Egyptian_parliamentary_election"
+  "sourceNote": "개별 후보 선출 284석은 모형 소선거구로 배분한다. 명부 284석·임명 28석은 전국 배분으로 단순화한다. https://data.ipu.org/parliament/EG/EG-LC01/election/EG-LC01-E20201024/ 하원 임기(2021-01-12 개회) 만료 전 60일 안 선거. 정원 596석(선출 568·임명 28). 무당적 대통령 후보를 인물로 선출한다. 2024년 1월 시점에서 직전 정기 선거와 임기로 산정한 모형 선거일이다. https://en.wikipedia.org/wiki/2025_Egyptian_parliamentary_election https://sis.gov.eg/en/egypt/system-of-government/executive-authority/president-of-the-republic/",
+  "executive": {
+   "next": "2029-12-12",
+   "termYears": 6,
+   "title": "대통령",
+   "nonpartisan": true,
+   "runoffDays": 28
+  }
  },
  "ZAF": {
   "system": "PARLIAMENTARY",
@@ -333,9 +362,10 @@
   "executive": {
    "next": "2024-02-14",
    "termYears": 5,
-   "title": "대통령"
+   "title": "대통령",
+   "runoffDays": 133
   },
-  "sourceNote": "총선 2024-02-14(대통령·국민대표회의). 국민대표회의 정원은 이번 선거부터 580석. https://en.wikipedia.org/wiki/2024_Indonesian_general_election"
+  "sourceNote": "총선 2024-02-14(대통령·국민대표회의). 국민대표회의 정원은 이번 선거부터 580석. https://en.wikipedia.org/wiki/2024_Indonesian_general_election 결선 간격은 2024년 계획일인 6월 26일을 기준으로 잡고 지방별 별도 득표 요건은 전국 득표로 근사한다. https://www.kpu.go.id/dmdocument/1675917628DINAMIKA%20PEMILU.pdf"
  },
  "VNM": {
   "system": "NON_COMPETITIVE",

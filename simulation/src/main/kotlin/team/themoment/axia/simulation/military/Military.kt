@@ -42,6 +42,8 @@ enum class MilitaryAction(
     WITHDRAWAL_TREATY("상호 철수 협정", 5.0, "점령지에서 상호 철수하고 전쟁을 종결한다."),
     OFFER_TERRITORY("분쟁지 양도 협정", 5.0, "분쟁지의 관할을 상대에게 넘기고 양측이 나머지 점령지에서 철수한다."),
     REQUEST_TERRITORY("분쟁지 반환 협정", 8.0, "상대에게 분쟁지 관할 이전을 요구한다. 상대가 크게 지치고 불리한 경우에 수락한다."),
+    BLOCKADE("해상 봉쇄", 9.0, "교전 상대의 해상 교역로 수송능력을 45%로 줄인다."),
+    END_BLOCKADE("해상 봉쇄 해제", 0.0, "해상 교역을 재개한다."),
     MILITARY_AID("군사 지원", 4.0, "1년 동안 GDP의 0.2%를 들여 전쟁 중인 나라의 전력을 보탠다."),
     JOIN_WAR("참전", 20.0, "동맹국이나 관계가 좋은 나라 편으로 전쟁에 들어간다."),
 }
@@ -174,6 +176,7 @@ data class MilitarySnapshot(
     val negotiableRegions: Map<String, List<TreatyRegion>>,
     val recovery: WarRecoverySnapshot,
     val reconstructionEffort: ReconstructionEffort,
+    val maritimeRestrictions: List<MaritimeRestriction>,
     /** 플레이어가 지원 중인 나라와 종료일. */
     val aid: Map<String, LocalDate>,
 )
@@ -219,6 +222,7 @@ internal class Military(
     var mobilization = Mobilization.PEACETIME
         private set
     private val aid = HashMap<String, LocalDate>()
+    val maritime = MaritimeTrade()
     private val wars = mutableListOf<War>()
     private val civilWars = mutableListOf<CivilWar>()
     private val disputes = data.disputes.toMutableList()
@@ -364,6 +368,19 @@ internal class Military(
         aid.entries.removeIf { date >= it.value }
         reviewPeace(date, inputs)
         advanceCivilWars(date)
+        if (date.monthValue % 3 == 0) {
+            wars.filter { it.active && date >= it.started.plusMonths(3) }.forEach { war ->
+                listOf(war.principalA to war.principalB, war.principalB to war.principalA).forEach { (issuer, target) ->
+                    val order = MaritimeRestriction(issuer, target, null)
+                    if (issuer != playerId && !maritime.has(order) && geography.of(issuer).coastal && geography.of(target).coastal &&
+                        (war.weariness[issuer] ?: 0.0) < PEACE_WEARINESS && random.nextDouble() < 0.20
+                    ) {
+                        maritime.set(order, true)
+                        news += WorldNews(date, issuer, "해상 봉쇄", "${name(issuer)} 정부가 ${name(target)}의 해상 교역을 제한했다.", major = false)
+                    }
+                }
+            }
+        }
     }
 
     private fun rawPower(id: String): Double {
@@ -457,6 +474,7 @@ internal class Military(
         text: String,
     ) {
         war.ceasefire = date
+        maritime.clearInactive(::atWar)
         pendingOffers.remove(war.id)
         news += WorldNews(date, war.sideA.first(), war.name, text, major = true)
     }
@@ -578,6 +596,14 @@ internal class Military(
 
     val aidSpending: Double get() = aid.size * AID_SHARE
 
+    fun routeChangeAllowed(
+        target: String,
+        partner: String,
+        impose: Boolean,
+    ): Boolean =
+        target in startOccupied && partner in startOccupied && atWar(playerId, target) && geography.of(playerId).coastal &&
+            MaritimeTrade.seaRoute(target, partner) && maritime.has(MaritimeRestriction(playerId, target, partner)) != impose
+
     fun available(target: String): Set<MilitaryAction> {
         if (target == playerId || target !in startOccupied) return emptySet()
         val enemies = atWar(playerId, target)
@@ -588,6 +614,9 @@ internal class Military(
         val negotiating = negotiatingWar(target)
         return buildSet {
             if (!enemies && reachable && !allied(playerId, target)) add(MilitaryAction.DECLARE_WAR)
+            if (enemies && geography.of(playerId).coastal && geography.of(target).coastal) {
+                add(if (maritime.has(MaritimeRestriction(playerId, target, null))) MilitaryAction.END_BLOCKADE else MilitaryAction.BLOCKADE)
+            }
             if (negotiating?.active == true) add(MilitaryAction.PROPOSE_PEACE)
             if (negotiating != null) {
                 add(MilitaryAction.WITHDRAWAL_TREATY)
@@ -610,6 +639,11 @@ internal class Military(
     ): Boolean {
         if (action !in available(target)) return false
         when (action) {
+            MilitaryAction.BLOCKADE, MilitaryAction.END_BLOCKADE -> {
+                maritime.set(MaritimeRestriction(playerId, target, null), action == MilitaryAction.BLOCKADE)
+                news += WorldNews(date, playerId, action.label, "${name(target)} 해상 교역 · ${action.label}", major = false)
+            }
+
             MilitaryAction.DECLARE_WAR -> {
                 declareWar(playerId, target, date)
             }
@@ -745,6 +779,7 @@ internal class Military(
     ) {
         check(war.treaty == null)
         if (war.active) war.ceasefire = date
+        maritime.clearInactive(::atWar)
         pendingOffers.remove(war.id)
         val transferred = area?.treatyRegions ?: listOfNotNull(region?.id)
         val from = area?.controller ?: region?.let(::owner)
@@ -893,6 +928,7 @@ internal class Military(
 
     fun snapshot(): MilitarySnapshot =
         MilitarySnapshot(
+            maritimeRestrictions = maritime.snapshot(),
             forces =
                 ids.associateWith { id ->
                     val total = rawPower(id) / maxPower * 100.0

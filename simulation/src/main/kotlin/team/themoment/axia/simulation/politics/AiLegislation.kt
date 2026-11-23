@@ -16,6 +16,9 @@ data class AiFiscalBill(
     val decision: LocalDate? = null,
     val vote: RollCall? = null,
     val approved: Boolean? = null,
+    val conference: Boolean = false,
+    val upperVote: Int? = null,
+    val delayed: Boolean = false,
 )
 
 internal class AiLegislation {
@@ -37,6 +40,7 @@ internal class AiLegislation {
         id: String,
         government: String,
         chamber: Legislature?,
+        upper: UpperHouse?,
         indicators: EconomyIndicators,
         approval: Double,
         enact: (String, Double, Double) -> Unit,
@@ -44,10 +48,28 @@ internal class AiLegislation {
         val bill = pending
         if (bill != null) {
             val deficit = bill.spendingAdjustment - spending - (bill.revenueAdjustment - revenue)
-            val score = (48.0 + (approval - 50.0) * 0.4 - deficit * 200.0).coerceIn(20.0, 80.0)
+            val score = (48.0 + (approval - 50.0) * 0.4 - deficit * 200.0 + if (bill.conference) 5.0 else 0.0).coerceIn(20.0, 80.0)
             val vote = chamber?.forecast(score, score, PopulationGroup.entries.associateWith { score }, null)
-            val passed = vote?.passes ?: (score >= 50.0)
-            lastDecision = bill.copy(decision = date, vote = vote, approved = passed)
+            val lowerPassed = vote?.passes ?: (score >= 50.0)
+            val upperYes = upper?.takeIf { chamber != null }?.forecast(score)
+            val upperPassed = upperYes == null || upperYes > requireNotNull(upper).seats / 2
+            if (lowerPassed && !upperPassed && !bill.conference) {
+                pending =
+                    bill.copy(
+                        conference = true,
+                        vote = vote,
+                        upperVote = upperYes,
+                        revenueAdjustment = (bill.revenueAdjustment + revenue) / 2,
+                        spendingAdjustment = (bill.spendingAdjustment + spending) / 2,
+                    )
+                return WorldNews(date, id, requireNotNull(upper).name, "${bill.title} 양원 협의회 회부 · 다음 달 절충안 재표결", false)
+            }
+            if (lowerPassed && !upperPassed && upper.power == ChamberPower.DELAY && !bill.delayed) {
+                pending = bill.copy(delayed = true, vote = vote, upperVote = upperYes)
+                return WorldNews(date, id, upper.name, "${bill.title} 절충안 시행을 다음 달까지 유예했다.", false)
+            }
+            val passed = lowerPassed && (upperPassed || bill.delayed)
+            lastDecision = bill.copy(decision = date, vote = vote, approved = passed, upperVote = upperYes)
             pending = null
             if (passed) {
                 revenue = bill.revenueAdjustment

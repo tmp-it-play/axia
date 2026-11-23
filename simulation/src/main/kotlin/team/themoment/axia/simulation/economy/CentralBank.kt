@@ -2,6 +2,7 @@ package team.themoment.axia.simulation.economy
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import java.time.YearMonth
 
 enum class MonetaryFramework(
     val label: String,
@@ -46,6 +47,7 @@ data class MonetaryPolicy(
     val anchorCurrency: String?,
     /** 플레이어가 기준금리를 직접 정할 수 있는지. */
     val directable: Boolean,
+    val governor: GovernorSnapshot,
 ) {
     val stance: MonetaryStance
         get() =
@@ -230,8 +232,10 @@ internal class RateSetter(
         inflation: Double,
         outputGap: Double,
         responsiveness: Double,
+        outputResponse: Double = OUTPUT_RESPONSE,
+        adjustment: Double = 0.0,
     ) {
-        val target = baseLevel + responsiveness * (inflation - referenceInflation) + OUTPUT_RESPONSE * outputGap
+        val target = baseLevel + responsiveness * (inflation - referenceInflation) + outputResponse * outputGap + adjustment
         shadowRate = (shadowRate + SMOOTHING * (target - shadowRate)).coerceIn(MIN_SHADOW_RATE, MAX_POLICY_RATE)
         rate = shadowRate.coerceAtLeast(MIN_POLICY_RATE)
     }
@@ -251,6 +255,7 @@ internal class RateSetter(
 /** 한 나라의 중앙은행. 통화동맹·고정환율이면 금리는 밖에서 정해지고, 자기 기준 수준은 경기 판단(중립 실질금리)에만 쓴다. */
 internal class CentralBank(
     val countryId: String,
+    val leadership: BankLeadership,
     val name: String?,
     framework: MonetaryFramework,
     independent: Boolean,
@@ -281,6 +286,32 @@ internal class CentralBank(
 
     val adjustableIndependence: Boolean
         get() = framework == MonetaryFramework.INFLATION_TARGETING || framework == MonetaryFramework.GOVERNMENT_DIRECTED
+
+    fun appoint(choice: GovernorMandate) {
+        if (independent && leadership.earlyReplacement) credibility = (credibility - 0.08).coerceAtLeast(0.0)
+        leadership.appoint(choice)
+    }
+
+    fun pressure(direction: BankPressure) {
+        leadership.request(direction)
+        credibility = (credibility - if (independent) 0.035 else 0.015).coerceAtLeast(0.0)
+    }
+
+    fun decideRate(
+        inflation: Double,
+        outputGap: Double,
+        response: Double,
+    ) {
+        val stance = leadership.mandate
+        val adjustment = (leadership.pressure?.direction ?: 0) * if (independent) 0.004 else 0.012
+        setter.followRule(
+            inflation,
+            outputGap,
+            response + stance.inflationResponse,
+            RateSetter.OUTPUT_RESPONSE + stance.outputResponse,
+            adjustment,
+        )
+    }
 
     fun direct(rate: Double) {
         if (framework == MonetaryFramework.GOVERNMENT_DIRECTED && rate.isFinite()) {
@@ -338,7 +369,7 @@ internal class CentralBank(
             directiveMonths--
         } else {
             directedRate = null
-            setter.followRule(inflation, outputGap, response)
+            decideRate(inflation, outputGap, response)
         }
     }
 
@@ -372,6 +403,8 @@ internal class MonetarySystem(
     data: CentralBankData,
     initial: Collection<InitialEconomy>,
     private val playerCountryId: String?,
+    start: YearMonth,
+    seed: Long,
 ) {
     private val unions = data.unions.associateBy { it.id }
     private val unionSetters =
@@ -380,6 +413,11 @@ internal class MonetarySystem(
             val weight = members.sumOf { it.gdp }
             val inflation = members.sumOf { it.inflation * it.gdp } / weight
             union.id to RateSetter(union.policyRate, inflation, union.inflationTarget)
+        }
+    private val unionGovernors =
+        data.unions.associate {
+            it.id to
+                BankLeadership(it.members.first(), start, seed xor it.id.hashCode().toLong())
         }
     private val unionOf = data.unions.flatMap { union -> union.members.map { it to union.id } }.toMap()
     private val pegOf = data.pegs.flatMap { peg -> peg.members.map { it to peg.anchor } }.toMap()
@@ -408,6 +446,7 @@ internal class MonetarySystem(
             economy.id to
                 CentralBank(
                     countryId = economy.id,
+                    leadership = unionId?.let(unionGovernors::getValue) ?: BankLeadership(economy.id, start, seed),
                     name = entry?.name,
                     framework = framework,
                     independent = entry?.independent ?: true,
@@ -430,30 +469,52 @@ internal class MonetarySystem(
     }
 
     /** 지난달 물가와 산출 갭으로 이번 달 금리를 정한다. */
-    fun decide(countries: Map<String, CountryEconomy>) {
+    fun decide(
+        countries: Map<String, CountryEconomy>,
+        now: YearMonth,
+    ) {
         unionSetters.forEach { (id, setter) ->
             val members = unions.getValue(id).members.map(countries::getValue)
             val weight = members.sumOf { it.dollarGdp }
             val inflation = members.sumOf { it.inflation * it.dollarGdp } / weight
             anchorInflation[id] = inflation
             setter.normalize()
-            setter.followRule(inflation, members.sumOf { it.outputGap * it.dollarGdp } / weight, TARGETING_RESPONSE)
+            val gap = members.sumOf { it.outputGap * it.dollarGdp } / weight
+            val governor = unionGovernors.getValue(id)
+            governor.advance(now, inflation - setter.inflationTarget, gap)
+            setter.followRule(
+                inflation,
+                gap,
+                TARGETING_RESPONSE + governor.mandate.inflationResponse,
+                RateSetter.OUTPUT_RESPONSE + governor.mandate.outputResponse,
+            )
         }
         anchorInflation.keys.filter { it in banks }.forEach { id -> anchorInflation[id] = countries.getValue(id).inflation }
         banks.values.forEach { bank ->
             bank.setter.normalize()
             bank.recover()
             val economy = countries.getValue(bank.countryId)
+            if (bank.unionId == null) {
+                bank.leadership.advance(now, economy.inflation - bank.setter.inflationTarget, economy.outputGap)
+                if (bank.countryId != playerCountryId && bank.adjustableIndependence && bank.leadership.pressure == null &&
+                    now.monthValue == 1
+                ) {
+                    when {
+                        economy.inflation > bank.setter.inflationTarget + 0.08 -> bank.pressure(BankPressure.TIGHTEN)
+                        economy.outputGap < -0.06 && economy.inflation < bank.setter.inflationTarget -> bank.pressure(BankPressure.EASE)
+                    }
+                }
+            }
             when (bank.framework) {
                 MonetaryFramework.INFLATION_TARGETING -> {
-                    bank.setter.followRule(economy.inflation, economy.outputGap, TARGETING_RESPONSE)
+                    bank.decideRate(economy.inflation, economy.outputGap, TARGETING_RESPONSE)
                 }
 
                 MonetaryFramework.GOVERNMENT_DIRECTED -> {
                     if (bank.countryId == playerCountryId) {
                         bank.applyDirectedRate(economy.inflation, economy.outputGap, DIRECTED_RESPONSE)
                     } else {
-                        bank.setter.followRule(economy.inflation, economy.outputGap, DIRECTED_RESPONSE)
+                        bank.decideRate(economy.inflation, economy.outputGap, DIRECTED_RESPONSE)
                     }
                 }
 
@@ -461,6 +522,7 @@ internal class MonetarySystem(
                     // 기준 통화의 이번 달 금리가 정해진 뒤 아래에서 따라간다.
                 }
             }
+            if (bank.unionId == null) bank.leadership.finishRateDecision()
         }
         banks.values.forEach { bank ->
             when (bank.framework) {
@@ -496,6 +558,7 @@ internal class MonetarySystem(
         val setter = bank.setter
         return MonetaryPolicy(
             bankName = bank.name,
+            governor = bank.leadership.snapshot(),
             framework = bank.framework,
             independent = bank.independent,
             credibility = bank.credibility,

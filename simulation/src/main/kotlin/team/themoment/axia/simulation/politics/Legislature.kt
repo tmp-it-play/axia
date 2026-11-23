@@ -3,6 +3,7 @@ package team.themoment.axia.simulation.politics
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import team.themoment.axia.simulation.nation.PopulationGroup
+import team.themoment.axia.simulation.society.Identity
 import kotlin.math.roundToInt
 
 enum class PartyRole(
@@ -25,9 +26,21 @@ data class ParliamentaryGroup(
     val nonVoting: Int = 0,
     /** 일반 의석 외에 정당에 배정된 유보석. 표결에는 참여하되 다음 지역구 선거의 득표 기반에서는 뺀다. */
     val reservedSeats: Int = 0,
+    val foundingIdentity: Identity? = null,
 ) {
     init {
         require(name.isNotBlank() && seats > 0 && nonVoting in 0..seats && reservedSeats in 0..seats)
+    }
+
+    val identity: Identity? get() = foundingIdentity ?: partyIdentity(name, constituency)
+
+    internal fun supportMood(
+        groups: Map<PopulationGroup, Double>,
+        identities: Map<Identity, Double>,
+        fallback: Double,
+    ): Double {
+        val moods = listOfNotNull(groups[constituency], identities[identity])
+        return if (moods.isEmpty()) fallback else moods.average()
     }
 
     val directSeats: Int get() = seats - reservedSeats
@@ -64,10 +77,12 @@ data class Legislature(
         groupScores: Map<PopulationGroup, Double>,
         negotiatingWith: String?,
         sponsor: String? = null,
+        identityScores: Map<Identity, Double> = emptyMap(),
+        districtOpinion: Map<String, List<Double>> = emptyMap(),
     ): RollCall {
         val rows =
             groups.map { party ->
-                val interest = party.constituency?.let { groupScores.getValue(it) - constituencyMean } ?: 0.0
+                val interest = party.supportMood(groupScores, identityScores, constituencyMean) - constituencyMean
                 // 협의는 표결을 2주 늦춘다. 정책에 호의적인 지지 기반일수록 협의로 더 많은 표를 얻는다.
                 val concession = if (party.name == negotiatingWith) (10.0 + interest * 0.5).coerceIn(0.0, 20.0) else 0.0
                 val backing =
@@ -80,7 +95,19 @@ data class Legislature(
                     }
                 val support = policyScore + backing + interest * 0.5
 
-                fun seatsWith(points: Double): Int = (party.votingSeats * points.coerceIn(0.0, 100.0) / 100).roundToInt()
+                val districts = districtOpinion[party.name].orEmpty().take(party.votingSeats)
+
+                fun seatsWith(points: Double): Int {
+                    // 의석별 고정 분위수로 같은 안의 전망과 표결에서 같은 의원이 이탈한다.
+                    val localYes =
+                        districts.withIndex().count { (index, local) ->
+                            val cutoff = (index + 0.5) * 100.0 / districts.size
+                            val alignment = if (sponsor == null) 1.0 else -1.0
+                            points + local.coerceIn(-25.0, 25.0) * 0.6 * alignment >= cutoff
+                        }
+                    val atLarge = party.votingSeats - districts.size
+                    return localYes + (atLarge * points.coerceIn(0.0, 100.0) / 100).roundToInt()
+                }
                 val yes = seatsWith(support + concession)
                 PartyVote(party, yes, yes - seatsWith(support))
             }

@@ -29,6 +29,7 @@ internal class UnitedStatesModule(
 
     private val suspension =
         CountryPolicyItem(
+            binary = true,
             key = "usa.debt_limit_suspension",
             label = "부채한도 유예",
             lowLabel = "한도 유지",

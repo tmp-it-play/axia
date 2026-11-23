@@ -201,7 +201,7 @@
   "noConfidence": true,
   "presidentialVeto": {
    "holder": "안제이 두다",
-   "party": "법과 정의",
+   "party": "법과정의당",
    "override": 0.6
   },
   "sourceNote": "상원 거부는 세임 과반으로 재의결(헌법 제121조)이라 지연으로 단순화. 대통령 거부권은 세임 재적 3/5로 재의결(제122조). 두다 대통령은 법과 정의 출신으로 투스크 정부와 동거. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",

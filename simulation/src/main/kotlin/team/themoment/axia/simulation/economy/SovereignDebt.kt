@@ -10,14 +10,43 @@ import kotlinx.serialization.Serializable
 enum class DebtPlan(
     val label: String,
     val negotiationMonths: Int,
-    val haircut: Double,
-    val maturityMonths: Int,
     val initialSpread: Double,
     val recoveryMonths: Int,
 ) {
-    PRINCIPAL_REDUCTION("원금 감면", 3, 0.40, 60, 0.04, 36),
-    MATURITY_EXTENSION("만기 연장", 2, 0.0, 120, 0.015, 24),
+    PRINCIPAL_REDUCTION("원금 감면", 3, 0.04, 36),
+    MATURITY_EXTENSION("만기 연장", 2, 0.015, 24),
 }
+
+/** 공공 채권은 일반 양자·공적 국채를 뜻한다. 별도 외환계정의 IMF 대출은 포함하지 않는다. */
+enum class Creditor(
+    val label: String,
+    val reduction: Double,
+    val reductionMonths: Int,
+    val extensionMonths: Int,
+    internal val couponFactor: Double,
+    internal val financingLimit: Double,
+) {
+    DOMESTIC("국내 채권자", 0.25, 60, 96, 0.65, 0.28),
+    MARKET("해외 민간 채권자", 0.50, 48, 108, 0.75, 0.22),
+    OFFICIAL("공적 채권자", 0.15, 96, 180, 0.40, 0.32),
+    ;
+
+    fun haircut(plan: DebtPlan) = if (plan == DebtPlan.PRINCIPAL_REDUCTION) reduction else 0.0
+
+    fun months(plan: DebtPlan) = if (plan == DebtPlan.PRINCIPAL_REDUCTION) reductionMonths else extensionMonths
+}
+
+data class CreditorSnapshot(
+    val creditor: Creditor,
+    val outstanding: Double,
+    val eligible: Double,
+    val proposal: DebtPlan?,
+    val exchanged: Double,
+    val coupon: Double,
+    val monthsToMaturity: Int,
+    val countered: Boolean,
+    val lastWriteDown: Double?,
+)
 
 enum class DebtPhase(
     val label: String,
@@ -41,6 +70,7 @@ data class DebtWorkoutSnapshot(
     val exchangedDebt: Double,
     val exchangeCoupon: Double,
     val lastWriteDown: Double?,
+    val creditors: List<CreditorSnapshot>,
 )
 
 internal enum class DebtNotice { DEFAULT, COUNTEROFFER, SETTLEMENT, RECOVERED }
@@ -57,10 +87,41 @@ internal class SovereignDebt(
         private set
     private var monthsRemaining = 0
     private var stressMonths = 0
-    private var eligiblePrincipal = 0.0
-    private var exchanged = 0.0
-    private var coupon = 0.0
-    private var maturityMonthsLeft = 0
+
+    private class Holding(
+        val creditor: Creditor,
+        val issueShare: Double,
+        var principal: Double,
+    ) {
+        var eligible = 0.0
+        var exchanged = 0.0
+        var coupon = 0.0
+        var months = 0
+        var proposal: DebtPlan? = null
+        var countered = false
+        var lastWriteDown: Double? = null
+    }
+
+    // 채권자 보유 통계가 없는 나라에도 같은 규칙을 적용한다. 공적 채권 비중만 소득군에 따라 달라진다.
+    private val holdings =
+        run {
+            val official =
+                when (initial.society.incomeGroup) {
+                    "HIC" -> 0.05
+                    "UMC" -> 0.15
+                    "LMC" -> 0.30
+                    else -> 0.45
+                }
+            Creditor.entries.map { group ->
+                val share =
+                    when (group) {
+                        Creditor.DOMESTIC -> (1 - official) * 0.6
+                        Creditor.MARKET -> (1 - official) * 0.4
+                        Creditor.OFFICIAL -> official
+                    }
+                Holding(group, share, balance.coerceAtLeast(0.0) * share)
+            }
+        }
     private var lastWriteDown: Double? = null
 
     private val initialInterest = initial.debt * initial.interestRate
@@ -79,49 +140,85 @@ internal class SovereignDebt(
             }
 
     fun borrow(amount: Double) {
+        val previous = balance.coerceAtLeast(0.0)
         balance += amount
-        exchanged = minOf(exchanged, balance.coerceAtLeast(0.0))
-        if (phase == DebtPhase.AWAITING_PLAN || phase == DebtPhase.NEGOTIATING) {
-            eligiblePrincipal = minOf(eligiblePrincipal, balance.coerceAtLeast(0.0))
+        val change = balance.coerceAtLeast(0.0) - previous
+        if (change == 0.0) return
+        holdings.forEach { holding ->
+            holding.principal =
+                if (change > 0.0) {
+                    holding.principal + change * holding.issueShare
+                } else {
+                    holding.principal * (balance.coerceAtLeast(0.0) / previous)
+                }
+            holding.exchanged = minOf(holding.exchanged, holding.principal)
+            holding.eligible = minOf(holding.eligible, holding.principal)
         }
     }
 
-    /** 교환채에는 합의한 고정 이율, 나머지에는 국채 실효금리(순자산이면 자산 수익률)를 적용한다. */
-    fun annualInterest(marketRate: Double): Double = (balance - exchanged) * marketRate + exchanged * coupon
+    fun annualInterest(marketRate: Double): Double = balance * marketRate + holdings.sumOf { it.exchanged * (it.coupon - marketRate) }
 
     private fun fundingNeed(gdp: Double): Double {
-        val due = if (maturityMonthsLeft > 0) exchanged * minOf(12, maturityMonthsLeft) / maturityMonthsLeft else 0.0
-        val rollover = (balance.coerceAtLeast(0.0) - exchanged) / MARKET_MATURITY_YEARS + due
+        val rollover =
+            holdings.sumOf {
+                val due = if (it.months > 0) it.exchanged * minOf(12, it.months) / it.months else 0.0
+                (it.principal - it.exchanged) / MARKET_MATURITY_YEARS + due
+            }
         return (rollover / gdp + deficit).coerceAtLeast(0.0)
+    }
+
+    fun setTerms(
+        creditor: Creditor,
+        proposal: DebtPlan?,
+    ): Boolean {
+        if (phase != DebtPhase.AWAITING_PLAN) return false
+        holdings[creditor.ordinal].proposal = proposal
+        return true
+    }
+
+    fun negotiateByCapacity(extensionNeed: Double) {
+        check(phase == DebtPhase.AWAITING_PLAN)
+        holdings.forEach {
+            it.proposal = if (extensionNeed <= it.creditor.financingLimit) DebtPlan.MATURITY_EXTENSION else DebtPlan.PRINCIPAL_REDUCTION
+        }
+        startNegotiation()
     }
 
     fun negotiate(proposal: DebtPlan) {
         check(phase == DebtPhase.AWAITING_PLAN)
-        startNegotiation(proposal)
+        holdings.forEach { if (it.proposal == null) it.proposal = proposal }
+        startNegotiation()
     }
 
-    private fun startNegotiation(proposal: DebtPlan) {
+    private fun startNegotiation() {
         phase = DebtPhase.NEGOTIATING
-        plan = proposal
-        monthsRemaining = proposal.negotiationMonths
+        plan =
+            if (holdings.any { it.eligible > 0 && it.proposal == DebtPlan.PRINCIPAL_REDUCTION }) {
+                DebtPlan.PRINCIPAL_REDUCTION
+            } else {
+                DebtPlan.MATURITY_EXTENSION
+            }
+        monthsRemaining = requireNotNull(plan).negotiationMonths
     }
 
-    /** 현재 재정으로 원금 보전안에 합의했을 때 첫해 조달 필요액(GDP 대비). */
     fun extensionNeed(
         gdp: Double,
         annualPrimaryDeficit: Double,
         marketRate: Double,
     ): Double {
-        val eligible = minOf(eligiblePrincipal, balance.coerceAtLeast(0.0))
-        val other = balance.coerceAtLeast(0.0) - eligible
-        val extension = DebtPlan.MATURITY_EXTENSION
+        val averageRate = averageRate(marketRate)
         val financing =
-            annualPrimaryDeficit + eligible * (12.0 / extension.maturityMonths + exchangeRate(marketRate)) +
-                other * (1.0 / MARKET_MATURITY_YEARS + marketRate)
-        return (financing / gdp).coerceAtLeast(0.0)
+            holdings.sumOf { holding ->
+                val terms = holding.proposal ?: DebtPlan.MATURITY_EXTENSION
+                val creditor = holding.creditor
+                val converted = holding.eligible * (1 - creditor.haircut(terms))
+                converted * (12.0 / creditor.months(terms) + averageRate * creditor.couponFactor) +
+                    (holding.principal - holding.eligible) * (1.0 / MARKET_MATURITY_YEARS + marketRate)
+            }
+        return ((annualPrimaryDeficit + financing) / gdp).coerceAtLeast(0.0)
     }
 
-    private fun exchangeRate(marketRate: Double): Double = if (balance > 0.0) annualInterest(marketRate) / balance * COUPON_FACTOR else 0.0
+    private fun averageRate(marketRate: Double) = if (balance > 0.0) annualInterest(marketRate) / balance else 0.0
 
     /** 이달 이자와 기초수지를 한 번 결산한 뒤 연속 자금 압박 또는 협상 기한을 판정한다. */
     fun closeMonth(
@@ -134,18 +231,27 @@ internal class SovereignDebt(
         val shortfall = primarySpending + interest - revenue
         deficit = shortfall * 12 / gdp
         // 만기 원금은 시장 차환으로 재분류한다. 실제 부채 증감은 재정수지로 한 번만 기록한다.
-        if (maturityMonthsLeft > 0) {
-            exchanged -= exchanged / maturityMonthsLeft
-            maturityMonthsLeft--
+        holdings.forEach {
+            if (it.months > 0) {
+                it.exchanged -= it.exchanged / it.months
+                it.months--
+            }
         }
         borrow(shortfall)
         if (phase == DebtPhase.AWAITING_PLAN) return null
         if (phase == DebtPhase.NEGOTIATING) {
             if (--monthsRemaining > 0) return null
-            if (plan == DebtPlan.MATURITY_EXTENSION &&
-                extensionNeed(gdp, (primarySpending - revenue) * 12, marketRate) > EXTENSION_CAPACITY
-            ) {
-                startNegotiation(DebtPlan.PRINCIPAL_REDUCTION)
+            val need = extensionNeed(gdp, (primarySpending - revenue) * 12, marketRate)
+            val objections =
+                holdings.filter {
+                    it.eligible > 0.0 && it.proposal == DebtPlan.MATURITY_EXTENSION && need > it.creditor.financingLimit
+                }
+            if (objections.isNotEmpty()) {
+                objections.forEach {
+                    it.proposal = DebtPlan.PRINCIPAL_REDUCTION
+                    it.countered = true
+                }
+                startNegotiation()
                 return DebtNotice.COUNTEROFFER
             }
             settle(gdp, marketRate)
@@ -160,7 +266,11 @@ internal class SovereignDebt(
             plan = null
             monthsRemaining = 0
             stressMonths = 0
-            eligiblePrincipal = balance
+            holdings.forEach {
+                it.eligible = it.principal
+                it.proposal = null
+                it.countered = false
+            }
             return DebtNotice.DEFAULT
         }
         if (phase == DebtPhase.RECOVERY && --monthsRemaining == 0) {
@@ -175,12 +285,20 @@ internal class SovereignDebt(
         marketRate: Double,
     ) {
         val agreement = requireNotNull(plan)
-        val eligible = minOf(eligiblePrincipal, balance.coerceAtLeast(0.0))
-        val relief = eligible * agreement.haircut
-        coupon = exchangeRate(marketRate)
+        val previousRate = averageRate(marketRate)
+        val relief =
+            holdings.sumOf {
+                val terms = requireNotNull(it.proposal)
+                val cut = it.eligible * it.creditor.haircut(terms)
+                it.coupon = previousRate * it.creditor.couponFactor
+                it.principal -= cut
+                it.lastWriteDown = cut / gdp
+                it.exchanged = it.eligible - cut
+                it.months = it.creditor.months(terms)
+                it.eligible = 0.0
+                cut
+            }
         balance -= relief
-        exchanged = eligible - relief
-        maturityMonthsLeft = agreement.maturityMonths
         lastWriteDown = relief / gdp
         monthsRemaining = agreement.recoveryMonths
         phase = DebtPhase.RECOVERY
@@ -196,8 +314,25 @@ internal class SovereignDebt(
             interestThreshold = interestThreshold,
             fundingThreshold = fundingThreshold,
             marketSpread = marketSpread,
-            exchangedDebt = exchanged / gdp,
-            exchangeCoupon = coupon,
+            exchangedDebt = holdings.sumOf { it.exchanged } / gdp,
+            exchangeCoupon =
+                holdings.sumOf { it.exchanged }.let { total ->
+                    if (total > 0.0) holdings.sumOf { it.exchanged * it.coupon } / total else 0.0
+                },
+            creditors =
+                holdings.map {
+                    CreditorSnapshot(
+                        it.creditor,
+                        it.principal / gdp,
+                        it.eligible / gdp,
+                        it.proposal,
+                        it.exchanged / gdp,
+                        it.coupon,
+                        it.months,
+                        it.countered,
+                        it.lastWriteDown,
+                    )
+                },
             lastWriteDown = lastWriteDown,
         )
 
@@ -217,9 +352,7 @@ internal class SovereignDebt(
         private const val FUNDING_MARGIN = 0.10
         private const val LARGE_DEFICIT = 0.04
 
-        /** 협상 중 신규 차입 가산금리, 교환채의 기존 평균 이율 대비 배율, 연장안의 GDP 대비 조달 여력. */
+        /** 협상 중 신규 차입 가산금리. */
         private const val DEFAULT_SPREAD = 0.06
-        private const val COUPON_FACTOR = 0.60
-        const val EXTENSION_CAPACITY = 0.25
     }
 }

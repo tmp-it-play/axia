@@ -4,12 +4,8 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import team.themoment.axia.simulation.math.nextGaussian
 import team.themoment.axia.simulation.nation.PopulationGroup
-import kotlin.math.PI
-import kotlin.math.cos
 import kotlin.math.exp
-import kotlin.math.ln
 import kotlin.math.pow
-import kotlin.math.sqrt
 import kotlin.random.Random
 
 /** 성향 집단 기준률을 정하는 국가별 실측값. 비율은 소수다. */
@@ -66,6 +62,7 @@ internal data class SocietyProfile(
     val defenseShare: Double,
     val childShare: Double,
     val elderlyShare: Double,
+    val lifeExpectancy: Double,
 )
 
 /** 여론을 직업 집단 만족도와 성향 만족도의 선형 결합으로 쓰기 위한 계수. 합은 1이다. */
@@ -83,110 +80,206 @@ internal data class ElectorateSummary(
     val politicalWeights: OpinionWeights,
 )
 
-/**
- * 시드 기반 대표 유권자 표본. 각자 직업 집단, 연령대, 성향별 소속 강도(0~1)를 가진다.
- * 성향 사이에는 권위·전통 축과 경제 좌우 축으로 약한 상관을 두어, 교차 소속도 자연스럽게 생긴다.
- * 소속은 게임 동안 고정한다.
- */
+/** 시작 시점과 비교한 생활 여건. 가치관 재평가 때 각 사안의 중요도를 바꾼다. */
+internal data class VoterConditions(
+    val unemploymentChange: Double = 0.0,
+    val crimeChange: Double = 0.0,
+    val pollutionChange: Double = 0.0,
+    val educationChange: Double = 0.0,
+    val libertiesChange: Double = 0.0,
+) {
+    fun salience(identity: Identity): Double =
+        (
+            1.0 +
+                when (identity) {
+                    Identity.ENVIRONMENTALISTS -> 0.7 * pollutionChange + 0.3 * educationChange
+                    Identity.PATRIOTS -> 0.5 * crimeChange
+                    Identity.RELIGIOUS -> 0.0
+                    Identity.LIBERTARIANS -> -0.5 * libertiesChange + 0.3 * educationChange
+                    Identity.EGALITARIANS -> 2.0 * unemploymentChange
+                    Identity.FREE_MARKET -> -1.5 * unemploymentChange
+                    Identity.UNIONISTS -> 2.5 * unemploymentChange
+                    Identity.YOUTH, Identity.PARENTS -> 0.0
+                }
+        ).coerceIn(0.5, 1.8)
+}
+
+/** 개인별 잠재 성향과 가입 문턱을 보존하고, 연령·직업과 생활 여건이 바뀌면 소속을 재평가한다. */
 internal class Electorate(
     groupShares: Map<PopulationGroup, Double>,
-    profile: SocietyProfile,
-    random: Random,
+    private val profile: SocietyProfile,
+    private val random: Random,
 ) {
-    /** 직업 하나의 표본을 한 번 집계하고 월별 인구 변화에는 대표 인구만 바꾼다. */
+    private class Voter(
+        var group: PopulationGroup,
+        var ageMonths: Int,
+        val lifespan: Int,
+        random: Random,
+    ) {
+        val tradition = random.nextGaussian()
+        val left = random.nextGaussian()
+        val threshold = DoubleArray(Identity.entries.size) { random.nextDouble() }
+        val attachment = DoubleArray(Identity.entries.size) { 0.5 + 0.5 * random.nextDouble() }
+        val strengths = DoubleArray(Identity.entries.size)
+        val age: AgeBand get() =
+            when {
+                ageMonths < 35 * 12 -> AgeBand.YOUNG
+                ageMonths < RETIREMENT -> AgeBand.MIDDLE
+                else -> AgeBand.OLD
+            }
+    }
+
     private class SampleGroup {
         var count = 0
         var jobCoefficient = 0.0
         val identityCoefficients = DoubleArray(Identity.entries.size)
-
-        // 대각선은 각 성향의 소속자 수, 그 밖의 칸은 두 성향의 공동 소속자 수다.
         val joint = Array(Identity.entries.size) { IntArray(Identity.entries.size) }
 
-        fun record(
-            strengths: Array<DoubleArray>,
-            voter: Int,
+        fun countVoter(
+            voter: Voter,
+            delta: Int,
         ) {
-            count++
-            val denominator = 1.0 + Identity.entries.sumOf { it.weight * strengths[it.ordinal][voter] }
-            jobCoefficient += 1.0 / denominator
+            count += delta
+            val strengths = voter.strengths
+            val denominator = 1.0 + Identity.entries.sumOf { it.weight * strengths[it.ordinal] }
+            jobCoefficient += delta / denominator
             for (identity in Identity.entries) {
-                val strength = strengths[identity.ordinal][voter]
+                val strength = strengths[identity.ordinal]
                 if (strength == 0.0) continue
-                identityCoefficients[identity.ordinal] += identity.weight * strength / denominator
+                identityCoefficients[identity.ordinal] += delta * identity.weight * strength / denominator
                 for (other in Identity.entries) {
-                    if (strengths[other.ordinal][voter] > 0.0) joint[identity.ordinal][other.ordinal]++
+                    if (strengths[other.ordinal] > 0.0) joint[identity.ordinal][other.ordinal] += delta
                 }
             }
         }
     }
 
+    private val occupations = PopulationGroup.entries.filter { it != PopulationGroup.RETIREES }
     private val samples = PopulationGroup.entries.associateWith { SampleGroup() }
+    private val voters: Array<Voter>
+    private val scale: Map<Identity, Double>
+    private val attitudes = Identity.entries.filterNot { it.demographic }
 
     init {
-        val size = SAMPLE_SIZE
-        val groupOf = IntArray(size)
-        val ageOf = IntArray(size)
-        val strengths = Array(Identity.entries.size) { DoubleArray(size) }
-        val groups = PopulationGroup.entries
-        val cumulative = groups.runningFold(0.0) { sum, group -> sum + groupShares.getValue(group) }.drop(1)
-        val total = cumulative.last()
-        val retirees = groupShares.getValue(PopulationGroup.RETIREES) / total
+        val targets = sampleCounts(groupShares, SAMPLE_SIZE)
+        val assignments = targets.flatMap { (group, count) -> List(count) { group } }.shuffled(random)
         val youngShare = (0.25 + 0.6 * profile.childShare - 0.3 * profile.elderlyShare).coerceIn(0.15, 0.5)
-        val youngAmongWorking = (youngShare / (1.0 - retirees)).coerceIn(0.0, 0.8)
-        val tradition = DoubleArray(size)
-        val left = DoubleArray(size)
-        for (i in 0 until size) {
-            // 소수 직업도 적어도 한 명을 표집한다. 실제 인구 비중은 집계할 때 적용한다.
-            val group =
-                if (i < groups.size) {
-                    i
-                } else {
-                    val draw = random.nextDouble() * total
-                    cumulative.indexOfFirst { draw < it }.let { if (it < 0) groups.lastIndex else it }
-                }
-            groupOf[i] = group
-            ageOf[i] =
-                when {
-                    groups[group] == PopulationGroup.RETIREES -> AgeBand.OLD.ordinal
-                    random.nextDouble() < youngAmongWorking -> AgeBand.YOUNG.ordinal
-                    else -> AgeBand.MIDDLE.ordinal
-                }
-            tradition[i] = random.nextGaussian()
-            left[i] = random.nextGaussian()
-        }
-        Identity.entries.forEach { identity ->
-            val row = strengths[identity.ordinal]
-            if (identity.demographic) {
-                for (i in 0 until size) {
-                    val member =
-                        when (identity) {
-                            Identity.YOUTH -> {
-                                ageOf[i] == AgeBand.YOUNG.ordinal
-                            }
-
-                            else -> {
-                                random.nextDouble() <
-                                    PARENT_RATE[ageOf[i]] * (profile.childShare / REFERENCE_CHILD_SHARE).coerceIn(0.5, 1.6)
-                            }
-                        }
-                    row[i] = if (member) 1.0 else 0.0
-                }
-            } else {
-                val propensity =
-                    DoubleArray(size) { i ->
-                        val group = groups[groupOf[i]]
-                        val latent = latentFactor(identity, tradition[i], left[i])
-                        (GROUP_MULTIPLIER[identity]?.get(group) ?: 1.0) * AGE_MULTIPLIER.getValue(identity)[ageOf[i]] * latent
+        val youngAmongWorking = (youngShare / (1.0 - groupShares.getValue(PopulationGroup.RETIREES))).coerceIn(0.0, 0.8)
+        voters =
+            Array(SAMPLE_SIZE) { i ->
+                val group = assignments[i]
+                val lifespan = lifespan()
+                val age =
+                    when {
+                        group == PopulationGroup.RETIREES -> random.nextInt(RETIREMENT, lifespan)
+                        random.nextDouble() < youngAmongWorking -> random.nextInt(ENTRY_AGE, 35 * 12)
+                        else -> random.nextInt(35 * 12, RETIREMENT)
                     }
-                // 표본 전체의 평균 소속 확률이 국가 기준률이 되도록 맞춘다.
-                val scale = baseRate(identity, profile) / propensity.average()
-                for (i in 0 until size) {
-                    val probability = (propensity[i] * scale).coerceAtMost(MAX_PROBABILITY)
-                    row[i] = if (random.nextDouble() < probability) 0.5 + 0.5 * random.nextDouble() else 0.0
-                }
+                Voter(group, age, lifespan, random)
             }
+        scale =
+            attitudes.associateWith { identity ->
+                baseRate(identity, profile) * voters.size / voters.sumOf { propensity(it, identity) }
+            }
+        val salience = DoubleArray(Identity.entries.size) { 1.0 }
+        voters.forEach { voter ->
+            assess(voter, profile.childShare, salience)
+            samples.getValue(voter.group).countVoter(voter, 1)
         }
-        for (i in 0 until size) samples.getValue(groups[groupOf[i]]).record(strengths, i)
+    }
+
+    /** 65세에 은퇴하며, 사망한 표본 자리는 새로 진입하는 18세 코호트가 채운다. */
+    fun advanceMonth(
+        population: Map<PopulationGroup, Double>,
+        demographics: DemographySnapshot,
+        conditions: VoterConditions,
+    ) {
+        val salience = DoubleArray(Identity.entries.size) { conditions.salience(Identity.entries[it]) }
+        val counts = IntArray(PopulationGroup.entries.size)
+        for (i in voters.indices) {
+            var voter = voters[i]
+            voter.ageMonths++
+            val exits = voter.ageMonths >= voter.lifespan + ((demographics.lifeExpectancy - profile.lifeExpectancy) * 12).toInt()
+            val retires = voter.ageMonths == RETIREMENT
+            // 연 1회 생일에 가치관을 재평가한다. 진입과 은퇴는 그 달에 반영한다.
+            if (exits || retires || voter.ageMonths % 12 == 0) {
+                samples.getValue(voter.group).countVoter(voter, -1)
+                if (exits) {
+                    voter = Voter(occupations.random(random), ENTRY_AGE, lifespan(), random)
+                    voters[i] = voter
+                } else if (retires) {
+                    voter.group = PopulationGroup.RETIREES
+                }
+                assess(voter, demographics.childShare, salience)
+                samples.getValue(voter.group).countVoter(voter, 1)
+            }
+            counts[voter.group.ordinal]++
+        }
+
+        // 실제 직업 비중에 맞춰 남는 집단에서 빈 집단으로 표본을 옮긴다. 같은 사람의 잠재 성향은 유지한다.
+        val working = population.filterKeys { it != PopulationGroup.RETIREES }
+        val targets = sampleCounts(working, voters.size - counts[PopulationGroup.RETIREES.ordinal])
+        val vacancies = occupations.flatMap { group -> List((targets.getValue(group) - counts[group.ordinal]).coerceAtLeast(0)) { group } }
+        if (vacancies.isEmpty()) return
+        var filled = 0
+        val start = random.nextInt(voters.size)
+        for (offset in voters.indices) {
+            val voter = voters[(start + offset) % voters.size]
+            val source = voter.group
+            if (source == PopulationGroup.RETIREES || counts[source.ordinal] <= targets.getValue(source)) continue
+            samples.getValue(source).countVoter(voter, -1)
+            counts[source.ordinal]--
+            voter.group = vacancies[filled++]
+            counts[voter.group.ordinal]++
+            assess(voter, demographics.childShare, salience)
+            samples.getValue(voter.group).countVoter(voter, 1)
+            if (filled == vacancies.size) break
+        }
+    }
+
+    private fun lifespan(): Int = ((profile.lifeExpectancy + 7.0 + 7.0 * random.nextGaussian()).coerceIn(70.0, 100.0) * 12).toInt()
+
+    /** 소수 집단에 한 명을 보장하고 나머지 표본을 최대 잔여 방식으로 배분한다. */
+    private fun sampleCounts(
+        shares: Map<PopulationGroup, Double>,
+        total: Int,
+    ): Map<PopulationGroup, Int> {
+        val sum = shares.values.sum()
+        val extra = shares.mapValues { (_, share) -> share / sum * (total - shares.size) }
+        val counts = extra.mapValues { 1 + it.value.toInt() }.toMutableMap()
+        extra.keys.sortedByDescending { extra.getValue(it) % 1.0 }.take(total - counts.values.sum()).forEach { group ->
+            counts[group] = counts.getValue(group) + 1
+        }
+        return counts
+    }
+
+    private fun propensity(
+        voter: Voter,
+        identity: Identity,
+    ): Double =
+        (GROUP_MULTIPLIER[identity]?.get(voter.group) ?: 1.0) * AGE_MULTIPLIER.getValue(identity)[voter.age.ordinal] *
+            latentFactor(identity, voter.tradition, voter.left)
+
+    private fun assess(
+        voter: Voter,
+        childShare: Double,
+        salience: DoubleArray,
+    ) {
+        for (identity in Identity.entries) {
+            val i = identity.ordinal
+            val probability =
+                when (identity) {
+                    Identity.YOUTH -> if (voter.age == AgeBand.YOUNG) 1.0 else 0.0
+                    Identity.PARENTS -> PARENT_RATE[voter.age.ordinal] * (childShare / REFERENCE_CHILD_SHARE).coerceIn(0.5, 1.6)
+                    else -> (propensity(voter, identity) * scale.getValue(identity) * salience[i]).coerceAtMost(MAX_PROBABILITY)
+                }
+            voter.strengths[i] =
+                if (voter.threshold[i] < probability) {
+                    if (identity.demographic) 1.0 else voter.attachment[i]
+                } else {
+                    0.0
+                }
+        }
     }
 
     fun summarize(
@@ -256,6 +349,8 @@ internal class Electorate(
         }.coerceIn(0.0, MAX_PROBABILITY)
 
     private companion object {
+        const val ENTRY_AGE = 18 * 12
+        const val RETIREMENT = 65 * 12
         const val SAMPLE_SIZE = 3_000
         const val MAX_PROBABILITY = 0.95
         const val REFERENCE_CHILD_SHARE = 0.18

@@ -1,6 +1,8 @@
 package team.themoment.axia.simulation.nation
 
 import team.themoment.axia.simulation.economy.InitialSociety
+import team.themoment.axia.simulation.economy.Sector
+import team.themoment.axia.simulation.economy.SectorLine
 import kotlin.math.pow
 
 /** 지지율 원인 분해에 쓰는 만족도 요인. */
@@ -158,11 +160,49 @@ private fun taxes(
 internal data class GroupComposition(
     val shares: Map<PopulationGroup, Double>,
     val incomes: Map<PopulationGroup, Double>,
+)
+
+/** 산업별 취업자 비중에 맞춰 비은퇴층의 직업 분포가 12개월에 걸쳐 조정된다(게임 가정). */
+internal class OccupationalMobility(
+    initial: Map<PopulationGroup, Double>,
+    private val exposures: Map<PopulationGroup, Map<Sector, Double>>,
 ) {
-    /** 고령층을 제외한 직업 간 시작 비율은 유지한다. */
-    fun atRetireeShare(retirees: Double): Map<PopulationGroup, Double> {
-        val workingRatio = (1.0 - retirees) / (1.0 - shares.getValue(PopulationGroup.RETIREES))
-        return shares.mapValues { (group, share) -> if (group == PopulationGroup.RETIREES) retirees else share * workingRatio }
+    private val occupations = PopulationGroup.entries.filter { it != PopulationGroup.RETIREES }
+    private val base = occupations.associateWith { initial.getValue(it) / (1.0 - initial.getValue(PopulationGroup.RETIREES)) }
+    private var working = base
+    private lateinit var initialEmployment: Map<Sector, Double>
+    var netTransfers = occupations.associateWith { 0.0 }
+        private set
+
+    fun start(sectors: List<SectorLine>) {
+        initialEmployment = sectors.associate { it.sector to it.employment }
+    }
+
+    fun advanceMonth(
+        sectors: List<SectorLine>,
+        retireeShare: Double,
+    ): Map<PopulationGroup, Double> {
+        val employmentIndex =
+            sectors.associate { line ->
+                val original = initialEmployment.getValue(line.sector)
+                line.sector to if (original > 0.0) line.employment / original else 1.0
+            }
+        val demand =
+            base.mapValues { (group, share) ->
+                val weights = exposures.getValue(group)
+                share * weights.entries.sumOf { (sector, weight) -> weight * employmentIndex.getValue(sector) } / weights.values.sum()
+            }
+        val demandTotal = demand.values.sum()
+        val previous = working
+        working =
+            occupations.associateWith { group ->
+                val current = previous.getValue(group)
+                current + (demand.getValue(group) / demandTotal - current) / 12.0
+            }
+        // 유입과 유출은 같은 총량이다. 은퇴 인구 증감은 직업 이동에서 제외한다.
+        val workforce = 1.0 - retireeShare
+        netTransfers = occupations.associateWith { (working.getValue(it) - previous.getValue(it)) * workforce }
+        return working.mapValues { it.value * workforce } + (PopulationGroup.RETIREES to retireeShare)
     }
 }
 

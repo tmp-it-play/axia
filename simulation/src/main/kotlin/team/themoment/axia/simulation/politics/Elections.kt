@@ -1,6 +1,7 @@
 package team.themoment.axia.simulation.politics
 
 import team.themoment.axia.simulation.nation.PopulationGroup
+import team.themoment.axia.simulation.society.Identity
 import java.time.LocalDate
 import kotlin.math.exp
 import kotlin.math.floor
@@ -16,15 +17,10 @@ data class PartyResult(
     val seatsAfter: Int,
 )
 
-data class ExecutiveResult(
-    val title: String,
-    val incumbent: String,
-    val challenger: String?,
-    /** 양자 대결에서 집권당 후보의 득표율. */
-    val incumbentShare: Double,
-) {
-    val winner: String get() = if (challenger == null || incumbentShare >= 0.5) incumbent else challenger
-}
+data class CoalitionPreference(
+    val formateur: String,
+    val partner: String,
+)
 
 data class ElectionResult(
     val date: LocalDate,
@@ -37,6 +33,7 @@ data class ElectionResult(
     /** 의회 해산으로 폐기돼 초안으로 돌아간 재정안이 있었는지. */
     val billLapsed: Boolean,
     val districts: List<DistrictResult> = emptyList(),
+    val coalitionReport: String? = null,
 ) {
     val governmentChanged: Boolean get() = governmentBefore != governmentAfter
 }
@@ -74,7 +71,6 @@ internal object ElectionModel {
     private const val GOVERNMENT_SWING = 0.6
     private const val OPPOSITION_SWING = 0.3
     private const val CONSTITUENCY_WEIGHT = 0.4
-    private const val EXECUTIVE_SWING = 0.35
     private const val AUTOCRATIC_DAMPING = 0.5
 
     fun voteShares(
@@ -84,6 +80,8 @@ internal object ElectionModel {
         approval: Double,
         satisfaction: Map<PopulationGroup, Double>,
         lastVote: Map<String, Double> = emptyMap(),
+        identityMood: Map<Identity, Double> = emptyMap(),
+        identityShares: Map<Identity, Double> = emptyMap(),
         noise: (ParliamentaryGroup) -> Double,
     ): Map<String, Double> {
         val totalSeats = groups.sumOf { it.directSeats }.toDouble()
@@ -105,7 +103,7 @@ internal object ElectionModel {
                         }
 
                         PartyRole.OPPOSITION -> {
-                            val discontent = party.constituency?.let { (50.0 - satisfaction.getValue(it)) / 50.0 } ?: 0.0
+                            val discontent = (50.0 - party.supportMood(satisfaction, identityMood, 50.0)) / 50.0
                             -OPPOSITION_SWING * swing + CONSTITUENCY_WEIGHT * discontent * damping
                         }
 
@@ -113,7 +111,11 @@ internal object ElectionModel {
                             0.0
                         }
                     }
-                party.name to implied.getValue(party.name) * exp(shift + noise(party) * damping)
+                val mobilization =
+                    party.identity?.let { id ->
+                        (identityShares[id] ?: 0.0) * (50.0 - (identityMood[id] ?: 50.0)) / 50.0
+                    } ?: 0.0
+                party.name to implied.getValue(party.name) * exp(shift + (noise(party) + mobilization * 0.3) * damping)
             }
         val sum = weights.values.sum()
         return weights.mapValues { it.value / sum }
@@ -221,7 +223,7 @@ internal object ElectionModel {
      * 의회에서 정부를 만든다. 무소속은 그대로 둔다.
      * - 기존 정부 블록(주도·연정·협력)이 과반을 지키면 정부를 유지하고, 블록 안의 제1당이 주도한다.
      * - 아니면 [president]가 있으면 그 정당이, 없으면 제1당이 과반이 될 때까지 영입한다.
-     *   영입 주체가 정부에 있었다면 기존 연정 상대부터, 야당이었다면 다른 야당부터 의석 순으로 영입한다.
+     *   부족한 의석·기존 협력·이념 거리로 접촉 순서를 정한다. 합의한 파트너가 과반에 모자라면 소수 내각이 된다.
      * 해산 상태에서 의회를 처음 구성할 때는 이전 역할이 비어 있다. 기존 무당파 정부(예: 이란, 이집트)는 유지한다.
      */
     fun formGovernment(
@@ -229,70 +231,104 @@ internal object ElectionModel {
         required: Int,
         previousRoles: Map<String, PartyRole>,
         president: String? = null,
+        preference: CoalitionPreference? = null,
     ): List<ParliamentaryGroup> {
         if (previousRoles.isNotEmpty() && PartyRole.LEAD !in previousRoles.values) return groups
         val inGovernment = { name: String ->
             previousRoles[name].let { it == PartyRole.LEAD || it == PartyRole.COALITION || it == PartyRole.SUPPLY }
         }
-        if (president == null) {
-            val bloc = groups.filter { it.role != PartyRole.OTHER && inGovernment(it.name) }
-            if (bloc.sumOf { it.votingSeats } >= required) {
-                val leader = bloc.maxBy { it.votingSeats }.name
-                return groups.map { party ->
-                    val role =
-                        when {
-                            party.name == leader -> PartyRole.LEAD
-                            party.role == PartyRole.OTHER -> PartyRole.OTHER
-                            previousRoles[party.name] == PartyRole.LEAD -> PartyRole.COALITION
-                            else -> previousRoles.getValue(party.name)
-                        }
-                    party.copy(role = role)
-                }
+        val bloc = groups.filter { it.role != PartyRole.OTHER && inGovernment(it.name) }
+        val incumbentLeader = bloc.maxByOrNull { it.votingSeats }?.takeIf { bloc.sumOf { p -> p.votingSeats } >= required }
+        if (president == null && incumbentLeader != null && preference?.formateur != incumbentLeader.name) {
+            val leader = incumbentLeader.name
+            return groups.map { party ->
+                val role =
+                    when {
+                        party.name == leader -> PartyRole.LEAD
+                        party.role == PartyRole.OTHER -> PartyRole.OTHER
+                        previousRoles[party.name] == PartyRole.LEAD -> PartyRole.COALITION
+                        else -> previousRoles[party.name] ?: PartyRole.OPPOSITION
+                    }
+                party.copy(role = role)
             }
         }
         val candidates = groups.filter { it.role != PartyRole.OTHER }.sortedByDescending { it.votingSeats }
-        val formateur = candidates.firstOrNull { it.name == president } ?: candidates.firstOrNull() ?: return groups
-        val formateurWasInGovernment = inGovernment(formateur.name)
-        val order =
-            (candidates - formateur).sortedWith(
-                compareBy({ inGovernment(it.name) != formateurWasInGovernment }, { -it.votingSeats }),
-            )
-        val coalition = mutableSetOf(formateur.name)
+        val formateur = candidates.firstOrNull { it.name == president } ?: incumbentLeader ?: candidates.firstOrNull() ?: return groups
+        val coalition = mutableMapOf(formateur.name to PartyRole.LEAD)
         var seats = formateur.votingSeats
-        for (party in order) {
-            if (seats >= required) break
-            coalition += party.name
-            seats += party.votingSeats
+        val remaining = (candidates - formateur).toMutableList()
+        while (seats < required && remaining.isNotEmpty()) {
+            fun affinity(party: ParliamentaryGroup): Double {
+                val distance =
+                    coalition.keys
+                        .map { name ->
+                            ideologicalDistance(candidates.first { it.name == name }.identity, party.identity)
+                        }.average()
+                val continuity = if (inGovernment(formateur.name) == inGovernment(party.name)) 0.16 else 0.0
+                val neededSeats = minOf(party.votingSeats, required - seats).toDouble() / (required - seats)
+                return 0.55 * (1.0 - distance) + 0.29 * neededSeats + continuity
+            }
+            val requested = preference?.takeIf { it.formateur == formateur.name }?.partner
+            val partner = remaining.firstOrNull { it.name == requested } ?: remaining.maxBy(::affinity)
+            remaining.remove(partner)
+            val distance = ideologicalDistance(formateur.identity, partner.identity)
+            val formerPartners = inGovernment(formateur.name) && inGovernment(partner.name)
+            if (distance > 0.58 && !formerPartners) continue
+            coalition[partner.name] =
+                if (distance > 0.43 || previousRoles[partner.name] == PartyRole.SUPPLY) PartyRole.SUPPLY else PartyRole.COALITION
+            seats += partner.votingSeats
         }
         return groups.map { party ->
             val role =
                 when {
                     party.role == PartyRole.OTHER -> PartyRole.OTHER
                     party.name == formateur.name -> PartyRole.LEAD
-                    party.name in coalition -> PartyRole.COALITION
+                    party.name in coalition -> coalition.getValue(party.name)
                     else -> PartyRole.OPPOSITION
                 }
             party.copy(role = role)
         }
     }
 
-    /** 집권당 후보와 제1야당 후보의 양자 대결. */
-    fun executiveRace(
-        groups: List<ParliamentaryGroup>,
-        title: String,
-        regime: Regime,
-        approval: Double,
-        noise: Double,
-    ): ExecutiveResult? {
-        val incumbent = groups.firstOrNull { it.role == PartyRole.LEAD } ?: return null
-        val challenger = groups.filter { it.role == PartyRole.OPPOSITION }.maxByOrNull { it.seats }
-        val swing = ((approval - 50.0) / 50.0).coerceIn(-1.0, 1.0) * if (regime.autocratic) 0.5 else 1.0
-        val share = (0.5 + EXECUTIVE_SWING * swing + regime.incumbentBias * 0.3 + noise).coerceIn(0.05, 0.95)
-        return ExecutiveResult(title, incumbent.name, challenger?.name, share)
+    fun afterLegislativeElection(
+        chamber: Legislature,
+        rules: ElectionRules,
+        previousRoles: Map<String, PartyRole>,
+        presidentialParty: String?,
+        preference: CoalitionPreference? = null,
+    ): Legislature {
+        if (!rules.coalitionNegotiations) return chamber
+        val president =
+            if (rules.system == GovernmentSystem.PRESIDENTIAL) {
+                presidentialParty?.takeIf { name -> chamber.groups.any { it.name == name } } ?: return chamber
+            } else {
+                null
+            }
+        return chamber.withGroups(formGovernment(chamber.groups, chamber.required, previousRoles, president, preference))
+    }
+
+    fun presidentialLegislature(
+        chamber: Legislature,
+        rules: ElectionRules,
+        winner: String,
+    ): Legislature {
+        if (rules.system != GovernmentSystem.PRESIDENTIAL ||
+            chamber.groups.any { it.name == winner && it.role == PartyRole.LEAD }
+        ) {
+            return chamber
+        }
+        val installed = chamber.withGroups(installPresident(chamber.groups, winner))
+        if (rules.legislature?.electoralSystem != ElectoralSystem.PROPORTIONAL ||
+            installed.groups.none { it.name == winner }
+        ) {
+            return installed
+        }
+        val previousRoles = chamber.groups.associate { it.name to it.role }
+        return installed.withGroups(formGovernment(installed.groups, installed.required, previousRoles, president = winner))
     }
 
     /** 대통령 정당이 바뀌면 새 대통령 정당이 정부를 주도하고 나머지 정당은 야당이 된다. */
-    fun installPresident(
+    private fun installPresident(
         groups: List<ParliamentaryGroup>,
         winner: String,
     ): List<ParliamentaryGroup> {

@@ -89,9 +89,11 @@ internal class CommodityMarket(
         inputs: Map<Commodity, List<CommodityInput>>,
         routeFactors: DoubleArray,
         period: YearMonth,
+        capacity: DoubleArray,
     ) {
+        require(capacity.size == count * count && capacity.all { it in 0.0..1.0 })
         require(routeFactors.size == count * count && routeFactors.all { it.isFinite() && it >= 0.0 })
-        markets.forEach { (commodity, book) -> book.advance(inputs.getValue(commodity), routeFactors, period) }
+        markets.forEach { (commodity, book) -> book.advance(inputs.getValue(commodity), routeFactors, period, capacity) }
     }
 
     fun snapshot(): Map<Commodity, CommodityQuote> = markets.mapValues { it.value.quote }
@@ -132,6 +134,7 @@ internal class CommodityMarket(
             inputs: List<CommodityInput>,
             routes: DoubleArray,
             period: YearMonth,
+            capacity: DoubleArray,
         ) {
             require(inputs.size == count)
             val month = period.month
@@ -163,10 +166,10 @@ internal class CommodityMarket(
                 val immediateNeed = DoubleArray(count) { (demand[it] - stocks[it] - production[it]).coerceAtLeast(0.0) }
                 if (immediateNeed.any { it > 0.0 }) {
                     for (i in ids.indices) request[i] -= immediateNeed[i]
-                    match(offer, immediateNeed, routes, shipments)
+                    match(offer, immediateNeed, routes, capacity, shipments)
                 }
             }
-            match(offer, request, routes, shipments)
+            match(offer, request, routes, capacity, shipments)
             val imports = DoubleArray(count)
             val exports = DoubleArray(count)
             shipments.forEach { (route, quantity) ->
@@ -234,6 +237,7 @@ internal class CommodityMarket(
         offer: DoubleArray,
         request: DoubleArray,
         routes: DoubleArray,
+        capacity: DoubleArray,
         shipments: MutableMap<Int, Double>,
     ) {
         fun ship(
@@ -243,7 +247,7 @@ internal class CommodityMarket(
         ) {
             val route = seller * count + buyer
             // 제재로 선적하지 못한 계약 물량은 수출국 재고에 남고 이번 달 수입 실적에서도 빠진다.
-            val shipped = planned * routes[route].coerceAtMost(1.0)
+            val shipped = planned * capacity[route]
             if (shipped > 0.0) shipments[route] = (shipments[route] ?: 0.0) + shipped
             offer[seller] = (offer[seller] - planned).coerceAtLeast(0.0)
             request[buyer] = (request[buyer] - planned).coerceAtLeast(0.0)

@@ -14,11 +14,13 @@ import team.themoment.axia.format.formatCompactDollars
 import team.themoment.axia.format.formatPercent
 import team.themoment.axia.format.formatRate
 import team.themoment.axia.game.note
+import team.themoment.axia.simulation.economy.BankPressure
 import team.themoment.axia.simulation.economy.Company
 import team.themoment.axia.simulation.economy.CountryHistory
 import team.themoment.axia.simulation.economy.EconomyIndicators
 import team.themoment.axia.simulation.economy.EconomySeries
 import team.themoment.axia.simulation.economy.ExternalAccountSnapshot
+import team.themoment.axia.simulation.economy.GovernorMandate
 import team.themoment.axia.simulation.economy.MonetaryFramework
 import team.themoment.axia.simulation.economy.MonetaryPolicy
 import team.themoment.axia.simulation.economy.MonetaryStance
@@ -54,6 +56,9 @@ fun EconomyPanel(
     date: LocalDate,
     monetary: MonetaryPolicy,
     politics: PoliticsSnapshot,
+    politicalCapital: Double,
+    onAppointGovernor: (GovernorMandate) -> Unit,
+    onPressureBank: (BankPressure) -> Unit,
     onDirectRate: (Double) -> Unit,
     onDraftIndependence: (Double) -> Unit,
     onViewBill: () -> Unit,
@@ -61,6 +66,7 @@ fun EconomyPanel(
     SectionTitle("현재 지표")
     KeyIndicatorRows(indicators)
     MonetarySection(countryName(countryId), indicators, history, monetary, politics, onDirectRate, onDraftIndependence, onViewBill)
+    GovernorSection(monetary, politicalCapital, onAppointGovernor, onPressureBank)
     SectionTitle("대외 거래와 외환")
     if (externalAccount.settled) {
         StatRow("월 수출 · 수입", "${formatCompactDollars(externalAccount.exports)} · ${formatCompactDollars(externalAccount.imports)}")
@@ -236,3 +242,39 @@ private const val MIN_RATE = -0.0075
 private const val RATE_STEP = 0.0025
 private const val MIN_SLIDER_LIMIT = 0.2
 private const val SLIDER_ROUNDING = 0.05
+
+@Composable
+private fun GovernorSection(
+    monetary: MonetaryPolicy,
+    capital: Double,
+    onAppoint: (GovernorMandate) -> Unit,
+    onPressure: (BankPressure) -> Unit,
+) {
+    val governor = monetary.governor
+    SectionTitle(if (monetary.unionBank == null) "중앙은행 총재" else "공동 중앙은행 총재")
+    StatRow(governor.name, "${governor.mandate.label} · 임기 ${governor.termEnds}까지")
+    governor.pressure?.let { StatRow("정부 의견", "${it.label} · ${governor.pressureMonths}개월 남음") }
+    if (monetary.unionBank != null) {
+        Hint("통화동맹의 공동 총재가 회원국 전체의 물가와 경기에 대응합니다.")
+        return
+    }
+    Hint("새 총재의 정책 우선순위를 선택하세요. 임기는 6년이며 독립 총재를 임기 종료 6개월보다 일찍 교체하면 신뢰도가 하락합니다.")
+    GovernorMandate.entries.forEach { mandate ->
+        PaperTag("${mandate.label} 총재 임명 · ${governor.replacementCost.toInt()}", enabled = capital >= governor.replacementCost, onClick = {
+            onAppoint(mandate)
+        })
+    }
+    if (monetary.framework != MonetaryFramework.CURRENCY_PEG) {
+        Hint("정부 의견은 세 차례의 월간 금리 결정에 영향을 주며 중앙은행 신뢰도가 낮아집니다. 독립 총재는 요구를 일부만 반영합니다.")
+        Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+            BankPressure.entries.forEach { direction ->
+                PaperTag(
+                    "${direction.label} · ${governor.pressureCost.toInt()}",
+                    enabled =
+                        governor.pressure == null && monetary.directiveMonths == 0 && capital >= governor.pressureCost,
+                    onClick = { onPressure(direction) },
+                )
+            }
+        }
+    }
+}

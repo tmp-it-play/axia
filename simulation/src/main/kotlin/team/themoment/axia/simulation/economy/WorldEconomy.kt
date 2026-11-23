@@ -24,7 +24,7 @@ class WorldEconomy internal constructor(
     private val startMonth: YearMonth,
     seed: Long,
 ) {
-    internal val monetary = MonetarySystem(centralBanks, data.countries.values, playerCountryId)
+    internal val monetary = MonetarySystem(centralBanks, data.countries.values, playerCountryId, startMonth, seed)
     private val countries =
         data.countries.values
             .sortedBy(InitialEconomy::id)
@@ -74,7 +74,7 @@ class WorldEconomy internal constructor(
         currencyNotices.clear()
         val dollarInflation = reserveCurrencyIssuer.inflation
         val external = trade.advanceMonth(international, period)
-        monetary.decide(countriesById)
+        monetary.decide(countriesById, period.plusMonths(1))
         val us = monetary.conditions(RESERVE_CURRENCY_ISSUER)
         val usRealRate = us.effectiveRate - reserveCurrencyIssuer.expectedInflation
         val euroExchange = countriesById.getValue(EURO_REFERENCE).realExchange
@@ -137,6 +137,8 @@ class WorldEconomy internal constructor(
     }
 
     internal fun setStartingTradePolicy(state: InternationalState) = trade.setStartingPolicy(state)
+
+    internal fun commodityQuotes(): Map<Commodity, CommodityQuote> = trade.commodityQuotes()
 
     fun tradeSnapshot(): TradeSnapshot = trade.snapshot()
 

@@ -14,6 +14,7 @@ enum class RegionalProgram(
     NONE("사업 없음", 0.0),
     JOBS("고용 지원", 0.006),
     SERVICES("생활 서비스", 0.004),
+    PUBLIC_SAFETY("지역 치안", 0.003),
 }
 
 data class ElectoralRegion(
@@ -21,6 +22,7 @@ data class ElectoralRegion(
     val name: String,
     val populationShare: Double,
     val approval: Double,
+    val groupShares: Map<PopulationGroup, Double>,
 )
 
 /** 지역 하나의 현황. */
@@ -36,6 +38,9 @@ data class RegionSnapshot(
     val relativeIncome: Double,
     /** 지역 지지율. 지역의 인구 집단 구성 차이로 전국 지지율에서 벗어난다. */
     val approval: Double,
+    val groupShares: Map<PopulationGroup, Double>,
+    /** 전국 시작 지수 100을 기준으로 한 지역 범죄 발생 압력. */
+    val crime: Double,
     val economy: RegionEconomySnapshot,
     val program: RegionalProgram,
     val programSpending: Double,
@@ -83,7 +88,6 @@ internal class Regions(
         val name: String,
         val share: Double,
         val urban: Double,
-        val groupDensity: Map<PopulationGroup, Double>,
         val income: Double,
         val sectorDensity: Map<Sector, Double>,
         val participatesInDistricts: Boolean,
@@ -96,6 +100,13 @@ internal class Regions(
     private val services = mutableMapOf<String, Double>()
     private val jobs = mutableMapOf<String, Double>()
 
+    private val crimeAdjustment = mutableMapOf<String, Double>()
+    private var baseCrime = 100.0
+
+    val nationalCrime: Double get() = baseCrime * (1.0 + regions.sumOf { it.share * (crimeAdjustment[it.id] ?: 0.0) })
+
+    private fun localCrime(id: String): Double = baseCrime * (1.0 + (crimeAdjustment[id] ?: 0.0))
+
     fun assign(
         id: String,
         program: RegionalProgram,
@@ -107,12 +118,30 @@ internal class Regions(
     val spending: Double get() = regions.sumOf { it.share * (programs[it.id]?.annualCost ?: 0.0) }
     val employmentEffect: Double get() = regions.sumOf { it.share * (jobs[it.id] ?: 0.0) } * 0.01
 
-    fun advanceMonth() {
+    fun advanceMonth(
+        unemployment: Double,
+        sectors: List<SectorLine>,
+        nationalBaseCrime: Double,
+    ) {
+        baseCrime = nationalBaseCrime
         regions.forEach { region ->
             val id = region.id
             val program = programs[id]
             services[id] = (services[id] ?: 0.0) * 0.85 + if (program == RegionalProgram.SERVICES) 0.15 else 0.0
             jobs[id] = (jobs[id] ?: 0.0) * 0.85 + if (program == RegionalProgram.JOBS) 0.15 else 0.0
+        }
+        val economy = RegionalEconomy(sectors, unemployment)
+        val estimates = regions.map { economy.estimate(it.share, it.sectorDensity) }
+        val localRates = placedUnemployment(estimates, unemployment)
+        val meanRate = regions.indices.sumOf { i -> regions[i].share * localRates[i] }
+        val meanUrban = regions.sumOf { it.urban * it.share }
+        regions.forEachIndexed { i, region ->
+            val current = crimeAdjustment[region.id] ?: 0.0
+            val prevention = if (programs[region.id] == RegionalProgram.PUBLIC_SAFETY) 0.18 else 0.0
+            val target =
+                3.0 * (localRates[i] - meanRate) + 0.08 * (region.urban - meanUrban) -
+                    0.06 * (services[region.id] ?: 0.0) - prevention
+            crimeAdjustment[region.id] = current + (target.coerceIn(-0.6, 0.8) - current) / 6.0
         }
     }
 
@@ -129,6 +158,7 @@ internal class Regions(
         programs.keys.retainAll(remaining)
         jobs.keys.retainAll(remaining)
         services.keys.retainAll(remaining)
+        crimeAdjustment.keys.retainAll(remaining)
     }
 
     private fun buildRegions(owners: Map<String, String>): List<RegionState> {
@@ -154,17 +184,12 @@ internal class Regions(
                 region.name,
                 share,
                 urban,
-                groupDensity(urban - urbanWeight),
                 incomeRaw.getValue(region.id) / average,
                 RegionalEconomy.density(urban, urbanWeight),
                 participatesInDistricts = region.territoryId == null || region.countryId != countryId,
             )
         }
     }
-
-    /** 도시화율 차이로 생기는 직업별 입지 배율. 매월 현재 전국 인구 비중과 결합한다. */
-    private fun groupDensity(tilt: Double): Map<PopulationGroup, Double> =
-        URBAN_TILT.mapValues { (_, sensitivity) -> (1.0 + sensitivity * tilt).coerceAtLeast(0.1) }
 
     fun snapshot(
         population: Double,
@@ -180,18 +205,9 @@ internal class Regions(
         val estimates = regions.map { economy.estimate(it.share, it.sectorDensity) }
         // 전국 실업자 수는 유지하고, 고용 지원이 집중된 지역의 실업자 몫을 낮춘다.
         val sectorAllocations = if (holdings.isEmpty()) emptyList() else reconcileOutput(estimates, sectors)
-        val weightedUnemployment =
-            regions.indices.sumOf { i ->
-                estimates[i].laborForceShare * estimates[i].unemployment * placementWeight(regions[i].id)
-            }
+        val localRates = placedUnemployment(estimates, unemployment)
         return regions.mapIndexed { i, region ->
             val estimate = estimates[i]
-            val localUnemployment =
-                if (weightedUnemployment > 0) {
-                    estimate.unemployment * placementWeight(region.id) * unemployment / weightedUnemployment
-                } else {
-                    estimate.unemployment
-                }
             val program = programs[region.id] ?: RegionalProgram.NONE
             RegionSnapshot(
                 regionId = region.id,
@@ -201,9 +217,11 @@ internal class Regions(
                 urbanShare = region.urban,
                 relativeIncome = region.income,
                 approval = sentiments.getValue(region.id).approval,
+                groupShares = sentiments.getValue(region.id).groupShares,
+                crime = localCrime(region.id),
                 economy =
                     estimate.copy(
-                        unemployment = localUnemployment,
+                        unemployment = localRates[i],
                         gdpShare = holdings[region.id]?.gdp ?: estimate.gdpShare,
                         sectors = sectorAllocations.getOrNull(i) ?: estimate.sectors,
                     ),
@@ -239,6 +257,15 @@ internal class Regions(
         }
     }
 
+    private fun placedUnemployment(
+        estimates: List<RegionEconomySnapshot>,
+        national: Double,
+    ): List<Double> {
+        val adjusted = regions.indices.map { i -> estimates[i].unemployment * placementWeight(regions[i].id) }
+        val total = adjusted.indices.sumOf { i -> estimates[i].laborForceShare * adjusted[i] }
+        return if (total > 0.0) adjusted.map { it * national / total } else adjusted
+    }
+
     private fun placementWeight(id: String): Double = 1.0 - (jobs[id] ?: 0.0) * 0.15
 
     fun electoralRegions(
@@ -256,15 +283,24 @@ internal class Regions(
         satisfaction: Map<PopulationGroup, Double>,
     ): List<ElectoralRegion> {
         val average = groupShares.entries.sumOf { (group, share) -> share * satisfaction.getValue(group) }
+        val urbanMean = regions.sumOf { it.share * it.urban }
+        val tiltMean = groupShares.entries.sumOf { (group, share) -> share * URBAN_TILT.getValue(group) }
+        val tilt = URBAN_TILT.mapValues { it.value - tiltMean }
+        // 두 축의 평균을 빼면 지역별 합은 1, 전국 인구 가중 합은 각 직업의 실제 비중이다.
+        val urbanSpread = regions.maxOfOrNull { kotlin.math.abs(it.urban - urbanMean) } ?: 0.0
+        val extent = urbanSpread * tilt.values.maxOf { kotlin.math.abs(it) }
+        val scale = if (extent > 0.95) 0.95 / extent else 1.0
+        val nationalCrimeIndex = nationalCrime
         return regions.map { region ->
-            val density = groupShares.entries.sumOf { (group, share) -> share * region.groupDensity.getValue(group) }
+            val urban = (region.urban - urbanMean) * scale
+            val localGroups = groupShares.mapValues { (group, share) -> share * (1.0 + tilt.getValue(group) * urban) }
             val shift =
                 PopulationGroup.entries.sumOf { group ->
-                    approvalWeights.getValue(group) * (region.groupDensity.getValue(group) / density - 1.0) *
-                        (satisfaction.getValue(group) - average)
+                    approvalWeights.getValue(group) * tilt.getValue(group) * urban * (satisfaction.getValue(group) - average)
                 }
             val benefit = 7.0 * (services[region.id] ?: 0.0) + 4.0 * (jobs[region.id] ?: 0.0)
-            ElectoralRegion(region.id, region.name, region.share, (approval + shift + benefit).coerceIn(0.0, 100.0))
+            val security = 0.12 * (nationalCrimeIndex - localCrime(region.id))
+            ElectoralRegion(region.id, region.name, region.share, (approval + shift + benefit + security).coerceIn(0.0, 100.0), localGroups)
         }
     }
 

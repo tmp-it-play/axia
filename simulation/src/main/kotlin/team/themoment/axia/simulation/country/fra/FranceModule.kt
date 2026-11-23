@@ -20,6 +20,7 @@ internal class FranceModule : CountryModule {
 
     private val forceItem =
         CountryPolicyItem(
+            binary = true,
             key = "fra.article_49_3",
             label = "49조 3항 강행 처리",
             lowLabel = "쓰지 않음",

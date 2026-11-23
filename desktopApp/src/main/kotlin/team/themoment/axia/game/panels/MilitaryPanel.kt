@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
@@ -20,6 +21,7 @@ import team.themoment.axia.format.formatCompactDollars
 import team.themoment.axia.format.formatPercent
 import team.themoment.axia.format.formatPopulation
 import team.themoment.axia.simulation.WorldSnapshot
+import team.themoment.axia.simulation.military.MaritimeRestriction
 import team.themoment.axia.simulation.military.MilitaryAction
 import team.themoment.axia.simulation.military.Mobilization
 import team.themoment.axia.simulation.military.ReconstructionEffort
@@ -45,6 +47,7 @@ fun MilitaryPanel(
     onMobilize: (Mobilization) -> Unit,
     onAction: (String, MilitaryAction) -> Unit,
     onReconstruction: (ReconstructionEffort) -> Unit,
+    onTradeRoute: (String, String, Boolean) -> Unit,
     onRegionTreaty: (String, String) -> Unit,
 ) {
     val military = world.military
@@ -98,6 +101,16 @@ fun MilitaryPanel(
     if (ours.isEmpty()) Hint("치르고 있는 전쟁이 없습니다.")
     ours.forEach { WarCard(it, countryName, playerId) }
 
+    if (military.maritimeRestrictions.isNotEmpty()) {
+        SectionTitle("해상 교역 제한")
+        military.maritimeRestrictions.forEach { order ->
+            val affected =
+                order.partner?.let { "${countryName(order.target)} ↔ ${countryName(it)} · 선적 중단" }
+                    ?: "${countryName(order.target)} · 해상 수송능력 45%"
+            StatRow(countryName(order.issuer), affected)
+        }
+    }
+
     SectionTitle("군사 행위")
     Hint("인접국, 관계가 -30 미만인 나라, 전쟁 중인 나라를 보여 줍니다. 양측 주전국이 진영을 대표해 휴전·평화협정을 제안합니다. 양측의 행정구역을 선택해 관할 이관을 제안할 수 있습니다. 마지막 행정구역은 이관할 수 없습니다.")
     val targets = world.militaryActions.entries.sortedBy { countryName(it.key) }
@@ -135,6 +148,17 @@ fun MilitaryPanel(
                             onClick = { onAction(id, action) },
                         )
                     }
+                }
+                if (MilitaryAction.BLOCKADE in actions || MilitaryAction.END_BLOCKADE in actions) {
+                    TradeRouteForm(
+                        id,
+                        playerId,
+                        military.forces.keys,
+                        military.maritimeRestrictions,
+                        politicalCapital,
+                        countryName,
+                        onTradeRoute,
+                    )
                 }
                 if (MilitaryAction.WITHDRAWAL_TREATY in actions) {
                     RegionTreatyForm(
@@ -262,3 +286,41 @@ internal fun WarCard(
 
 private const val TOP_POWERS = 10
 private const val HOSTILE = -30.0
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun TradeRouteForm(
+    target: String,
+    player: String,
+    countries: Set<String>,
+    orders: List<MaritimeRestriction>,
+    capital: Double,
+    countryName: (String) -> String,
+    onChange: (String, String, Boolean) -> Unit,
+) {
+    var open by remember(target) { mutableStateOf(false) }
+    PaperTag(if (open) "교역로 접기" else "상대국의 개별 해상 교역로", onClick = { open = !open })
+    if (!open) return
+    val partners =
+        remember(target, countries, countryName) {
+            val geo = Geography.default
+            countries.filter { it != target && geo.of(it).coastal && !geo.neighbors(it, target) }.sortedBy(countryName)
+        }
+    var page by remember(target) { mutableStateOf(0) }
+    Hint("거래 상대를 선택하면 해당 두 나라 사이의 원유·곡물 선적과 교역 결제를 양방향 중단하거나 재개합니다.")
+    FlowRow(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+        partners.drop(page * REGIONS_PER_PAGE).take(REGIONS_PER_PAGE).forEach { partner ->
+            val closed = MaritimeRestriction(player, target, partner) in orders
+            PaperTag(
+                countryName(partner) + if (closed) " · 재개" else " · 차단 ${MaritimeRestriction.ROUTE_COST.toInt()}",
+                selected = closed,
+                enabled = closed || capital >= MaritimeRestriction.ROUTE_COST,
+                onClick = { onChange(target, partner, !closed) },
+            )
+        }
+    }
+    Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+        PaperTag("이전", enabled = page > 0, onClick = { page-- })
+        PaperTag("다음", enabled = (page + 1) * REGIONS_PER_PAGE < partners.size, onClick = { page++ })
+    }
+}

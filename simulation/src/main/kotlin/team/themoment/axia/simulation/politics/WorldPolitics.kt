@@ -8,6 +8,7 @@ import team.themoment.axia.simulation.people.Leadership
 import team.themoment.axia.simulation.people.LeadershipState
 import team.themoment.axia.simulation.people.PeopleRegistry
 import team.themoment.axia.simulation.people.retires
+import team.themoment.axia.simulation.society.Identity
 import team.themoment.axia.simulation.text.josa
 import java.time.LocalDate
 import kotlin.math.PI
@@ -28,6 +29,8 @@ data class CountryPoliticsSnapshot(
     val lastElection: ElectionResult?,
     val pendingBill: AiFiscalBill?,
     val lastBill: AiFiscalBill?,
+    val executiveCampaign: ExecutiveCampaign? = null,
+    val newParties: List<NewParty> = emptyList(),
 )
 
 /** 세계에서 일어난 일 한 줄. */
@@ -57,8 +60,13 @@ internal class AiCountryPolitics(
     private var legislature: Legislature? = profile.legislature
     private var nextLegislative: LocalDate? = rules.legislature?.next
     private var nextExecutive: LocalDate? = rules.executive?.next
+    private val executiveElection = ExecutiveElection(leadership, profile.regime, constitution.executiveTermLimit, random)
     private var lastElection: ElectionResult? = null
     private val legislation = AiLegislation()
+    private val newParties = EmergingParties()
+    private var identityMood = Identity.entries.associateWith { 50.0 }
+    private val identityShares = identityMood.keys.associateWith { 0.25 }
+
     private var monthsInOffice = 0
 
     /** 지지율이 돌아가는 기준. 시작 정부는 2024년 1월 여론조사, 새 정부는 50이다. */
@@ -81,6 +89,8 @@ internal class AiCountryPolitics(
         legislature = null
         nextLegislative = null
         nextExecutive = null
+        executiveElection.cancel()
+        newParties.clear()
     }
 
     fun installRebelGovernment(
@@ -93,6 +103,8 @@ internal class AiCountryPolitics(
         legislature = null
         nextLegislative = null
         nextExecutive = null
+        executiveElection.cancel()
+        newParties.clear()
         legislation.dissolve()
         monthsInOffice = 0
         base = BASELINE
@@ -119,17 +131,45 @@ internal class AiCountryPolitics(
         val fatigue = -(monthsInOffice * FATIGUE_PER_MONTH).coerceAtMost(MAX_FATIGUE)
         val target = base + damping * (jobs + prices + growth + fatigue)
         approval = (approval + (target - approval) * SMOOTHING + random.nextGaussian() * APPROVAL_NOISE).coerceIn(5.0, 95.0)
-        return listOfNotNull(
-            departure?.let { WorldNews(date, countryId, "지도자 교체", it, major = true) },
-            legislation.advance(date, countryId, government(), legislature, indicators, approval, enact),
-        )
+        // AI 국가에는 유권자 개별 표본이 없어 경기·물가·고용 노출로 성향별 여론을 추정한다.
+        identityMood =
+            identityMood.keys.associateWith { identity ->
+                val pressure =
+                    when (identity) {
+                        Identity.YOUTH, Identity.UNIONISTS -> jobs
+                        Identity.PARENTS, Identity.EGALITARIANS -> prices
+                        Identity.FREE_MARKET -> growth
+                        else -> 0.0
+                    }
+                (approval + pressure * 0.45).coerceIn(0.0, 100.0)
+            }
+        val fresh =
+            legislature
+                ?.takeIf {
+                    nextLegislative != null
+                }?.let { newParties.advance(date, it.groups, identityMood, identityShares, random) }
+                .orEmpty()
+        return fresh.map { WorldNews(date, countryId, it.name, "${it.identity.label} 성향의 신당 ${it.name} 창당", true) } +
+            listOfNotNull(
+                departure?.let { WorldNews(date, countryId, "지도자 교체", it, major = true) },
+                legislation.advance(date, countryId, government(), legislature, constitution.upperHouse, indicators, approval, enact),
+            )
     }
 
     /** 오늘 선거가 있으면 치르고 소식을 돌려준다. */
     fun holdElections(date: LocalDate): List<WorldNews> {
+        val nominated = executiveElection.prepare(date, nextExecutive, rules.executive, legislature?.groups.orEmpty(), approval)
+        val nominations =
+            if (nominated &&
+                rules.executive?.partyPrimary == true
+            ) {
+                listOf(WorldNews(date, countryId, "선거", "당내 경선에서 본선 후보가 확정됐다.", false))
+            } else {
+                emptyList()
+            }
         val legislativeDue = nextLegislative?.let { it <= date } == true
         val executiveDue = nextExecutive?.let { it <= date } == true
-        if (!legislativeDue && !executiveDue) return emptyList()
+        if (!legislativeDue && !executiveDue) return nominations
         val before = government()
         val billLapsed = legislativeDue && legislation.dissolve()
         var parties: List<PartyResult>? = null
@@ -138,12 +178,20 @@ internal class AiCountryPolitics(
             nextLegislative = date.plusYears(requireNotNull(rules.legislature).termYears.toLong())
         }
         val executive = if (executiveDue) electExecutive(date) else null
-        if (executiveDue) nextExecutive = date.plusYears(requireNotNull(rules.executive).termYears.toLong())
+        if (executive !=
+            null
+        ) {
+            nextExecutive =
+                executiveElection.campaign?.runoffDate
+                    ?: executive.campaign.firstDate.plusYears(requireNotNull(rules.executive).termYears.toLong())
+        }
         val after = government()
         lastElection = ElectionResult(date, early = false, parties, executive, before, after, billLapsed = billLapsed)
         val kind = if (executiveDue) "${rules.executive?.title} 선거" else "총선"
         val text =
-            if (before != after) {
+            if (executive != null && executive.winner == null) {
+                "$kind 1차 투표에서 과반 후보가 없어 ${executive.campaign.runoffDate}에 결선을 치른다."
+            } else if (before != after) {
                 "$kind 결과 정권이 바뀌었다. 새 정부: $after"
             } else {
                 "$kind 결과 ${after.josa("이", "가")} 정권을 지켰다."
@@ -175,48 +223,40 @@ internal class AiCountryPolitics(
             }
             return result.parties
         }
-        val shares = voteShares(chamber.groups, rule.electoralSystem)
+        val shares = newParties.voteShares(voteShares(chamber.groups, rule.electoralSystem))
+        val contenders = chamber.groups + newParties.contenders()
+        newParties.clear()
         val seats = ElectionModel.legislativeSeats(shares, rule)
-        val previousRoles = chamber.groups.associate { it.name to it.role }
-        val reseated = chamber.withGroups(ElectionModel.reseat(chamber.groups, seats))
-        val governed =
-            when (rules.system) {
-                GovernmentSystem.PARLIAMENTARY, GovernmentSystem.SEMI_PRESIDENTIAL -> {
-                    reseated.withGroups(ElectionModel.formGovernment(reseated.groups, reseated.required, previousRoles))
-                }
-
-                GovernmentSystem.PRESIDENTIAL, GovernmentSystem.NON_COMPETITIVE -> {
-                    reseated
-                }
-            }
+        val previousRoles = contenders.associate { it.name to it.role }
+        val reseated = chamber.withGroups(ElectionModel.reseat(contenders, seats))
+        val governed = ElectionModel.afterLegislativeElection(reseated, rules, previousRoles, leadership.executiveIncumbent().party)
         legislature = governed
         val leadBefore = previousRoles.entries.firstOrNull { it.value == PartyRole.LEAD }?.key
         val leadAfter = governed.groups.firstOrNull { it.role == PartyRole.LEAD }?.name
         if (leadAfter != null && rules.system != GovernmentSystem.PRESIDENTIAL) {
             leadership.onGovernmentFormed(leadAfter, date, reelected = leadAfter == leadBefore)
         }
-        return chamber.groups.map { party ->
-            PartyResult(party.name, party.role, shares.getValue(party.name), party.seats, seats.total(party.name))
+        return contenders.map { party ->
+            PartyResult(
+                party.name,
+                party.role,
+                shares.getValue(party.name),
+                chamber.groups
+                    .find {
+                        it.name == party.name
+                    }?.seats ?: 0,
+                seats.total(party.name),
+            )
         }
     }
 
-    private fun electExecutive(date: LocalDate): ExecutiveResult? {
-        val chamber = legislature ?: return null
+    private fun electExecutive(date: LocalDate): ExecutiveResult {
         val rule = requireNotNull(rules.executive)
-        val openSeat = leadership.termLimited(constitution.executiveTermLimit)
-        val race =
-            ElectionModel.executiveRace(
-                chamber.groups,
-                rule.title,
-                profile.regime,
-                approval,
-                random.nextGaussian() * EXECUTIVE_NOISE - if (openSeat) OPEN_SEAT_PENALTY else 0.0,
-            ) ?: return null
-        leadership.onExecutiveElection(race.winner, constitution.executiveTermLimit, date)
-        if (race.winner != race.incumbent && rules.system == GovernmentSystem.PRESIDENTIAL) {
-            legislature = chamber.withGroups(ElectionModel.installPresident(chamber.groups, race.winner))
+        val result = executiveElection.vote(date, rule, approval)
+        result.winner?.party?.let { winner ->
+            legislature = legislature?.let { ElectionModel.presidentialLegislature(it, rules, winner) }
         }
-        return race
+        return result
     }
 
     private fun voteShares(
@@ -229,6 +269,8 @@ internal class AiCountryPolitics(
             regime = profile.regime,
             approval = approval,
             satisfaction = PopulationGroup.entries.associateWith { approval },
+            identityMood = identityMood,
+            identityShares = identityShares,
             noise = { random.nextGaussian() * VOTE_NOISE },
         )
 
@@ -244,6 +286,8 @@ internal class AiCountryPolitics(
             lastElection = lastElection,
             pendingBill = legislation.pending,
             lastBill = legislation.lastDecision,
+            executiveCampaign = executiveElection.campaign,
+            newParties = newParties.snapshot(),
         )
 
     private companion object {
@@ -259,8 +303,6 @@ internal class AiCountryPolitics(
         const val MAX_FATIGUE = 10.0
         const val AUTOCRATIC_DAMPING = 0.5
         const val VOTE_NOISE = 0.1
-        const val EXECUTIVE_NOISE = 0.04
-        const val OPEN_SEAT_PENALTY = 0.02
     }
 }
 
@@ -323,7 +365,7 @@ internal class WorldPolitics(
                     state.leaderId = successor.id
                     add(WorldNews(date, id, state.faction, "${successor.name} 과도정부 수반 취임", major = true))
                 }
-                state.legislation.advance(date, id, state.faction, null, indicators.getValue(id), 50.0, enact)?.let(::add)
+                state.legislation.advance(date, id, state.faction, null, null, indicators.getValue(id), 50.0, enact)?.let(::add)
             }
         }
 

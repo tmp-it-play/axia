@@ -89,8 +89,14 @@ data class ExecutiveElectionRule(
     val next: LocalDate,
     val termYears: Int,
     val title: String,
+    /** 0은 단순 다수제. 그 밖에는 전국 과반 미달 시 양자 결선을 치르는 모형 일정이다. */
+    val runoffDays: Int = 0,
+    val lastSundayRunoff: Boolean = false,
+    val partyPrimary: Boolean = false,
+    val nonpartisan: Boolean = false,
 ) {
     init {
+        require(runoffDays >= 0 && (!lastSundayRunoff || runoffDays > 0))
         require(termYears in 1..7 && title.isNotBlank())
     }
 }
@@ -111,9 +117,12 @@ data class ElectionRules(
     init {
         require(sourceNote.isNotBlank())
         require(system != GovernmentSystem.NON_COMPETITIVE || (legislature == null && executive == null))
-        require(executive == null || system == GovernmentSystem.PRESIDENTIAL || system == GovernmentSystem.SEMI_PRESIDENTIAL)
         require(suspended == null || (legislature == null && executive == null))
     }
+
+    val coalitionNegotiations: Boolean get() =
+        system == GovernmentSystem.PARLIAMENTARY || system == GovernmentSystem.SEMI_PRESIDENTIAL ||
+            (system == GovernmentSystem.PRESIDENTIAL && legislature?.electoralSystem == ElectoralSystem.PROPORTIONAL)
 }
 
 internal object LocalDateSerializer : KSerializer<LocalDate> {

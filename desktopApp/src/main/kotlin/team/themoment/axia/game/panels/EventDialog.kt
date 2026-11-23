@@ -12,6 +12,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import team.themoment.axia.simulation.economy.Creditor
+import team.themoment.axia.simulation.economy.DebtPlan
+import team.themoment.axia.simulation.economy.DebtWorkoutSnapshot
 import team.themoment.axia.simulation.events.GameEvent
 import team.themoment.axia.theme.DossierColors
 import team.themoment.axia.theme.DossierType
@@ -23,6 +26,8 @@ import team.themoment.axia.ui.dossier.Stamp
 fun EventDialog(
     event: GameEvent,
     remaining: Int,
+    debt: DebtWorkoutSnapshot,
+    onCreditorTerms: (Creditor, DebtPlan?) -> Unit,
     countryName: (String) -> String,
     onChoose: (Int, Int) -> Unit,
     modifier: Modifier = Modifier,
@@ -36,6 +41,7 @@ fun EventDialog(
             color = DossierColors.inkMuted,
         )
         Text(event.text, style = DossierType.number(14.sp), color = DossierColors.ink, modifier = Modifier.padding(vertical = 8.dp))
+        if (event.definitionId == "sovereign_default") CreditorTermsForm(debt, onCreditorTerms)
         event.deadline?.let { Hint("${shortDate(it)}까지 고르지 않으면 첫 번째 대응을 따릅니다.") }
         Column(Modifier.padding(top = 8.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
             event.choices.forEachIndexed { index, choice ->

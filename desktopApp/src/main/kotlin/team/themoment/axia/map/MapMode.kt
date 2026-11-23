@@ -112,6 +112,19 @@ enum class MapMode(
         ),
         regionValue = { it.economy.unemployment },
     ),
+    PUBLIC_SAFETY(
+        "치안",
+        ChoroplethScale(
+            thresholds = listOf(85.0, 95.0, 100.0, 105.0, 115.0),
+            colors = MapPalette.severity,
+            labels = listOf("범죄 지수 85 미만", "85~95", "95~100", "100~105", "105~115", "115 이상"),
+            value = { data, id ->
+                data.nation.social.crime
+                    .takeIf { id == data.nation.countryId }
+            },
+        ),
+        regionValue = RegionSnapshot::crime,
+    ),
     DEBT(
         "국가부채",
         ChoroplethScale(

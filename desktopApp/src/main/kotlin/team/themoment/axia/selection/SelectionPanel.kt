@@ -54,6 +54,9 @@ fun SelectionPanel(
             StatRow("인구", formatPopulation(r.population))
             StatRow("도시화율", "${(r.urbanShare * 100).roundToInt()}%")
             StatRow("1인당 소득 (전국 = 100)", "${(r.relativeIncome * 100).roundToInt()}")
+            val largest = r.groupShares.maxBy { it.value }
+            StatRow("가장 큰 직업·은퇴 집단", largest.key.label, note = formatPercent(largest.value))
+            StatRow("지역 범죄 지수", "%.1f".format(r.crime), note = "2024년 전국 = 100")
             StatRow("지역 지지율", "${r.approval.roundToInt()}%")
             StatRow("지역 실업률", formatPercent(r.economy.unemployment), note = economy?.let { "전국 ${formatPercent(it.unemployment)}" })
             StatRow("전국 GDP 중 지역 비중", formatPercent(r.economy.gdpShare))
@@ -77,7 +80,23 @@ fun SelectionPanel(
             StatRow("체제", politics.regime.label)
             StatRow("지지율 (추정)", "${politics.approval.roundToInt()}%")
             politics.nextElection?.let { StatRow("다음 선거", it.toString()) }
-            politics.pendingBill?.let { StatRow("심의 중", "${it.title} · ${it.sponsor}") }
+            politics.executiveCampaign?.let { campaign ->
+                val contestants =
+                    if (campaign.firstBallot.isEmpty()) {
+                        campaign.nominations.map {
+                            it.nominee
+                        }
+                    } else {
+                        campaign.firstBallot.take(2).map { it.person }
+                    }
+                StatRow(if (campaign.runoffDate == null) "본선 후보" else "결선 후보", contestants.joinToString(" · ") { it.name })
+            }
+            politics.lastElection
+                ?.executive
+                ?.winner
+                ?.let { StatRow("최근 대통령 당선인", it.name) }
+            politics.newParties.forEach { party -> StatRow(party.name, "${party.identity.label} · ${formatPercent(party.support)}") }
+            politics.pendingBill?.let { StatRow(if (it.conference) "양원 절충안" else "심의 중", "${it.title} · ${it.sponsor}") }
             politics.lastBill?.let { bill ->
                 val vote = bill.vote
                 StatRow("최근 예산안", "${bill.title} · ${if (bill.approved == true) "가결" else "부결"}")

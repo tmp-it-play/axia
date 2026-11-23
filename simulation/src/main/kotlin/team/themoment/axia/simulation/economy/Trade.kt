@@ -26,6 +26,11 @@ internal interface InternationalState {
     /** 시작 대비 늘어난 점령 비율(되찾으면 음수). */
     fun occupied(country: String): Double
 
+    fun routeAvailability(
+        a: String,
+        b: String,
+    ): Double = 1.0
+
     companion object {
         val PEACEFUL =
             object : InternationalState {
@@ -173,6 +178,7 @@ internal class TradeNetwork(
     ): Map<String, ExternalConditions> {
         val gdpNow = DoubleArray(n) { countries[it].dollarGdp }
         val routeFactors = DoubleArray(n * n)
+        val shipmentCapacity = DoubleArray(n * n)
         // 정책 교역 강도: 시작 비중 × (협정·제재 배율의 시작 대비 변화). 상대 경제 성장 효과는 넣지 않는다.
         val policy = DoubleArray(n)
         for (i in 0 until n) {
@@ -181,7 +187,10 @@ internal class TradeNetwork(
             for (j in 0 until n) {
                 if (i == j) continue
                 val k = i * n + j
-                val change = factor(state, i, j) / startFactor[k]
+                val policyFactor = factor(state, i, j) / startFactor[k]
+                val availability = state.routeAvailability(ids[i], ids[j])
+                val change = policyFactor * availability
+                shipmentCapacity[k] = policyFactor.coerceAtMost(1.0) * availability
                 routeFactors[k] = change
                 policySum += baseShare[k] * change
                 shares[k] = baseShare[k] * change * (gdpNow[j] / startGdp[j]).pow(GDP_ELASTICITY)
@@ -192,7 +201,7 @@ internal class TradeNetwork(
         }
 
         payments.settle(countries, routeFactors)
-        market.advanceMonth(fundamentals.monthlyInputs(countries, state), routeFactors, period)
+        market.advanceMonth(fundamentals.monthlyInputs(countries, state), routeFactors, period, shipmentCapacity)
         val quotes = market.snapshot()
         val oil = quotes.getValue(Commodity.CRUDE_OIL)
         val grain = quotes.getValue(Commodity.GRAIN)
@@ -230,6 +239,8 @@ internal class TradeNetwork(
     }
 
     private fun CommodityBalance.unmetShare(): Double = if (demand > 0.0) ((demand - consumption) / demand).coerceIn(0.0, 1.0) else 0.0
+
+    fun commodityQuotes(): Map<Commodity, CommodityQuote> = market.snapshot()
 
     fun snapshot(): TradeSnapshot =
         TradeSnapshot(

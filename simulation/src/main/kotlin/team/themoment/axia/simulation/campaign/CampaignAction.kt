@@ -4,6 +4,10 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import team.themoment.axia.simulation.Simulation
 import team.themoment.axia.simulation.diplomacy.DiplomaticAction
+import team.themoment.axia.simulation.economy.BankPressure
+import team.themoment.axia.simulation.economy.Creditor
+import team.themoment.axia.simulation.economy.DebtPlan
+import team.themoment.axia.simulation.economy.GovernorMandate
 import team.themoment.axia.simulation.military.MilitaryAction
 import team.themoment.axia.simulation.military.Mobilization
 import team.themoment.axia.simulation.military.ReconstructionEffort
@@ -70,9 +74,60 @@ sealed interface CampaignAction {
     }
 
     @Serializable
+    @SerialName("election.coalition")
+    data class PreferCoalition(
+        val party: String?,
+    ) : CampaignAction {
+        override fun applyTo(simulation: Simulation) = simulation.preferCoalitionPartner(party)
+    }
+
+    @Serializable
     @SerialName("election.early")
     data object EarlyElection : CampaignAction {
         override fun applyTo(simulation: Simulation) = simulation.callEarlyElection()
+    }
+
+    @Serializable
+    @SerialName("monetary.governor")
+    data class AppointGovernor(
+        val mandate: GovernorMandate,
+    ) : CampaignAction {
+        override fun applyTo(simulation: Simulation) {
+            simulation.appointGovernor(mandate)
+        }
+    }
+
+    @Serializable
+    @SerialName("monetary.pressure")
+    data class PressureBank(
+        val direction: BankPressure,
+    ) : CampaignAction {
+        override fun applyTo(simulation: Simulation) {
+            simulation.pressureBank(direction)
+        }
+    }
+
+    @Serializable
+    @SerialName("debt.terms")
+    data class CreditorTerms(
+        val creditor: Creditor,
+        val terms: DebtPlan?,
+    ) : CampaignAction {
+        override fun applyTo(simulation: Simulation) {
+            simulation.setCreditorTerms(creditor, terms)
+        }
+    }
+
+    @Serializable
+    @SerialName("trade.route")
+    data class SetTradeRoute(
+        val target: String,
+        val partner: String,
+        val restrict: Boolean,
+    ) : CampaignAction {
+        override fun applyTo(simulation: Simulation) {
+            simulation.setTradeRoute(target, partner, restrict)
+        }
     }
 
     @Serializable

@@ -10,7 +10,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import team.themoment.axia.format.formatCompactDollars
 import team.themoment.axia.format.formatPercent
+import team.themoment.axia.simulation.economy.Creditor
 import team.themoment.axia.simulation.economy.DebtPhase
+import team.themoment.axia.simulation.economy.DebtPlan
+import team.themoment.axia.simulation.economy.DebtWorkoutSnapshot
 import team.themoment.axia.simulation.nation.BudgetItem
 import team.themoment.axia.simulation.nation.BudgetSnapshot
 import team.themoment.axia.simulation.politics.PoliticsSnapshot
@@ -54,9 +57,9 @@ fun BudgetPanel(
     if (budget.organizationSubsidies > 0.0) {
         StatRow("조직 보조금 (기초지출에 포함)", "${formatPercent(budget.organizationSubsidies)} · ${money(budget.organizationSubsidies)}")
     }
-    if (budget.housingSpendingChange != 0.0) {
-        val share = String.format(java.util.Locale.KOREA, "%+.3f%%", budget.housingSpendingChange * 100.0)
-        StatRow("주택 정책 지출 증감 (경기 보정 전)", "$share · ${money(budget.housingSpendingChange)}")
+    if (budget.countrySpendingChange != 0.0) {
+        val share = String.format(java.util.Locale.KOREA, "%+.3f%%", budget.countrySpendingChange * 100.0)
+        StatRow("국가별 정책 지출 증감 (경기 보정 전)", "$share · ${money(budget.countrySpendingChange)}")
     }
     budget.grainProducerPayment?.let { payment ->
         val share = String.format(java.util.Locale.KOREA, "%.4f%%", payment * 100.0)
@@ -135,6 +138,19 @@ private fun DebtSection(budget: BudgetSnapshot) {
         StatRow("교환채 잔액 (GDP 대비)", formatPercent(debt.exchangedDebt))
         StatRow("교환채 고정 이율", formatPercent(debt.exchangeCoupon))
     }
+    debt.creditors.forEach { line ->
+        StatRow(line.creditor.label + " (GDP 대비)", formatPercent(line.outstanding))
+        if (debt.phase == DebtPhase.NEGOTIATING) {
+            line.proposal?.let { terms ->
+                val label = if (line.countered) "수정 요구" else "제안"
+                Hint("$label · ${terms.label} · 감면 ${formatPercent(line.creditor.haircut(terms))} · 만기 ${line.creditor.months(terms)}개월")
+            }
+        }
+        if (line.exchanged > 0.0) {
+            Hint("교환채 GDP의 ${formatPercent(line.exchanged)} · 고정 이율 ${formatPercent(line.coupon)} · 잔여 ${line.monthsToMaturity}개월")
+        }
+        line.lastWriteDown?.let { Hint("최근 확정 감면 · 합의 당시 GDP의 ${formatPercent(it)}") }
+    }
     debt.lastWriteDown?.let { StatRow("최근 원금 감면 (합의 당시 GDP 대비)", formatPercent(it)) }
 }
 
@@ -163,5 +179,28 @@ internal fun DraftControls(
         PaperTag("변경안 발의 · ${politics.draft.size}건", selected = true, enabled = politics.draft.isNotEmpty(), onClick = onIntroduce)
         if (politics.draft.isNotEmpty()) PaperTag("심의 근거", onClick = onViewBill)
         PaperTag("초안 초기화", enabled = politics.draft.isNotEmpty(), onClick = onClear)
+    }
+}
+
+@Composable
+internal fun CreditorTermsForm(
+    debt: DebtWorkoutSnapshot,
+    onChange: (Creditor, DebtPlan?) -> Unit,
+) {
+    Hint("채권자별 조건을 선택한 뒤 아래에서 기본안을 제출하세요. 기본안을 따르는 채권자는 제출한 조건을 적용합니다.")
+    debt.creditors.forEach { line ->
+        StatRow(line.creditor.label, "대상 원금 GDP의 ${formatPercent(line.eligible)}")
+        Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+            PaperTag("기본안", selected = line.proposal == null, onClick = { onChange(line.creditor, null) })
+            DebtPlan.entries.forEach { terms ->
+                val cut = line.creditor.haircut(terms)
+                val label = if (cut > 0.0) "${formatPercent(cut)} 감면" else "원금 보전"
+                PaperTag(
+                    "$label · ${line.creditor.months(terms)}개월",
+                    selected = line.proposal == terms,
+                    onClick = { onChange(line.creditor, terms) },
+                )
+            }
+        }
     }
 }

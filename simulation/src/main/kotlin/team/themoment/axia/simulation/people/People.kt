@@ -207,9 +207,9 @@ internal class LeadershipState(
         semiPresidential: Boolean,
     ): String {
         val now = current()
-        if (now.all().map { it.id } == initialIds) return initial
+        if (now.all().map { it.id } == initialIds || (parliamentary && now.leader.id == initialIds.last())) return initial
         val head = now.headOfGovernment
-        if (semiPresidential && head != null) return "${now.headOfState.name} · ${head.name}"
+        if ((semiPresidential || !executiveIsHeadOfState) && head != null) return "${now.headOfState.name} · ${head.name}"
         val leader = now.leader
         return "${leader.name} · ${leader.party ?: leader.title}"
     }
@@ -220,20 +220,28 @@ internal class LeadershipState(
     /** 연임 제한에 걸려 다음 행정부 선거에 나설 수 없는지. */
     fun termLimited(limit: Int?): Boolean = limit != null && executive().termsServed >= limit
 
-    /** 대통령(행정부 수반) 선거 결과. 같은 정당이 이기면 현직이 재선되거나(제한 전) 같은 당 후보가 승계한다. */
-    fun onExecutiveElection(
-        winnerParty: String,
-        limit: Int?,
+    fun executiveIncumbent(): Person = executive()
+
+    fun eligibleIncumbent(limit: Int?): Person? = executive().takeIf { !termLimited(limit) && it.termsServed < RETIREMENT_TERMS }
+
+    fun nominate(
+        party: String?,
+        date: LocalDate,
+    ): Person = registry.generate(countryId, "후보", party, date)
+
+    fun seatPresident(
+        candidate: Person,
         date: LocalDate,
     ) {
         val incumbent = executive()
-        val next =
-            if (incumbent.party == winnerParty && !termLimited(limit) && incumbent.termsServed < RETIREMENT_TERMS) {
-                registry.update(incumbent.copy(termsServed = incumbent.termsServed + 1))
+        val nominee = requireNotNull(registry.get(candidate.id))
+        val elected =
+            if (incumbent.id == nominee.id) {
+                incumbent.copy(termsServed = incumbent.termsServed + 1)
             } else {
-                registry.generate(countryId, incumbent.title, winnerParty, date)
+                nominee.copy(title = incumbent.title, since = date, termsServed = 1)
             }
-        setExecutive(next)
+        setExecutive(registry.update(elected))
     }
 
     /** 의회에서 내각을 구성한다. 과도 내각을 이을 때는 새 정부 수반의 정식 [title]을 지정한다. */

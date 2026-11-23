@@ -129,6 +129,9 @@ fun GameScreen(
                                     date = worldState.date,
                                     monetary = economy.monetary.getValue(nation.countryId),
                                     politics = politics,
+                                    politicalCapital = nation.society.politicalCapital,
+                                    onAppointGovernor = runner::appointGovernor,
+                                    onPressureBank = runner::pressureBank,
                                     onDirectRate = runner::directPolicyRate,
                                     onDraftIndependence = { runner.editBudgetDraft(InstitutionItem.CENTRAL_BANK_INDEPENDENCE, it) },
                                     onViewBill = { panel = GamePanel.POLITICS },
@@ -177,6 +180,7 @@ fun GameScreen(
                                     politics,
                                     today = clock.date,
                                     onCallEarlyElection = runner::callEarlyElection,
+                                    onCoalitionPartner = runner::preferCoalitionPartner,
                                     onOppositionVeto = runner::setOppositionVeto,
                                     onBudget = { panel = GamePanel.BUDGET },
                                     onNegotiate = runner::negotiateBudgetWith,
@@ -207,6 +211,7 @@ fun GameScreen(
                                     countryName,
                                     onMobilize = runner::setMobilization,
                                     onReconstruction = runner::setReconstructionEffort,
+                                    onTradeRoute = runner::setTradeRoute,
                                     onRegionTreaty = runner::negotiateRegion,
                                     onAction = runner::militaryAction,
                                 )
@@ -229,6 +234,8 @@ fun GameScreen(
                 worldState.pendingEvents.firstOrNull()?.let { event ->
                     EventDialog(
                         event = event,
+                        debt = nation.budget.debtWorkout,
+                        onCreditorTerms = runner::setCreditorTerms,
                         remaining = worldState.pendingEvents.size,
                         countryName = countryName,
                         onChoose = runner::chooseEventOption,

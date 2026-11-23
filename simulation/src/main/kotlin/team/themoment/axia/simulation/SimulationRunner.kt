@@ -17,7 +17,11 @@ import team.themoment.axia.simulation.campaign.CampaignSave
 import team.themoment.axia.simulation.campaign.DatedAction
 import team.themoment.axia.simulation.campaign.campaignKey
 import team.themoment.axia.simulation.diplomacy.DiplomaticAction
+import team.themoment.axia.simulation.economy.BankPressure
+import team.themoment.axia.simulation.economy.Creditor
+import team.themoment.axia.simulation.economy.DebtPlan
 import team.themoment.axia.simulation.economy.EconomySnapshot
+import team.themoment.axia.simulation.economy.GovernorMandate
 import team.themoment.axia.simulation.events.EventCategory
 import team.themoment.axia.simulation.military.MilitaryAction
 import team.themoment.axia.simulation.military.Mobilization
@@ -112,6 +116,23 @@ class SimulationRunner(
     fun introduceBudget() = perform(CampaignAction.IntroduceBudget)
 
     fun callEarlyElection() = perform(CampaignAction.EarlyElection)
+
+    fun preferCoalitionPartner(party: String?) = perform(CampaignAction.PreferCoalition(party))
+
+    fun appointGovernor(mandate: GovernorMandate) = perform(CampaignAction.AppointGovernor(mandate))
+
+    fun pressureBank(direction: BankPressure) = perform(CampaignAction.PressureBank(direction))
+
+    fun setCreditorTerms(
+        creditor: Creditor,
+        terms: DebtPlan?,
+    ) = perform(CampaignAction.CreditorTerms(creditor, terms))
+
+    fun setTradeRoute(
+        target: String,
+        partner: String,
+        restrict: Boolean,
+    ) = perform(CampaignAction.SetTradeRoute(target, partner, restrict))
 
     fun directPolicyRate(rate: Double) = perform(CampaignAction.DirectRate(rate))
 
@@ -240,7 +261,7 @@ class SimulationRunner(
                 when (action) {
                     is CampaignAction.EditBudget, is CampaignAction.NegotiateBudget, CampaignAction.ClearBudget,
                     CampaignAction.ReviseBudget, CampaignAction.IntroduceBudget, CampaignAction.EarlyElection,
-                    is CampaignAction.SetOppositionVeto,
+                    is CampaignAction.SetOppositionVeto, is CampaignAction.PreferCoalition,
                         -> {
                             // 예산 초안과 표결 상태는 아래 publish()가 갱신한다.
                         }
@@ -278,7 +299,10 @@ class SimulationRunner(
         val eventful = update.pauseFor.isNotEmpty() || update.decisionNeeded || update.decisionExpired
         if (update.newMonth || update.budgetPassed || eventful || update.electionHeld) mutableNation.value = simulation.nationSnapshot()
         // 세계 소식은 매일 쌓일 수 있으므로 월초, 사건, 일주일마다 갱신한다.
-        if (update.newMonth || eventful || simulation.date.dayOfWeek == DayOfWeek.MONDAY) mutableWorld.value = simulation.worldSnapshot()
+        val electionNews = update.worldElectionNews || update.electionHeld
+        if (update.newMonth || eventful || electionNews || simulation.date.dayOfWeek == DayOfWeek.MONDAY) {
+            mutableWorld.value = simulation.worldSnapshot()
+        }
         // 선거 결과와 선택지가 있는 사건은 플레이어가 놓치지 않도록 자동으로 일시정지한다.
         if (update.electionHeld || update.decisionNeeded || update.pauseFor.any { it in pauseCategories }) paused = true
         if (update.newMonth) autosave(capture())
