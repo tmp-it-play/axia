@@ -1,0 +1,386 @@
+{
+ "banks": {
+  "KOR": {
+   "name": "한국은행",
+   "framework": "INFLATION_TARGETING",
+   "independent": true,
+   "credibility": 0.9,
+   "policyRate": 0.035,
+   "inflationTarget": 0.02,
+   "sourceNote": "기준금리 3.50%(2023-01-13 이후 동결), 물가안정목표 2%. https://data.bis.org/topics/CBPOL"
+  },
+  "USA": {
+   "name": "연방준비제도",
+   "framework": "INFLATION_TARGETING",
+   "independent": true,
+   "credibility": 0.95,
+   "policyRate": 0.05375,
+   "inflationTarget": 0.02,
+   "sourceNote": "연방기금금리 목표 범위 5.25~5.50%의 중간값(2023-07-26 결정), 물가 목표 2%. https://data.bis.org/topics/CBPOL"
+  },
+  "CHN": {
+   "name": "중국인민은행",
+   "framework": "GOVERNMENT_DIRECTED",
+   "independent": false,
+   "credibility": 0.6,
+   "policyRate": 0.018,
+   "inflationTarget": 0.03,
+   "sourceNote": "7일물 역레포 금리 1.80%(2023-08 인하). 국무원 산하 기관. 소비자물가 목표 3%. https://data.bis.org/topics/CBPOL"
+  },
+  "JPN": {
+   "name": "일본은행",
+   "framework": "INFLATION_TARGETING",
+   "independent": true,
+   "credibility": 0.85,
+   "policyRate": -0.001,
+   "inflationTarget": 0.02,
+   "sourceNote": "단기 정책금리 -0.1%(2016년 이후, 2024-03 인상 전). 물가안정목표 2%. https://data.bis.org/topics/CBPOL"
+  },
+  "DEU": {
+   "name": "독일연방은행 · 유로시스템",
+   "framework": "MONETARY_UNION",
+   "independent": true,
+   "credibility": 0.9,
+   "policyRate": 0.04,
+   "inflationTarget": 0.02,
+   "sourceNote": "유럽중앙은행 예금금리 4.00%(2023-09-20 결정, 2023년 말 유지). https://data.bis.org/topics/CBPOL",
+   "union": "EUR"
+  },
+  "GBR": {
+   "name": "영란은행",
+   "framework": "INFLATION_TARGETING",
+   "independent": true,
+   "credibility": 0.9,
+   "policyRate": 0.0525,
+   "inflationTarget": 0.02,
+   "sourceNote": "기준금리 5.25%(2023-08-03 결정), 물가 목표 2%. https://data.bis.org/topics/CBPOL"
+  },
+  "FRA": {
+   "name": "프랑스은행 · 유로시스템",
+   "framework": "MONETARY_UNION",
+   "independent": true,
+   "credibility": 0.9,
+   "policyRate": 0.04,
+   "inflationTarget": 0.02,
+   "sourceNote": "유럽중앙은행 예금금리 4.00%(2023-09-20 결정, 2023년 말 유지). https://data.bis.org/topics/CBPOL",
+   "union": "EUR"
+  },
+  "RUS": {
+   "name": "러시아 중앙은행",
+   "framework": "INFLATION_TARGETING",
+   "independent": true,
+   "credibility": 0.6,
+   "policyRate": 0.16,
+   "inflationTarget": 0.04,
+   "sourceNote": "핵심금리 16.00%(2023-12-15 결정), 물가 목표 4%. https://data.bis.org/topics/CBPOL"
+  },
+  "UKR": {
+   "name": "우크라이나 국립은행",
+   "framework": "INFLATION_TARGETING",
+   "independent": true,
+   "credibility": 0.6,
+   "policyRate": 0.15,
+   "inflationTarget": 0.05,
+   "sourceNote": "할인율 15.0%(2023-12-14 결정), 물가 목표 5%. https://bank.gov.ua/en/monetary/stages/archive-rish"
+  },
+  "IND": {
+   "name": "인도준비은행",
+   "framework": "INFLATION_TARGETING",
+   "independent": true,
+   "credibility": 0.8,
+   "policyRate": 0.065,
+   "inflationTarget": 0.04,
+   "sourceNote": "레포 금리 6.50%(2023-02 이후 동결), 물가 목표 4%. https://data.bis.org/topics/CBPOL"
+  },
+  "BRA": {
+   "name": "브라질 중앙은행",
+   "framework": "INFLATION_TARGETING",
+   "independent": true,
+   "credibility": 0.75,
+   "policyRate": 0.1175,
+   "inflationTarget": 0.0325,
+   "sourceNote": "셀릭 11.75%(2023-12-13 결정), 2023년 물가 목표 3.25%. https://data.bis.org/topics/CBPOL"
+  },
+  "CAN": {
+   "name": "캐나다은행",
+   "framework": "INFLATION_TARGETING",
+   "independent": true,
+   "credibility": 0.9,
+   "policyRate": 0.05,
+   "inflationTarget": 0.02,
+   "sourceNote": "기준금리 5.00%(2023-07-12 결정), 물가 목표 2%. https://data.bis.org/topics/CBPOL"
+  },
+  "PRK": {
+   "name": "조선중앙은행",
+   "framework": "GOVERNMENT_DIRECTED",
+   "independent": false,
+   "credibility": 0.3,
+   "policyRate": 0.05,
+   "inflationTarget": 0.05,
+   "sourceNote": "공식 정책금리가 공개되지 않아 추정값을 쓴다.",
+   "estimated": true
+  },
+  "AUS": {
+   "name": "호주준비은행",
+   "framework": "INFLATION_TARGETING",
+   "independent": true,
+   "credibility": 0.9,
+   "policyRate": 0.0435,
+   "inflationTarget": 0.025,
+   "sourceNote": "현금금리 4.35%(2023-11-07 결정), 물가 목표 2~3%의 중간값. https://data.bis.org/topics/CBPOL"
+  },
+  "POL": {
+   "name": "폴란드 국립은행",
+   "framework": "INFLATION_TARGETING",
+   "independent": true,
+   "credibility": 0.75,
+   "policyRate": 0.0575,
+   "inflationTarget": 0.025,
+   "sourceNote": "기준금리 5.75%(2023-10-04 결정), 물가 목표 2.5%. https://data.bis.org/topics/CBPOL"
+  },
+  "ITA": {
+   "name": "이탈리아은행 · 유로시스템",
+   "framework": "MONETARY_UNION",
+   "independent": true,
+   "credibility": 0.9,
+   "policyRate": 0.04,
+   "inflationTarget": 0.02,
+   "sourceNote": "유럽중앙은행 예금금리 4.00%(2023-09-20 결정, 2023년 말 유지). https://data.bis.org/topics/CBPOL",
+   "union": "EUR"
+  },
+  "FIN": {
+   "name": "핀란드은행 · 유로시스템",
+   "framework": "MONETARY_UNION",
+   "independent": true,
+   "credibility": 0.9,
+   "policyRate": 0.04,
+   "inflationTarget": 0.02,
+   "sourceNote": "유럽중앙은행 예금금리 4.00%(2023-09-20 결정, 2023년 말 유지). https://data.bis.org/topics/CBPOL",
+   "union": "EUR"
+  },
+  "EST": {
+   "name": "에스토니아은행 · 유로시스템",
+   "framework": "MONETARY_UNION",
+   "independent": true,
+   "credibility": 0.9,
+   "policyRate": 0.04,
+   "inflationTarget": 0.02,
+   "sourceNote": "유럽중앙은행 예금금리 4.00%(2023-09-20 결정, 2023년 말 유지). https://data.bis.org/topics/CBPOL",
+   "union": "EUR"
+  },
+  "LVA": {
+   "name": "라트비아은행 · 유로시스템",
+   "framework": "MONETARY_UNION",
+   "independent": true,
+   "credibility": 0.9,
+   "policyRate": 0.04,
+   "inflationTarget": 0.02,
+   "sourceNote": "유럽중앙은행 예금금리 4.00%(2023-09-20 결정, 2023년 말 유지). https://data.bis.org/topics/CBPOL",
+   "union": "EUR"
+  },
+  "LTU": {
+   "name": "리투아니아은행 · 유로시스템",
+   "framework": "MONETARY_UNION",
+   "independent": true,
+   "credibility": 0.9,
+   "policyRate": 0.04,
+   "inflationTarget": 0.02,
+   "sourceNote": "유럽중앙은행 예금금리 4.00%(2023-09-20 결정, 2023년 말 유지). https://data.bis.org/topics/CBPOL",
+   "union": "EUR"
+  },
+  "TUR": {
+   "name": "튀르키예 중앙은행",
+   "framework": "INFLATION_TARGETING",
+   "independent": true,
+   "credibility": 0.35,
+   "policyRate": 0.425,
+   "inflationTarget": 0.05,
+   "sourceNote": "1주 레포 금리 42.50%(2023-12-21 결정), 물가 목표 5%. 통화정책의 정치적 개입 이력으로 신뢰도를 낮게 잡았다. https://data.bis.org/topics/CBPOL"
+  },
+  "ISR": {
+   "name": "이스라엘은행",
+   "framework": "INFLATION_TARGETING",
+   "independent": true,
+   "credibility": 0.85,
+   "policyRate": 0.0475,
+   "inflationTarget": 0.02,
+   "sourceNote": "기준금리 4.75%(2024-01-01 인하 발표 전), 물가 목표 1~3%의 중간값. https://data.bis.org/topics/CBPOL"
+  },
+  "IRN": {
+   "name": "이란 중앙은행",
+   "framework": "GOVERNMENT_DIRECTED",
+   "independent": false,
+   "credibility": 0.3,
+   "policyRate": 0.23,
+   "inflationTarget": 0.15,
+   "sourceNote": "은행간 금리 회랑의 목표 수준. 2023년 공식 목표를 확인하지 못해 최근 보도된 23% 안팎을 추정값으로 쓴다. https://tradingeconomics.com/iran/interest-rate",
+   "estimated": true
+  },
+  "SAU": {
+   "name": "사우디아라비아 중앙은행",
+   "framework": "CURRENCY_PEG",
+   "independent": true,
+   "credibility": 0.85,
+   "policyRate": 0.06,
+   "inflationTarget": 0.02,
+   "sourceNote": "레포 금리 6.00%(2023-07 인상). 리얄은 미국 달러에 고정. https://data.bis.org/topics/CBPOL"
+  },
+  "EGY": {
+   "name": "이집트 중앙은행",
+   "framework": "INFLATION_TARGETING",
+   "independent": true,
+   "credibility": 0.45,
+   "policyRate": 0.1925,
+   "inflationTarget": 0.07,
+   "sourceNote": "익일물 예금금리 19.25%(2023-12-21 동결), 2024년 4분기 물가 목표 7%. https://english.ahram.org.eg/News/514483.aspx"
+  },
+  "ZAF": {
+   "name": "남아프리카 준비은행",
+   "framework": "INFLATION_TARGETING",
+   "independent": true,
+   "credibility": 0.8,
+   "policyRate": 0.0825,
+   "inflationTarget": 0.045,
+   "sourceNote": "레포 금리 8.25%(2023-05-25 결정), 물가 목표 3~6%의 중간값. https://data.bis.org/topics/CBPOL"
+  },
+  "TWN": {
+   "name": "중화민국 중앙은행",
+   "framework": "INFLATION_TARGETING",
+   "independent": true,
+   "credibility": 0.85,
+   "policyRate": 0.01875,
+   "inflationTarget": 0.02,
+   "sourceNote": "재할인율 1.875%(2023-03-23 결정). https://data.bis.org/topics/CBPOL"
+  },
+  "IDN": {
+   "name": "인도네시아은행",
+   "framework": "INFLATION_TARGETING",
+   "independent": true,
+   "credibility": 0.75,
+   "policyRate": 0.06,
+   "inflationTarget": 0.03,
+   "sourceNote": "BI 금리 6.00%(2023-10-19 결정), 2023년 물가 목표 3±1%. https://data.bis.org/topics/CBPOL"
+  },
+  "VNM": {
+   "name": "베트남 국가은행",
+   "framework": "GOVERNMENT_DIRECTED",
+   "independent": false,
+   "credibility": 0.55,
+   "policyRate": 0.045,
+   "inflationTarget": 0.045,
+   "sourceNote": "재융자 금리 4.50%(2023-06 인하). 정부 산하 기관. 물가 상한 목표 4.5%. https://www.sbv.gov.vn"
+  },
+  "THA": {
+   "name": "태국은행",
+   "framework": "INFLATION_TARGETING",
+   "independent": true,
+   "credibility": 0.85,
+   "policyRate": 0.025,
+   "inflationTarget": 0.02,
+   "sourceNote": "정책금리 2.50%(2023-09-27 결정), 물가 목표 1~3%의 중간값. https://data.bis.org/topics/CBPOL"
+  },
+  "RWA": {
+   "name": "르완다 국립은행",
+   "framework": "INFLATION_TARGETING",
+   "independent": true,
+   "credibility": 0.65,
+   "policyRate": 0.075,
+   "inflationTarget": 0.05,
+   "sourceNote": "중앙은행 금리 7.5%(2023-11-23 동결), 물가 목표 2~8%의 중간값. https://www.newtimes.co.rw/article/12567/news/economy/central-bank-maintains-lending-rate-at-75"
+  },
+  "PAK": {
+   "name": "파키스탄 국립은행",
+   "framework": "INFLATION_TARGETING",
+   "independent": true,
+   "credibility": 0.45,
+   "policyRate": 0.22,
+   "inflationTarget": 0.06,
+   "sourceNote": "정책금리 22%(2023-06 인상, 2023년 말 유지). 2022년 개정법으로 독립. 중기 물가 목표 5~7%의 중간값. https://data.bis.org/topics/CBPOL"
+  }
+ },
+ "unions": [
+  {
+   "id": "EUR",
+   "name": "유럽중앙은행",
+   "policyRate": 0.04,
+   "inflationTarget": 0.02,
+   "credibility": 0.9,
+   "members": [
+    "AUT",
+    "BEL",
+    "HRV",
+    "CYP",
+    "EST",
+    "FIN",
+    "FRA",
+    "DEU",
+    "GRC",
+    "IRL",
+    "ITA",
+    "LVA",
+    "LTU",
+    "LUX",
+    "MLT",
+    "NLD",
+    "PRT",
+    "SVK",
+    "SVN",
+    "ESP"
+   ],
+   "sourceNote": "2023년 말 유로 사용 20개국(크로아티아 2023-01 가입). 예금금리 4.00%. https://data.bis.org/topics/CBPOL",
+   "currency": "유로"
+  }
+ ],
+ "pegs": [
+  {
+   "anchor": "USA",
+   "members": [
+    "SAU",
+    "ARE",
+    "QAT",
+    "BHR",
+    "OMN",
+    "JOR",
+    "PAN",
+    "ECU",
+    "SLV",
+    "TLS",
+    "FSM",
+    "MHL",
+    "PLW"
+   ],
+   "sourceNote": "달러 고정환율 또는 달러화 국가. IMF AREAER 환율제도 분류 기준.",
+   "currency": "미국 달러"
+  },
+  {
+   "anchor": "EUR",
+   "members": [
+    "DNK",
+    "BGR",
+    "BIH",
+    "KOS",
+    "MNE",
+    "AND",
+    "MCO",
+    "SMR",
+    "VAT",
+    "BEN",
+    "BFA",
+    "CIV",
+    "GNB",
+    "MLI",
+    "NER",
+    "SEN",
+    "TGO",
+    "CMR",
+    "CAF",
+    "TCD",
+    "COG",
+    "GNQ",
+    "GAB"
+   ],
+   "sourceNote": "유로 고정(덴마크, 불가리아, 보스니아, CFA 프랑 국가) 또는 유로 일방 사용국. IMF AREAER 환율제도 분류 기준.",
+   "currency": "유로"
+  }
+ ]
+}

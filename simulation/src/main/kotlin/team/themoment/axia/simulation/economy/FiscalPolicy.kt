@@ -9,7 +9,7 @@ data class FiscalShares(
 )
 
 /**
- * 한 국가의 재정을 정하는 주체. AI 국가는 [AutomaticFiscalPolicy], 플레이어 국가는 플레이어 예산을 쓴다.
+ * 한 국가의 재정과 구조 정책을 정하는 주체. AI 국가는 [AutomaticFiscalPolicy], 플레이어 국가는 플레이어 예산과 규제를 쓴다.
  * 매월 거시 모델이 [advanceMonth]를 한 번 호출한다.
  */
 interface FiscalPolicy {
@@ -23,6 +23,12 @@ interface FiscalPolicy {
 
     /** 정책이 이번 달 물가 상승률(연율)에 더하는 값. */
     val inflationImpulse: Double get() = 0.0
+
+    /** 정책이 실업률에 더하는 구조적 변화(노동 규제 등). 경기와 무관하게 실업률을 옮긴다. */
+    val naturalUnemploymentShift: Double get() = 0.0
+
+    /** 정책이 인구 증가율(연율)에 더하는 값(이민 등). */
+    val populationGrowthShift: Double get() = 0.0
 }
 
 /**
