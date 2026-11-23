@@ -6,11 +6,42 @@ on:
       - "v*"
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  windows-installer:
-    runs-on: windows-latest
+  version:
+    runs-on: ubuntu-latest
+    outputs:
+      value: ${{ steps.version.outputs.value }}
+    steps:
+      - name: Resolve version from tag
+        id: version
+        run: |
+          if [[ ! "$GITHUB_REF_NAME" =~ ^v([0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
+            echo "::error::태그는 vMAJOR.MINOR.PATCH 형식이어야 합니다: $GITHUB_REF_NAME"
+            exit 1
+          fi
+          echo "value=${BASH_REMATCH[1]}" >> "$GITHUB_OUTPUT"
+
+  installer:
+    needs: version
+    name: Build ${{ matrix.platform }} installer
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      matrix:
+        include:
+          - platform: windows-x64
+            runner: windows-latest
+            task: packageMsi
+            format: msi
+          - platform: macos-arm64
+            runner: macos-15
+            task: packageDmg
+            format: dmg
+          - platform: macos-x64
+            runner: macos-15-intel
+            task: packageDmg
+            format: dmg
     defaults:
       run:
         shell: bash
@@ -24,23 +55,39 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v6
 
-      - name: Resolve version from tag
-        id: version
-        run: |
-          if [[ ! "$GITHUB_REF_NAME" =~ ^v([0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
-            echo "::error::태그는 vMAJOR.MINOR.PATCH 형식이어야 합니다: $GITHUB_REF_NAME"
-            exit 1
-          fi
-          echo "value=${BASH_REMATCH[1]}" >> "$GITHUB_OUTPUT"
+      - name: Build installer
+        run: ./gradlew :desktopApp:${{ matrix.task }} "-Paxia.version=${{ needs.version.outputs.value }}"
 
-      - name: Build MSI
-        run: ./gradlew :desktopApp:packageMsi "-Paxia.version=${{ steps.version.outputs.value }}"
+      - name: Include Mac architecture in DMG filename
+        if: runner.os == 'macOS'
+        working-directory: desktopApp/build/compose/binaries/main/dmg
+        run: mv ./*.dmg "Axia-${{ needs.version.outputs.value }}-${{ matrix.platform }}.dmg"
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: installer-${{ matrix.platform }}
+          path: desktopApp/build/compose/binaries/main/${{ matrix.format }}/*.${{ matrix.format }}
+          if-no-files-found: error
+          compression-level: 0
+
+  release:
+    needs: installer
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          pattern: installer-*
+          path: installers
+          merge-multiple: true
 
       - name: Create draft release
         env:
           GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
         run: |
-          gh release create "$GITHUB_REF_NAME" desktopApp/build/compose/binaries/main/msi/*.msi \
+          gh release create "$GITHUB_REF_NAME" installers/*.msi installers/*.dmg \
             --draft \
             --verify-tag \
             --title "$GITHUB_REF_NAME" \
