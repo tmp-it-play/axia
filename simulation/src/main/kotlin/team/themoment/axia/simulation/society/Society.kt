@@ -74,6 +74,15 @@ internal data class OpinionWeights(
     val identities: Map<Identity, Double>,
 )
 
+/** 같은 직업집단별 대표 인구로 계산한 소속률과 여론 가중치. */
+internal data class ElectorateSummary(
+    val groupShares: Map<PopulationGroup, Double>,
+    val memberShares: Map<Identity, Double>,
+    val overlaps: Map<Identity, Map<Identity, Double>>,
+    val approvalWeights: OpinionWeights,
+    val politicalWeights: OpinionWeights,
+)
+
 /**
  * 시드 기반 대표 유권자 표본. 각자 직업 집단, 연령대, 성향별 소속 강도(0~1)를 가진다.
  * 성향 사이에는 권위·전통 축과 경제 좌우 축으로 약한 상관을 두어, 교차 소속도 자연스럽게 생긴다.
@@ -84,12 +93,40 @@ internal class Electorate(
     profile: SocietyProfile,
     random: Random,
 ) {
-    val size = SAMPLE_SIZE
-    private val groupOf = IntArray(size)
-    private val ageOf = IntArray(size)
-    private val strengths = Array(Identity.entries.size) { DoubleArray(size) }
+    /** 직업 하나의 표본을 한 번 집계하고 월별 인구 변화에는 대표 인구만 바꾼다. */
+    private class SampleGroup {
+        var count = 0
+        var jobCoefficient = 0.0
+        val identityCoefficients = DoubleArray(Identity.entries.size)
+
+        // 대각선은 각 성향의 소속자 수, 그 밖의 칸은 두 성향의 공동 소속자 수다.
+        val joint = Array(Identity.entries.size) { IntArray(Identity.entries.size) }
+
+        fun record(
+            strengths: Array<DoubleArray>,
+            voter: Int,
+        ) {
+            count++
+            val denominator = 1.0 + Identity.entries.sumOf { it.weight * strengths[it.ordinal][voter] }
+            jobCoefficient += 1.0 / denominator
+            for (identity in Identity.entries) {
+                val strength = strengths[identity.ordinal][voter]
+                if (strength == 0.0) continue
+                identityCoefficients[identity.ordinal] += identity.weight * strength / denominator
+                for (other in Identity.entries) {
+                    if (strengths[other.ordinal][voter] > 0.0) joint[identity.ordinal][other.ordinal]++
+                }
+            }
+        }
+    }
+
+    private val samples = PopulationGroup.entries.associateWith { SampleGroup() }
 
     init {
+        val size = SAMPLE_SIZE
+        val groupOf = IntArray(size)
+        val ageOf = IntArray(size)
+        val strengths = Array(Identity.entries.size) { DoubleArray(size) }
         val groups = PopulationGroup.entries
         val cumulative = groups.runningFold(0.0) { sum, group -> sum + groupShares.getValue(group) }.drop(1)
         val total = cumulative.last()
@@ -99,8 +136,14 @@ internal class Electorate(
         val tradition = DoubleArray(size)
         val left = DoubleArray(size)
         for (i in 0 until size) {
-            val draw = random.nextDouble() * total
-            val group = cumulative.indexOfFirst { draw < it }.let { if (it < 0) groups.lastIndex else it }
+            // 소수 직업도 적어도 한 명을 표집한다. 실제 인구 비중은 집계할 때 적용한다.
+            val group =
+                if (i < groups.size) {
+                    i
+                } else {
+                    val draw = random.nextDouble() * total
+                    cumulative.indexOfFirst { draw < it }.let { if (it < 0) groups.lastIndex else it }
+                }
             groupOf[i] = group
             ageOf[i] =
                 when {
@@ -143,41 +186,48 @@ internal class Electorate(
                 }
             }
         }
+        for (i in 0 until size) samples.getValue(groups[groupOf[i]]).record(strengths, i)
     }
 
-    /** 성향별 소속 비율(소속 강도와 무관하게 속한 사람의 비율). */
-    fun memberShare(identity: Identity): Double = strengths[identity.ordinal].count { it > 0.0 }.toDouble() / size
+    fun summarize(
+        population: Map<PopulationGroup, Double>,
+        civilParticipation: Double,
+    ): ElectorateSummary {
+        // 표본 한 명이 대표하는 실제 성인 비중. 표본에 우연히 많거나 적게 뽑힌 효과도 함께 보정한다.
+        val perVoter = population.mapValues { (group, share) -> share / samples.getValue(group).count }
 
-    /** [first] 소속자 중 [second]에도 속한 비율. */
-    fun overlap(
-        first: Identity,
-        second: Identity,
-    ): Double {
-        val a = strengths[first.ordinal]
-        val b = strengths[second.ordinal]
-        val members = a.count { it > 0.0 }
-        if (members == 0) return 0.0
-        return (0 until size).count { a[it] > 0.0 && b[it] > 0.0 }.toDouble() / members
-    }
+        fun jointShare(
+            first: Identity,
+            second: Identity,
+        ): Double = samples.entries.sumOf { (group, sample) -> perVoter.getValue(group) * sample.joint[first.ordinal][second.ordinal] }
 
-    /** 직업 집단별 유권자 가중치로 여론 계수를 구한다. */
-    fun weights(groupWeight: (PopulationGroup) -> Double): OpinionWeights {
-        val groups = PopulationGroup.entries
-        val groupCoefficients = DoubleArray(groups.size)
-        val identityCoefficients = DoubleArray(Identity.entries.size)
-        var total = 0.0
-        for (i in 0 until size) {
-            val weight = groupWeight(groups[groupOf[i]])
-            val denominator = 1.0 + Identity.entries.sumOf { it.weight * strengths[it.ordinal][i] }
-            groupCoefficients[groupOf[i]] += weight / denominator
-            Identity.entries.forEach { identity ->
-                identityCoefficients[identity.ordinal] += weight * identity.weight * strengths[identity.ordinal][i] / denominator
+        val members = Identity.entries.associateWith { jointShare(it, it) }
+        val overlaps =
+            Identity.entries.associateWith { first ->
+                val memberShare = members.getValue(first)
+                Identity.entries.filter { it != first }.associateWith { second ->
+                    if (memberShare > 0.0) jointShare(first, second) / memberShare else 0.0
+                }
             }
-            total += weight
+
+        fun weights(influence: (PopulationGroup) -> Double): OpinionWeights {
+            val total = population.entries.sumOf { (group, share) -> share * influence(group) }
+            val weights = perVoter.mapValues { (group, share) -> share * influence(group) / total }
+            return OpinionWeights(
+                groups = samples.mapValues { (group, sample) -> weights.getValue(group) * sample.jobCoefficient },
+                identities =
+                    Identity.entries.associateWith { identity ->
+                        samples.entries.sumOf { (group, sample) -> weights.getValue(group) * sample.identityCoefficients[identity.ordinal] }
+                    },
+            )
         }
-        return OpinionWeights(
-            groups = groups.associateWith { groupCoefficients[it.ordinal] / total },
-            identities = Identity.entries.associateWith { identityCoefficients[it.ordinal] / total },
+
+        return ElectorateSummary(
+            groupShares = population,
+            memberShares = members,
+            overlaps = overlaps,
+            approvalWeights = weights { it.influence },
+            politicalWeights = weights { civilParticipation + (1.0 - civilParticipation) * it.influence },
         )
     }
 

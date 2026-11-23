@@ -70,6 +70,10 @@ internal class Demography(
     var laborGrowthEffect = 0.0
         private set
 
+    /** 연령 자료에서 0~14세를 뺀 15세 이상 인구를 성인 집단의 분모로 쓴다. */
+    val adultShare: Double get() = 1.0 - childShare
+    val retireeShare: Double get() = elderlyShare / adultShare
+
     /** 고령 인구 1인당 사회보장 수준을 맞추려면 필요한 지출 배율(시작 = 1). */
     val pensionPressure: Double get() = elderlyShare / initialElderly
 

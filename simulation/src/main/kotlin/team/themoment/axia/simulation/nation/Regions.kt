@@ -56,7 +56,6 @@ internal class Regions(
     world: World,
     countryId: String,
     nationalUrbanShare: Double,
-    private val groupShares: Map<PopulationGroup, Double>,
     file: RegionFile = RegionFile.default,
 ) {
     private class RegionState(
@@ -64,7 +63,7 @@ internal class Regions(
         val name: String,
         val share: Double,
         val urban: Double,
-        val mix: Map<PopulationGroup, Double>,
+        val groupDensity: Map<PopulationGroup, Double>,
         val income: Double,
         val sectorDensity: Map<Sector, Double>,
     )
@@ -96,29 +95,20 @@ internal class Regions(
                     region.name,
                     share,
                     urban,
-                    mix(urban, nationalUrbanShare),
+                    groupDensity(urban - urbanWeight),
                     incomeRaw.getValue(region.id) / average,
                     RegionalEconomy.density(urban, urbanWeight),
                 )
             }
     }
 
-    /** 도시화율 차이로 전국 집단 구성을 조정한다. */
-    private fun mix(
-        urban: Double,
-        national: Double,
-    ): Map<PopulationGroup, Double> {
-        val tilt = urban - national
-        val raw =
-            groupShares.mapValues { (group, share) ->
-                share * (1.0 + (URBAN_TILT[group] ?: 0.0) * tilt).coerceAtLeast(0.1)
-            }
-        val total = raw.values.sum()
-        return raw.mapValues { it.value / total }
-    }
+    /** 도시화율 차이로 생기는 직업별 입지 배율. 매월 현재 전국 인구 비중과 결합한다. */
+    private fun groupDensity(tilt: Double): Map<PopulationGroup, Double> =
+        URBAN_TILT.mapValues { (_, sensitivity) -> (1.0 + sensitivity * tilt).coerceAtLeast(0.1) }
 
     fun snapshot(
         population: Double,
+        groupShares: Map<PopulationGroup, Double>,
         unemployment: Double,
         sectors: List<SectorLine>,
         approval: Double,
@@ -128,15 +118,11 @@ internal class Regions(
         val average = groupShares.entries.sumOf { (group, share) -> share * satisfaction.getValue(group) }
         val economy = RegionalEconomy(sectors, unemployment)
         return regions.map { region ->
+            val density = groupShares.entries.sumOf { (group, share) -> share * region.groupDensity.getValue(group) }
             val shift =
                 PopulationGroup.entries.sumOf { group ->
-                    val share = groupShares.getValue(group)
-                    if (share <= 0.0) {
-                        0.0
-                    } else {
-                        approvalWeights.getValue(group) * (region.mix.getValue(group) / share - 1.0) *
-                            (satisfaction.getValue(group) - average)
-                    }
+                    approvalWeights.getValue(group) * (region.groupDensity.getValue(group) / density - 1.0) *
+                        (satisfaction.getValue(group) - average)
                 }
             RegionSnapshot(
                 regionId = region.id,

@@ -154,11 +154,17 @@ private fun taxes(
     TaxKind.TARIFF to tariff,
 )
 
-/** 집단별 성인 인구 비중과 시작 시점 1인당 소득(연간 달러). */
+/** 시작 시점의 성인 인구 구성과 집단별 1인당 소득(연간 달러). */
 internal data class GroupComposition(
     val shares: Map<PopulationGroup, Double>,
     val incomes: Map<PopulationGroup, Double>,
-)
+) {
+    /** 고령층을 제외한 직업 간 시작 비율은 유지한다. */
+    fun atRetireeShare(retirees: Double): Map<PopulationGroup, Double> {
+        val workingRatio = (1.0 - retirees) / (1.0 - shares.getValue(PopulationGroup.RETIREES))
+        return shares.mapValues { (group, share) -> if (group == PopulationGroup.RETIREES) retirees else share * workingRatio }
+    }
+}
 
 /**
  * 고용 구조, 자영업 비중, 고령 인구 비중, 소득 그룹별 공공부문 비중으로 집단 구성을 정하고,
@@ -170,7 +176,7 @@ internal fun composeGroups(
     population: Double,
 ): GroupComposition {
     val adults = 1.0 - society.childShare
-    val retirees = (society.elderlyShare / adults).coerceIn(0.0, 0.6)
+    val retirees = society.elderlyShare / adults
     val workforce = 1.0 - retirees
     val public = PUBLIC_SECTOR_SHARE[society.incomeGroup] ?: 0.1
     val rest = 1.0 - CAPITALIST_SHARE - public
@@ -188,7 +194,9 @@ internal fun composeGroups(
             PopulationGroup.FARMERS to society.agricultureEmployment * rest,
             PopulationGroup.PUBLIC_SECTOR to public,
         )
-    val shares = workforceShares.mapValues { it.value * workforce } + (PopulationGroup.RETIREES to retirees)
+    // 고용 통계의 반올림으로 생긴 오차는 일하는 집단 안에서 보정한다.
+    val workforceTotal = workforceShares.values.sum()
+    val shares = workforceShares.mapValues { it.value / workforceTotal * workforce } + (PopulationGroup.RETIREES to retirees)
 
     val inequality = society.gini / REFERENCE_GINI
     val multipliers = shares.keys.associateWith { it.incomeMultiplier.pow(inequality) }

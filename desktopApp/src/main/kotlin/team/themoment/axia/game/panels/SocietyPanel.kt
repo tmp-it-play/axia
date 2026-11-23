@@ -41,7 +41,7 @@ import kotlin.math.roundToInt
 @Composable
 fun SocietyPanel(nation: NationSnapshot) {
     var expanded by remember { mutableStateOf<PopulationGroup?>(null) }
-    SectionTitle("성인 인구 구성")
+    SectionTitle("15세 이상 인구 구성")
     CompositionBar(nation.groups.map { Segment(it.group.label, it.share, it.group.color()) })
     Column(modifier = Modifier.padding(top = 6.dp), verticalArrangement = Arrangement.spacedBy(3.dp)) {
         nation.groups.chunked(2).forEach { pair ->

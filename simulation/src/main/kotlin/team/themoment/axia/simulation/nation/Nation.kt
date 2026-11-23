@@ -147,7 +147,7 @@ internal data class Opinion(
  * 직업 집단 만족도 = 기준선 + 경제 요인별 기여도. 성향 만족도 = 기준선 + 정책 반응 + 결과 지표 반응.
  * 기여도는 매달 목표값으로 천천히 움직인다(지연).
  * 유권자 한 사람의 만족도는 직업 집단과 소속 성향의 가중 평균이고, 지지율은 이를 영향력으로 가중 평균한 값이다.
- * 소속이 고정이므로 지지율은 집단·성향 만족도의 선형 결합([OpinionWeights])으로 계산한다.
+ * 유권자의 성향 소속은 고정하고, 집단별 대표 인구가 바뀌면 여론의 가중치([OpinionWeights])를 갱신한다.
  */
 class Nation internal constructor(
     initial: InitialEconomy,
@@ -182,11 +182,10 @@ class Nation internal constructor(
     private val eventMood = PopulationGroup.entries.associateWith { 0.0 }.toMutableMap()
 
     private val composition = composeGroups(initial.society, initial.gdp, initial.population)
-    private val adultShare = 1.0 - initial.society.childShare
-    private val regions = Regions(world, initial.id, structure.urbanShare, composition.shares)
+    private val regions = Regions(world, initial.id, structure.urbanShare)
     private val groups =
         PopulationGroup.entries.map { group ->
-            GroupState(group, composition.shares.getValue(group), composition.incomes.getValue(group), initial.growth)
+            GroupState(group, composition.incomes.getValue(group), initial.growth)
         }
     private val electorate =
         Electorate(
@@ -201,10 +200,13 @@ class Nation internal constructor(
             ),
             Random(seed),
         )
+    private var constituents = electorate.summarize(composition.shares, civilParticipation)
     private val civilSociety =
         CivilSociety(
             seeds = organizations,
-            baseShares = { kind -> kind.identity?.let(electorate::memberShare) ?: kind.group?.let(composition.shares::getValue) ?: 0.0 },
+            baseShares = { kind ->
+                kind.identity?.let(constituents.memberShares::getValue) ?: kind.group?.let(constituents.groupShares::getValue) ?: 0.0
+            },
             legislativeConstraints = profile.legislativeConstraints,
             autocratic = profile.regime.autocratic,
             start = startDate,
@@ -213,10 +215,7 @@ class Nation internal constructor(
 
     /** 조직의 과격 행동이 다음 달 범죄 지수에 더하는 값. */
     private var pendingCrime = 0.0
-    private val approvalWeights = electorate.weights { it.influence }
-    private val politicalWeights = electorate.weights { civilParticipation + (1.0 - civilParticipation) * it.influence }
-    private val overlaps =
-        Identity.entries.associateWith { first -> Identity.entries.filter { it != first }.associateWith { electorate.overlap(first, it) } }
+    private val approvalWeights get() = constituents.approvalWeights
     private val identityPolicy = Identity.entries.associateWith { 0.0 }.toMutableMap()
     private val identityOutcome = Identity.entries.associateWith { 0.0 }.toMutableMap()
 
@@ -263,6 +262,7 @@ class Nation internal constructor(
                 housingSupply = module.housingSupply,
             ),
         )
+        constituents = electorate.summarize(composition.atRetireeShare(demography.retireeShare), civilParticipation)
         update(economy, institutionChanges, smoothing = FACTOR_SMOOTHING)
         eventMood.keys.forEach { eventMood[it] = eventMood.getValue(it) * EVENT_DECAY }
         val orderInitial = budget.initialLevel(SpendingKind.ORDER)
@@ -426,9 +426,9 @@ class Nation internal constructor(
         Opinion(
             groups = groups.associate { it.group to it.satisfaction(baseline) },
             identities = Identity.entries.associateWith { identitySatisfaction(it) },
-            weights = politicalWeights,
+            weights = constituents.politicalWeights,
             stakes = civilSociety.stakes(),
-            identityShares = Identity.entries.associateWith(electorate::memberShare),
+            identityShares = constituents.memberShares,
         )
 
     internal fun snapshot(
@@ -453,12 +453,12 @@ class Nation internal constructor(
                 Identity.entries.map {
                     IdentitySnapshot(
                         identity = it,
-                        memberShare = electorate.memberShare(it),
+                        memberShare = constituents.memberShares.getValue(it),
                         satisfaction = identitySatisfaction(it),
                         policyEffect = identityPolicy.getValue(it),
                         outcomeEffect = identityOutcome.getValue(it),
                         governmentEffect = civilSociety.identityMood.getValue(it),
-                        overlaps = overlaps.getValue(it),
+                        overlaps = constituents.overlaps.getValue(it),
                     )
                 },
             social = SocialSnapshot(indicators.pollution, indicators.crime, regulations.lines()),
@@ -488,6 +488,7 @@ class Nation internal constructor(
             regions =
                 regions.snapshot(
                     population = economy.populationCount,
+                    groupShares = constituents.groupShares,
                     unemployment = economy.unemployment,
                     sectors = economy.sectorLines(),
                     approval = approval(),
@@ -514,13 +515,14 @@ class Nation internal constructor(
     }
 
     internal fun groupSnapshots(economy: CountryEconomy): List<GroupSnapshot> {
-        val adults = economy.populationCount * adultShare
+        val adults = economy.populationCount * demography.adultShare
         val dollarPerReal = economy.dollarGdp / (economy.realGdpPerCapita * economy.populationCount)
         return groups.map { state ->
+            val share = constituents.groupShares.getValue(state.group)
             GroupSnapshot(
                 group = state.group,
-                population = adults * state.share,
-                share = state.share,
+                population = adults * share,
+                share = share,
                 income = state.realIncome * dollarPerReal,
                 satisfaction = state.satisfaction(baseline),
                 factors = SatisfactionFactor.entries.associateWith(state::factor),
@@ -558,9 +560,10 @@ class Nation internal constructor(
                         weights.values.sum()
                 }
                     ?: 1.0
+            val groupShare = constituents.groupShares.getValue(group)
             val producerIncome =
-                if (group == PopulationGroup.FARMERS && state.share > 0.0) {
-                    economy.monthlyProducerPayment * 12.0 / (economy.populationCount * adultShare * state.share)
+                if (group == PopulationGroup.FARMERS && groupShare > 0.0) {
+                    economy.monthlyProducerPayment * 12.0 / (economy.populationCount * demography.adultShare * groupShare)
                 } else {
                     0.0
                 }
@@ -664,7 +667,6 @@ class Nation internal constructor(
 
     private class GroupState(
         val group: PopulationGroup,
-        val share: Double,
         private val initialIncome: Double,
         initialGrowth: Double,
     ) {
