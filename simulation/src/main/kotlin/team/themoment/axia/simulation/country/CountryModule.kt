@@ -32,6 +32,9 @@ interface CountryModule {
     /** 이 나라 고유의 정책. 정책 화면에 슬라이더로 나오고 법안에 담아 심의한다. */
     val policies: List<CountryPolicyItem> get() = emptyList()
 
+    /** 준공된 주택 공급으로 낮아지는 균형 집값의 로그 변화량(시작 대비). */
+    val housingSupply: Double get() = 0.0
+
     /** 고유 정책의 현재 값(0~1). */
     fun policyValue(item: CountryPolicyItem): Double = error("${item.key} is not a policy of $countryId")
 
@@ -79,7 +82,7 @@ object CountryModules {
             UkraineModule.ID,
             IndiaModule.ID,
             NorthKoreaModule.ID,
-        )
+        ) + HousingModule.countryIds
 
     fun create(
         countryId: String,
@@ -100,6 +103,7 @@ object CountryModules {
             UkraineModule.ID -> UkraineModule()
             IndiaModule.ID -> IndiaModule(random)
             NorthKoreaModule.ID -> NorthKoreaModule(random)
+            in HousingModule.countryIds -> HousingModule.create(countryId)
             else -> DefaultCountryModule(countryId)
         }
 }

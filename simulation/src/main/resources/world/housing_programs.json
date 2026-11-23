@@ -1,0 +1,56 @@
+{
+ "modelNote": "각 지수는 2024-01-01의 정책 기조를 유지한 경로와 비교한다. 초기 정책 강도, 시차, 물량·가격·여론 계수는 게임 가정이다. 재정 계수는 정책 강도 0에서 1까지의 가상 연간 지출 차이를 전국 GDP에 대한 비율로 나타낸다. 실제 기금 규모와 사업 기간별 예산은 출처 설명에만 사용했다. 건설 경기와 매매가격에 주는 효과는 프로그램의 대상과 범위를 감안한 전국 평균이다.",
+ "programs": {
+  "GBR": {
+   "key": "gbr.housing_planning",
+   "label": "잉글랜드 주택 공급 계획",
+   "lowLabel": "공급 부지 축소",
+   "highLabel": "공급 부지 확대",
+   "description": "잉글랜드의 국가계획정책체계(NPPF)에서 지방계획에 확보할 주택 부지의 규모를 조정한다. 지방 당국의 개발 심사와 인허가를 거쳐 민간 착공이 변한다.",
+   "housingLabel": "잉글랜드 주택",
+   "initial": 0.5,
+   "spendingPerUnit": 0.0,
+   "startsPerUnit": 0.24,
+   "startAdjustmentMonths": 10,
+   "buildMonths": 18,
+   "constructionResponse": 0.30,
+   "priceResponse": 0.30,
+   "identityReactions": {"FREE_MARKET": 10.0, "YOUTH": 12.0, "ENVIRONMENTALISTS": -8.0},
+   "sourceNote": "잉글랜드에 적용되는 2023-12-19 개정 NPPF 제60~61항 및 76~77항. 표준 산식에 따른 지역 주택 수요는 권고용 출발점이다. 지방계획당국이 토지 공급과 개발 신청을 심사한다. 영국 전역의 주택·건설 효과는 잉글랜드 정책의 파급을 나타낸다. https://assets.publishing.service.gov.uk/media/66a8d6fece1fd0da7b592f87/NPPF_December_2023.pdf"
+  },
+  "CAN": {
+   "key": "can.housing_accelerator",
+   "label": "주택공급촉진기금(HAF) 지방정부 협약",
+   "lowLabel": "협약 지원 축소",
+   "highLabel": "협약 지원 확대",
+   "description": "연방정부가 용도지역·인허가 절차를 개편하는 지방정부에 지급할 보조금을 조정한다. 지원을 늘리면 재정 지출이 늘고 협약 지역에서 더 많은 주택 사업이 착공에 이른다.",
+   "housingLabel": "협약 지역 주택",
+   "initial": 0.5,
+   "spendingPerUnit": 0.0005,
+   "startsPerUnit": 0.32,
+   "startAdjustmentMonths": 8,
+   "buildMonths": 15,
+   "constructionResponse": 0.20,
+   "priceResponse": 0.18,
+   "identityReactions": {"YOUTH": 15.0, "EGALITARIANS": 8.0, "FREE_MARKET": -4.0},
+   "sourceNote": "2023-03 출범한 Housing Accelerator Fund의 당시 규모는 40억 캐나다달러였다. 2023년 가을 경제성명은 온타리오주 런던 등과 체결한 협약, 지방정부의 용도지역·인허가 개혁, 추가 공급 목표 10만 호를 설명한다. https://budget.canada.ca/fes-eea/2023/report-rapport/chap1-en.html"
+  },
+  "AUS": {
+   "key": "aus.housing_future_fund",
+   "label": "주택미래기금(HAFF) 임대주택 사업",
+   "lowLabel": "사업 지원 축소",
+   "highLabel": "사업 지원 확대",
+   "description": "Housing Australia가 사회주택·저렴한 임대주택 공급 사업에 약정하는 지원을 조정한다. 지원을 늘리면 재정 부담과 임대주택 착공이 늘고, 준공 뒤 전국 매매가격에 작은 영향이 생긴다.",
+   "housingLabel": "기금 지원 임대주택",
+   "initial": 0.5,
+   "spendingPerUnit": 0.0008,
+   "startsPerUnit": 0.60,
+   "startAdjustmentMonths": 9,
+   "buildMonths": 12,
+   "constructionResponse": 0.06,
+   "priceResponse": 0.024,
+   "identityReactions": {"EGALITARIANS": 18.0, "UNIONISTS": 10.0, "YOUTH": 8.0, "FREE_MARKET": -10.0},
+   "sourceNote": "2023-12-19 Housing Australia가 공개한 공모 지침 초안에 따르면 HAFF의 5년 목표는 사회주택 2만 호와 저렴한 임대주택 1만 호였다. 2024-01-01에는 준비 단계였고 첫 공동 공모는 2024-01-15 개시됐다. 게임에서는 HAFF 지원에 따른 추가 공급만 다룬다. https://www.housingaustralia.gov.au/sites/default/files/2023-12/HAFFF%20and%20NHAF%20Program%20Guidelines%20Dec%202023%20-%20FINAL.pdf https://www.housingaustralia.gov.au/sites/default/files/2024-01/HAFFF%20NHAF%20Fact%20Sheet%20-%20General.pdf"
+  }
+ }
+}

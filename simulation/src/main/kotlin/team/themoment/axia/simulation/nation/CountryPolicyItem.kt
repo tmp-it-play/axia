@@ -14,6 +14,8 @@ data class CountryPolicyItem(
     val description: String,
     val identityReactions: Map<Identity, Double> = emptyMap(),
     val groupReactions: Map<PopulationGroup, Double> = emptyMap(),
+    /** 정책을 0에서 1로 올렸을 때의 연간 직접 지출 변화(GDP 대비). */
+    val spendingPerUnit: Double = 0.0,
 ) : PolicyItem {
     override val maxTarget: Double get() = 1.0
 }

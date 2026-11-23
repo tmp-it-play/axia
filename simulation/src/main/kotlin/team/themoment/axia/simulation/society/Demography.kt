@@ -35,6 +35,7 @@ internal data class DemographyInputs(
     /** 1인당 실질소득 지수(시작 = 1). */
     val incomeIndex: Double,
     val realRate: Double,
+    val housingSupply: Double,
 )
 
 /**
@@ -93,7 +94,7 @@ internal class Demography(
         val incomeGrowth = ln(inputs.incomeIndex / lastIncome) * 12.0
         lastIncome = inputs.incomeIndex
         // 소득 대비 집값이 시작보다 높으면 수요가 줄어 서서히 되돌아온다.
-        val valuation = ln(housePrice / (100.0 * inputs.incomeIndex))
+        val valuation = ln(housePrice / (100.0 * inputs.incomeIndex)) + inputs.housingSupply
         val realRate = inputs.realRate.coerceIn(-MAX_REAL_RATE, MAX_REAL_RATE)
         val priceGrowth =
             (incomeGrowth + RATE_SENSITIVITY * (NEUTRAL_REAL_RATE - realRate) - VALUATION_REVERSION * valuation).coerceIn(-0.2, 0.2)

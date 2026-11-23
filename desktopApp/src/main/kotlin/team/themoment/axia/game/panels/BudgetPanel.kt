@@ -48,6 +48,10 @@ fun BudgetPanel(
     if (budget.organizationSubsidies > 0.0) {
         StatRow("조직 보조금 (기초지출에 포함)", "${formatPercent(budget.organizationSubsidies)} · ${money(budget.organizationSubsidies)}")
     }
+    if (budget.housingSpendingChange != 0.0) {
+        val share = String.format(java.util.Locale.KOREA, "%+.3f%%", budget.housingSpendingChange * 100.0)
+        StatRow("주택 정책 지출 증감 (경기 보정 전)", "$share · ${money(budget.housingSpendingChange)}")
+    }
     DebtSection(budget)
     DraftControls(
         politics = politics,

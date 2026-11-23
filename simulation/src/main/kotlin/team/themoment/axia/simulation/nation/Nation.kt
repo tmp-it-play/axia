@@ -62,6 +62,7 @@ data class BudgetSnapshot(
     val gdp: Double,
     /** 조직 보조금(GDP 대비 연간). 기초지출에 포함돼 있다. */
     val organizationSubsidies: Double,
+    val housingSpendingChange: Double,
 )
 
 data class IdentitySnapshot(
@@ -163,7 +164,10 @@ class Nation internal constructor(
     private val startMonth = YearMonth.from(startDate)
     private val civilParticipation = profile.civilParticipation
     val countryId = initial.id
-    internal val budget = PlayerBudget(initial)
+    internal val budget =
+        PlayerBudget(initial) {
+            initialCountryPolicies.entries.sumOf { (item, baseline) -> (module.policyValue(item) - baseline) * item.spendingPerUnit }
+        }
     internal val regulations = Regulations(initial.society.incomeGroup, identityBase.civilLiberties)
 
     /** 거시 모델에 넘기는 플레이어 국가의 재정·구조 정책. */
@@ -253,6 +257,7 @@ class Nation internal constructor(
                 immigrationChange = regulations.change(RegulationItem.IMMIGRATION),
                 incomeIndex = incomeIndex,
                 realRate = economy.policyRate - economy.expectedInflation,
+                housingSupply = module.housingSupply,
             ),
         )
         update(economy, institutionChanges, smoothing = FACTOR_SMOOTHING)
@@ -467,6 +472,7 @@ class Nation internal constructor(
                     debtWorkout = economy.debt.snapshot(gdp),
                     gdp = economy.dollarGdp,
                     organizationSubsidies = budget.organizationSubsidies,
+                    housingSpendingChange = budget.housingSpendingChange,
                 ),
             society = civilSociety.snapshot(date),
             demography = demography.snapshot(economy.realGdpPerCapita / initialRealGdpPerCapita),

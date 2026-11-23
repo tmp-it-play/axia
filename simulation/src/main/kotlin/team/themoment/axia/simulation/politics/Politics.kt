@@ -700,7 +700,8 @@ internal class Politics(
                 when (val item = change.item) {
                     is TaxKind -> -change.delta * item.baseShare
                     is SpendingKind -> change.delta
-                    is InstitutionItem, is RegulationItem, is CountryPolicyItem -> 0.0
+                    is CountryPolicyItem -> change.delta * item.spendingPerUnit
+                    is InstitutionItem, is RegulationItem -> 0.0
                 }
             }
         val executiveBacking = 4.0 + 12.0 * (1.0 - profile.legislativeConstraints)
