@@ -117,6 +117,7 @@ data class NewParty(
 
 data class PoliticsSnapshot(
     val profile: PoliticalProfile,
+    val reviewBody: String,
     val government: String,
     val leadership: Leadership,
     val constitution: ConstitutionSnapshot,
@@ -162,7 +163,8 @@ internal class Politics(
 
     private var nextLegislative: LocalDate? = rules.legislature?.next
     private var nextExecutive: LocalDate? = rules.executive?.next
-    private var lastLegislative: LocalDate? = rules.legislature?.let { it.next.minusYears(it.termYears.toLong()) }
+    private var lastLegislative: LocalDate? =
+        if (legislature == null) null else rules.legislature?.let { it.next.minusYears(it.termYears.toLong()) }
     private var earlyCalled = false
     private var lastElection: ElectionResult? = null
     private var projection: List<SeatProjection>? = null
@@ -318,7 +320,7 @@ internal class Politics(
      * 창당한 정당은 불만이 이어지는 동안 지지율이 오르고 다음 총선에서 의석을 다툰다. 경쟁 선거가 있는 나라만 해당한다.
      */
     private fun considerNewParties(date: LocalDate) {
-        if (rules.legislature == null || juntaSince != null || groups.isEmpty()) return
+        if (rules.legislature == null || legislature == null || groups.isEmpty()) return
         newParties.replaceAll { party ->
             val mood = opinion.identities.getValue(party.identity)
             val target = partySupport(party.identity, mood)
@@ -364,10 +366,20 @@ internal class Politics(
     private fun provisionalGroups(): List<ParliamentaryGroup> = newParties.map { ParliamentaryGroup(it.name, 1, PartyRole.OPPOSITION) }
 
     private fun electLegislature(date: LocalDate): List<PartyResult> {
-        val chamber = requireNotNull(legislature)
         val rule = requireNotNull(rules.legislature)
+        val chamber = legislature
+        if (chamber == null) {
+            val result = ElectionModel.openingElection(rule, profile.regime) { random.nextGaussian() * VOTE_NOISE }
+            legislature = result.legislature
+            val lead = result.legislature.groups.firstOrNull { it.role == PartyRole.LEAD }
+            if (lead != null) {
+                val title = requireNotNull(rule.openingContest).headOfGovernmentTitle
+                leadership.onGovernmentFormed(lead.name, date, reelected = false, title = title)
+            }
+            return result.parties
+        }
         val shares = withNewParties(voteShares(chamber.groups) { random.nextGaussian() * VOTE_NOISE })
-        val seats = ElectionModel.allocateSeats(shares, rule.electoralSystem, rule.seats)
+        val seats = ElectionModel.legislativeSeats(shares, rule)
         val contenders = chamber.groups + provisionalGroups()
         val previousRoles = contenders.associate { it.name to it.role }
         newParties.clear()
@@ -390,7 +402,7 @@ internal class Politics(
         }
         return contenders.map { party ->
             val before = chamber.groups.firstOrNull { it.name == party.name }?.seats ?: 0
-            PartyResult(party.name, party.role, shares.getValue(party.name), before, seats.getValue(party.name))
+            PartyResult(party.name, party.role, shares.getValue(party.name), before, seats.total(party.name))
         }
     }
 
@@ -440,14 +452,18 @@ internal class Politics(
         )
 
     private fun project(): List<SeatProjection>? {
-        val chamber = legislature ?: return null
         val rule = rules.legislature ?: return null
-        if (groups.isEmpty()) return null
+        if (groups.isEmpty() || nextLegislative == null) return null
+        val chamber = legislature
+        if (chamber == null) {
+            val result = ElectionModel.openingElection(rule, profile.regime) { 0.0 }
+            return result.parties.map { SeatProjection(it.name, null, it.seatsAfter, it.voteShare) }
+        }
         val shares = withNewParties(voteShares(chamber.groups) { 0.0 })
-        val seats = ElectionModel.allocateSeats(shares, rule.electoralSystem, rule.seats)
+        val seats = ElectionModel.legislativeSeats(shares, rule)
         return (chamber.groups + provisionalGroups()).map {
             val current = chamber.groups.firstOrNull { group -> group.name == it.name }?.seats ?: 0
-            SeatProjection(it.name, current, seats.getValue(it.name), shares.getValue(it.name))
+            SeatProjection(it.name, current, seats.total(it.name), shares.getValue(it.name))
         }
     }
 
@@ -644,6 +660,12 @@ internal class Politics(
     fun snapshot(date: LocalDate): PoliticsSnapshot =
         PoliticsSnapshot(
             profile = profile,
+            reviewBody =
+                when {
+                    juntaSince != null -> "국가재건평의회"
+                    rules.legislature?.openingContest != null -> legislature?.name ?: profile.reviewBody
+                    else -> profile.reviewBody
+                },
             government = snapshotGovernment(),
             legislature = legislature,
             schedule =

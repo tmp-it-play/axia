@@ -363,6 +363,34 @@
  },
  "PAK": {
   "system": "PARLIAMENTARY",
-  "sourceNote": "2024-02-08 총선이 예정돼 있으나 시작 시점이 과도 내각이라 의석 기준 자료가 없어 아직 다루지 않는다. https://en.wikipedia.org/wiki/2024_Pakistani_general_election"
+  "legislature": {
+   "next": "2024-02-08",
+   "termYears": 5,
+   "seats": 336,
+   "electoralSystem": "MAJORITARIAN",
+   "earlyDissolution": true,
+   "reservedSeats": 70,
+   "openingContest": {
+    "chamberName": "국민의회",
+    "headOfGovernmentTitle": "총리",
+    "parties": [
+     { "name": "파키스탄 정의운동(PTI) 계열", "votes": 16903702 },
+     { "name": "파키스탄 무슬림연맹 나와즈파(PML-N)", "votes": 12934589 },
+     { "name": "파키스탄 인민당(PPPP)", "votes": 6925943 },
+     { "name": "무소속", "votes": 6087410, "other": true },
+     { "name": "통합행동위원회(MMA) 계열", "votes": 2573939 },
+     { "name": "테흐리크에라바이크 파키스탄(TLP)", "votes": 2234316 },
+     { "name": "대민주연합(GDA)", "votes": 1260147 },
+     { "name": "아와미 국민당(ANP)", "votes": 815998 },
+     { "name": "통합민족운동 파키스탄(MQM-P)", "votes": 733245 },
+     { "name": "파키스탄 무슬림연맹 카이드파(PML-Q)", "votes": 517408 },
+     { "name": "발루치스탄 아와미당(BAP)", "votes": 319348 },
+     { "name": "발루치스탄 국민당(BNP)", "votes": 238817 },
+     { "name": "아와미 무슬림연맹(AML)", "votes": 119362 },
+     { "name": "잠후리 와탄당(JWP)", "votes": 23274 }
+    ]
+   }
+  },
+  "sourceNote": "2023-08-09 하원 해산 후 과도 내각. 2023-11-02 대통령·선관위가 2024-02-08 총선일에 합의했다. https://www.supremecourt.gov.pk/downloads_judgements/const.p._32_2023_03nov2023.pdf 헌법 제51·52·58·91조. 정원 336석 중 266석은 지역구, 여성 60석은 주별, 비무슬림 10석은 전국 단위로 정당의 지역구 당선 의석에 비례해 배분한다. 게임에서는 유보석 70석을 전국 단위로 배분한다. https://na.gov.pk/uploads/documents/63ea176f52421_610.pdf 첫 선거의 지지 기반은 2018-07-25 국민의회 선거구별 ECP 잠정 집계의 2018-09-04 보존본이다. 당시 투표한 270개 선거구(연기된 NA-60·103 제외)의 후보 득표 53,123,733표를 합산했다. 지역구 당선 또는 전국 득표율 1% 이상 정당·연합과 무소속을 포함한 51,687,498표를 기준으로 지지율을 계산한다. 나머지 71개 정당의 1,436,235표는 제외했다. PTI·MMA 계열은 2018년 당시 소속 기준이며 2024년 후보별 소속 변경이나 실제 총선 결과는 반영하지 않는다. https://github.com/colincookman/pakistan_election_results_2018/blob/81761f218106a8b054e4b70651d002f4050a1696/data/pk_candidate_data_consolidated_090418.csv"
  }
 }

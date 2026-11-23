@@ -11,7 +11,8 @@ data class PartyResult(
     val name: String,
     val role: PartyRole,
     val voteShare: Double,
-    val seatsBefore: Int,
+    /** 개원 전 첫 선거에는 비교할 현역 의회가 없다. */
+    val seatsBefore: Int?,
     val seatsAfter: Int,
 )
 
@@ -42,9 +43,22 @@ data class ElectionResult(
 /** 지금 선거를 치르면 나올 예상(무작위 변동 없음). */
 data class SeatProjection(
     val name: String,
-    val current: Int,
+    val current: Int?,
     val projected: Int,
     val voteShare: Double,
+)
+
+internal data class LegislativeSeats(
+    val direct: Map<String, Int>,
+    val reserved: Map<String, Int> = emptyMap(),
+) {
+    fun total(name: String): Int = direct.getValue(name) + reserved.getOrDefault(name, 0)
+}
+
+/** 해산 상태에서 치른 첫 총선의 새 의회와 정당별 득표 결과. */
+internal data class OpeningElection(
+    val legislature: Legislature,
+    val parties: List<PartyResult>,
 )
 
 /**
@@ -68,8 +82,8 @@ internal object ElectionModel {
         satisfaction: Map<PopulationGroup, Double>,
         noise: (ParliamentaryGroup) -> Double,
     ): Map<String, Double> {
-        val totalSeats = groups.sumOf { it.seats }.toDouble()
-        val implied = groups.associate { it.name to (it.seats / totalSeats).pow(1.0 / system.seatExponent) }
+        val totalSeats = groups.sumOf { it.directSeats }.toDouble()
+        val implied = groups.associate { it.name to (it.directSeats / totalSeats).pow(1.0 / system.seatExponent) }
         // 권위주의 체제의 집권 우위는 이미 현재 의석에 담겨 있다. 가점을 더하면 선거마다 누적되므로,
         // 대신 지지율, 불만, 무작위 변동이 덜 반영되게만 한다.
         val damping = if (regime.autocratic) AUTOCRATIC_DAMPING else 1.0
@@ -101,6 +115,58 @@ internal object ElectionModel {
         return weights.mapValues { it.value / sum }
     }
 
+    /** 해산 전 마지막 총선의 득표를 기준으로 개원 선거를 치른다. 과도 내각에는 집권당이 없다. */
+    fun openingElection(
+        rule: LegislativeElectionRule,
+        regime: Regime,
+        noise: () -> Double,
+    ): OpeningElection {
+        val opening = requireNotNull(rule.openingContest)
+        val damping = if (regime.autocratic) AUTOCRATIC_DAMPING else 1.0
+        val weights = opening.parties.associate { it.name to it.votes * exp(noise() * damping) }
+        val total = weights.values.sum()
+        val shares = weights.mapValues { it.value / total }
+        val seats = legislativeSeats(shares, rule)
+        val elected =
+            opening.parties.mapNotNull { party ->
+                val count = seats.total(party.name)
+                if (count > 0) {
+                    ParliamentaryGroup(
+                        name = party.name,
+                        seats = count,
+                        role = if (party.other) PartyRole.OTHER else PartyRole.OPPOSITION,
+                        reservedSeats = seats.reserved.getOrDefault(party.name, 0),
+                    )
+                } else {
+                    null
+                }
+            }
+        val chamber = Legislature(opening.chamberName, elected, elected.sumOf { it.seats })
+        val governed = formGovernment(chamber.groups, chamber.required, previousRoles = emptyMap())
+        val roles = governed.associate { it.name to it.role }
+        val results =
+            opening.parties.map { party ->
+                val role = roles[party.name] ?: if (party.other) PartyRole.OTHER else PartyRole.OPPOSITION
+                PartyResult(party.name, role, shares.getValue(party.name), null, seats.total(party.name))
+            }
+        return OpeningElection(chamber.withGroups(governed), results)
+    }
+
+    /** 일반 의석을 먼저 채우고, 유보석이 있는 의회는 정당이 얻은 일반 의석에 비례해 나머지를 배분한다. */
+    fun legislativeSeats(
+        shares: Map<String, Double>,
+        rule: LegislativeElectionRule,
+    ): LegislativeSeats {
+        val direct = allocateSeats(shares, rule.electoralSystem, rule.seats - rule.reservedSeats)
+        if (rule.reservedSeats == 0) return LegislativeSeats(direct)
+        val candidates = rule.openingContest?.parties.orEmpty()
+        val independents = candidates.filter { it.other }.map { it.name }.toSet()
+        val eligible = direct.filter { (name, seats) -> name !in independents && seats > 0 }
+        if (eligible.isEmpty()) return LegislativeSeats(direct)
+        val reserved = allocateSeats(eligible.mapValues { it.value.toDouble() }, ElectoralSystem.PROPORTIONAL, rule.reservedSeats)
+        return LegislativeSeats(direct, reserved)
+    }
+
     /** 최대잉여법. 의석 비중 ∝ 득표율^지수. */
     fun allocateSeats(
         shares: Map<String, Double>,
@@ -124,15 +190,15 @@ internal object ElectionModel {
     /** 새 의석으로 정당 목록을 다시 만든다. 의석을 모두 잃은 정당은 빠지고, 표결 불참 의석은 같은 비율로 유지한다. */
     fun reseat(
         groups: List<ParliamentaryGroup>,
-        seats: Map<String, Int>,
+        seats: LegislativeSeats,
     ): List<ParliamentaryGroup> =
         groups.mapNotNull { party ->
-            val newSeats = seats.getValue(party.name)
+            val newSeats = seats.total(party.name)
             if (newSeats == 0) {
                 null
             } else {
                 val nonVoting = (newSeats * party.nonVoting.toDouble() / party.seats).roundToInt().coerceIn(0, newSeats)
-                party.copy(seats = newSeats, nonVoting = nonVoting)
+                party.copy(seats = newSeats, nonVoting = nonVoting, reservedSeats = seats.reserved.getOrDefault(party.name, 0))
             }
         }
 
@@ -141,7 +207,7 @@ internal object ElectionModel {
      * - 기존 정부 블록(주도·연정·협력)이 과반을 지키면 정부를 유지하고, 블록 안의 제1당이 주도한다.
      * - 아니면 [president]가 있으면 그 정당이, 없으면 제1당이 과반이 될 때까지 영입한다.
      *   영입 주체가 정부에 있었다면 기존 연정 상대부터, 야당이었다면 다른 야당부터 의석 순으로 영입한다.
-     * 처음부터 정부 주도 정당이 없는 의회(예: 이란, 이집트)는 정부를 재구성하지 않는다.
+     * 해산 상태에서 의회를 처음 구성할 때는 이전 역할이 비어 있다. 기존 무당파 정부(예: 이란, 이집트)는 유지한다.
      */
     fun formGovernment(
         groups: List<ParliamentaryGroup>,
@@ -149,7 +215,7 @@ internal object ElectionModel {
         previousRoles: Map<String, PartyRole>,
         president: String? = null,
     ): List<ParliamentaryGroup> {
-        if (PartyRole.LEAD !in previousRoles.values) return groups
+        if (previousRoles.isNotEmpty() && PartyRole.LEAD !in previousRoles.values) return groups
         val inGovernment = { name: String ->
             previousRoles[name].let { it == PartyRole.LEAD || it == PartyRole.COALITION || it == PartyRole.SUPPLY }
         }

@@ -236,35 +236,21 @@ internal class LeadershipState(
         setExecutive(next)
     }
 
-    /** 의회에서 정부 주도 정당이 바뀌었을 때 새 정부 수반을 세운다. 같은 정당이면 재신임으로 보고 임기를 늘린다. */
+    /** 의회에서 내각을 구성한다. 과도 내각을 이을 때는 새 정부 수반의 정식 [title]을 지정한다. */
     fun onGovernmentFormed(
         leadParty: String,
         date: LocalDate,
         reelected: Boolean,
+        title: String? = null,
     ) {
         val head = parliamentaryHead()
+        val office = title ?: head.title
+        val successorNeeded = head.party != leadParty || head.title != office || (reelected && head.termsServed >= RETIREMENT_TERMS)
         val next =
             when {
-                head.party == leadParty && reelected && head.termsServed >= RETIREMENT_TERMS -> {
-                    registry.generate(
-                        countryId,
-                        head.title,
-                        leadParty,
-                        date,
-                    )
-                }
-
-                head.party == leadParty && reelected -> {
-                    registry.update(head.copy(termsServed = head.termsServed + 1))
-                }
-
-                head.party == leadParty -> {
-                    head
-                }
-
-                else -> {
-                    registry.generate(countryId, head.title, leadParty, date)
-                }
+                successorNeeded -> registry.generate(countryId, office, leadParty, date)
+                reelected -> registry.update(head.copy(termsServed = head.termsServed + 1))
+                else -> head
             }
         if (headOfGovernmentId != null) headOfGovernmentId = next.id else headOfStateId = next.id
     }

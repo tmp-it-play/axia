@@ -133,11 +133,20 @@ internal class AiCountryPolitics(
             else -> leadership.governmentLabel(profile.initialGovernment, rules.system == GovernmentSystem.SEMI_PRESIDENTIAL)
         }
 
-    private fun electLegislature(date: LocalDate): List<PartyResult>? {
-        val chamber = legislature ?: return null
+    private fun electLegislature(date: LocalDate): List<PartyResult> {
         val rule = requireNotNull(rules.legislature)
+        val chamber = legislature
+        if (chamber == null) {
+            val contest = requireNotNull(rule.openingContest)
+            val result = ElectionModel.openingElection(rule, profile.regime) { random.nextGaussian() * VOTE_NOISE }
+            legislature = result.legislature
+            result.legislature.groups.firstOrNull { it.role == PartyRole.LEAD }?.let { lead ->
+                leadership.onGovernmentFormed(lead.name, date, reelected = false, title = contest.headOfGovernmentTitle)
+            }
+            return result.parties
+        }
         val shares = voteShares(chamber.groups, rule.electoralSystem)
-        val seats = ElectionModel.allocateSeats(shares, rule.electoralSystem, rule.seats)
+        val seats = ElectionModel.legislativeSeats(shares, rule)
         val previousRoles = chamber.groups.associate { it.name to it.role }
         val reseated = chamber.withGroups(ElectionModel.reseat(chamber.groups, seats))
         val governed =
@@ -157,7 +166,7 @@ internal class AiCountryPolitics(
             leadership.onGovernmentFormed(leadAfter, date, reelected = leadAfter == leadBefore)
         }
         return chamber.groups.map { party ->
-            PartyResult(party.name, party.role, shares.getValue(party.name), party.seats, seats.getValue(party.name))
+            PartyResult(party.name, party.role, shares.getValue(party.name), party.seats, seats.total(party.name))
         }
     }
 

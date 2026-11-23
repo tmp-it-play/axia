@@ -66,9 +66,12 @@ data class PoliticalProfile(
             require(entries.map { it.id }.toSet() == electionRules.keys) { "Elections must cover all political profiles" }
             entries.forEach { profile ->
                 val rule = electionRules.getValue(profile.id).legislature
-                require(
-                    rule == null || chambers.getValue(profile.id).chamber != null,
-                ) { "${profile.id} has legislative elections but no chamber" }
+                if (rule != null) {
+                    val hasChamber = chambers.getValue(profile.id).chamber != null
+                    require(hasChamber != (rule.openingContest != null)) {
+                        "${profile.id} needs either a sitting chamber or a pre-election contest"
+                    }
+                }
             }
             entries.associateBy { it.id }.also { require(it.size == entries.size) { "Duplicate political profile" } }
         }

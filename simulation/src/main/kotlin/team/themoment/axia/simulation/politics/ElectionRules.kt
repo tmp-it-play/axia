@@ -35,6 +35,31 @@ enum class ElectoralSystem(
     MAJORITARIAN("다수대표제", 1.9),
 }
 
+/** 시작 시점에 하원이 해산된 나라의 첫 선거에 쓸 직전 총선 득표 자료. */
+@Serializable
+data class OpeningContest(
+    val chamberName: String,
+    val headOfGovernmentTitle: String,
+    val parties: List<OpeningParty>,
+) {
+    init {
+        require(chamberName.isNotBlank() && headOfGovernmentTitle.isNotBlank())
+        require(parties.any { !it.other } && parties.distinctBy { it.name }.size == parties.size)
+    }
+}
+
+@Serializable
+data class OpeningParty(
+    val name: String,
+    val votes: Int,
+    /** 무소속 등 하나의 정당으로 연정을 이끌거나 유보석을 배분받을 수 없는 후보 묶음. */
+    val other: Boolean = false,
+) {
+    init {
+        require(name.isNotBlank() && votes > 0)
+    }
+}
+
 @Serializable
 data class LegislativeElectionRule(
     @Serializable(with = LocalDateSerializer::class)
@@ -45,9 +70,12 @@ data class LegislativeElectionRule(
     val electoralSystem: ElectoralSystem,
     /** 정부가 임기 중 의회를 해산하고 조기 총선을 치를 수 있는지. */
     val earlyDissolution: Boolean,
+    /** 정원 중 지역구 당선 정당에 비례해 따로 배분할 의석. */
+    val reservedSeats: Int = 0,
+    val openingContest: OpeningContest? = null,
 ) {
     init {
-        require(termYears in 1..7 && seats > 0)
+        require(termYears in 1..7 && seats > 0 && reservedSeats in 0 until seats)
     }
 }
 

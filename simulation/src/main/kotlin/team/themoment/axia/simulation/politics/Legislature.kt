@@ -23,11 +23,14 @@ data class ParliamentaryGroup(
     val role: PartyRole,
     val constituency: PopulationGroup? = null,
     val nonVoting: Int = 0,
+    /** 일반 의석 외에 정당에 배정된 유보석. 표결에는 참여하되 다음 지역구 선거의 득표 기반에서는 뺀다. */
+    val reservedSeats: Int = 0,
 ) {
     init {
-        require(name.isNotBlank() && seats > 0 && nonVoting in 0..seats)
+        require(name.isNotBlank() && seats > 0 && nonVoting in 0..seats && reservedSeats in 0..seats)
     }
 
+    val directSeats: Int get() = seats - reservedSeats
     val votingSeats: Int get() = seats - nonVoting
     val canNegotiate: Boolean get() = votingSeats > 0 && (role == PartyRole.OPPOSITION || role == PartyRole.SUPPLY)
 }

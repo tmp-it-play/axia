@@ -61,8 +61,13 @@ fun PoliticsPanel(
     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
         politics.leadership.all().forEach { PersonCard(it, today, onRenamePerson) }
     }
-    StatRow("재정 심의 기구", profile.reviewBody)
-    politics.legislature?.let { ChamberComposition(it) }
+    val openingContest = profile.elections.legislature?.openingContest
+    val chamber = politics.legislature
+    StatRow("재정 심의 기구", politics.reviewBody)
+    if (openingContest != null && chamber == null && politics.schedule.legislative != null) {
+        Hint("${openingContest.chamberName} 해산으로 과도 내각이 심의합니다. 총선 후에는 새 의회가 법안을 표결합니다.")
+    }
+    chamber?.let { ChamberComposition(it) }
     ElectionSection(politics, today, onCallEarlyElection)
     if (politics.newParties.isNotEmpty()) {
         SectionTitle("신생 정당 (다음 총선 출마)")
@@ -152,6 +157,8 @@ private fun ChecksSection(
 private fun ChamberComposition(chamber: Legislature) {
     var expanded by remember(chamber) { mutableStateOf(false) }
     SectionTitle("${chamber.name} · ${chamber.filledSeats}석")
+    val reserved = chamber.groups.sumOf { it.reservedSeats }
+    if (reserved > 0) StatRow("지역구 · 유보 의석", "${chamber.filledSeats - reserved}석 · ${reserved}석")
     val cabinet = chamber.groups.filter { it.role == PartyRole.LEAD || it.role == PartyRole.COALITION }
     if (cabinet.isNotEmpty()) StatRow("정부·연정 의석", "${cabinet.sumOf { it.seats }}석")
     val allies = chamber.groups.filter { it.role == PartyRole.SUPPLY }
@@ -161,7 +168,8 @@ private fun ChamberComposition(chamber: Legislature) {
     if (expanded) {
         chamber.groups.forEach { party ->
             val excluded = if (party.nonVoting > 0) " · 불참 ${party.nonVoting}" else ""
-            StatRow(party.name, "${party.role.label} · ${party.seats}석$excluded")
+            val allocation = if (party.reservedSeats > 0) " (유보 ${party.reservedSeats})" else ""
+            StatRow(party.name, "${party.role.label} · ${party.seats}석$allocation$excluded")
         }
     }
 }
@@ -342,12 +350,12 @@ private fun ElectionSection(
 @Composable
 private fun Projection(projection: List<SeatProjection>) {
     var expanded by remember { mutableStateOf(false) }
-    SectionTitle("여론조사 · 지금 총선을 치르면")
+    SectionTitle(if (projection.firstOrNull()?.current == null) "첫 총선 전망 · 직전 총선 득표 기준" else "여론조사 · 지금 총선을 치르면")
     val ranked = projection.sortedByDescending { it.projected }
     (if (expanded) ranked else ranked.take(PROJECTION_PREVIEW)).forEach { row ->
-        val change = row.projected - row.current
-        val sign = if (change > 0) "+" else ""
-        StatRow(row.name, "득표 ${formatPercent(row.voteShare)} · ${row.projected}석 (${sign}$change)")
+        val current = row.current
+        val seats = if (current == null) "${row.projected}석" else "${row.projected}석 (${seatChange(current, row.projected)})"
+        StatRow(row.name, "득표 ${formatPercent(row.voteShare)} · $seats")
     }
     if (ranked.size > PROJECTION_PREVIEW) {
         PaperTag(if (expanded) "접기" else "전체 정당 보기", onClick = { expanded = !expanded })
@@ -369,20 +377,25 @@ private fun LastElection(result: ElectionResult) {
         StatRow("당선", race.winner)
     }
     if (result.billLapsed) {
-        Text("의회 해산으로 심의 중이던 재정안이 폐기돼 초안으로 돌아갔습니다.", style = DossierType.number(12.sp), color = DossierColors.stamp)
+        Text("총선으로 심의가 종료되어 재정안이 초안으로 돌아갔습니다.", style = DossierType.number(12.sp), color = DossierColors.stamp)
     }
     result.parties?.let { parties ->
         val ranked = parties.sortedByDescending { it.seatsAfter }
         (if (expanded) ranked else ranked.take(PROJECTION_PREVIEW)).forEach { row ->
-            val change = row.seatsAfter - row.seatsBefore
-            val sign = if (change > 0) "+" else ""
-            StatRow(row.name, "득표 ${formatPercent(row.voteShare)} · ${row.seatsBefore}→${row.seatsAfter}석 (${sign}$change)")
+            val before = row.seatsBefore
+            val seats = if (before == null) "${row.seatsAfter}석" else "$before→${row.seatsAfter}석 (${seatChange(before, row.seatsAfter)})"
+            StatRow(row.name, "득표 ${formatPercent(row.voteShare)} · $seats")
         }
         if (ranked.size > PROJECTION_PREVIEW) {
             PaperTag(if (expanded) "접기" else "전체 결과 보기", onClick = { expanded = !expanded })
         }
     }
 }
+
+private fun seatChange(
+    before: Int,
+    after: Int,
+): String = if (after > before) "+${after - before}" else (after - before).toString()
 
 private const val PROJECTION_PREVIEW = 6
 private const val D_DAY_HORIZON = 180L
