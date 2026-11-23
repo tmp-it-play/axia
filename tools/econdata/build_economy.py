@@ -1,15 +1,17 @@
-"""IMF 세계경제전망(WEO)과 World Bank 지표로 2024년 1월 1일 시작 시점의 국가별 경제 초기 상태(economy.json)를 만든다.
+"""IMF WEO·GFS·WoRLD와 World Bank 지표로 2024년 1월 1일 시작 시점의 국가별 경제 초기 상태(economy.json)를 만든다.
 
 사용법:
     python3 tools/econdata/build_economy.py [--cache-dir <원본 응답 저장 폴더>]
 
-기준 연도는 2023년이다. 항목마다 IMF WEO, World Bank 순으로 값을 찾고, 둘 다 없으면 같은 소득 그룹의 중앙값으로
+기준 연도는 2023년이다. 세입 구성은 IMF GFS(정부범위별), WoRLD, WDI 순으로 찾는다.
+다른 항목은 IMF WEO, World Bank 순으로 값을 찾고, 둘 다 없으면 같은 소득 그룹의 중앙값으로
 채운 뒤 estimated 목록에 기록한다. 두 출처 모두에 없는 국가는 MANUAL 표의 대략적인 값을 쓴다.
 다운로드는 시스템 인증서를 쓰는 curl로 한다.
 """
 
 import argparse
 import json
+import math
 import statistics
 import subprocess
 import xml.etree.ElementTree as ElementTree
@@ -84,6 +86,23 @@ BUDGET_FIELDS = [
     "socialContributionShare",
     "tradeTaxShare",
 ]
+
+TAX_COMPONENTS = {
+    "incomeTaxShare": "G1111",
+    "corporateTaxShare": "G1112",
+    "consumptionTaxShare": "G114",
+    "socialContributionShare": "G121",
+    "tradeTaxShare": "G115",
+}
+WDI_TAX_FIELDS = {"incomeProfitTaxShare", "consumptionTaxShare", "socialContributionShare", "tradeTaxShare"}
+# 일반정부가 비면 범위가 넓은 중앙정부 자료부터 일반정부 세입 구성의 대용값으로 쓴다.
+GFS_SECTORS = {
+    "S13": "GFS_GENERAL",
+    "S1321": "GFS_CENTRAL_INCL_SOCIAL_SECURITY",
+    "S1311": "GFS_CENTRAL_EXCL_SOCIAL_SECURITY",
+    "S1311B": "GFS_BUDGETARY_CENTRAL",
+}
+
 
 # World Bank의 소득·이익세는 개인소득세와 법인세의 합이다. 법인세 비중은 소득 그룹별 대략적인 템플릿으로 나눈다.
 CORPORATE_SHARE_OF_INCOME_TAX = {"HIC": 0.3, "UMC": 0.45, "LMC": 0.5, "LIC": 0.5}
@@ -167,6 +186,85 @@ def load_world_bank(cache_dir):
     income_data = json.loads(download("https://api.worldbank.org/v2/country?format=json&per_page=400", cache_dir / "countries.json" if cache_dir else None))
     income = {row["id"]: row["incomeLevel"]["id"] for row in income_data[1] if row["region"]["value"] != "Aggregates"}
     return series, income
+
+
+def load_revenue_compositions(cache_dir):
+    """같은 해·출처·정부범위에서 총세입과 다섯 세목이 모두 보고된 구성만 반환한다."""
+    codes = ["G1", *TAX_COMPONENTS.values()]
+    gfs_indicators = "+".join(f"{code}_T" for code in codes)
+    gfs_sectors = "+".join(GFS_SECTORS)
+    gfs_key = f".{gfs_sectors}.G1.{gfs_indicators}.POGDP_PT.A"
+    sources = (
+        ("IMF.STA,GFS_SOO", gfs_key, "gfs-revenue", "_T"),
+        ("IMF.FAD,WORLD", "", "world-revenue", "_POGDP_PT_R"),
+    )
+    observations = {}
+    for flow, key, filename, suffix in sources:
+        url = f"https://api.imf.org/external/sdmx/2.1/data/{flow}/{key}?startPeriod={BASE_YEAR}&endPeriod={BASE_YEAR}"
+        cache = cache_dir / f"imf-{filename}-{BASE_YEAR}.xml" if cache_dir else None
+        root = ElementTree.fromstring(download(url, cache))
+        found = False
+        for series in root.iter("Series"):
+            indicator = series.get("INDICATOR", "")
+            if not indicator.endswith(suffix):
+                continue
+            code = indicator.removesuffix(suffix)
+            if code not in codes or series.get("TYPE_OF_TRANSFORMATION") != "POGDP_PT" or series.get("FREQUENCY") != "A":
+                continue
+            if flow == "IMF.STA,GFS_SOO":
+                source = GFS_SECTORS.get(series.get("SECTOR"))
+                if source is None or series.get("GFS_GRP") != "G1":
+                    continue
+            else:
+                # WoRLD는 국가별 사용 정부범위를 공개 자료에 싣지 않는다.
+                source = "WORLD_UNSPECIFIED"
+            bundle = observations.setdefault((series.attrib["COUNTRY"], source), {})
+            for observation in series:
+                if observation.get("TIME_PERIOD") != str(BASE_YEAR) or observation.get("OBS_VALUE") in (None, ""):
+                    continue
+                if observation.get("STATUS") in ("NA", "NP"):
+                    continue
+                found = True
+                value = float(observation.attrib["OBS_VALUE"])
+                if code in bundle:
+                    raise ValueError(f"Duplicate {flow} revenue observation: {series.attrib}")
+                bundle[code] = value
+        if not found:
+            raise ValueError(f"No annual revenue observations in {flow} for {BASE_YEAR}")
+
+    result = {}
+    for (country, source), values in observations.items():
+        if not all(code in values and math.isfinite(values[code]) and values[code] >= 0 for code in codes):
+            continue
+        total = values["G1"]
+        if total <= 0 or sum(values[code] for code in TAX_COMPONENTS.values()) > total:
+            continue
+        shares = {field: round(values[code] / total, 8) for field, code in TAX_COMPONENTS.items()}
+        shares["otherRevenueShare"] = round(1 - sum(shares.values()), 8)
+        if shares["otherRevenueShare"] < 0:
+            raise ValueError(f"Rounded tax shares exceed total revenue: {country} {source}")
+        result[country, source] = shares
+    return result
+
+
+def apply_revenue_compositions(entries, compositions):
+    for entry in entries:
+        country = entry["id"]
+        codes = SOURCE_CODES.get(country, [country])
+        for source in [*GFS_SECTORS.values(), "WORLD_UNSPECIFIED"]:
+            shares = next((compositions[code, source] for code in codes if (code, source) in compositions), None)
+            if shares is not None:
+                entry["budget"].update(shares)
+                entry["budget"]["revenueCompositionSource"] = source
+                entry["estimated"] = sorted(set(entry["estimated"]) - WDI_TAX_FIELDS)
+                break
+        else:
+            budget = entry["budget"]
+            budget["revenueCompositionSource"] = "WDI_MODEL"
+            # 소수 넷째 자리로 반올림한 WDI 구성의 합을 1로 맞춘다. 보고된 0은 그대로 둔다.
+            fields = [*TAX_COMPONENTS, "otherRevenueShare"]
+            largest = max(fields, key=budget.get)
+            budget[largest] = round(budget[largest] + 1.0 - sum(budget[field] for field in fields), 4)
 
 
 def latest(values, years):
@@ -379,12 +477,16 @@ def main():
             },
         )
 
+    apply_revenue_compositions(entries, load_revenue_compositions(args.cache_dir))
     OUT.write_text(json.dumps({"baseYear": BASE_YEAR, "countries": entries}, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
-    print(f"countries={len(entries)} fully measured={sum(1 for entry in entries if not entry['estimated'])}")
+    print(f"countries={len(entries)} without median/manual flags={sum(1 for entry in entries if not entry['estimated'])}")
+    for source in [*GFS_SECTORS.values(), "WORLD_UNSPECIFIED", "WDI_MODEL"]:
+        count = sum(entry["budget"]["revenueCompositionSource"] == source for entry in entries)
+        print(f"  revenue composition: {source}={count}")
     for field in FIELDS:
         from_imf_count = sum(1 for country in states if sources[country].get(field) == "imf")
         estimated_count = sum(1 for entry in entries if field in entry["estimated"])
-        print(f"  {field}: imf={from_imf_count} estimated={estimated_count}")
+        print(f"  {field}: weo={from_imf_count} estimated={estimated_count}")
     print(f"economy: {OUT.relative_to(ROOT)}")
 
 

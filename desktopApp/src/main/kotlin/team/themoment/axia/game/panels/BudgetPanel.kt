@@ -14,6 +14,7 @@ import team.themoment.axia.simulation.economy.Creditor
 import team.themoment.axia.simulation.economy.DebtPhase
 import team.themoment.axia.simulation.economy.DebtPlan
 import team.themoment.axia.simulation.economy.DebtWorkoutSnapshot
+import team.themoment.axia.simulation.economy.RevenueCompositionSource
 import team.themoment.axia.simulation.nation.BudgetItem
 import team.themoment.axia.simulation.nation.BudgetSnapshot
 import team.themoment.axia.simulation.politics.PoliticsSnapshot
@@ -80,6 +81,16 @@ fun BudgetPanel(
     ): Double = pending?.changes?.firstOrNull { it.item == item }?.to ?: politics.draft[item]?.to ?: enacted
 
     SectionTitle("세입 · 실효세율")
+    Hint(
+        when (budget.revenueCompositionSource) {
+            RevenueCompositionSource.GFS_GENERAL -> "시작 세입 구성은 IMF GFS의 2023년 일반정부 통계를 따릅니다."
+            RevenueCompositionSource.GFS_CENTRAL_INCL_SOCIAL_SECURITY -> "시작 세입 구성은 IMF GFS의 2023년 중앙정부(사회보장기금 포함) 자료로 추정했습니다."
+            RevenueCompositionSource.GFS_CENTRAL_EXCL_SOCIAL_SECURITY -> "시작 세입 구성은 IMF GFS의 2023년 중앙정부(사회보장기금 제외) 자료로 추정했습니다."
+            RevenueCompositionSource.GFS_BUDGETARY_CENTRAL -> "시작 세입 구성은 IMF GFS의 2023년 중앙정부 예산회계 자료로 추정했습니다."
+            RevenueCompositionSource.WORLD_UNSPECIFIED -> "IMF WoRLD의 2023년 세입 구성으로 추정했습니다. 이 국가의 정부 보고범위는 확인되지 않았습니다."
+            RevenueCompositionSource.WDI_MODEL -> "세계은행 세입 지표와 소득그룹별 추정치를 사용했습니다. 개인소득세와 법인세는 소득그룹별 비율로 나눴습니다."
+        },
+    )
     Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
         budget.taxes.forEach { line ->
             val proposed = proposed(line.kind, line.targetRate)
@@ -94,7 +105,7 @@ fun BudgetPanel(
             )
             StatRow("연간 환산 세입", money(line.revenue))
         }
-        StatRow("기타 세입 (자원, 공기업 등)", "${formatPercent(budget.otherRevenue)} · ${money(budget.otherRevenue)}")
+        StatRow("기타 세입 (재산세·보조금·자원 수입 등)", "${formatPercent(budget.otherRevenue)} · ${money(budget.otherRevenue)}")
     }
 
     SectionTitle("세출 · GDP 대비")

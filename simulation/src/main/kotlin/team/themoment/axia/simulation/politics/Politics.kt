@@ -900,7 +900,7 @@ internal class Politics(
         val addedDeficit =
             changes.sumOf { change ->
                 when (val item = change.item) {
-                    is TaxKind -> -change.delta * item.baseShare
+                    is TaxKind -> -change.delta * budget.taxBase(item)
                     is SpendingKind -> change.delta
                     is CountryPolicyItem -> change.delta * module.estimatedSpendingPerUnit(item)
                     is InstitutionItem, is RegulationItem -> 0.0

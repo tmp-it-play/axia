@@ -24,7 +24,7 @@ enum class InstitutionItem(
 }
 
 /**
- * 세목. 세입 = 실효세율 × 과세 기반(GDP 대비 [baseShare]).
+ * 세목. 세입 = 실효세율 × 국가별 과세 기반(기본값은 GDP 대비 [baseShare]).
  * 과세 기반은 경기에 [cyclicality]만큼 반응하고, 세율을 시작보다 올리면 [behavior]만큼 줄어든다(회피, 위축).
  */
 enum class TaxKind(
@@ -83,14 +83,21 @@ internal class PlayerBudget(
     private val countryPolicyCost: () -> Double,
 ) : FiscalPolicy {
     private val budget = initial.budget
-    private val initialRates: Map<TaxKind, Double> =
+    val revenueCompositionSource = budget.revenueCompositionSource
+    private val initialTaxRevenue =
         mapOf(
             TaxKind.INCOME to budget.incomeTaxShare,
             TaxKind.CORPORATE to budget.corporateTaxShare,
             TaxKind.CONSUMPTION to budget.consumptionTaxShare,
             TaxKind.SOCIAL to budget.socialContributionShare,
             TaxKind.TARIFF to budget.tradeTaxShare,
-        ).mapValues { (kind, share) -> (share * initial.revenue / kind.baseShare).coerceIn(0.0, kind.maxTarget) }
+        ).mapValues { (_, share) -> share * initial.revenue }
+
+    // 출발 세입이 기본 과세 기반 × 세율 상한을 넘는 국가는 기반을 넓혀 세입 전액을 보존한다.
+    private val taxBases = initialTaxRevenue.mapValues { (kind, revenue) -> maxOf(kind.baseShare, revenue / kind.maxTarget) }
+    private val initialRates = initialTaxRevenue.mapValues { (kind, revenue) -> (revenue / taxBase(kind)).coerceAtMost(kind.maxTarget) }
+
+    fun taxBase(kind: TaxKind): Double = taxBases.getValue(kind)
 
     /** 조정할 수 없는 기타 세입(자원 수입, 공기업 이익 등)의 GDP 대비 비중. */
     val otherRevenue = budget.otherRevenueShare * initial.revenue
@@ -193,7 +200,7 @@ internal class PlayerBudget(
         TaxKind.entries.forEach { kind ->
             val rate = rates.getValue(kind)
             val base =
-                kind.baseShare * (1.0 + kind.cyclicality * outputGap) *
+                taxBase(kind) * (1.0 + kind.cyclicality * outputGap) *
                     (1.0 - kind.behavior * (rate - initialRates.getValue(kind))).coerceAtLeast(MIN_BASE_FACTOR)
             revenues[kind] = rate * base.coerceAtLeast(0.0)
         }

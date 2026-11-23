@@ -13,6 +13,7 @@ import team.themoment.axia.simulation.economy.FiscalPolicy
 import team.themoment.axia.simulation.economy.FiscalShares
 import team.themoment.axia.simulation.economy.GrainProducerSupport
 import team.themoment.axia.simulation.economy.InitialEconomy
+import team.themoment.axia.simulation.economy.RevenueCompositionSource
 import team.themoment.axia.simulation.economy.Sector
 import team.themoment.axia.simulation.events.EventEffects
 import team.themoment.axia.simulation.history.MonthlySeries
@@ -56,6 +57,7 @@ data class GroupSnapshot(
 /** 재정 현황. 비율은 모두 GDP 대비(연율)다. */
 data class BudgetSnapshot(
     val taxes: List<TaxLine>,
+    val revenueCompositionSource: RevenueCompositionSource,
     val otherRevenue: Double,
     val spending: List<SpendingLine>,
     val revenue: Double,
@@ -510,6 +512,7 @@ class Nation internal constructor(
             budget =
                 BudgetSnapshot(
                     taxes = budget.taxLines(),
+                    revenueCompositionSource = budget.revenueCompositionSource,
                     otherRevenue = budget.otherRevenue,
                     spending = budget.spendingLines(),
                     revenue = economy.monthlyRevenue * 12.0 / gdp,

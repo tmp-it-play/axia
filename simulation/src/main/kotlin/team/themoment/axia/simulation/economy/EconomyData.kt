@@ -18,6 +18,17 @@ data class InitialSociety(
     val gini: Double,
 )
 
+/** 시작 세입 구성의 자료와 정부범위. 세목별 비율을 게임의 총세입에 적용한다. */
+@Serializable
+enum class RevenueCompositionSource {
+    GFS_GENERAL,
+    GFS_CENTRAL_INCL_SOCIAL_SECURITY,
+    GFS_CENTRAL_EXCL_SOCIAL_SECURITY,
+    GFS_BUDGETARY_CENTRAL,
+    WORLD_UNSPECIFIED,
+    WDI_MODEL,
+}
+
 /** 예산 구성 초기값. 지출은 GDP 대비, 세입 구성은 세입 대비 비율이다. */
 @Serializable
 data class InitialBudget(
@@ -30,6 +41,7 @@ data class InitialBudget(
     val socialContributionShare: Double,
     val tradeTaxShare: Double,
     val otherRevenueShare: Double,
+    val revenueCompositionSource: RevenueCompositionSource,
 )
 
 /** 2023년 기준 국가별 경제 초기값. 비율은 모두 소수다. */
