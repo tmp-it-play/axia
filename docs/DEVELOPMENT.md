@@ -1,173 +1,76 @@
 # Axia 개발 안내
 
-이어서 작업하는 사람과 에이전트를 위한 문서다.
-- 무엇을 왜 만드는지(기획, 모델 수식, 데이터 출처, 마일스톤, 알려진 한계): [DESIGN.md](DESIGN.md)
-- 저장소 규칙: [AGENTS.md](../AGENTS.md)
-- 코드를 어떻게 찾고, 고치고, 검증하는지: 이 문서
+게임 규칙은 [설계 문서](DESIGN.md), 국가별 정책의 제도 근거는 [국가별 정책 모듈](COUNTRY_MODULES.md), 시작 자료의 결측·대체값은 [데이터 결측 문서](DATA_GAPS.md)에서 확인한다. 저장소 작업에는 [프로젝트 규칙](../AGENTS.md)을 적용한다.
 
-## 1. 현재 상태
+## 빌드와 실행
 
-- 실제 세계와 채무 경감 가상역사에서 시작해 캠페인을 저장하고 이어갈 수 있다.
-- 세부 구현 1회차(DESIGN.md 16장 8번)를 마쳤다.
-  - ① 보정, ② AI 결정, ③ 산업 9부문·지역 분포, ④ 국가 모듈 13개
-- 이어서 ⑤ 지역별 산업·실업을 구현했다. 실업률 지도와 지역 선택 카드에서 확인할 수 있다.
-- ⑥ 국가부도·채무 재조정을 구현했다. 재정 탭에서 차환 압박과 교환채를 확인하고 지급 유예 전보에서 협상안을 선택한다.
-- ⑦ 영국·캐나다·호주 주택 정책을 구현했다. 정책 탭에서 발의하고 정치·개요에서 착공과 준공, 사회에서 집값, 재정에서 지원 지출을 확인한다.
-- ⑧ 곡물·원유 시장을 구현했다. 경제 탭과 지도 국가 선택 카드에서 국가별 생산·소비·재고, 상대별 월 선적을 본다.
-- ⑨ 브라질 Conab 가격차 보조를 구현했다. 정책 탭에서 추가 경매 범위를 발의하고, 경제·재정 탭에서 월별 지급 물량과 집행액을 확인한다.
-- ⑩ 10개 주요 생산국의 곡물 수확 달력을 적용했다. 경제 탭과 국가 카드가 직전 달의 수확·재고·선적을 표시한다.
-- ⑪ 플레이어 국가의 고령화에 따라 은퇴층 인원과 인구 비중, 여론·법안·조직·지역의 대표 인구를 매월 갱신한다.
-- ⑫ 파키스탄은 과도 내각으로 시작해 2월 8일 총선에서 국민의회를 구성한다. 정치 탭에서 선거 전 전망, 지역구·유보 의석, 새 총리와 법안별 예상 표수를 확인한다. AI 국가도 같은 방식으로 첫 총선을 치른다.
-- 캠페인 메뉴에서 수동 저장·불러오기·시작 화면 복귀를 지원한다. 법안, 지정한 지역 사업, 평화 조건, IMF 대출, 이름 변경 등 게임 상태를 바꾸는 입력은 `CampaignAction`을 통해 날짜와 순서를 기록한다. 신규 플레이어 명령도 같은 경로로 연결한다.
-- 지역 카드에서 사업을 정하고 정치 탭에서 지역구 선거와 야당 법안의 공포·거부를 확인한다. AI 법안의 실제 예산 효과와 내전 뒤 과도정부는 세계 소식과 국가 카드에 연결된다.
-- 외교·군사에서는 기구 가입·탈퇴, 통행권, 평화협상과 재건을, 경제에서는 경상수지·외환보유액·IMF 상환과 기업 목록을 확인한다.
-- 자료별 결측과 보완 근거는 [데이터 결측과 구현 범위](DATA_GAPS.md)에서 확인한다.
-- 32개 플레이 국가가 모두 전용 정책을 제공한다. 추가 15개국의 실제 제도, 월별 계산과 보정 가정은 [국가별 정책 모듈](COUNTRY_MODULES.md)에서 확인한다.
-- 정치 탭에서 다음 총선의 우선 교섭 상대를 지정하고 경선·결선, 연정 교섭과 양원 절충 결과를 확인한다. 사회 탭과 지도 지역 카드에서는 세대별 성향 변화, 직업 이동과 지역 치안 사업을 확인한다.
-- 경제 탭에서 총재 임명과 금리 인상·인하 요구를 처리한다. 국가부도 전보에서 국내·해외 민간·공적 채권자에게 교환 조건을 따로 제시한다. 군사 탭의 해상 봉쇄·교역로 차단은 다음 월 결산의 상품 물량과 결제액에 반영된다.
-- 다음 단계는 게임 UI 정리와 장기 플레이 밸런스 보정이다.
+프로젝트의 Gradle Wrapper와 JDK 25를 사용한다. Kotlin·Compose·ktlint 버전은 [버전 카탈로그](../gradle/libs.versions.toml)에 있다.
 
-## 2. 빌드와 실행
-
-| 할 일 | 명령 |
+| 작업 | 명령 |
 |---|---|
-| 전체 빌드 + ktlint 검사 | `./gradlew build` |
-| 포맷 자동 정리 | `./gradlew ktlintFormat` (한 번에 다 안 고쳐지면 두세 번 돌린다) |
+| 전체 빌드와 ktlint 검사 | `./gradlew build` |
+| 포맷 정리 | `./gradlew ktlintFormat` |
 | 앱 실행 | `./gradlew :desktopApp:run` |
-| 시뮬레이션만 컴파일 | `./gradlew :simulation:compileKotlin` |
+| 시뮬레이션 컴파일 | `./gradlew :simulation:compileKotlin` |
 
-- 툴체인: Gradle 9, JDK 25, Kotlin 2.4, Compose Multiplatform 1.12, ktlint 1.8
-- `~/.gradle/gradle.properties`에서 JDK 자동 다운로드가 꺼져 있을 수 있다. 로컬 JDK 25 이상이 필요하다.
-- 테스트 소스는 두지 않는다(AGENTS.md 2번). 검증 방법은 6장을 따른다.
+`vMAJOR.MINOR.PATCH` 형식의 태그를 푸시하면 [릴리스 워크플로](../.github/workflows/release.yml)가 실행된다.
 
-## 3. 모듈과 패키지
+## 코드 위치
 
-`:simulation`은 Compose에 의존하지 않는 순수 Kotlin이다. 결정론적으로 동작하며, 모든 세계 모델이 여기 있다. `:desktopApp`은 화면이다.
+[simulation](../simulation/src/main/kotlin/team/themoment/axia/simulation)은 세계 상태와 게임 규칙을 관리한다. [desktopApp](../desktopApp/src/main/kotlin/team/themoment/axia)은 시뮬레이션 스냅숏으로 Compose 화면을 그린다.
 
-### 3.1 `simulation/src/main/kotlin/team/themoment/axia/simulation/`
-
-| 패키지 | 내용 | 주요 파일 |
-|---|---|---|
-| (루트) | 세계 전체를 묶어 하루씩 진행. UI용 스냅숏과 명령 채널 | `Simulation.kt`, `SimulationRunner.kt` |
-| `world` | 지도 세계 정의, 국가 지리(중심점·인접·해안), 구조 지표 | `World.kt`, `WorldLoader.kt`, `Geography.kt` |
-| `economy` | 거시경제, 중앙은행, 교역·곡물·원유·환율, 산업 9부문, AI 재정, 채무 재조정 | `CountryEconomy.kt`, `WorldEconomy.kt`, `CentralBank.kt`, `Trade.kt`, `CommodityMarket.kt`, `CommodityFundamentals.kt`, `Sectors.kt`, `SovereignDebt.kt` |
-| `nation` | 플레이어 국가: 인구 집단, 예산, 규제, 지지율, 지역별 산업·실업 | `Nation.kt`, `Budget.kt`, `Population.kt`, `Regulations.kt`, `Regions.kt`, `RegionalEconomy.kt`, `CountryPolicyItem.kt` |
-| `society` | 성향 집단, 유권자 표본, 조직, 사회 지표, 인구 구조, 기후·기술 추세 | `Identity.kt`, `Society.kt`, `Organizations.kt`, `Demography.kt` |
-| `politics` | 정당 의석, 법안 심의, 선거, 헌법기관, 신생 정당, AI 국가 정치, 체제·지지율 자료 | `Politics.kt`, `Elections.kt`, `Constitution.kt`, `WorldPolitics.kt` |
-| `people` | 지도자 인물, 이름 생성기, 사망·승계 | `People.kt` |
-| `diplomacy` | 관계, 국제기구, 동맹, 무역협정, 제재, AI 외교 결정 | `Diplomacy.kt` |
-| `military` | 전력, 동원, 전선, 내전, 영토 분쟁, AI 개전 | `Military.kt` |
-| `events` | 조건부 사건, 선택지, 시스템 사건(휴전·협정 제안) | `Events.kt` |
-| `country` | 국가별 특화 모듈 인터페이스와 `<ISO3 소문자>/` 구현 | `CountryModule.kt` |
-| `math`, `text`, `history`, `time` | 정규분포 난수, 한국어 조사(`josa`), 월간 기록, 배속 | |
-
-### 3.2 `desktopApp/src/main/kotlin/team/themoment/axia/`
-
-| 패키지 | 내용 |
+| 작업 | 시작점 |
 |---|---|
-| `game` | 게임 화면(`GameScreen.kt`), 상단 띠, 왼쪽 탭 |
-| `game/panels` | 탭별 패널(개요·경제·재정·정책·정치·조직·사회·외교·군사·상황·통계), 사건 전보, 공통 부품(`CommonParts.kt`, `PanelParts.kt`) |
-| `map` | 지도 그리기, 지도 모드(`MapMode.kt`), 지역 단위 색칠 |
-| `ui/dossier`, `theme` | 서류철 UI 부품과 색·글꼴 |
-| `newgame`, `selection` | 국가 선택 화면, 지도 선택 카드 |
-| `update` | GitHub 릴리스 기반 자동 업데이트 |
+| 시간 진행·플레이어 입력·저장 재생 | `Simulation.kt`, `SimulationRunner.kt`, `campaign/`. 디스크 저장은 앱의 `CampaignStore.kt` |
+| 지도·시작 세계·플레이 가능 국가 | `world/`. 지도 렌더링과 선택은 앱의 `map/`, `selection/`, `newgame/` |
+| 세계 경제·교역·부채 | `economy/WorldEconomy.kt`에서 국가 장부, 상품 시장, 대외 결제를 호출 |
+| 플레이어 예산·지역·여론·정치 | `nation/`, `society/`, `politics/`. 국가별 고유 정책은 `country/` |
+| 인물·사건·국제 관계 | `people/`, `events/`, `diplomacy/`, `military/` |
+| 게임 화면·공통 부품 | 앱의 `game/GameScreen.kt`, `game/panels/`, `ui/dossier/`, `theme/` |
 
-## 4. 시뮬레이션 진행
+## 날짜 진행과 저장
 
-`Simulation.advanceDay()`가 하루를 진행한다. UI는 `SimulationRunner`의 `StateFlow`(economy, nation, politics, world, clock)를 구독한다.
+[Simulation.advanceDay](../simulation/src/main/kotlin/team/themoment/axia/simulation/Simulation.kt)가 날짜를 하루 넘긴다. 매월 1일에는 피란·귀환과 재건비를 반영한 뒤 직전 달의 경제를 결산한다. 이어 플레이어 국가와 정책 모듈, AI 정치·외교·군사, 장기 추세·세계 사건, 정치 심사와 제안을 처리한다. 월요일에는 전선을 갱신한다. 일일 사건, 결정 기한, 선거와 법안 심의는 그 뒤에 처리한다.
 
-- 매월 1일, 순서가 중요하다.
-  1. 경제(교역 → 중앙은행 → 국가 경제)
-  2. 플레이어 국가, 국가 모듈, 전쟁 피로
-  3. AI 정치, 외교
-  4. 군사 자본, 분쟁, AI 개전, AI 외교 결정
-  5. 장기 추세, 세계 사건
-  6. 정치 지지 갱신, 불신임 점검
-  7. 휴전·협정 제안
-- 매주 월요일: 전선 이동
-- 매일: 플레이어 사건 판정, 결정 기한, 선거, 법안 심의, 소식 정리
-- **결정론**: 같은 시드·입력이면 같은 결과다. 시스템마다 시드를 다른 상수로 XOR해 난수 순서가 섞이지 않게 한다(`Simulation` companion의 `*_SEED_SALT`, `Nation`의 `ORGANIZATION_SEED_SALT`).
-  - 새 시스템에 난수가 필요하면 새 상수를 만든다.
-  - 국가 순서는 항상 id 정렬이다. `HashMap` 순회 순서에 기대지 않는다.
-- **시작 상태 보존**: 2023년 데이터에는 이미 진행 중인 전쟁·제재·협정의 효과가 들어 있다. 그래서 외부 효과는 시작 대비 변화만 경제에 전한다(교역 배율, 전쟁 강도, 점령 비율).
+- 같은 시작 시나리오·시드·입력 순서로 같은 결과가 나와야 한다. 난수는 시스템별 시드 상수로 분리하고, 국가별 계산에는 고정된 순회 순서를 사용한다.
+- 시작 통계에는 당시에 이미 시행 중인 제재나 전쟁의 영향이 들어 있다. 경제에 전달할 때는 시작 대비 변화를 계산한다.
+- 새 플레이어 명령은 `CampaignAction`과 `SimulationRunner.perform`을 거쳐 날짜·입력 순서를 저장한다. UI는 `SimulationRunner`가 발행하는 스냅숏을 구독한다.
 
-## 5. 데이터 파일과 생성 도구
+## 데이터 생성
 
-데이터는 `simulation/src/main/resources/world/`에 있다. 콘텐츠는 코드가 아니라 데이터로 정의한다(DESIGN.md 15장). 출처와 가정은 각 파일의 `sourceNote`와 DESIGN.md 14장에 남긴다.
+게임 데이터는 [world 리소스](../simulation/src/main/resources/world)에 있다. 새 필드는 JSON과 이를 읽는 Kotlin 데이터 클래스에 함께 추가한다.
 
-| 파일 | 내용 | 만드는 방법 |
-|---|---|---|
-| `world.json`, (`desktopApp`) `map/world-map.bin` | 국가·영역·행정구역, 지도 형상 | `tools/mapdata/build_map.py` (Natural Earth) |
-| `economy.json` | 2023년 거시·사회·예산 초기값 | `tools/econdata/build_economy.py` (IMF WEO·GFS·WoRLD, World Bank) |
-| `structure.json` | 교역 개방도, 자원 지대, 병력, 인구 동태, 부가가치 구성 | `tools/econdata/build_structure.py` (World Bank) |
-| `geography.json` | 중심점, 면적, 해안, 육상 인접국 | `tools/geodata/build_geography.py` (지도 형상) |
-| `reserve_assets.json` | 2023년 말 금 제외 준비자산(USD), 관측 경로 및 미수록국 | `tools/econdata/build_reserve_assets.py` (IMF IL·IIP, WDI 연간 대용치) |
-| `region_population.json` | 공식 지역 인구와 관측일, 통계상의 전국 합 | `tools/geodata/build_region_population.py`, 원표 지역 코드 대응은 `region_population_codes.csv` |
-| `central_banks.json` | 중앙은행·통화 체제와 2023년 말 금리 | 국가별 정책수단은 수작업 조사, 보완 금리는 `tools/econdata/build_policy_rates.py` (BIS) |
-| `regions.json` | 플레이 가능국 행정구역별 면적·도시 인구 | `tools/geodata/build_regions.py` (Natural Earth 거주지) |
-| `commodities.json` | 2023년 곡물·원유 생산량, 곡물 국내 공급과 석유 수요 가중치 | `tools/econdata/build_commodities.py` (WDI·FAO·EIA, 대만·코소보 보완) |
-| `grain_harvest.json` | 국가별 12개월 곡물 수확 비중 | 국가별 출처·연간 합 100 확인 |
-| `housing_programs.json` | 영국·캐나다·호주 주택 제도와 효과 계수 | 제도 근거는 국가별 `sourceNote` |
-| `trade.json` | 국가별 수출 상대 비중 | `tools/tradedata/build_trade.py` (UN Comtrade 공개 API, 매우 느림, 캐시 사용 권장) |
-| `regimes.json` | 모든 나라의 V-Dem 체제 분류 | `tools/politicsdata/build_regimes.py` (OWID) |
-| `playable.json`, `politics.json`, `parliaments.json`, `elections.json`, `constitutions.json`, `leaders.json`, `approval.json`, `society_identities.json`, `organizations.json`, `diplomacy.json`, `military.json`, `events.json`, `names.json` | 손으로 조사·작성한 자료 | 직접 편집. 근거는 `sourceNote`/`source`에 |
+| 출력 | 생성기 또는 입력 |
+|---|---|
+| `world.json`, `map/world-map.bin` | `tools/mapdata/build_map.py --ne-dir <폴더>`에 Natural Earth의 admin 0·1 GeoJSON을 전달 |
+| `geography.json` | `tools/geodata/build_geography.py`가 번들의 지도 형상과 세계 정의를 읽음 |
+| `regions.json`, `region_population.json` | `tools/geodata/build_regions.py`, `build_region_population.py`. 공식 행정구역 코드 대응은 같은 폴더의 `region_population_codes.csv` |
+| `economy.json`, `structure.json` | `tools/econdata/build_economy.py`, `build_structure.py` |
+| `reserve_assets.json`, `commodities.json` | `tools/econdata/build_reserve_assets.py`, `build_commodities.py` |
+| `central_banks.json` | 국가별 정책수단을 직접 편집. BIS 보완 금리는 `tools/econdata/build_policy_rates.py`로 갱신 |
+| `trade.json`, `regimes.json` | `tools/tradedata/build_trade.py`, `tools/politicsdata/build_regimes.py` |
+| 국가 정책·수확 달력·선거·인물·사건 | 해당 JSON을 직접 편집. 국가 정책은 `housing_programs.json`, `national_programs.json`과 국가 모듈 참조 |
 
-- 도구는 모두 `--cache-dir <폴더>`를 받는다. 원본 응답을 캐시해 두고 다시 돌리면 내려받지 않는다. 세션 스크래치패드를 캐시로 쓰면 된다.
-- Python은 시스템 `curl`로 받는다. python.org판 Python에는 인증서가 없어 urllib HTTPS가 실패한다.
-- `economy.json`을 다시 만들면 거시 초기값이 바뀔 수 있다. 원본 자료가 갱신되면 결과가 달라지므로 필요할 때만 돌린다.
-- 예산 자료를 재생성할 때는 `budget.revenueCompositionSource`로 일반정부·중앙정부·범위 미상·WDI 구성을 구분한다. 총세입과 다섯 세목의 연도·단위·보고 범위가 일치하는지 검사하고, 국가별 시작 세목과 기타 수입의 합을 게임 총세입과 대조한다.
-- JSON 로더는 모르는 키를 허용하지 않는다(`ignoreUnknownKeys = false`). 필드를 추가하면 Kotlin 데이터 클래스도 함께 고친다.
+통계 다운로드 도구는 `--cache-dir <폴더>`로 원본 응답을 재사용할 수 있다. 관측 연도와 단위, 국가·정부의 보고 범위를 확인하고, 결측과 보고된 0을 구분한다. 세입 구성은 총세입과 다섯 세목의 보고 범위를 맞추고 `budget.revenueCompositionSource`에 기록한다. 자료를 교체하면 출처와 남은 대체 범위를 함께 갱신한다. [데이터 결측 문서](DATA_GAPS.md)
 
-## 6. 검증 방법
+## 변경 검증
 
-영구 테스트 코드는 두지 않는다. 대신 임시 검증을 하고 끝나면 지운다(AGENTS.md 2번).
+모델을 변경하면 임시 실행기로 `Simulation.advanceDay()`를 호출해 검증한다. 장기 영향은 고정 시드로 각 플레이 국가를 30년 이상 진행해 연말 스냅숏을 비교한다. 임시 실행기·테스트 코드와 이를 위한 빌드 설정은 커밋 전에 제거한다.
 
-기본 시스템 통합 검증은 시드 `408`로 32개 플레이 국가를 각각 2024-01-01부터 2054-01-01까지 진행했다. 960개 연말 상태에서 곡물·원유 장부 382,080건의 수급과 양자 선적, 국채 장부 191,040건의 채권자별 잔액을 대조했다. 시작 데이터를 보완한 뒤 채무 감면 이력이 있는 연말 관측 1,023건에서는 채권자별 확정 손실 합이 국가 감면액과 일치했다.
+| 변경 영역 | 확인할 조건 |
+|---|---|
+| 진행·저장 | 동일한 날짜에 여러 명령을 내린 뒤 새 프로세스에서 저장을 재생한다. 로드 직후와 추가 진행 뒤 경제·국가·정치·세계 스냅숏이 원래 플레이와 일치해야 한다. |
+| 경제·재정 | 첫날의 다섯 세목과 기타 세입의 합이 총세입과 일치해야 한다. 장기 실행에서 지표의 유한성과 상한 고착을 확인한다. 채무 감면은 합의 시점에 한 번 반영하고 채권자별 잔액·손실의 합을 국채 장부와 대조한다. |
+| 교역·외환 | 세계 수출 합계와 수입 합계를 대조한다. 국가별 상품은 기초 재고 + 생산 + 수입 = 기말 재고 + 소비 + 수출이다. IMF 자금 인출은 준비자산과 대출 원금을 같은 금액만큼 늘린다. |
+| 지역·영토 | 지역 GDP·경제활동인구 비중은 각각 합이 1이어야 한다. 지역 실업률을 경제활동인구로 가중해 전국 실업률과 대조한다. 영토 이관 전후 양국 인구·실질 GDP의 합을 확인한다. |
+| 정책·선거 | 정책의 법안 통과·집행·결산 시점, 국가별 시차와 지급액을 대조한다. 선거 후 정당별 의석 합계와 의회 정원, 정부 구성과 진행 중인 법안의 처리를 확인한다. |
 
-- **장기 실행 검증**
-  1. `simulation/build.gradle.kts`를 백업한다.
-  2. `JavaExec` 태스크를 임시로 추가한다(`classpath = sourceSets["main"].runtimeClasspath`).
-  3. `simulation/.../TempVerify.kt`에 `main`을 만들어 30~50년을 돌린다. 매년 1월 1일 지표, 선거, 전쟁, 소식, NaN 여부를 출력한다.
-  4. 결정이 필요한 사건은 첫 선택지로 넘긴다.
-  5. 끝나면 파일을 지우고 빌드 파일을 되돌린다.
-  - 한 나라 50년은 몇 초면 끝난다.
-- **화면 확인**
-  - 앱 창을 직접 조작할 때는 매번 맨 앞 프로세스가 Axia(java)인지 확인한다. 사용자가 다른 앱을 쓰고 있으면 입력을 보내지 않는다.
-  - 창을 건드릴 수 없을 때는 Compose `ImageComposeScene`으로 패널을 PNG로 렌더하는 임시 `main`을 쓴다. `desktopApp`에 임시 `JavaExec` 태스크를 두고 `-Djava.awt.headless=true`로 돌린 뒤, 끝나면 지운다.
-- **확인할 것**
-  - 저장한 게임을 새 프로세스에서 열어 같은 날짜의 경제·국가·정치·세계 스냅숏을 비교한다. 같은 날 입력한 여러 명령, 수동 슬롯과 자동 슬롯, 추가 진행 뒤 상태도 대조한다.
-  - 영토 양도 전후 양국 인구와 실질 GDP의 합, 반환 뒤 장부, 다자전 참전국의 협상 권한, 난민 유출입 합계와 재건비 집행을 확인한다. 국내 속령의 경제 집계와 본토 선거구 귀속을 따로 검사한다.
-  - 모든 국가의 달러 수출 합은 수입 합과 같아야 한다. 외환위기에 IMF 자금 인출은 보유액과 대출 원금을 같은 금액만큼 늘리며, 상환·페그 포기 이후 외환 장부와 통화 체제도 함께 바뀐다.
-  - 32개국 장기 실행에서 NaN과 폭주(부채·물가·환율 상한 고착)가 없어야 한다.
-  - 정권 교체·전쟁·사건 빈도가 그럴듯해야 한다.
-  - 같은 시드면 같은 결과가 나와야 한다.
-  - 지역 GDP 비중과 경제활동인구 비중은 각각 합이 1이다. 지역 실업률은 경제활동인구로, 지역 산업 비중은 각각 GDP와 취업자로 가중하면 전국 값과 일치해야 한다.
-  - 주택 공급 법안은 착공 뒤 해당 국가의 공기만큼 지나서 준공에 반영되어야 한다. 지원 지출은 법안·월 예산에서 대조한다.
-  - 상품별·국가별로 기초 재고 + 생산 + 수입 = 기말 재고 + 실제 소비 + 수출이다. 유입·유출 선적 합과 상대 장부를 대조하고, 첫달 제재와 제재 해제 이후 물량·가격 반응을 확인한다.
-  - 브라질 가격차 보조는 지급 물량 × 톤당 가격차가 농가와 정부 양쪽에 같은 달 한 번만 계상되어야 한다. 평년 수확 합계, 비수기 이월과 전년비 가격, 은퇴층 인원과 65세 이상 인구의 일치도 확인한다.
-  - 파키스탄은 2024-02-07까지 과도 내각이 법안을 심의한다. 다음 날에는 지역구 266석·유보석 70석, 무소속 유보석 0석, 과반 169표, 과도 총리 교체와 심의안의 초안 복귀를 확인한다. 다른 국가로 플레이할 때의 선거 소식, 5년 뒤 총선과 쿠데타에 따른 선거 중단도 확인한다.
-  - 부도·협상 시작 때 원금이 감면되지 않아야 한다. 결산 후 부채는 직전 잔액 + 기초지출 + 이자 − 세입 − 합의 감면액이다. 세 채권자 보유액의 합, 채권자별 연장안 수락·반려와 확정 손실, 14일 무응답, 교환채 만기까지 확인한다.
+화면은 앱에서 해당 패널을 열어 확인한다. 별도 렌더링이 필요하면 Compose `ImageComposeScene`과 임시 실행기로 PNG를 생성할 수 있다.
 
-## 7. 자주 하는 확장
+## 기능 확장
 
-- **국가 모듈 추가**: `country/<iso3>/<이름>Module.kt`에서 `CountryModule`을 구현하고 `CountryModules`의 `specialized`와 `create`에 등록한다.
-  - 필요한 훅만 덮어쓴다: 고유 정책 `policies`/`policyValue`/`enact`, 거부 지점 `billChecks`, 강행 처리 `forceThrough`, 월간 효과 `advanceMonth`, 화면 지표 `indicators`.
-  - 고유 정책의 성향·집단 반응 계수는 `CountryPolicyItem`에 넣는다. 정책 화면과 법안 평가에 자동으로 나온다.
-  - 월간 효과의 산출 갭 충격은 갭 지속성(0.94) 때문에 약 17배로 누적된다. 매달 주는 충격은 작게 둔다.
-- **사건 추가**: `events.json`에 정의를 추가한다.
-  - 변수는 `EventContext.VARIABLES`에 있는 것만 쓸 수 있다. 새 변수는 `Nation.eventValues`나 `Simulation.sharedEventValues`에서 채운다.
-  - 특수 처리(쿠데타, 반란처럼)가 필요하면 `Simulation`에서 `definitionId`로 분기한다.
-- **정책 항목 추가**: `PolicyItem`은 sealed다. 새 종류를 넣으면 `when` 분기가 컴파일 오류로 드러난다(`Politics`, `Identity.reaction`, `PoliticsPanel.describe`).
-- **스냅숏에 값 추가**: 시뮬레이션의 `*Snapshot` 데이터 클래스에 필드를 추가하고, 패널은 `GameScreen`에서 넘긴다.
-- **지도 모드 추가**: `MapMode`에 항목을 추가하고 `MapData`로 값을 읽는다. 플레이어 지역 단위 색은 `MapMode.regionColor`가 정한다.
-
-## 8. 코드와 문서 규칙
-
-- 주석·KDoc·화면 문구는 한국어로 쓴다.
-  - 조사는 `text/Korean.kt`의 `String.josa()`를 쓴다. "이(가)" 같은 병기를 직접 쓰지 않는다.
-  - 화면 문구에 국가 코드를 그대로 쓰지 않고 나라 이름으로 바꾼다.
-- 수치 계수는 이름 있는 상수로 두고 KDoc에 의미를 적는다. 게임 가정이면 "게임 가정"이라고 쓴다.
-- 문제를 가리지 않고 근본 원인을 고친다(AGENTS.md 3번). 예를 들어 폭주를 상한으로 자르기 전에 원인 피드백 고리를 찾는다.
-- **커밋**: 사용자가 요청할 때만 한다. 규칙은 `.claude/skills/git-commit`(`type(scope): 한국어 설명`, 본문 없음)이다.
-- **태그**: `v*` 태그는 릴리스 워크플로(`.github/workflows/release.yml`)를 실행한다. `checkpoint-*` 태그는 작업 시점 표시용이다.
-- 모델이나 데이터를 바꾸면 DESIGN.md의 해당 절, 14장(데이터 출처), 16장(마일스톤), 18장(알려진 한계)을 함께 고친다. README는 최소한으로 둔다.
+- 공통 정책 구조에 맞는 국가 사업은 `national_programs.json`과 `NationalProgramModule`을 사용한다. 독자 규칙이 필요하면 `CountryModule`을 구현해 `CountryModules.specialized`와 `create`에 등록한다. 고유 정책과 집단별 반응은 `CountryPolicyItem`에 정의한다.
+- 사건은 `events.json`에 추가한다. 새 조건 변수는 `EventContext.VARIABLES`에 등록하고 `Nation.eventValues` 또는 `Simulation.sharedEventValues`에서 값을 제공한다.
+- 새 정책 종류는 `PolicyItem`과 이를 처리하는 심의·성향·화면 분기에 연결한다. 화면에 값을 추가할 때는 해당 `*Snapshot`에서 `GameScreen`을 거쳐 패널로 전달한다. 지역별 지도 색은 `MapMode.regionColor`에서 결정한다.
+- 모델 계수는 이름 있는 상수로 두고 단위와 근거를 기록한다. 자료가 없는 값은 게임 가정으로 표시한다. 주석·KDoc·화면 문구는 한국어로 쓰고, 화면에는 국가 이름과 `String.josa()`를 사용한다.
+- 게임 규칙을 바꾸면 설계 문서의 해당 절을 갱신하고 README는 간단히 유지한다. 커밋은 사용자가 요청할 때 만들며 [저장소의 커밋 규칙](../.agents/skills/git-commit/SKILL.md)을 따른다.
