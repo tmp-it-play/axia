@@ -48,7 +48,7 @@ internal class CountryEconomy(
     }
 
     /** 산업 부문의 상대 수준(전체 경제 대비, 시작 = 1). */
-    fun sectorLevel(sector: Sector): Double = sectors.relativeLevel(sector) / (1.0 + outputGap)
+    fun sectorLevel(sector: Sector): Double = sectors.relativeLevel(sector)
 
     fun sectorLines(): List<SectorLine> = sectors.lines(realGdp / realGdpHistory[historyIndex] - 1.0)
 

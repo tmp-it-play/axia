@@ -2,6 +2,8 @@ package team.themoment.axia.simulation.nation
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import team.themoment.axia.simulation.economy.Sector
+import team.themoment.axia.simulation.economy.SectorLine
 import team.themoment.axia.simulation.world.World
 
 /** 지역 하나의 현황. */
@@ -17,6 +19,7 @@ data class RegionSnapshot(
     val relativeIncome: Double,
     /** 지역 지지율. 지역의 인구 집단 구성 차이로 전국 지지율에서 벗어난다. */
     val approval: Double,
+    val economy: RegionEconomySnapshot,
 )
 
 @Serializable
@@ -63,6 +66,7 @@ internal class Regions(
         val urban: Double,
         val mix: Map<PopulationGroup, Double>,
         val income: Double,
+        val sectorDensity: Map<Sector, Double>,
     )
 
     private val regions: List<RegionState>
@@ -87,7 +91,15 @@ internal class Regions(
         val average = raw.sumOf { (region, share, _) -> share * incomeRaw.getValue(region.id) }.coerceAtLeast(1e-9)
         regions =
             raw.map { (region, share, urban) ->
-                RegionState(region.id, region.name, share, urban, mix(urban, nationalUrbanShare), incomeRaw.getValue(region.id) / average)
+                RegionState(
+                    region.id,
+                    region.name,
+                    share,
+                    urban,
+                    mix(urban, nationalUrbanShare),
+                    incomeRaw.getValue(region.id) / average,
+                    RegionalEconomy.density(urban, urbanWeight),
+                )
             }
     }
 
@@ -107,11 +119,14 @@ internal class Regions(
 
     fun snapshot(
         population: Double,
+        unemployment: Double,
+        sectors: List<SectorLine>,
         approval: Double,
         approvalWeights: Map<PopulationGroup, Double>,
         satisfaction: Map<PopulationGroup, Double>,
     ): List<RegionSnapshot> {
         val average = groupShares.entries.sumOf { (group, share) -> share * satisfaction.getValue(group) }
+        val economy = RegionalEconomy(sectors, unemployment)
         return regions.map { region ->
             val shift =
                 PopulationGroup.entries.sumOf { group ->
@@ -131,6 +146,7 @@ internal class Regions(
                 urbanShare = region.urban,
                 relativeIncome = region.income,
                 approval = (approval + shift).coerceIn(0.0, 100.0),
+                economy = economy.estimate(region.share, region.sectorDensity),
             )
         }
     }

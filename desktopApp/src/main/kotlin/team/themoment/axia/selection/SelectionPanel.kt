@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import team.themoment.axia.format.formatPercent
 import team.themoment.axia.format.formatPopulation
 import team.themoment.axia.game.panels.KeyIndicatorRows
 import team.themoment.axia.simulation.WorldSnapshot
@@ -35,7 +36,7 @@ fun SelectionPanel(
     val region = world.region(regionId)
     val country = world.country(region.countryId)
     val territory = region.territoryId?.let(world::territory)
-    DossierPanel(title = country.name, onClose = onClose, modifier = modifier.width(320.dp)) {
+    DossierPanel(title = country.name, onClose = onClose, scrollable = true, modifier = modifier.width(320.dp)) {
         if (country.kind == CountryKind.UNCLAIMED) {
             Text(text = "무주지", style = DossierType.title(13.sp), color = DossierColors.stamp)
         }
@@ -47,6 +48,13 @@ fun SelectionPanel(
             StatRow("도시화율", "${(r.urbanShare * 100).roundToInt()}%")
             StatRow("1인당 소득 (전국 = 100)", "${(r.relativeIncome * 100).roundToInt()}")
             StatRow("지역 지지율", "${r.approval.roundToInt()}%")
+            StatRow("지역 실업률", formatPercent(r.economy.unemployment), note = economy?.let { "전국 ${formatPercent(it.unemployment)}" })
+            StatRow("전국 GDP 중 지역 비중", formatPercent(r.economy.gdpShare))
+            SectionTitle("지역 산업 구성 (추정)")
+            StatRow("부문", "부가가치 · 고용 비중")
+            r.economy.sectors.sortedByDescending { it.share }.forEach { sector ->
+                StatRow(sector.sector.label, "${formatPercent(sector.share)} · ${formatPercent(sector.employment)}")
+            }
         }
         val id = country.id
         snapshot.politics[id]?.let { politics ->
@@ -69,7 +77,7 @@ fun SelectionPanel(
             StatRow("내전", "${it.rebels} · ${(it.rebelControl * 100).roundToInt()}% 통제", valueColor = DossierColors.negative)
         }
         if (economy != null) {
-            SectionTitle("경제 지표")
+            SectionTitle("국가 경제 지표")
             KeyIndicatorRows(economy)
         }
     }

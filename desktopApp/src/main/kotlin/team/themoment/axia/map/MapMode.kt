@@ -5,6 +5,7 @@ import team.themoment.axia.simulation.WorldSnapshot
 import team.themoment.axia.simulation.economy.EconomyIndicators
 import team.themoment.axia.simulation.economy.EconomySnapshot
 import team.themoment.axia.simulation.nation.NationSnapshot
+import team.themoment.axia.simulation.nation.RegionSnapshot
 import team.themoment.axia.simulation.world.StructureData
 
 /** 지도 색칠에 쓰는 자료 묶음. */
@@ -13,6 +14,8 @@ class MapData(
     val world: WorldSnapshot,
     val nation: NationSnapshot,
 ) {
+    val regions = nation.regions.associateBy(RegionSnapshot::regionId)
+
     /** 지지율. 플레이어 국가와 플레이 가능 국가에만 있다. */
     fun approval(countryId: String): Double? = if (countryId == nation.countryId) nation.approval else world.politics[countryId]?.approval
 
@@ -57,8 +60,10 @@ class ChoroplethScale(
         countryId: String,
     ): Color {
         val measured = value(data, countryId) ?: return MapPalette.noData
-        return colors[thresholds.count { measured >= it }]
+        return colorOf(measured)
     }
+
+    fun colorOf(measured: Double): Color = colors[thresholds.count { measured >= it }]
 }
 
 private fun economic(field: (EconomyIndicators) -> Double): (MapData, String) -> Double? =
@@ -67,6 +72,7 @@ private fun economic(field: (EconomyIndicators) -> Double): (MapData, String) ->
 enum class MapMode(
     val label: String,
     val scale: ChoroplethScale?,
+    private val regionValue: ((RegionSnapshot) -> Double)? = null,
 ) {
     POLITICAL("정치", null),
     GDP_PER_CAPITA(
@@ -104,6 +110,7 @@ enum class MapMode(
             labels = listOf("3% 미만", "3~5%", "5~8%", "8~12%", "12~20%", "20% 이상"),
             value = economic(EconomyIndicators::unemployment),
         ),
+        regionValue = { it.economy.unemployment },
     ),
     DEBT(
         "국가부채",
@@ -131,6 +138,7 @@ enum class MapMode(
             labels = listOf("지지율 30% 미만", "30~40%", "40~47%", "47~53%", "53~60%", "60% 이상"),
             value = { data, id -> data.approval(id) },
         ),
+        regionValue = RegionSnapshot::approval,
     ),
     RELATIONS(
         "외교 관계",
@@ -175,10 +183,9 @@ enum class MapMode(
         regionId: String,
         data: MapData,
     ): Color? {
-        if (this != APPROVAL) return null
-        val region = data.nation.regions.firstOrNull { it.regionId == regionId } ?: return null
-        val scale = requireNotNull(scale)
-        return scale.colors[scale.thresholds.count { region.approval >= it }]
+        val measure = regionValue ?: return null
+        val region = data.regions[regionId] ?: return null
+        return requireNotNull(scale).colorOf(measure(region))
     }
 
     fun colorOf(

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -217,16 +218,18 @@ fun GameScreen(
                     )
                 }
                 selectedRegionId?.let { regionId ->
-                    SelectionPanel(
-                        world = world,
-                        regionId = regionId,
-                        economy = economy.countries[world.region(regionId).countryId],
-                        snapshot = worldState,
-                        playerRegion = nation.regions.firstOrNull { it.regionId == regionId },
-                        playerId = nation.countryId,
-                        onClose = { selectedRegionId = null },
-                        modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp),
-                    )
+                    key(regionId) {
+                        SelectionPanel(
+                            world = world,
+                            regionId = regionId,
+                            economy = economy.countries[world.region(regionId).countryId],
+                            snapshot = worldState,
+                            playerRegion = mapData.regions[regionId],
+                            playerId = nation.countryId,
+                            onClose = { selectedRegionId = null },
+                            modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp),
+                        )
+                    }
                 }
             }
         }

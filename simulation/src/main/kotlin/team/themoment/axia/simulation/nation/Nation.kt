@@ -136,7 +136,7 @@ internal data class Opinion(
 )
 
 /**
- * 플레이어 국가의 인구 집단, 성향 집단, 예산, 규제, 지지율. 국가 단위로 계산한다(지역 분포는 이후).
+ * 플레이어 국가의 인구 집단, 성향 집단, 예산, 규제, 지지율. [Regions]가 전국 경제와 여론에서 지역 현황을 추정한다.
  *
  * 직업 집단 만족도 = 기준선 + 경제 요인별 기여도. 성향 만족도 = 기준선 + 정책 반응 + 결과 지표 반응.
  * 기여도는 매달 목표값으로 천천히 움직인다(지연).
@@ -470,6 +470,8 @@ class Nation internal constructor(
             regions =
                 regions.snapshot(
                     population = economy.populationCount,
+                    unemployment = economy.unemployment,
+                    sectors = economy.sectorLines(),
                     approval = approval(),
                     approvalWeights = approvalWeights.groups,
                     satisfaction = groups.associate { it.group to it.satisfaction(baseline) },

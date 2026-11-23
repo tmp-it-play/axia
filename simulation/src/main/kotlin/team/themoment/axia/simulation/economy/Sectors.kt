@@ -9,6 +9,8 @@ import kotlin.math.pow
  * @property rateSensitivity 실질금리 갭 1%p가 부문 경기에서 빼는 몫(%p)
  * @property exportExposure 교역 상대 경기에 대한 반응(수출 비중을 곱한다)
  * @property incomeElasticity 1인당 소득이 오를 때 부가가치 비중이 바뀌는 탄력성(구조 변화)
+ * @property urbanDensity 도시 인구 1명당 부문 활동량 / 농촌 인구 1명당 활동량(게임 가정)
+ * @property jobSearchWeight 평상시 취업자 1명당 구직자 수의 부문 간 상대 배율(게임 가정)
  */
 enum class Sector(
     val label: String,
@@ -16,16 +18,18 @@ enum class Sector(
     val rateSensitivity: Double,
     val exportExposure: Double,
     val incomeElasticity: Double,
+    val urbanDensity: Double,
+    val jobSearchWeight: Double,
 ) {
-    AGRICULTURE("농림어업", 0.3, 0.0, 0.3, -0.6),
-    ENERGY("광업·에너지", 0.6, 0.0, 0.8, 0.0),
-    LIGHT_INDUSTRY("경공업", 1.0, 0.2, 1.0, -0.3),
-    HEAVY_INDUSTRY("중화학", 1.5, 0.4, 1.5, 0.0),
-    HIGH_TECH("첨단 제조", 1.4, 0.3, 2.0, 0.4),
-    CONSTRUCTION("건설", 2.0, 1.2, 0.0, 0.0),
-    SERVICES("유통·서비스", 1.0, 0.2, 0.2, 0.15),
-    FINANCE("금융·부동산", 1.3, 0.8, 0.3, 0.3),
-    PUBLIC("공공·사회서비스", 0.2, 0.0, 0.0, 0.1),
+    AGRICULTURE("농림어업", 0.3, 0.0, 0.3, -0.6, 0.08, 1.4),
+    ENERGY("광업·에너지", 0.6, 0.0, 0.8, 0.0, 0.35, 1.1),
+    LIGHT_INDUSTRY("경공업", 1.0, 0.2, 1.0, -0.3, 1.2, 1.1),
+    HEAVY_INDUSTRY("중화학", 1.5, 0.4, 1.5, 0.0, 0.9, 1.0),
+    HIGH_TECH("첨단 제조", 1.4, 0.3, 2.0, 0.4, 2.5, 0.8),
+    CONSTRUCTION("건설", 2.0, 1.2, 0.0, 0.0, 1.1, 1.5),
+    SERVICES("유통·서비스", 1.0, 0.2, 0.2, 0.15, 1.6, 1.0),
+    FINANCE("금융·부동산", 1.3, 0.8, 0.3, 0.3, 4.0, 0.7),
+    PUBLIC("공공·사회서비스", 0.2, 0.0, 0.0, 0.1, 1.0, 0.6),
 }
 
 /** 한 부문의 현황. */
@@ -79,25 +83,25 @@ internal class SectorEconomy(
     private val gaps = Sector.entries.associateWith { 0.0 }.toMutableMap()
     private val levels = Sector.entries.associateWith { 1.0 }.toMutableMap()
     private val history = Sector.entries.associateWith { ArrayDeque(List(12) { 1.0 }) }
-    private val employment: Map<Sector, Double>
+    private val initialEmployment: Map<Sector, Double>
 
     init {
         val industrySectors = listOf(Sector.ENERGY, Sector.LIGHT_INDUSTRY, Sector.HEAVY_INDUSTRY, Sector.HIGH_TECH, Sector.CONSTRUCTION)
         val serviceSectors = listOf(Sector.SERVICES, Sector.FINANCE, Sector.PUBLIC)
-        val industryOutput = industrySectors.sumOf { initialShares.getValue(it) }
-        val serviceOutput = serviceSectors.sumOf { initialShares.getValue(it) }
+        val jobWeights = initialShares.mapValues { (sector, share) -> share * LABOR_INTENSITY.getValue(sector) }
+        val industryWeight = industrySectors.sumOf(jobWeights::getValue)
+        val serviceWeight = serviceSectors.sumOf(jobWeights::getValue)
         // 같은 대분류 안에서는 부가가치 비중 × 노동 집약도로 고용을 나눈다.
         val raw =
             Sector.entries.associateWith { sector ->
-                val share = initialShares.getValue(sector)
                 when (sector) {
                     Sector.AGRICULTURE -> agricultureEmployment
-                    in industrySectors -> industryEmployment * share * LABOR_INTENSITY.getValue(sector) / industryOutput
-                    else -> servicesEmployment * share * LABOR_INTENSITY.getValue(sector) / serviceOutput
+                    in industrySectors -> industryEmployment * jobWeights.getValue(sector) / industryWeight
+                    else -> servicesEmployment * jobWeights.getValue(sector) / serviceWeight
                 }
             }
         val total = raw.values.sum()
-        employment = raw.mapValues { it.value / total }
+        initialEmployment = raw.mapValues { it.value / total }
     }
 
     fun advanceMonth(inputs: SectorInputs) {
@@ -128,33 +132,39 @@ internal class SectorEconomy(
             shares[sector] = shares.getValue(sector) + (targets.getValue(sector) / targetSum - shares.getValue(sector)) * STRUCTURAL_SPEED
         }
         val shareSum = shares.values.sum()
+        val realizedTotal = Sector.entries.sumOf { shares.getValue(it) * (1.0 + gaps.getValue(it)) }
         Sector.entries.forEach { sector ->
-            shares[sector] = shares.getValue(sector) / shareSum
+            val structuralShare = shares.getValue(sector)
+            shares[sector] = structuralShare / shareSum
             val series = history.getValue(sector)
             series.removeFirst()
             series.addLast(levels.getValue(sector))
-            levels[sector] = shares.getValue(sector) / initialShares.getValue(sector) * (1.0 + gaps.getValue(sector))
+            val realizedShare = structuralShare * (1.0 + gaps.getValue(sector)) / realizedTotal
+            levels[sector] = realizedShare / initialShares.getValue(sector)
         }
     }
 
     /** 부문 수준 지수(시작 = 1, 비중 변화와 경기 포함). 인구 집단 소득에 쓴다. 전체 경제 대비 상대값이다. */
     fun relativeLevel(sector: Sector): Double = levels.getValue(sector)
 
-    fun share(sector: Sector): Double = shares.getValue(sector)
-
-    fun lines(realGdpGrowth: Double): List<SectorLine> =
-        Sector.entries.map { sector ->
+    fun lines(realGdpGrowth: Double): List<SectorLine> {
+        val jobs = initialEmployment.mapValues { (sector, base) -> base * levels.getValue(sector).pow(EMPLOYMENT_ELASTICITY) }
+        val totalJobs = jobs.values.sum()
+        return Sector.entries.map { sector ->
             val yearAgo = history.getValue(sector).first()
             SectorLine(
                 sector = sector,
-                share = shares.getValue(sector),
+                share = initialShares.getValue(sector) * levels.getValue(sector),
                 gap = gaps.getValue(sector),
                 growth = (1.0 + realGdpGrowth) * levels.getValue(sector) / yearAgo - 1.0,
-                employment = employment.getValue(sector),
+                employment = jobs.getValue(sector) / totalJobs,
             )
         }
+    }
 
     companion object {
+        /** 상대 실질 부가가치가 1% 늘 때 해당 부문의 상대 고용이 늘어나는 비율(게임 가정). */
+        private const val EMPLOYMENT_ELASTICITY = 0.5
         private const val CONSTRUCTION_CAP = 0.08
         private const val CONSTRUCTION_OF_NON_MANUFACTURING = 0.55
         private const val HIGH_TECH_OF_TECH = 0.45
