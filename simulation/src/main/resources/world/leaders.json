@@ -1,0 +1,445 @@
+{
+ "sourceNote": "2024-01-01 재임자. 정당은 parliaments.json의 정당 이름을 따른다. termsServed는 현재 임기를 포함한 연속 재임 횟수다. born은 출생 연도다.",
+ "countries": {
+  "KOR": {
+   "culture": "korean",
+   "headOfState": {
+    "name": "윤석열",
+    "title": "대통령",
+    "party": "국민의힘",
+    "termsServed": 1,
+    "born": 1960
+   }
+  },
+  "USA": {
+   "culture": "english",
+   "headOfState": {
+    "name": "조 바이든",
+    "title": "대통령",
+    "party": "민주당",
+    "termsServed": 1,
+    "born": 1942
+   }
+  },
+  "CHN": {
+   "culture": "chinese",
+   "headOfState": {
+    "name": "시진핑",
+    "title": "국가주석",
+    "party": "중국공산당",
+    "born": 1953
+   },
+   "headOfGovernment": {
+    "name": "리창",
+    "title": "국무원 총리",
+    "party": "중국공산당",
+    "born": 1959
+   }
+  },
+  "JPN": {
+   "culture": "japanese",
+   "headOfState": {
+    "name": "나루히토",
+    "title": "천황",
+    "born": 1960
+   },
+   "headOfGovernment": {
+    "name": "기시다 후미오",
+    "title": "총리",
+    "party": "자유민주당",
+    "born": 1957
+   }
+  },
+  "DEU": {
+   "culture": "german",
+   "headOfState": {
+    "name": "프랑크발터 슈타인마이어",
+    "title": "연방대통령",
+    "born": 1956
+   },
+   "headOfGovernment": {
+    "name": "올라프 숄츠",
+    "title": "총리",
+    "party": "사회민주당",
+    "born": 1958
+   }
+  },
+  "GBR": {
+   "culture": "english",
+   "headOfState": {
+    "name": "찰스 3세",
+    "title": "국왕",
+    "born": 1948
+   },
+   "headOfGovernment": {
+    "name": "리시 수낵",
+    "title": "총리",
+    "party": "보수당",
+    "born": 1980
+   }
+  },
+  "FRA": {
+   "culture": "french",
+   "headOfState": {
+    "name": "에마뉘엘 마크롱",
+    "title": "대통령",
+    "party": "르네상스",
+    "termsServed": 2,
+    "born": 1977
+   },
+   "headOfGovernment": {
+    "name": "엘리자베트 보른",
+    "title": "총리",
+    "party": "르네상스",
+    "born": 1961
+   }
+  },
+  "RUS": {
+   "culture": "russian",
+   "headOfState": {
+    "name": "블라디미르 푸틴",
+    "title": "대통령",
+    "party": "통합러시아",
+    "termsServed": 1,
+    "born": 1952
+   },
+   "headOfGovernment": {
+    "name": "미하일 미슈스틴",
+    "title": "총리",
+    "party": "통합러시아",
+    "born": 1966
+   }
+  },
+  "UKR": {
+   "culture": "ukrainian",
+   "headOfState": {
+    "name": "볼로디미르 젤렌스키",
+    "title": "대통령",
+    "party": "인민의 종",
+    "termsServed": 1,
+    "born": 1978
+   },
+   "headOfGovernment": {
+    "name": "데니스 슈미할",
+    "title": "총리",
+    "party": "인민의 종",
+    "born": 1975
+   }
+  },
+  "IND": {
+   "culture": "hindi",
+   "headOfState": {
+    "name": "드라우파디 무르무",
+    "title": "대통령",
+    "born": 1958
+   },
+   "headOfGovernment": {
+    "name": "나렌드라 모디",
+    "title": "총리",
+    "party": "인도인민당",
+    "born": 1950
+   }
+  },
+  "BRA": {
+   "culture": "portuguese",
+   "headOfState": {
+    "name": "루이스 이나시우 룰라 다 시우바",
+    "title": "대통령",
+    "party": "노동자당",
+    "termsServed": 1,
+    "born": 1945
+   }
+  },
+  "CAN": {
+   "culture": "english",
+   "headOfState": {
+    "name": "찰스 3세",
+    "title": "국왕",
+    "born": 1948
+   },
+   "headOfGovernment": {
+    "name": "쥐스탱 트뤼도",
+    "title": "총리",
+    "party": "자유당",
+    "born": 1971
+   }
+  },
+  "PRK": {
+   "culture": "korean",
+   "headOfState": {
+    "name": "김정은",
+    "title": "국무위원장",
+    "party": "조선로동당",
+    "born": 1984
+   },
+   "headOfGovernment": {
+    "name": "김덕훈",
+    "title": "내각총리",
+    "party": "조선로동당",
+    "born": 1961
+   }
+  },
+  "AUS": {
+   "culture": "english",
+   "headOfState": {
+    "name": "찰스 3세",
+    "title": "국왕",
+    "born": 1948
+   },
+   "headOfGovernment": {
+    "name": "앤서니 앨버니지",
+    "title": "총리",
+    "party": "노동당",
+    "born": 1963
+   }
+  },
+  "POL": {
+   "culture": "polish",
+   "headOfState": {
+    "name": "안제이 두다",
+    "title": "대통령",
+    "party": "법과 정의",
+    "termsServed": 2,
+    "born": 1972
+   },
+   "headOfGovernment": {
+    "name": "도날트 투스크",
+    "title": "총리",
+    "party": "시민연합",
+    "born": 1957
+   }
+  },
+  "ITA": {
+   "culture": "italian",
+   "headOfState": {
+    "name": "세르조 마타렐라",
+    "title": "대통령",
+    "born": 1941
+   },
+   "headOfGovernment": {
+    "name": "조르자 멜로니",
+    "title": "총리",
+    "party": "이탈리아의 형제들",
+    "born": 1977
+   }
+  },
+  "FIN": {
+   "culture": "finnish",
+   "headOfState": {
+    "name": "사울리 니니스퇴",
+    "title": "대통령",
+    "termsServed": 2,
+    "born": 1948
+   },
+   "headOfGovernment": {
+    "name": "페테리 오르포",
+    "title": "총리",
+    "party": "국민연합당",
+    "born": 1969
+   }
+  },
+  "EST": {
+   "culture": "estonian",
+   "headOfState": {
+    "name": "알라르 카리스",
+    "title": "대통령",
+    "termsServed": 1,
+    "born": 1958
+   },
+   "headOfGovernment": {
+    "name": "카야 칼라스",
+    "title": "총리",
+    "party": "개혁당",
+    "born": 1977
+   }
+  },
+  "LVA": {
+   "culture": "latvian",
+   "headOfState": {
+    "name": "에드가르스 링케비치스",
+    "title": "대통령",
+    "termsServed": 1,
+    "born": 1973
+   },
+   "headOfGovernment": {
+    "name": "에비카 실리냐",
+    "title": "총리",
+    "party": "신통합",
+    "born": 1975
+   }
+  },
+  "LTU": {
+   "culture": "lithuanian",
+   "headOfState": {
+    "name": "기타나스 나우세다",
+    "title": "대통령",
+    "termsServed": 1,
+    "born": 1964
+   },
+   "headOfGovernment": {
+    "name": "잉그리다 시모니테",
+    "title": "총리",
+    "party": "조국연합·기독교민주당",
+    "born": 1974
+   }
+  },
+  "TUR": {
+   "culture": "turkish",
+   "headOfState": {
+    "name": "레제프 타이이프 에르도안",
+    "title": "대통령",
+    "party": "정의개발당",
+    "termsServed": 2,
+    "born": 1954
+   }
+  },
+  "ISR": {
+   "culture": "hebrew",
+   "headOfState": {
+    "name": "이츠하크 헤르초그",
+    "title": "대통령",
+    "born": 1960
+   },
+   "headOfGovernment": {
+    "name": "베냐민 네타냐후",
+    "title": "총리",
+    "party": "리쿠드",
+    "born": 1949
+   }
+  },
+  "IRN": {
+   "culture": "persian",
+   "headOfState": {
+    "name": "알리 하메네이",
+    "title": "최고지도자",
+    "born": 1939
+   },
+   "headOfGovernment": {
+    "name": "에브라힘 라이시",
+    "title": "대통령",
+    "termsServed": 1,
+    "born": 1960
+   }
+  },
+  "SAU": {
+   "culture": "arabic",
+   "headOfState": {
+    "name": "살만 빈 압둘아지즈",
+    "title": "국왕",
+    "born": 1935
+   },
+   "headOfGovernment": {
+    "name": "무함마드 빈 살만",
+    "title": "총리",
+    "born": 1985
+   }
+  },
+  "EGY": {
+   "culture": "arabic",
+   "headOfState": {
+    "name": "압델 파타흐 엘시시",
+    "title": "대통령",
+    "termsServed": 3,
+    "born": 1954
+   },
+   "headOfGovernment": {
+    "name": "무스타파 마드불리",
+    "title": "총리",
+    "born": 1966
+   }
+  },
+  "ZAF": {
+   "culture": "southafrican",
+   "headOfState": {
+    "name": "시릴 라마포사",
+    "title": "대통령",
+    "party": "아프리카민족회의",
+    "termsServed": 1,
+    "born": 1952
+   }
+  },
+  "TWN": {
+   "culture": "chinese",
+   "headOfState": {
+    "name": "차이잉원",
+    "title": "총통",
+    "party": "민주진보당",
+    "termsServed": 2,
+    "born": 1956
+   },
+   "headOfGovernment": {
+    "name": "천젠런",
+    "title": "행정원장",
+    "party": "민주진보당",
+    "born": 1951
+   }
+  },
+  "IDN": {
+   "culture": "indonesian",
+   "headOfState": {
+    "name": "조코 위도도",
+    "title": "대통령",
+    "party": "투쟁민주당",
+    "termsServed": 2,
+    "born": 1961
+   }
+  },
+  "VNM": {
+   "culture": "vietnamese",
+   "headOfState": {
+    "name": "응우옌푸쫑",
+    "title": "공산당 총서기",
+    "party": "베트남 공산당",
+    "born": 1944
+   },
+   "headOfGovernment": {
+    "name": "팜민찐",
+    "title": "총리",
+    "party": "베트남 공산당",
+    "born": 1958
+   }
+  },
+  "THA": {
+   "culture": "thai",
+   "headOfState": {
+    "name": "마하 와치랄롱꼰",
+    "title": "국왕",
+    "born": 1952
+   },
+   "headOfGovernment": {
+    "name": "세타 타위신",
+    "title": "총리",
+    "party": "프아타이당",
+    "born": 1962
+   }
+  },
+  "RWA": {
+   "culture": "kinyarwanda",
+   "headOfState": {
+    "name": "폴 카가메",
+    "title": "대통령",
+    "party": "르완다 애국전선 연합",
+    "termsServed": 3,
+    "born": 1957
+   },
+   "headOfGovernment": {
+    "name": "에두아르 응기렌테",
+    "title": "총리",
+    "born": 1973
+   }
+  },
+  "PAK": {
+   "culture": "urdu",
+   "headOfState": {
+    "name": "아리프 알비",
+    "title": "대통령",
+    "born": 1949
+   },
+   "headOfGovernment": {
+    "name": "안와르울하크 카카르",
+    "title": "과도 총리",
+    "born": 1971
+   }
+  }
+ }
+}
