@@ -254,8 +254,8 @@ class SimulationRunner(
 
     private fun stepDay() {
         val update = simulation.advanceDay()
-        if (update.newMonth) mutableEconomy.value = simulation.economySnapshot()
-        val eventful = update.pauseFor.isNotEmpty() || update.decisionNeeded
+        if (update.newMonth || update.decisionExpired) mutableEconomy.value = simulation.economySnapshot()
+        val eventful = update.pauseFor.isNotEmpty() || update.decisionNeeded || update.decisionExpired
         if (update.newMonth || update.budgetPassed || eventful || update.electionHeld) mutableNation.value = simulation.nationSnapshot()
         // 세계 소식은 매일 쌓일 수 있으므로 월초, 사건, 일주일마다 갱신한다.
         if (update.newMonth || eventful || simulation.date.dayOfWeek == DayOfWeek.MONDAY) mutableWorld.value = simulation.worldSnapshot()

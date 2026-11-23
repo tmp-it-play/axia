@@ -27,7 +27,7 @@ fun EventDialog(
     onChoose: (Int, Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    DossierPanel(title = "긴급 전보", modifier = modifier.width(460.dp)) {
+    DossierPanel(title = "긴급 전보", scrollable = true, modifier = modifier.width(460.dp)) {
         Stamp(event.category.label, color = DossierColors.negative)
         Text(event.name, style = DossierType.title(18.sp), color = DossierColors.ink, modifier = Modifier.padding(top = 6.dp))
         Text(

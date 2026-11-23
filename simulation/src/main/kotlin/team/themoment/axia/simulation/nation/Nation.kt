@@ -6,6 +6,7 @@ import team.themoment.axia.simulation.country.CountryModule
 import team.themoment.axia.simulation.country.CountryMonthContext
 import team.themoment.axia.simulation.country.CountryPolicyLine
 import team.themoment.axia.simulation.economy.CountryEconomy
+import team.themoment.axia.simulation.economy.DebtWorkoutSnapshot
 import team.themoment.axia.simulation.economy.FiscalPolicy
 import team.themoment.axia.simulation.economy.FiscalShares
 import team.themoment.axia.simulation.economy.InitialEconomy
@@ -56,6 +57,7 @@ data class BudgetSnapshot(
     val interest: Double,
     val balance: Double,
     val debtRatio: Double,
+    val debtWorkout: DebtWorkoutSnapshot,
     /** 달러 기준 명목 GDP. 비율을 금액으로 바꿀 때 쓴다. */
     val gdp: Double,
     /** 조직 보조금(GDP 대비 연간). 기초지출에 포함돼 있다. */
@@ -323,7 +325,7 @@ class Nation internal constructor(
         economy.addInflationShock(effects.inflation)
         economy.addSpending(effects.spending)
         economy.addPotentialGrowth(effects.potentialGrowth)
-        economy.relieveDebt(effects.debtRelief)
+        effects.debtPlan?.let(economy.debt::negotiate)
         effects.sectorShocks.forEach { (sector, shock) -> economy.addSectorShock(sector, shock) }
         PopulationGroup.entries.forEach { group ->
             eventMood[group] = eventMood.getValue(group) + effects.mood + (effects.groupMood[group] ?: 0.0)
@@ -462,6 +464,7 @@ class Nation internal constructor(
                     interest = economy.monthlyInterest * 12.0 / gdp,
                     balance = (economy.monthlyRevenue - economy.monthlyPrimarySpending - economy.monthlyInterest) * 12.0 / gdp,
                     debtRatio = economy.debtRatio,
+                    debtWorkout = economy.debt.snapshot(gdp),
                     gdp = economy.dollarGdp,
                     organizationSubsidies = budget.organizationSubsidies,
                 ),

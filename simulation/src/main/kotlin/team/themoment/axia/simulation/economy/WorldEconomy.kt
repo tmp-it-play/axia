@@ -49,7 +49,7 @@ class WorldEconomy internal constructor(
     internal fun advanceMonth(
         random: Random,
         international: InternationalState = InternationalState.PEACEFUL,
-    ) {
+    ): Map<String, DebtNotice> {
         val dollarInflation = reserveCurrencyIssuer.inflation
         val external =
             trade.advanceMonth(
@@ -61,6 +61,7 @@ class WorldEconomy internal constructor(
         val us = monetary.conditions(RESERVE_CURRENCY_ISSUER)
         val usRealRate = us.effectiveRate - reserveCurrencyIssuer.expectedInflation
         val euroExchange = countriesById.getValue(EURO_REFERENCE).realExchange
+        val debtNotices = mutableMapOf<String, DebtNotice>()
         countries.forEach { country ->
             val conditions = monetary.conditions(country.id)
             val anchor =
@@ -70,15 +71,17 @@ class WorldEconomy internal constructor(
                     conditions.pegAnchor != null -> euroExchange
                     else -> null
                 }
-            country.advanceMonth(
-                random.nextGaussian(),
-                dollarInflation,
-                conditions,
-                external.getValue(country.id),
-                ExchangeInputs(usRealRate, anchor, random.nextGaussian()),
-            )
+            country
+                .advanceMonth(
+                    random.nextGaussian(),
+                    dollarInflation,
+                    conditions,
+                    external.getValue(country.id),
+                    ExchangeInputs(usRealRate, anchor, random.nextGaussian()),
+                )?.let { debtNotices[country.id] = it }
         }
         record()
+        return debtNotices
     }
 
     fun tradeSnapshot(): TradeSnapshot = trade.snapshot()

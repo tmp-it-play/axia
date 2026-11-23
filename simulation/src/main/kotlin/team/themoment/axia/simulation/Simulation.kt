@@ -6,9 +6,12 @@ import team.themoment.axia.simulation.diplomacy.Diplomacy
 import team.themoment.axia.simulation.diplomacy.DiplomaticAction
 import team.themoment.axia.simulation.economy.CentralBank
 import team.themoment.axia.simulation.economy.CentralBankData
+import team.themoment.axia.simulation.economy.DebtNotice
+import team.themoment.axia.simulation.economy.DebtPlan
 import team.themoment.axia.simulation.economy.EconomyData
 import team.themoment.axia.simulation.economy.EconomySnapshot
 import team.themoment.axia.simulation.economy.InternationalState
+import team.themoment.axia.simulation.economy.SovereignDebt
 import team.themoment.axia.simulation.economy.WorldEconomy
 import team.themoment.axia.simulation.events.EventCategory
 import team.themoment.axia.simulation.events.EventChoice
@@ -54,6 +57,7 @@ import team.themoment.axia.simulation.world.World
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
+import java.util.Locale
 import kotlin.random.Random
 
 /**
@@ -183,6 +187,7 @@ class Simulation(
         val electionHeld: Boolean,
         val pauseFor: Set<EventCategory> = emptySet(),
         val decisionNeeded: Boolean = false,
+        val decisionExpired: Boolean = false,
     )
 
     fun advanceDay(): DayUpdate {
@@ -198,7 +203,8 @@ class Simulation(
             pauseFor += event.category
             applyPlayerEvent(event)
         }
-        events.expire(date).forEach { (event, choice) ->
+        val expired = events.expire(date)
+        expired.forEach { (event, choice) ->
             applyChoice(choice)
             nation.report(date, event.name, "결정 기한이 지나 '${choice.label}'로 대응했다.", major = false)
         }
@@ -212,12 +218,22 @@ class Simulation(
         if (politics.takeMandateRenewal()) nation.renewMandate()
         politics.drainNews().forEach { nation.report(date, it.source, it.text, it.major) }
         (diplomacy.drainNews() + military.drainNews()).forEach(::addWorldNews)
-        return DayUpdate(newMonth, passed, electionHeld, pauseFor, decisionNeeded = offered || happened.any { it.choices.isNotEmpty() })
+        return DayUpdate(
+            newMonth,
+            passed,
+            electionHeld,
+            pauseFor,
+            offered || happened.any { it.choices.isNotEmpty() },
+            expired.isNotEmpty(),
+        )
     }
 
     /** @return 플레이어가 결정해야 할 제안이 새로 생겼는지 */
     private fun advanceMonth(pauseFor: MutableSet<EventCategory>): Boolean {
-        economy.advanceMonth(random, international)
+        val debtNotices = economy.advanceMonth(random, international)
+        processDebtNotices(debtNotices)
+        val debtDecision = debtNotices[playerCountryId] == DebtNotice.DEFAULT
+        if (debtDecision) pauseFor += EventCategory.FINANCIAL
         val player = economy.country(playerCountryId)
         nation.advanceMonth(player, institutions.changes(), date)
         nation
@@ -277,7 +293,48 @@ class Simulation(
                     ),
             )
         }
-        return offers.isNotEmpty() || proposals.isNotEmpty()
+        return debtDecision || offers.isNotEmpty() || proposals.isNotEmpty()
+    }
+
+    private fun processDebtNotices(notices: Map<String, DebtNotice>) {
+        notices.forEach { (id, notice) ->
+            val country = economy.country(id)
+            val isPlayer = id == playerCountryId
+            val text =
+                when (notice) {
+                    DebtNotice.DEFAULT -> {
+                        val need = country.extensionNeed()
+                        val estimate = "현재 예산으로 만기를 늘리면 첫해 조달 필요액은 GDP의 %.1f%%다.".format(Locale.ROOT, need * 100)
+                        val event = events.trigger("sovereign_default", id, date, isPlayer, estimate)
+                        if (isPlayer) {
+                            applyPlayerEvent(event)
+                            return@forEach
+                        }
+                        applyAiEvent(id, event.effects)
+                        val canExtend = need <= SovereignDebt.EXTENSION_CAPACITY
+                        val plan = if (canExtend) DebtPlan.MATURITY_EXTENSION else DebtPlan.PRINCIPAL_REDUCTION
+                        country.debt.negotiate(plan)
+                        "${event.text} 채권단과 ${plan.label} 협상을 시작했다."
+                    }
+
+                    DebtNotice.COUNTEROFFER -> {
+                        "만기를 늘려도 조달 부담이 커서 채권단이 원금 감면을 포함한 교환안을 요구했다."
+                    }
+
+                    DebtNotice.SETTLEMENT -> {
+                        "채권단과 ${requireNotNull(country.debt.plan).label}에 합의해 국채를 교환했다."
+                    }
+
+                    DebtNotice.RECOVERED -> {
+                        "채무 재조정에 따른 신규 차입 가산금리가 해소됐다."
+                    }
+                }
+            if (isPlayer) {
+                nation.report(date, "국가채무", text, major = notice != DebtNotice.RECOVERED)
+            } else {
+                addWorldNews(WorldNews(date, id, "국가채무", text, major = notice != DebtNotice.RECOVERED))
+            }
+        }
     }
 
     private fun applyChoice(choice: EventChoice) {
@@ -335,7 +392,6 @@ class Simulation(
         country.addInflationShock(effects.inflation)
         country.addSpending(effects.spending)
         country.addPotentialGrowth(effects.potentialGrowth)
-        country.relieveDebt(effects.debtRelief)
         effects.sectorShocks.forEach { (sector, shock) -> country.addSectorShock(sector, shock) }
         worldPolitics.country(countryId)?.shiftApproval(effects.mood * AI_MOOD_TO_APPROVAL)
     }

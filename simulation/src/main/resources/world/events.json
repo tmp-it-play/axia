@@ -757,27 +757,31 @@
   },
   {
    "id": "sovereign_default",
-   "name": "국가 부도 위기",
+   "name": "국가채무 지급 유예",
    "category": "FINANCIAL",
-   "scope": "BOTH",
-   "base": 0.001,
+   "scope": "TRIGGERED",
+   "base": 0.0,
    "texts": [
-    "{country} 정부가 국채 이자를 제때 갚지 못해 채무불이행에 빠졌다."
+    "{country} 정부가 차환 자금을 확보하지 못해 국채 지급 유예를 선언했다. 협상 중에도 이자는 쌓인다. 두 안 모두 교환채 이율은 합의 당시 평균 국채 이율의 60%다."
    ],
    "major": true,
-   "factors": {
-    "debtRatio": 2.5,
-    "policyRate": 6.0
-   },
-   "requires": {
-    "debtRatio": 1.0
-   },
    "effects": {
     "outputGap": -0.04,
     "inflation": 0.03,
-    "mood": -3.0,
-    "debtRelief": 0.3
-   }
+    "mood": -3.0
+   },
+   "choices": [
+    {
+     "label": "원금 감면 협상",
+     "description": "3개월 뒤 대상 원금의 40%를 감면하고 나머지를 5년 교환채로 전환한다. 신규 차입 가산금리는 4%p에서 3년에 걸쳐 내려간다.",
+     "effects": { "debtPlan": "PRINCIPAL_REDUCTION" }
+    },
+    {
+     "label": "만기 연장 협상",
+     "description": "원금을 보전하는 10년 교환채를 제안한다. 2개월 뒤 연간 조달 필요액이 GDP의 25% 이하면 합의하고, 넘으면 원금 감면 협상으로 전환한다. 합의 시 가산금리는 1.5%p에서 2년에 걸쳐 내려간다.",
+     "effects": { "debtPlan": "MATURITY_EXTENSION" }
+    }
+   ]
   },
   {
    "id": "coup_attempt",

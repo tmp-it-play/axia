@@ -62,7 +62,7 @@ internal class CountryEconomy(
     private var priceLevel = 1.0
     private var dollarPriceLevel = 1.0
     private var lastPrimaryBalanceShare = initial.revenue - initial.primarySpending
-    private var debt = initial.debt * initial.gdp
+    val debt = SovereignDebt(initial)
     private var interestRate = initial.interestRate
     var expectedInflation = initial.inflation
         private set
@@ -117,13 +117,10 @@ internal class CountryEconomy(
 
     /** 한 번 지출해 부채로 쌓는다(GDP 대비 비율). */
     fun addSpending(share: Double) {
-        debt += share * nominalGdp
+        debt.borrow(share * nominalGdp)
     }
 
-    /** 채무 재조정으로 부채 일부를 탕감한다. */
-    fun relieveDebt(fraction: Double) {
-        if (debt > 0.0) debt *= 1.0 - fraction.coerceIn(0.0, 1.0)
-    }
+    fun extensionNeed(): Double = debt.extensionNeed(nominalGdp, (monthlyPrimarySpending - monthlyRevenue) * 12, interestRate)
 
     var outputGap = 0.0
         private set
@@ -156,7 +153,7 @@ internal class CountryEconomy(
 
     val populationCount get() = population
 
-    val debtRatio get() = debt / nominalGdp
+    val debtRatio get() = debt.balance / nominalGdp
 
     /**
      * @param shock 표준정규분포 충격
@@ -169,7 +166,7 @@ internal class CountryEconomy(
         monetary: MonetaryConditions,
         external: ExternalConditions = ExternalConditions.NONE,
         exchange: ExchangeInputs = ExchangeInputs.FIXED_TO_DOLLAR,
-    ) {
+    ): DebtNotice? {
         policyRate = monetary.policyRate
         updateExchange(monetary, exchange)
         warUnemployment += (external.warUnemployment.coerceAtLeast(-naturalUnemployment / 2) - warUnemployment) / WAR_ADJUST_MONTHS
@@ -243,14 +240,14 @@ internal class CountryEconomy(
             initialInterestRate +
                 RATE_PASS_THROUGH * (monetary.effectiveRate - monetary.initialPolicyRate) +
                 debtPremium(startDebtRatio) - initialDebtPremium +
-                monetary.credibilityPremium + riskPremium
+                monetary.credibilityPremium + riskPremium + debt.marketSpread
         interestRate += (interestTarget.coerceIn(MIN_RATE, MAX_RATE) - interestRate) / DEBT_ROLLOVER_MONTHS
 
         val gdp = nominalGdp
         monthlyRevenue = shares.revenue * gdp / 12.0
         monthlyPrimarySpending = shares.primarySpending * (1.0 - STABILIZER * outputGap) * gdp / 12.0
-        monthlyInterest = debt * (if (debt >= 0.0) interestRate else minOf(interestRate, MAX_ASSET_RETURN)) / 12.0
-        debt -= monthlyBalance
+        monthlyInterest = debt.annualInterest(if (debt.balance >= 0.0) interestRate else minOf(interestRate, MAX_ASSET_RETURN)) / 12.0
+        return debt.closeMonth(gdp, monthlyRevenue, monthlyPrimarySpending, monthlyInterest, interestRate)
     }
 
     private fun updateExchange(
@@ -282,7 +279,7 @@ internal class CountryEconomy(
             inflation = inflation,
             unemployment = unemployment,
             budgetBalance = monthlyBalance * 12.0 / gdp,
-            debtRatio = debt / gdp,
+            debtRatio = debtRatio,
             policyRate = policyRate,
             realExchange = realExchange,
             outputGap = outputGap,
@@ -353,7 +350,7 @@ internal class CountryEconomy(
         /** 순자산(부채 < 0)이 버는 연 수익률 상한. */
         const val MAX_ASSET_RETURN = 0.05
         const val DEBT_PREMIUM = 0.04
-        const val DEBT_ROLLOVER_MONTHS = 60.0
+        const val DEBT_ROLLOVER_MONTHS = SovereignDebt.MARKET_MATURITY_YEARS * 12
         const val MIN_RATE = 0.002
         const val MAX_RATE = 0.4
         const val MIN_INFLATION = -0.1

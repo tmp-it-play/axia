@@ -2,6 +2,7 @@ package team.themoment.axia.simulation.events
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import team.themoment.axia.simulation.economy.DebtPlan
 import team.themoment.axia.simulation.economy.Sector
 import team.themoment.axia.simulation.nation.PopulationGroup
 import team.themoment.axia.simulation.society.Identity
@@ -41,13 +42,16 @@ enum class EventScope {
 
     /** 세계 전체에 한 번. 매월 판정하고 모든 나라에 효과가 미친다. */
     GLOBAL,
+
+    /** 시뮬레이션 상태가 발생 시점을 정한다. 월간 확률 추첨에서 제외한다. */
+    TRIGGERED,
 }
 
 /**
  * 사건의 결과. 만족도 변화는 점수이고 서서히 사라진다.
  * @property mood 모든 인구 집단에 더하는 만족도
  * @property spending 한 번 지출하는 GDP 대비 비율(부채로 쌓인다)
- * @property debtRelief 부채 탕감(채무 재조정) 비율
+ * @property debtPlan 국가부도 협상에서 제시할 채무 교환안
  */
 @Serializable
 data class EventEffects(
@@ -60,7 +64,7 @@ data class EventEffects(
     val spending: Double = 0.0,
     val politicalCapital: Double = 0.0,
     val potentialGrowth: Double = 0.0,
-    val debtRelief: Double = 0.0,
+    val debtPlan: DebtPlan? = null,
     /** 한 달 동안 산업 부문 경기에 더하는 충격. */
     val sectorShocks: Map<Sector, Double> = emptyMap(),
 )
@@ -225,11 +229,21 @@ internal class EventSystem(
         return events
     }
 
+    /** 경제 모델이 판정한 사건도 일반 전보와 같은 선택·기한·기록을 사용한다. */
+    fun trigger(
+        id: String,
+        countryId: String,
+        date: LocalDate,
+        player: Boolean,
+        detail: String,
+    ): GameEvent = create(file.events.single { it.id == id && it.scope == EventScope.TRIGGERED }, countryId, date, player, detail)
+
     private fun create(
         definition: EventDefinition,
         countryId: String,
         date: LocalDate,
         player: Boolean,
+        detail: String = "",
     ): GameEvent {
         val country = name(countryId)
         val text =
@@ -246,7 +260,7 @@ internal class EventSystem(
                 category = definition.category,
                 countryId = countryId,
                 date = date,
-                text = text,
+                text = if (detail.isEmpty()) text else "$text $detail",
                 major = definition.major,
                 effects = definition.effects,
                 choices = if (decide) definition.choices else emptyList(),
