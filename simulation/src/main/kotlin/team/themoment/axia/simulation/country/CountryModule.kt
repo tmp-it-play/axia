@@ -1,8 +1,19 @@
 package team.themoment.axia.simulation.country
 
+import team.themoment.axia.simulation.country.chn.ChinaModule
+import team.themoment.axia.simulation.country.deu.GermanyModule
+import team.themoment.axia.simulation.country.fra.FranceModule
+import team.themoment.axia.simulation.country.ind.IndiaModule
 import team.themoment.axia.simulation.country.irn.IranModule
+import team.themoment.axia.simulation.country.isr.IsraelModule
+import team.themoment.axia.simulation.country.jpn.JapanModule
 import team.themoment.axia.simulation.country.kor.KoreaModule
+import team.themoment.axia.simulation.country.prk.NorthKoreaModule
+import team.themoment.axia.simulation.country.rus.RussiaModule
+import team.themoment.axia.simulation.country.twn.TaiwanModule
+import team.themoment.axia.simulation.country.ukr.UkraineModule
 import team.themoment.axia.simulation.country.usa.UnitedStatesModule
+import team.themoment.axia.simulation.economy.Sector
 import team.themoment.axia.simulation.nation.CountryPolicyItem
 import team.themoment.axia.simulation.politics.PolicyChange
 import team.themoment.axia.simulation.society.Identity
@@ -33,6 +44,12 @@ interface CountryModule {
     /** 공통 헌법기관 심사 외에 이 나라에만 있는 거부 지점(예: 미국 상원 필리버스터, 이란 헌법수호위원회). */
     fun billChecks(review: BillReview): List<BillCheck> = emptyList()
 
+    /**
+     * 하원에서 부결된 법안을 정부가 표결 없이 밀어붙일 수 있으면 그 근거(예: 프랑스 헌법 49조 3항)를 돌려준다.
+     * 상원 등 후속 심사는 그대로 거친다.
+     */
+    fun forceThrough(review: BillReview): String? = null
+
     /** 매월 1일, 경제와 여론이 갱신된 뒤 호출한다. */
     fun advanceMonth(context: CountryMonthContext): CountryEffects = CountryEffects.NONE
 
@@ -47,7 +64,22 @@ internal class DefaultCountryModule(
 
 object CountryModules {
     /** 특화 모듈이 있는 나라. */
-    val specialized: Set<String> = setOf(KoreaModule.ID, UnitedStatesModule.ID, IranModule.ID)
+    val specialized: Set<String> =
+        setOf(
+            KoreaModule.ID,
+            UnitedStatesModule.ID,
+            IranModule.ID,
+            GermanyModule.ID,
+            FranceModule.ID,
+            JapanModule.ID,
+            ChinaModule.ID,
+            IsraelModule.ID,
+            TaiwanModule.ID,
+            RussiaModule.ID,
+            UkraineModule.ID,
+            IndiaModule.ID,
+            NorthKoreaModule.ID,
+        )
 
     fun create(
         countryId: String,
@@ -58,6 +90,16 @@ object CountryModules {
             KoreaModule.ID -> KoreaModule(random)
             UnitedStatesModule.ID -> UnitedStatesModule(start)
             IranModule.ID -> IranModule(random)
+            GermanyModule.ID -> GermanyModule()
+            FranceModule.ID -> FranceModule()
+            JapanModule.ID -> JapanModule()
+            ChinaModule.ID -> ChinaModule(random)
+            IsraelModule.ID -> IsraelModule(random)
+            TaiwanModule.ID -> TaiwanModule(random)
+            RussiaModule.ID -> RussiaModule()
+            UkraineModule.ID -> UkraineModule()
+            IndiaModule.ID -> IndiaModule(random)
+            NorthKoreaModule.ID -> NorthKoreaModule(random)
             else -> DefaultCountryModule(countryId)
         }
 }
@@ -68,6 +110,11 @@ data class BillReview(
     val score: Double,
     val upperHouseYes: Int?,
     val upperHouseSeats: Int?,
+    /** 하원 예상 찬성표와 표결권 있는 의석. 의회가 없으면 null. */
+    val lowerHouseYes: Int? = null,
+    val lowerHouseSeats: Int? = null,
+    /** 법안이 늘리는 적자(GDP 대비, 감세는 과세 기반 기준). */
+    val addedDeficit: Double = 0.0,
 )
 
 /**
@@ -88,6 +135,8 @@ data class CountryMonthContext(
     val inflation: Double,
     val unemployment: Double,
     val debtRatio: Double,
+    /** 최근 재정수지(GDP 대비 연율, 흑자 양수). */
+    val budgetBalance: Double,
     /** 명목 국가부채(자국 통화 기준, 시작 시점 달러 가치 단위). */
     val debt: Double,
     /** 국방비의 시작 대비 변화(GDP 대비). */
@@ -109,6 +158,12 @@ data class CountryEffects(
     /** 국채 금리 목표에 더하는 위험 프리미엄(연율). 다음 달까지만 유효하다. */
     val interestPremium: Double = 0.0,
     val news: List<CountryNews> = emptyList(),
+    /** 다른 나라와의 관계 변화(점). */
+    val relationShifts: Map<String, Double> = emptyMap(),
+    /** 한 달 동안 산업 부문 경기에 더하는 충격. */
+    val sectorShocks: Map<Sector, Double> = emptyMap(),
+    /** 다음 달 연율 물가에 더하는 몫. */
+    val inflationShock: Double = 0.0,
 ) {
     companion object {
         val NONE = CountryEffects()
