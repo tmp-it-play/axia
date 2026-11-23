@@ -5,6 +5,10 @@ import androidx.compose.ui.graphics.Color
 object MapPalette {
     val ocean = Color(0xFF2C4A5E)
     val unclaimed = Color(0xFFDCE3E6)
+
+    /** 지도 모드에 자료가 없는 나라. */
+    val noData = Color(0xFFB9B4A8)
+    val peace = Color(0xFFE8DCC0)
     val countries =
         listOf(
             Color(0xFFC8B48A),

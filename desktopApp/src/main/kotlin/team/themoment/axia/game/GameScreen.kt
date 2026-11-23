@@ -17,11 +17,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import team.themoment.axia.game.panels.BudgetPanel
+import team.themoment.axia.game.panels.DiplomacyPanel
 import team.themoment.axia.game.panels.EconomyPanel
+import team.themoment.axia.game.panels.EventDialog
+import team.themoment.axia.game.panels.MilitaryPanel
+import team.themoment.axia.game.panels.OrganizationsPanel
 import team.themoment.axia.game.panels.OverviewPanel
+import team.themoment.axia.game.panels.PolicyPanel
 import team.themoment.axia.game.panels.PoliticsPanel
+import team.themoment.axia.game.panels.SituationPanel
 import team.themoment.axia.game.panels.SocietyPanel
 import team.themoment.axia.game.panels.StatisticsPanel
+import team.themoment.axia.game.panels.nextElectionTag
+import team.themoment.axia.map.MapData
 import team.themoment.axia.map.MapLegend
 import team.themoment.axia.map.MapMode
 import team.themoment.axia.map.MapModeBar
@@ -29,6 +37,7 @@ import team.themoment.axia.map.WorldMap
 import team.themoment.axia.map.WorldMapModel
 import team.themoment.axia.selection.SelectionPanel
 import team.themoment.axia.simulation.SimulationRunner
+import team.themoment.axia.simulation.nation.InstitutionItem
 import team.themoment.axia.simulation.world.World
 import team.themoment.axia.ui.dossier.DossierPanel
 
@@ -44,12 +53,16 @@ fun GameScreen(
     val economy by runner.economy.collectAsState()
     val nation by runner.nation.collectAsState()
     val politics by runner.politics.collectAsState()
+    val worldState by runner.world.collectAsState()
+    val pauseSettings by runner.pauseSettings.collectAsState()
+    val countryName = { id: String -> world.countries[id]?.name ?: id }
     var panel by remember { mutableStateOf<GamePanel?>(GamePanel.OVERVIEW) }
     var selectedRegionId by remember { mutableStateOf<String?>(null) }
     var mapMode by remember { mutableStateOf(MapMode.POLITICAL) }
     val playerName = world.country(nation.countryId).name
     val playerIndicators = economy.countries.getValue(nation.countryId)
     val playerHistory = economy.history.getValue(nation.countryId)
+    val mapData = remember(economy, worldState, nation) { MapData(economy, worldState, nation) }
 
     Column(modifier = modifier.fillMaxSize()) {
         TopStrip(
@@ -57,6 +70,12 @@ fun GameScreen(
             approval = nation.approval,
             indicators = playerIndicators,
             clock = clock,
+            nextElection = nextElectionTag(politics.schedule, clock.date),
+            politicalCapital = nation.society.politicalCapital,
+            headline =
+                nation.society.news
+                    .firstOrNull { it.major && !it.date.isBefore(clock.date.minusDays(HEADLINE_DAYS)) }
+                    ?.text,
             onTogglePause = runner::togglePause,
             onSpeedSelect = runner::setSpeed,
             onAdvanceDay = runner::advanceDay,
@@ -66,7 +85,7 @@ fun GameScreen(
             Box(Modifier.weight(1f).fillMaxHeight()) {
                 WorldMap(
                     model = mapModel,
-                    fillColor = { fill -> mapMode.colorOf(fill, economy) },
+                    fillColor = { fill -> mapMode.colorOf(fill, mapData) },
                     selectedRegionId = selectedRegionId,
                     onRegionClick = { selectedRegionId = it },
                     modifier = Modifier.fillMaxSize(),
@@ -84,7 +103,7 @@ fun GameScreen(
                             Modifier
                                 .align(Alignment.TopStart)
                                 .padding(start = 12.dp, top = 12.dp, bottom = 12.dp)
-                                .width(if (open == GamePanel.STATISTICS) 760.dp else 440.dp),
+                                .width(if (open == GamePanel.STATISTICS) 760.dp else 460.dp),
                     ) {
                         when (open) {
                             GamePanel.OVERVIEW -> {
@@ -92,7 +111,16 @@ fun GameScreen(
                             }
 
                             GamePanel.ECONOMY -> {
-                                EconomyPanel(playerIndicators, playerHistory)
+                                EconomyPanel(
+                                    countryName = playerName,
+                                    indicators = playerIndicators,
+                                    history = playerHistory,
+                                    monetary = economy.monetary.getValue(nation.countryId),
+                                    politics = politics,
+                                    onDirectRate = runner::directPolicyRate,
+                                    onDraftIndependence = { runner.editBudgetDraft(InstitutionItem.CENTRAL_BANK_INDEPENDENCE, it) },
+                                    onViewBill = { panel = GamePanel.POLITICS },
+                                )
                             }
 
                             GamePanel.BUDGET -> {
@@ -109,9 +137,34 @@ fun GameScreen(
                                 )
                             }
 
+                            GamePanel.POLICY -> {
+                                PolicyPanel(
+                                    nation.social,
+                                    nation.special,
+                                    politics,
+                                    runner::editBudgetDraft,
+                                    runner::clearBudgetDraft,
+                                    onIntroduce = {
+                                        runner.introduceBudget()
+                                        panel = GamePanel.POLITICS
+                                    },
+                                    onViewBill = { panel = GamePanel.POLITICS },
+                                )
+                            }
+
+                            GamePanel.ORGANIZATIONS -> {
+                                OrganizationsPanel(
+                                    nation.society,
+                                    onAct = runner::actOnOrganization,
+                                    onRename = runner::renameOrganization,
+                                )
+                            }
+
                             GamePanel.POLITICS -> {
                                 PoliticsPanel(
                                     politics,
+                                    today = clock.date,
+                                    onCallEarlyElection = runner::callEarlyElection,
                                     onBudget = { panel = GamePanel.BUDGET },
                                     onNegotiate = runner::negotiateBudgetWith,
                                     onIntroduce = runner::introduceBudget,
@@ -119,7 +172,27 @@ fun GameScreen(
                                         runner.reviseStalledBudget()
                                         panel = GamePanel.BUDGET
                                     },
+                                    onRenamePerson = runner::renamePerson,
                                 )
+                            }
+
+                            GamePanel.DIPLOMACY -> {
+                                DiplomacyPanel(worldState, nation.society.politicalCapital, countryName, runner::diplomaticAction)
+                            }
+
+                            GamePanel.MILITARY -> {
+                                MilitaryPanel(
+                                    worldState,
+                                    nation.countryId,
+                                    nation.society.politicalCapital,
+                                    countryName,
+                                    onMobilize = runner::setMobilization,
+                                    onAction = runner::militaryAction,
+                                )
+                            }
+
+                            GamePanel.SITUATION -> {
+                                SituationPanel(worldState, countryName, pauseSettings, runner::setAutoPause)
                             }
 
                             GamePanel.SOCIETY -> {
@@ -132,11 +205,22 @@ fun GameScreen(
                         }
                     }
                 }
+                worldState.pendingEvents.firstOrNull()?.let { event ->
+                    EventDialog(
+                        event = event,
+                        remaining = worldState.pendingEvents.size,
+                        countryName = countryName,
+                        onChoose = runner::chooseEventOption,
+                        modifier = Modifier.align(Alignment.Center),
+                    )
+                }
                 selectedRegionId?.let { regionId ->
                     SelectionPanel(
                         world = world,
                         regionId = regionId,
                         economy = economy.countries[world.region(regionId).countryId],
+                        snapshot = worldState,
+                        playerId = nation.countryId,
                         onClose = { selectedRegionId = null },
                         modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp),
                     )
@@ -145,3 +229,6 @@ fun GameScreen(
         }
     }
 }
+
+/** 큰 소식을 상단 띠에 띄워 두는 기간. */
+private const val HEADLINE_DAYS = 30L

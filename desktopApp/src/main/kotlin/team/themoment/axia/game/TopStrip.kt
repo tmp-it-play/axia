@@ -13,9 +13,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import team.themoment.axia.format.formatPercent
+import team.themoment.axia.format.formatRate
 import team.themoment.axia.simulation.ClockState
 import team.themoment.axia.simulation.economy.EconomyIndicators
 import team.themoment.axia.simulation.time.GameSpeed
@@ -36,6 +38,9 @@ fun TopStrip(
     approval: Double,
     indicators: EconomyIndicators,
     clock: ClockState,
+    nextElection: String?,
+    politicalCapital: Double,
+    headline: String?,
     onTogglePause: () -> Unit,
     onSpeedSelect: (GameSpeed) -> Unit,
     onAdvanceDay: () -> Unit,
@@ -59,7 +64,20 @@ fun TopStrip(
         PaperTag("실업 ${formatPercent(indicators.unemployment)}")
         PaperTag("재정 ${formatPercent(indicators.budgetBalance, signed = true)}")
         PaperTag("부채 ${formatPercent(indicators.debtRatio)}")
+        PaperTag("금리 ${formatRate(indicators.policyRate)}")
+        nextElection?.let { PaperTag(it, selected = true) }
+        PaperTag("정치 자본 ${politicalCapital.roundToInt()}")
         Spacer(Modifier.weight(1f))
+        headline?.let {
+            Text(
+                text = it,
+                style = DossierType.number(12.sp),
+                color = DossierColors.deskText,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(2f, fill = false),
+            )
+        }
         Text(text = DATE_FORMAT.format(clock.date), style = DossierType.number(15.sp), color = DossierColors.deskText)
         PaperTag(text = if (clock.paused) "▶" else "Ⅱ", onClick = onTogglePause)
         PaperTag(text = "하루", enabled = clock.paused, onClick = onAdvanceDay)

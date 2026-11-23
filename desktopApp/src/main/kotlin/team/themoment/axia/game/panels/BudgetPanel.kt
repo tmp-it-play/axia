@@ -44,26 +44,16 @@ fun BudgetPanel(
         valueColor = if (budget.balance >= 0.0) DossierColors.positive else DossierColors.negative,
     )
     StatRow("국가부채", formatPercent(budget.debtRatio))
-    SectionTitle("재정 변경안")
-    if (pending != null) {
-        StatRow("처리 상태", pending.stage.label)
-        PaperTag("정치에서 심의 보기", onClick = onViewBill)
-    } else {
-        Text(
-            text = "세율과 지출을 조정해 함께 발의하세요. 통과된 목표는 다음 달부터 집행됩니다.",
-            style = DossierType.number(12.sp),
-            color = DossierColors.inkMuted,
-        )
-        politics.draftSupport?.let { support ->
-            val vote = support.rollCall
-            if (vote == null) StatRow("예상 심의 점수", billScore(support.score)) else StatRow("예상 찬성", voteSummary(vote))
-        }
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            PaperTag("변경안 발의 · ${politics.draft.size}건", selected = true, enabled = politics.draft.isNotEmpty(), onClick = onIntroduce)
-            if (politics.draft.isNotEmpty()) PaperTag("심의 근거", onClick = onViewBill)
-            PaperTag("초안 초기화", enabled = politics.draft.isNotEmpty(), onClick = onClear)
-        }
+    if (budget.organizationSubsidies > 0.0) {
+        StatRow("조직 보조금 (기초지출에 포함)", "${formatPercent(budget.organizationSubsidies)} · ${money(budget.organizationSubsidies)}")
     }
+    DraftControls(
+        politics = politics,
+        hint = "세율과 지출, 정책 탭의 규제를 함께 묶어 발의하세요. 통과된 목표는 다음 달부터 집행됩니다.",
+        onIntroduce = onIntroduce,
+        onViewBill = onViewBill,
+        onClear = onClear,
+    )
 
     fun proposed(
         item: BudgetItem,
@@ -102,5 +92,33 @@ fun BudgetPanel(
                 onValueChange = { onEdit(line.kind, it.toDouble()) },
             )
         }
+    }
+}
+
+/** 재정·정책 탭이 함께 쓰는 법안 초안 조작부. 초안은 하나이고 두 탭의 변경을 함께 담는다. */
+@Composable
+internal fun DraftControls(
+    politics: PoliticsSnapshot,
+    hint: String,
+    onIntroduce: () -> Unit,
+    onViewBill: () -> Unit,
+    onClear: () -> Unit,
+) {
+    val pending = politics.pending
+    SectionTitle("변경안")
+    if (pending != null) {
+        StatRow("처리 상태", pending.stage.label)
+        PaperTag("정치에서 심의 보기", onClick = onViewBill)
+        return
+    }
+    Text(text = hint, style = DossierType.number(12.sp), color = DossierColors.inkMuted)
+    politics.draftSupport?.let { support ->
+        val vote = support.rollCall
+        if (vote == null) StatRow("예상 심의 점수", billScore(support.score)) else StatRow("예상 찬성", voteSummary(vote))
+    }
+    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        PaperTag("변경안 발의 · ${politics.draft.size}건", selected = true, enabled = politics.draft.isNotEmpty(), onClick = onIntroduce)
+        if (politics.draft.isNotEmpty()) PaperTag("심의 근거", onClick = onViewBill)
+        PaperTag("초안 초기화", enabled = politics.draft.isNotEmpty(), onClick = onClear)
     }
 }

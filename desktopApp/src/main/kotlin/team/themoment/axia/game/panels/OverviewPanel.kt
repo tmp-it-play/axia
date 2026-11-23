@@ -18,6 +18,7 @@ import team.themoment.axia.theme.DossierColors
 import team.themoment.axia.theme.DossierType
 import team.themoment.axia.ui.dossier.SectionTitle
 import team.themoment.axia.ui.dossier.Stamp
+import team.themoment.axia.ui.dossier.StatRow
 import kotlin.math.roundToInt
 
 @Composable
@@ -33,8 +34,15 @@ fun OverviewPanel(
     }
     SectionTitle("핵심 지표")
     KeyIndicatorRows(indicators)
+    if (nation.special.indicators.isNotEmpty()) {
+        SectionTitle("국가 특수 상황")
+        nation.special.indicators.forEach { indicator ->
+            StatRow(indicator.label, indicator.value)
+            Hint(indicator.description)
+        }
+    }
     SectionTitle("지지율이 움직인 이유")
-    FactorBars(nation.approvalFactors)
+    ApprovalBreakdown(nation)
     Text(
         text = "기준선 ${nation.baseline.roundToInt()} · 여론조사 자료가 없어 시작 지지율이 50%가 되도록 정한 값",
         style = DossierType.number(11.sp),

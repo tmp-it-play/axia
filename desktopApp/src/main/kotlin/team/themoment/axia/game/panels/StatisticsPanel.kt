@@ -38,7 +38,10 @@ fun StatisticsPanel(
             ChartSpec("실업률", history[EconomySeries.UNEMPLOYMENT], history.start, percentFormat),
             ChartSpec("재정수지 (GDP 대비)", history[EconomySeries.BUDGET_BALANCE], history.start, signedPercentFormat, zeroLine = true),
             ChartSpec("국가부채 (GDP 대비)", history[EconomySeries.DEBT], history.start, percentFormat),
+            ChartSpec("기준금리", history[EconomySeries.POLICY_RATE], history.start, rateFormat),
             ChartSpec("정부 지지율", nation.approval, nation.start, approvalFormat),
+            ChartSpec("오염 지수", nation.pollution, nation.start, approvalFormat),
+            ChartSpec("범죄 지수", nation.crime, nation.start, approvalFormat),
         )
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         charts.chunked(2).forEach { row ->

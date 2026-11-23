@@ -57,6 +57,12 @@ fun formatPopulation(value: Double): String =
 
 fun formatWholeDollars(value: Double): String = "${value.roundToLong().grouped()}달러"
 
+/** 금리처럼 0.25%p 단위로 움직이는 값. 소수 둘째 자리까지 쓴다. */
+fun formatRate(
+    ratio: Double,
+    signed: Boolean = false,
+): String = String.format(Locale.KOREA, if (signed) "%+.2f%%" else "%.2f%%", ratio * 100.0)
+
 /** 비율(0.031)을 백분율 문자열(3.1%)로. [signed]면 양수에 +를 붙인다. */
 fun formatPercent(
     ratio: Double,

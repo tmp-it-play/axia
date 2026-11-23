@@ -18,11 +18,14 @@ import team.themoment.axia.format.formatCompactDollars
 import team.themoment.axia.format.formatDollars
 import team.themoment.axia.format.formatPercent
 import team.themoment.axia.format.formatPopulation
+import team.themoment.axia.format.formatRate
 import team.themoment.axia.format.formatWholeDollars
 import team.themoment.axia.game.formatPoints
 import team.themoment.axia.game.note
 import team.themoment.axia.game.satisfactionColor
 import team.themoment.axia.simulation.economy.EconomyIndicators
+import team.themoment.axia.simulation.economy.POLICY_RATE_FIELD
+import team.themoment.axia.simulation.nation.NationSnapshot
 import team.themoment.axia.simulation.nation.SatisfactionFactor
 import team.themoment.axia.theme.DossierColors
 import team.themoment.axia.theme.DossierType
@@ -69,6 +72,24 @@ internal fun FactorBars(factors: Map<SatisfactionFactor, Double>) {
     )
 }
 
+/** 지지율 분해: 경제 요인, 성향, 사회 불안. 같은 축척으로 그린다. */
+@Composable
+internal fun ApprovalBreakdown(nation: NationSnapshot) {
+    val contributions =
+        nation.approvalFactors.map { (factor, value) -> Contribution(factor.label, value) } +
+            nation.identityContributions
+                .filter { kotlin.math.abs(it.value) >= MIN_SHOWN_CONTRIBUTION }
+                .map { (identity, value) -> Contribution("성향 · ${identity.label}", value) } +
+            listOfNotNull(Contribution("사회 불안", -nation.unrest).takeIf { nation.unrest >= MIN_SHOWN_CONTRIBUTION })
+    ContributionBars(
+        contributions = contributions,
+        format = ::formatPoints,
+        scale = maxOf(5.0, contributions.maxOf { kotlin.math.abs(it.value) }),
+    )
+}
+
+private const val MIN_SHOWN_CONTRIBUTION = 0.05
+
 @Composable
 internal fun KeyIndicatorRows(indicators: EconomyIndicators) {
     StatRow("인구", formatPopulation(indicators.population), note = indicators.note("population"))
@@ -83,9 +104,12 @@ internal fun KeyIndicatorRows(indicators: EconomyIndicators) {
         note = indicators.note("revenue", "expense", "interest"),
     )
     StatRow("국가부채 (GDP 대비)", formatPercent(indicators.debtRatio), note = indicators.note("debt"))
+    StatRow("기준금리", formatRate(indicators.policyRate), note = indicators.note(POLICY_RATE_FIELD))
+    StatRow("통화 가치 (달러 대비, 시작 대비)", formatPercent(kotlin.math.exp(indicators.realExchange) - 1.0, signed = true))
 }
 
 internal val percentFormat: (Double) -> String = { formatPercent(it) }
+internal val rateFormat: (Double) -> String = { formatRate(it) }
 internal val signedPercentFormat: (Double) -> String = { formatPercent(it, signed = true) }
 internal val dollarFormat: (Double) -> String = ::formatCompactDollars
 internal val wholeDollarFormat: (Double) -> String = { formatCompactDollars(it) }

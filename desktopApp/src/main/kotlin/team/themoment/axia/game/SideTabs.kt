@@ -26,8 +26,13 @@ enum class GamePanel(
     OVERVIEW("개요"),
     ECONOMY("경제"),
     BUDGET("재정"),
+    POLICY("정책"),
     POLITICS("정치"),
+    ORGANIZATIONS("조직"),
     SOCIETY("사회"),
+    DIPLOMACY("외교"),
+    MILITARY("군사"),
+    SITUATION("상황"),
     STATISTICS("통계"),
 }
 
@@ -44,8 +49,8 @@ fun SideTabs(
                 .width(64.dp)
                 .fillMaxHeight()
                 .background(DossierColors.desk)
-                .padding(top = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+                .padding(top = 12.dp),
+        verticalArrangement = Arrangement.spacedBy(6.dp),
     ) {
         GamePanel.entries.forEach { panel ->
             val isSelected = panel == selected
@@ -54,7 +59,7 @@ fun SideTabs(
                     Modifier
                         .fillMaxWidth()
                         .padding(start = if (isSelected) 6.dp else 12.dp)
-                        .height(52.dp)
+                        .height(44.dp)
                         .background(
                             if (isSelected) DossierColors.folder else DossierColors.deskRaised,
                             RoundedCornerShape(topStart = 6.dp, bottomStart = 6.dp),

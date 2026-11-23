@@ -5,9 +5,12 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,19 +25,22 @@ import team.themoment.axia.theme.DossierType
 import team.themoment.axia.ui.dossier.PaperTag
 
 /** 책상 위 띠에 꽂힌 꼬리표로 지도 모드를 고른다. */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun MapModeBar(
     selected: MapMode,
     onSelect: (MapMode) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Row(
+    FlowRow(
         modifier =
             modifier
+                .widthIn(max = 560.dp)
                 .shadow(4.dp, RoundedCornerShape(4.dp))
                 .background(DossierColors.desk, RoundedCornerShape(4.dp))
                 .padding(5.dp),
-        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.End),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         MapMode.entries.forEach { mode -> PaperTag(text = mode.label, selected = mode == selected, onClick = { onSelect(mode) }) }
     }
