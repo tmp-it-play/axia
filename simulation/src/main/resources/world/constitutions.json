@@ -1,0 +1,398 @@
+{
+ "KOR": {
+  "court": "헌법재판소",
+  "reviewsLaws": true,
+  "judicialIndependence": 0.822,
+  "executiveTermLimit": 1,
+  "noConfidence": false,
+  "sourceNote": "헌법 제70조 대통령 5년 단임, 제111조 헌법재판소 위헌법률심판. 단원제. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
+  "coupProne": false
+ },
+ "USA": {
+  "court": "연방대법원",
+  "reviewsLaws": true,
+  "judicialIndependence": 0.93,
+  "upperHouse": {
+   "name": "상원",
+   "power": "VETO",
+   "seats": 100,
+   "governmentSeats": 51,
+   "oppositionSeats": 49
+  },
+  "executiveTermLimit": 2,
+  "noConfidence": false,
+  "sourceNote": "2024-01-01 상원 민주당 48 + 민주당과 표결하는 무소속 3 = 51, 공화당 49. 수정헌법 제22조 대통령 2선 제한. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
+  "coupProne": false
+ },
+ "CHN": {
+  "court": null,
+  "reviewsLaws": false,
+  "judicialIndependence": 0.043,
+  "noConfidence": false,
+  "sourceNote": "2018년 개헌으로 국가주석 연임 제한 폐지. 헌법 해석은 전인대 상무위원회. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
+  "coupProne": false
+ },
+ "JPN": {
+  "court": "최고재판소",
+  "reviewsLaws": true,
+  "judicialIndependence": 0.871,
+  "upperHouse": {
+   "name": "참의원",
+   "power": "DELAY",
+   "seats": 248,
+   "governmentSeats": 141,
+   "oppositionSeats": 107
+  },
+  "noConfidence": true,
+  "sourceNote": "참의원 자민·공명 141석(2022 선거 후). 예산은 중의원 의결 우선(헌법 제60조)이라 지연으로 단순화. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
+  "coupProne": false
+ },
+ "DEU": {
+  "court": "연방헌법재판소",
+  "reviewsLaws": true,
+  "judicialIndependence": 0.947,
+  "upperHouse": {
+   "name": "연방참사원",
+   "power": "VETO",
+   "seats": 69,
+   "governmentSeats": 20,
+   "oppositionSeats": 26
+  },
+  "noConfidence": true,
+  "sourceNote": "연방참사원은 주정부 대표. 신호등 연정 정당만으로 구성된 주정부 표 20, CDU·CSU 주도 주정부 표 26, 나머지는 혼합 연정. 동의법률만 거부권이 있으나 거부권으로 단순화. 건설적 불신임(기본법 제67조). 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
+  "coupProne": false
+ },
+ "GBR": {
+  "court": "대법원",
+  "reviewsLaws": false,
+  "judicialIndependence": 0.911,
+  "upperHouse": {
+   "name": "귀족원",
+   "power": "DELAY",
+   "seats": 800,
+   "governmentSeats": 270,
+   "oppositionSeats": 235
+  },
+  "noConfidence": true,
+  "sourceNote": "귀족원은 의회법(1911·1949)상 최대 1년 지연. 대법원은 의회 제정법을 무효화하지 못한다. 의석은 2024-01 정당별 대략값(무소속 크로스벤치 등 제외). 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
+  "coupProne": false
+ },
+ "FRA": {
+  "court": "헌법위원회",
+  "reviewsLaws": true,
+  "judicialIndependence": 0.945,
+  "upperHouse": {
+   "name": "상원",
+   "power": "DELAY",
+   "seats": 348,
+   "governmentSeats": 100,
+   "oppositionSeats": 248
+  },
+  "executiveTermLimit": 2,
+  "noConfidence": true,
+  "sourceNote": "상원은 공화당·중도연합 다수. 의견 불일치 시 국민의회가 최종 의결(헌법 제45조). 대통령 연속 2선 제한. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
+  "coupProne": false
+ },
+ "RUS": {
+  "court": "헌법재판소",
+  "reviewsLaws": true,
+  "judicialIndependence": 0.06,
+  "upperHouse": {
+   "name": "연방평의회",
+   "power": "VETO",
+   "seats": 178,
+   "governmentSeats": 170,
+   "oppositionSeats": 0
+  },
+  "noConfidence": false,
+  "sourceNote": "2020년 개헌으로 현직 대통령 임기 횟수 초기화. 연방평의회 거부는 두마 2/3로 재의결 가능하나 거부권으로 단순화. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
+  "coupProne": false
+ },
+ "UKR": {
+  "court": "헌법재판소",
+  "reviewsLaws": true,
+  "judicialIndependence": 0.3,
+  "executiveTermLimit": 2,
+  "noConfidence": true,
+  "sourceNote": "단원제. 대통령 연속 2선 제한. 계엄 중 선거 유예. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
+  "coupProne": false
+ },
+ "IND": {
+  "court": "대법원",
+  "reviewsLaws": true,
+  "judicialIndependence": 0.724,
+  "upperHouse": {
+   "name": "라지야 사바",
+   "power": "DELAY",
+   "seats": 245,
+   "governmentSeats": 110,
+   "oppositionSeats": 95
+  },
+  "noConfidence": true,
+  "sourceNote": "2024-01 라지야 사바 NDA 약 110석. 재정 법안은 로크 사바 우선(헌법 제109조)이라 지연으로 단순화. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
+  "coupProne": false
+ },
+ "BRA": {
+  "court": "연방대법원",
+  "reviewsLaws": true,
+  "judicialIndependence": 0.914,
+  "upperHouse": {
+   "name": "연방상원",
+   "power": "VETO",
+   "seats": 81,
+   "governmentSeats": 38,
+   "oppositionSeats": 25
+  },
+  "executiveTermLimit": 2,
+  "noConfidence": false,
+  "sourceNote": "상원 정부 기반 정당 대략 38석, 자유당 등 야당 25석, 나머지 중도. 대통령 연속 2선 제한. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
+  "coupProne": false
+ },
+ "CAN": {
+  "court": "대법원",
+  "reviewsLaws": true,
+  "judicialIndependence": 0.887,
+  "upperHouse": {
+   "name": "상원",
+   "power": "DELAY",
+   "seats": 105,
+   "governmentSeats": 0,
+   "oppositionSeats": 12
+  },
+  "noConfidence": true,
+  "sourceNote": "상원 다수는 무소속(독립상원의원그룹 등). 보수당 12석. 관행상 하원 의결을 지연에 그친다. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
+  "coupProne": false
+ },
+ "PRK": {
+  "court": null,
+  "reviewsLaws": false,
+  "judicialIndependence": 0.003,
+  "noConfidence": false,
+  "sourceNote": "최고인민회의 단원제. 사법 심사 없음. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
+  "coupProne": false
+ },
+ "AUS": {
+  "court": "고등법원",
+  "reviewsLaws": true,
+  "judicialIndependence": 0.988,
+  "upperHouse": {
+   "name": "상원",
+   "power": "VETO",
+   "seats": 76,
+   "governmentSeats": 26,
+   "oppositionSeats": 31
+  },
+  "noConfidence": true,
+  "sourceNote": "상원 노동당 26석, 연립야당 31석(자유·국민), 녹색당 11석·무소속 8석은 기타. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
+  "coupProne": false
+ },
+ "POL": {
+  "court": "헌법재판소",
+  "reviewsLaws": true,
+  "judicialIndependence": 0.56,
+  "upperHouse": {
+   "name": "상원",
+   "power": "DELAY",
+   "seats": 100,
+   "governmentSeats": 66,
+   "oppositionSeats": 34
+  },
+  "executiveTermLimit": 2,
+  "noConfidence": true,
+  "presidentialVeto": {
+   "holder": "안제이 두다",
+   "party": "법과 정의",
+   "override": 0.6
+  },
+  "sourceNote": "상원 거부는 세임 과반으로 재의결(헌법 제121조)이라 지연으로 단순화. 대통령 거부권은 세임 재적 3/5로 재의결(제122조). 두다 대통령은 법과 정의 출신으로 투스크 정부와 동거. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
+  "coupProne": false
+ },
+ "ITA": {
+  "court": "헌법재판소",
+  "reviewsLaws": true,
+  "judicialIndependence": 0.865,
+  "upperHouse": {
+   "name": "상원",
+   "power": "VETO",
+   "seats": 205,
+   "governmentSeats": 115,
+   "oppositionSeats": 90
+  },
+  "noConfidence": true,
+  "sourceNote": "완전 양원제. 2022 총선 후 상원 우파 연합 약 115석. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
+  "coupProne": false
+ },
+ "FIN": {
+  "court": null,
+  "reviewsLaws": false,
+  "judicialIndependence": 0.981,
+  "executiveTermLimit": 2,
+  "noConfidence": true,
+  "sourceNote": "단원제. 헌법재판소 없이 의회 헌법위원회가 사전 심사. 대통령 연속 2선 제한. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
+  "coupProne": false
+ },
+ "EST": {
+  "court": "대법원(헌법심사부)",
+  "reviewsLaws": true,
+  "judicialIndependence": 0.966,
+  "executiveTermLimit": 2,
+  "noConfidence": true,
+  "sourceNote": "단원제. 대통령 연속 2선 제한(의회 간선). 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
+  "coupProne": false
+ },
+ "LVA": {
+  "court": "헌법재판소",
+  "reviewsLaws": true,
+  "judicialIndependence": 0.925,
+  "executiveTermLimit": 2,
+  "noConfidence": true,
+  "sourceNote": "단원제. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
+  "coupProne": false
+ },
+ "LTU": {
+  "court": "헌법재판소",
+  "reviewsLaws": true,
+  "judicialIndependence": 0.949,
+  "executiveTermLimit": 2,
+  "noConfidence": true,
+  "sourceNote": "단원제. 대통령 연속 2선 제한. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
+  "coupProne": false
+ },
+ "TUR": {
+  "court": "헌법재판소",
+  "reviewsLaws": true,
+  "judicialIndependence": 0.178,
+  "executiveTermLimit": 2,
+  "noConfidence": false,
+  "sourceNote": "2017년 개헌 후 대통령제. 대통령 2선 제한(의회가 조기 선거를 정하면 한 번 더 출마 가능). 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16). 2016년 쿠데타 시도 이력으로 쿠데타 위험국으로 본다.",
+  "coupProne": true
+ },
+ "ISR": {
+  "court": "대법원",
+  "reviewsLaws": true,
+  "judicialIndependence": 0.894,
+  "noConfidence": true,
+  "sourceNote": "단원제. 2024-01-01 대법원이 '합리성 기준' 제한 기본법 개정을 무효화했다. 건설적 불신임. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
+  "coupProne": false
+ },
+ "IRN": {
+  "court": "헌법수호위원회",
+  "reviewsLaws": true,
+  "judicialIndependence": 0.109,
+  "executiveTermLimit": 2,
+  "noConfidence": false,
+  "sourceNote": "헌법수호위원회가 이슬람 율법·헌법 합치 여부로 모든 법률을 심사(헌법 제94조). 대통령 연속 2선 제한. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
+  "coupProne": false
+ },
+ "SAU": {
+  "court": null,
+  "reviewsLaws": false,
+  "judicialIndependence": 0.285,
+  "noConfidence": false,
+  "sourceNote": "절대왕정. 슈라위원회는 자문 기구. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
+  "coupProne": false
+ },
+ "EGY": {
+  "court": "최고헌법재판소",
+  "reviewsLaws": true,
+  "judicialIndependence": 0.627,
+  "upperHouse": {
+   "name": "상원",
+   "power": "DELAY",
+   "seats": 300,
+   "governmentSeats": 250,
+   "oppositionSeats": 0
+  },
+  "executiveTermLimit": 2,
+  "noConfidence": true,
+  "sourceNote": "상원은 자문 성격이 강해 지연으로 단순화. 2019년 개헌으로 대통령 임기 6년·2선, 현직 예외. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16). 2013년 쿠데타 이력으로 쿠데타 위험국으로 본다.",
+  "coupProne": true
+ },
+ "ZAF": {
+  "court": "헌법재판소",
+  "reviewsLaws": true,
+  "judicialIndependence": 0.869,
+  "upperHouse": {
+   "name": "전국주평의회",
+   "power": "DELAY",
+   "seats": 90,
+   "governmentSeats": 54,
+   "oppositionSeats": 36
+  },
+  "executiveTermLimit": 2,
+  "noConfidence": true,
+  "sourceNote": "NCOP 주 대표단 중 ANC 다수 6개 주. 일반 법안은 국민의회가 재의결 가능. 대통령은 의회 선출, 2선 제한. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
+  "coupProne": false
+ },
+ "TWN": {
+  "court": "헌법법정",
+  "reviewsLaws": true,
+  "judicialIndependence": 0.876,
+  "executiveTermLimit": 2,
+  "noConfidence": true,
+  "sourceNote": "단원제 입법원. 총통 2선 제한. 입법원은 행정원장 불신임 가능. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
+  "coupProne": false
+ },
+ "IDN": {
+  "court": "헌법재판소",
+  "reviewsLaws": true,
+  "judicialIndependence": 0.529,
+  "executiveTermLimit": 2,
+  "noConfidence": false,
+  "sourceNote": "지역대표회의(DPD)는 입법 거부권이 없어 단원제로 본다. 대통령 2선 제한. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
+  "coupProne": false
+ },
+ "VNM": {
+  "court": null,
+  "reviewsLaws": false,
+  "judicialIndependence": 0.157,
+  "noConfidence": false,
+  "sourceNote": "국회 단원제. 사법 심사 없음. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
+  "coupProne": false
+ },
+ "THA": {
+  "court": "헌법재판소",
+  "reviewsLaws": true,
+  "judicialIndependence": 0.721,
+  "upperHouse": {
+   "name": "상원",
+   "power": "DELAY",
+   "seats": 250,
+   "governmentSeats": 0,
+   "oppositionSeats": 0
+  },
+  "noConfidence": true,
+  "sourceNote": "2024-01 상원 250명 전원 군정 임명(2024년 5월 임기 만료). 일반 법안은 하원 재의결 가능. 총리 재임 8년 제한은 연임 제한으로 다루지 않는다. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16). 2006·2014년 쿠데타 이력으로 쿠데타 위험국으로 본다.",
+  "coupProne": true
+ },
+ "RWA": {
+  "court": "대법원",
+  "reviewsLaws": true,
+  "judicialIndependence": 0.179,
+  "upperHouse": {
+   "name": "상원",
+   "power": "VETO",
+   "seats": 26,
+   "governmentSeats": 20,
+   "oppositionSeats": 0
+  },
+  "noConfidence": false,
+  "sourceNote": "2015년 개헌으로 현직 대통령 예외. 상원 다수는 임명·간선으로 정부 우호. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
+  "coupProne": false
+ },
+ "PAK": {
+  "court": "대법원",
+  "reviewsLaws": true,
+  "judicialIndependence": 0.634,
+  "upperHouse": {
+   "name": "상원",
+   "power": "DELAY",
+   "seats": 100,
+   "governmentSeats": 0,
+   "oppositionSeats": 0
+  },
+  "noConfidence": true,
+  "sourceNote": "과도 내각 기간. 재정 법안은 국민의회 우선(헌법 제73조)이라 지연으로 단순화. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16). 1958·1977·1999년 쿠데타 이력으로 쿠데타 위험국으로 본다.",
+  "coupProne": true
+ }
+}
