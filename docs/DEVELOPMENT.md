@@ -10,10 +10,12 @@
 - 1차 구현은 DESIGN.md의 모든 항목을 다룬다(가상역사 제외).
 - 세부 구현 1회차(DESIGN.md 16장 8번)를 마쳤다.
   - ① 보정, ② AI 결정, ③ 산업 9부문·지역 분포, ④ 국가 모듈 13개
+- 이어서 ⑤ 지역별 산업·실업을 구현했다. 실업률 지도와 지역 선택 카드에서 확인할 수 있다.
+- ⑥ 국가부도·채무 재조정을 구현했다. 재정 탭에서 차환 압박과 교환채를 확인하고 지급 유예 전보에서 협상안을 선택한다.
+- ⑦ 영국·캐나다·호주 주택 정책을 구현했다. 정책 탭에서 발의하고 정치·개요에서 착공과 준공, 사회에서 집값, 재정에서 지원 지출을 확인한다.
+- ⑧ 곡물·원유 시장을 구현했다. 경제 탭과 지도 국가 선택 카드에서 국가별 생산·소비·재고, 상대별 월 선적을 본다.
 - 다음 후보는 다음과 같다. 무엇을 먼저 할지는 사용자가 정한다.
-  - 남은 19개국 국가 모듈
-  - 지역별 산업·실업
-  - 상품 시장 도입 여부(DESIGN.md 17장)
+  - 남은 16개국 국가 모듈
   - DESIGN.md 18장의 알려진 한계
 
 ## 2. 빌드와 실행
@@ -39,8 +41,8 @@
 |---|---|---|
 | (루트) | 세계 전체를 묶어 하루씩 진행. UI용 스냅숏과 명령 채널 | `Simulation.kt`, `SimulationRunner.kt` |
 | `world` | 지도 세계 정의, 국가 지리(중심점·인접·해안), 구조 지표 | `World.kt`, `WorldLoader.kt`, `Geography.kt` |
-| `economy` | 거시경제, 중앙은행, 교역·유가·환율, 산업 9부문, AI 재정 | `CountryEconomy.kt`, `WorldEconomy.kt`, `CentralBank.kt`, `Trade.kt`, `Sectors.kt` |
-| `nation` | 플레이어 국가: 인구 집단, 예산, 규제, 지지율, 지역 분포 | `Nation.kt`, `Budget.kt`, `Population.kt`, `Regulations.kt`, `Regions.kt`, `CountryPolicyItem.kt` |
+| `economy` | 거시경제, 중앙은행, 교역·곡물·원유·환율, 산업 9부문, AI 재정, 채무 재조정 | `CountryEconomy.kt`, `WorldEconomy.kt`, `CentralBank.kt`, `Trade.kt`, `CommodityMarket.kt`, `CommodityFundamentals.kt`, `Sectors.kt`, `SovereignDebt.kt` |
+| `nation` | 플레이어 국가: 인구 집단, 예산, 규제, 지지율, 지역별 산업·실업 | `Nation.kt`, `Budget.kt`, `Population.kt`, `Regulations.kt`, `Regions.kt`, `RegionalEconomy.kt`, `CountryPolicyItem.kt` |
 | `society` | 성향 집단, 유권자 표본, 조직, 사회 지표, 인구 구조, 기후·기술 추세 | `Identity.kt`, `Society.kt`, `Organizations.kt`, `Demography.kt` |
 | `politics` | 정당 의석, 법안 심의, 선거, 헌법기관, 신생 정당, AI 국가 정치, 체제·지지율 자료 | `Politics.kt`, `Elections.kt`, `Constitution.kt`, `WorldPolitics.kt` |
 | `people` | 지도자 인물, 이름 생성기, 사망·승계 | `People.kt` |
@@ -118,6 +120,10 @@
   - 32개국 장기 실행에서 NaN과 폭주(부채·물가·환율 상한 고착)가 없어야 한다.
   - 정권 교체·전쟁·사건 빈도가 그럴듯해야 한다.
   - 같은 시드면 같은 결과가 나와야 한다.
+  - 지역 GDP 비중과 경제활동인구 비중은 각각 합이 1이다. 지역 실업률은 경제활동인구로, 지역 산업 비중은 각각 GDP와 취업자로 가중하면 전국 값과 일치해야 한다.
+  - 주택 공급 법안은 착공 뒤 해당 국가의 공기만큼 지나서 준공에 반영되어야 한다. 지원 지출은 법안·월 예산에서 대조한다.
+  - 상품별·국가별로 기초 재고 + 생산 + 수입 = 기말 재고 + 실제 소비 + 수출이다. 유입·유출 선적 합과 상대 장부를 대조하고, 첫달 제재와 제재 해제 이후 물량·가격 반응을 확인한다.
+  - 부도·협상 시작 때 원금이 감면되지 않아야 한다. 결산 후 부채는 직전 잔액 + 기초지출 + 이자 − 세입 − 합의 감면액이다. 연장안 합의·반려, 14일 무응답, 교환채 만기까지 확인한다.
 
 ## 7. 자주 하는 확장
 
