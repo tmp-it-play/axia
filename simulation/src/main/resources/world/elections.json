@@ -1,0 +1,368 @@
+{
+ "KOR": {
+  "system": "PRESIDENTIAL",
+  "legislature": {
+   "next": "2024-04-10",
+   "termYears": 4,
+   "seats": 300,
+   "electoralSystem": "MIXED",
+   "earlyDissolution": false
+  },
+  "executive": {
+   "next": "2027-03-03",
+   "termYears": 5,
+   "title": "대통령"
+  },
+  "sourceNote": "2024-01-01 기준 법정 일정. 제22대 국회의원 선거 2024-04-10(지역구 254·비례 46), 제21대 대통령 선거 법정일 2027-03-03. https://en.wikipedia.org/wiki/2024_South_Korean_legislative_election"
+ },
+ "USA": {
+  "system": "PRESIDENTIAL",
+  "legislature": {
+   "next": "2024-11-05",
+   "termYears": 2,
+   "seats": 435,
+   "electoralSystem": "MAJORITARIAN",
+   "earlyDissolution": false
+  },
+  "executive": {
+   "next": "2024-11-05",
+   "termYears": 4,
+   "title": "대통령"
+  },
+  "sourceNote": "연방법상 선거일(11월 첫 월요일 다음 화요일) 2024-11-05. 하원 435석 전원·대통령. https://en.wikipedia.org/wiki/2024_United_States_elections"
+ },
+ "CHN": {
+  "system": "NON_COMPETITIVE",
+  "sourceNote": "전국인민대표대회는 간접 선출이며 권력 구성을 바꾸는 경쟁 선거가 없다."
+ },
+ "JPN": {
+  "system": "PARLIAMENTARY",
+  "legislature": {
+   "next": "2025-10-26",
+   "termYears": 4,
+   "seats": 465,
+   "electoralSystem": "MIXED",
+   "earlyDissolution": true
+  },
+  "sourceNote": "2021-10-31 총선으로 구성된 중의원 임기 만료 2025-10-30. 만료 전 마지막 일요일을 법정 최종 기한으로 사용. 소선거구 289·비례 176. https://en.wikipedia.org/wiki/House_of_Representatives_(Japan)"
+ },
+ "DEU": {
+  "system": "PARLIAMENTARY",
+  "legislature": {
+   "next": "2025-09-28",
+   "termYears": 4,
+   "seats": 630,
+   "electoralSystem": "PROPORTIONAL",
+   "earlyDissolution": true
+  },
+  "sourceNote": "기본법상 제21대 연방의회 선거 기간 2025-08-27~10-26 중 정기 선거일 2025-09-28. 2023년 선거법 개정으로 다음 선거부터 정원 630석. https://bundeswahlleiterin.de/en/bundestagswahlen/2025.html"
+ },
+ "GBR": {
+  "system": "PARLIAMENTARY",
+  "legislature": {
+   "next": "2025-01-28",
+   "termYears": 5,
+   "seats": 650,
+   "electoralSystem": "MAJORITARIAN",
+   "earlyDissolution": true
+  },
+  "sourceNote": "Dissolution and Calling of Parliament Act 2022: 2019-12-17 첫 개회 후 5년인 2024-12-17 자동 해산, 법정 최종 투표일 2025-01-28. https://en.wikipedia.org/wiki/Dissolution_and_Calling_of_Parliament_Act_2022"
+ },
+ "FRA": {
+  "system": "SEMI_PRESIDENTIAL",
+  "legislature": {
+   "next": "2027-06-20",
+   "termYears": 5,
+   "seats": 577,
+   "electoralSystem": "MAJORITARIAN",
+   "earlyDissolution": true
+  },
+  "executive": {
+   "next": "2027-04-25",
+   "termYears": 5,
+   "title": "대통령"
+  },
+  "sourceNote": "2022년 6월 구성된 국민의회의 정기 총선(결선) 2027년 6월, 대통령 임기 만료 2027-05-13 전 결선 2027년 4월. 대통령은 1년에 한 번 국민의회를 해산할 수 있다. https://en.wikipedia.org/wiki/Next_French_presidential_election"
+ },
+ "RUS": {
+  "system": "PRESIDENTIAL",
+  "legislature": {
+   "next": "2026-09-20",
+   "termYears": 5,
+   "seats": 450,
+   "electoralSystem": "MIXED",
+   "earlyDissolution": false
+  },
+  "executive": {
+   "next": "2024-03-17",
+   "termYears": 6,
+   "title": "대통령"
+  },
+  "sourceNote": "대통령 선거 2024-03-15~17(마지막 날 사용), 국가두마 정기 선거 2026년 9월 셋째 일요일. https://en.wikipedia.org/wiki/2024_Russian_presidential_election"
+ },
+ "UKR": {
+  "system": "SEMI_PRESIDENTIAL",
+  "suspended": "계엄 기간 중 선거 유예",
+  "sourceNote": "2022-02-24 선포된 계엄이 이어지는 동안 헌법과 계엄법에 따라 최고 라다·대통령 선거를 치르지 않는다. https://en.wikipedia.org/wiki/Martial_law_in_Ukraine"
+ },
+ "IND": {
+  "system": "PARLIAMENTARY",
+  "legislature": {
+   "next": "2024-06-04",
+   "termYears": 5,
+   "seats": 543,
+   "electoralSystem": "MAJORITARIAN",
+   "earlyDissolution": true
+  },
+  "sourceNote": "제17대 로크 사바 임기 만료 2024-06-16 전 총선. 개표일 2024-06-04를 선거일로 사용. https://en.wikipedia.org/wiki/2024_Indian_general_election"
+ },
+ "BRA": {
+  "system": "PRESIDENTIAL",
+  "legislature": {
+   "next": "2026-10-04",
+   "termYears": 4,
+   "seats": 513,
+   "electoralSystem": "PROPORTIONAL",
+   "earlyDissolution": false
+  },
+  "executive": {
+   "next": "2026-10-04",
+   "termYears": 4,
+   "title": "대통령"
+  },
+  "sourceNote": "헌법상 10월 첫 일요일 총선 2026-10-04(대통령 결선은 단순화해 1차 투표일로 처리). https://en.wikipedia.org/wiki/2026_Brazilian_general_election"
+ },
+ "CAN": {
+  "system": "PARLIAMENTARY",
+  "legislature": {
+   "next": "2025-10-20",
+   "termYears": 4,
+   "seats": 343,
+   "electoralSystem": "MAJORITARIAN",
+   "earlyDissolution": true
+  },
+  "sourceNote": "Canada Elections Act 고정 선거일 2025-10-20. 2023년 선거구 재획정으로 다음 선거부터 343석. https://en.wikipedia.org/wiki/2025_Canadian_federal_election"
+ },
+ "PRK": {
+  "system": "NON_COMPETITIVE",
+  "sourceNote": "최고인민회의 선거는 단일 후보 찬반 투표로 권력 구성을 바꾸지 않는다."
+ },
+ "AUS": {
+  "system": "PARLIAMENTARY",
+  "legislature": {
+   "next": "2025-09-27",
+   "termYears": 3,
+   "seats": 150,
+   "electoralSystem": "MAJORITARIAN",
+   "earlyDissolution": true
+  },
+  "sourceNote": "하원 단독 선거의 법정 최종일 2025-09-27. 2023년 의석 재배분으로 다음 선거부터 150석. https://en.wikipedia.org/wiki/Next_Australian_federal_election"
+ },
+ "POL": {
+  "system": "SEMI_PRESIDENTIAL",
+  "legislature": {
+   "next": "2027-11-07",
+   "termYears": 4,
+   "seats": 460,
+   "electoralSystem": "PROPORTIONAL",
+   "earlyDissolution": false
+  },
+  "executive": {
+   "next": "2025-05-18",
+   "termYears": 5,
+   "title": "대통령"
+  },
+  "sourceNote": "헌법 98조: 세임 임기(2023-11-13 개회) 종료 전 30일 안의 휴일 선거, 최종 일요일 2027-11-07. 대통령 임기 만료 2025-08-06 전 100~75일 사이 1차 투표 2025년 5월. https://en.wikipedia.org/wiki/Next_Polish_parliamentary_election"
+ },
+ "ITA": {
+  "system": "PARLIAMENTARY",
+  "legislature": {
+   "next": "2027-12-19",
+   "termYears": 5,
+   "seats": 400,
+   "electoralSystem": "MIXED",
+   "earlyDissolution": true
+  },
+  "sourceNote": "제19대 의회(2022-10-13 개회) 임기 만료 2027-10-12, 해산 후 70일 안 선거. 법정 최종 기한에 가까운 일요일 사용. https://en.wikipedia.org/wiki/Next_Italian_general_election"
+ },
+ "FIN": {
+  "system": "PARLIAMENTARY",
+  "legislature": {
+   "next": "2027-04-18",
+   "termYears": 4,
+   "seats": 200,
+   "electoralSystem": "PROPORTIONAL",
+   "earlyDissolution": true
+  },
+  "sourceNote": "선거법상 4월 셋째 일요일 2027-04-18. https://en.wikipedia.org/wiki/Next_Finnish_parliamentary_election"
+ },
+ "EST": {
+  "system": "PARLIAMENTARY",
+  "legislature": {
+   "next": "2027-03-07",
+   "termYears": 4,
+   "seats": 101,
+   "electoralSystem": "PROPORTIONAL",
+   "earlyDissolution": false
+  },
+  "sourceNote": "헌법상 3월 첫 일요일 2027-03-07. 정부의 자의적 해산 권한이 없다. https://en.wikipedia.org/wiki/Next_Estonian_parliamentary_election"
+ },
+ "LVA": {
+  "system": "PARLIAMENTARY",
+  "legislature": {
+   "next": "2026-10-03",
+   "termYears": 4,
+   "seats": 100,
+   "electoralSystem": "PROPORTIONAL",
+   "earlyDissolution": false
+  },
+  "sourceNote": "헌법상 10월 첫 토요일 2026-10-03. 조기 해산은 국민투표를 거쳐야 한다. https://en.wikipedia.org/wiki/Next_Latvian_parliamentary_election"
+ },
+ "LTU": {
+  "system": "SEMI_PRESIDENTIAL",
+  "legislature": {
+   "next": "2024-10-13",
+   "termYears": 4,
+   "seats": 141,
+   "electoralSystem": "MIXED",
+   "earlyDissolution": false
+  },
+  "executive": {
+   "next": "2024-05-12",
+   "termYears": 5,
+   "title": "대통령"
+  },
+  "sourceNote": "세이마스 정기 선거 2024-10-13(1차), 대통령 선거 2024-05-12(1차). https://en.wikipedia.org/wiki/2024_Lithuanian_parliamentary_election"
+ },
+ "TUR": {
+  "system": "PRESIDENTIAL",
+  "legislature": {
+   "next": "2028-05-14",
+   "termYears": 5,
+   "seats": 600,
+   "electoralSystem": "PROPORTIONAL",
+   "earlyDissolution": false
+  },
+  "executive": {
+   "next": "2028-05-14",
+   "termYears": 5,
+   "title": "대통령"
+  },
+  "sourceNote": "2023-05-14 동시 선거 후 5년 임기. 다음 동시 선거 2028년 5월. https://en.wikipedia.org/wiki/Next_Turkish_presidential_election"
+ },
+ "ISR": {
+  "system": "PARLIAMENTARY",
+  "legislature": {
+   "next": "2026-10-27",
+   "termYears": 4,
+   "seats": 120,
+   "electoralSystem": "PROPORTIONAL",
+   "earlyDissolution": true
+  },
+  "sourceNote": "기본법상 정기 선거일 2026-10-27. 크네세트는 자진 해산할 수 있다. https://en.wikipedia.org/wiki/Next_Israeli_legislative_election"
+ },
+ "IRN": {
+  "system": "PRESIDENTIAL",
+  "legislature": {
+   "next": "2024-03-01",
+   "termYears": 4,
+   "seats": 290,
+   "electoralSystem": "MAJORITARIAN",
+   "earlyDissolution": false
+  },
+  "sourceNote": "제12대 이슬람 의회 선거 2024-03-01, 정원 290석. 후보 자격은 헌법수호위원회가 심사한다. 대통령은 정당 소속이 아니어서 대통령 선거는 다루지 않는다. https://en.wikipedia.org/wiki/2024_Iranian_legislative_election"
+ },
+ "SAU": {
+  "system": "NON_COMPETITIVE",
+  "sourceNote": "절대군주제로 국가 차원의 선거가 없다."
+ },
+ "EGY": {
+  "system": "PRESIDENTIAL",
+  "legislature": {
+   "next": "2025-12-14",
+   "termYears": 5,
+   "seats": 596,
+   "electoralSystem": "MIXED",
+   "earlyDissolution": false
+  },
+  "sourceNote": "하원 임기(2021-01-12 개회) 만료 전 60일 안 선거. 정원 596석(선출 568·임명 28). 대통령은 정당 소속이 아니어서 대통령 선거는 다루지 않는다. https://en.wikipedia.org/wiki/2025_Egyptian_parliamentary_election"
+ },
+ "ZAF": {
+  "system": "PARLIAMENTARY",
+  "legislature": {
+   "next": "2024-05-29",
+   "termYears": 5,
+   "seats": 400,
+   "electoralSystem": "PROPORTIONAL",
+   "earlyDissolution": false
+  },
+  "sourceNote": "총선 2024-05-29. 대통령은 국민의회가 선출한다. https://en.wikipedia.org/wiki/2024_South_African_general_election"
+ },
+ "TWN": {
+  "system": "PRESIDENTIAL",
+  "legislature": {
+   "next": "2024-01-13",
+   "termYears": 4,
+   "seats": 113,
+   "electoralSystem": "MIXED",
+   "earlyDissolution": false
+  },
+  "executive": {
+   "next": "2024-01-13",
+   "termYears": 4,
+   "title": "총통"
+  },
+  "sourceNote": "총통·입법위원 동시 선거 2024-01-13, 입법원 정원 113석. https://en.wikipedia.org/wiki/2024_Taiwanese_general_election"
+ },
+ "IDN": {
+  "system": "PRESIDENTIAL",
+  "legislature": {
+   "next": "2024-02-14",
+   "termYears": 5,
+   "seats": 580,
+   "electoralSystem": "PROPORTIONAL",
+   "earlyDissolution": false
+  },
+  "executive": {
+   "next": "2024-02-14",
+   "termYears": 5,
+   "title": "대통령"
+  },
+  "sourceNote": "총선 2024-02-14(대통령·국민대표회의). 국민대표회의 정원은 이번 선거부터 580석. https://en.wikipedia.org/wiki/2024_Indonesian_general_election"
+ },
+ "VNM": {
+  "system": "NON_COMPETITIVE",
+  "sourceNote": "국회 선거는 조국전선이 후보를 심사하는 일당 체제 선거로 권력 구성을 바꾸지 않는다."
+ },
+ "THA": {
+  "system": "PARLIAMENTARY",
+  "legislature": {
+   "next": "2027-06-27",
+   "termYears": 4,
+   "seats": 500,
+   "electoralSystem": "MIXED",
+   "earlyDissolution": true
+  },
+  "sourceNote": "하원 임기(2023-05-14 선거) 만료 2027-05-13 후 45일 안 선거. 법정 최종 기한에 가까운 일요일 사용. https://en.wikipedia.org/wiki/Next_Thai_general_election"
+ },
+ "RWA": {
+  "system": "PRESIDENTIAL",
+  "legislature": {
+   "next": "2024-07-15",
+   "termYears": 5,
+   "seats": 80,
+   "electoralSystem": "PROPORTIONAL",
+   "earlyDissolution": false
+  },
+  "executive": {
+   "next": "2024-07-15",
+   "termYears": 5,
+   "title": "대통령"
+  },
+  "sourceNote": "대통령·하원 동시 선거 2024-07-15. 2015년 개헌으로 2024년부터 대통령 임기 5년. https://en.wikipedia.org/wiki/2024_Rwandan_general_election"
+ },
+ "PAK": {
+  "system": "PARLIAMENTARY",
+  "sourceNote": "2024-02-08 총선이 예정돼 있으나 시작 시점이 과도 내각이라 의석 기준 자료가 없어 아직 다루지 않는다. https://en.wikipedia.org/wiki/2024_Pakistani_general_election"
+ }
+}

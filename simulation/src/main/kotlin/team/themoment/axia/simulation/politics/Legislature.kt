@@ -51,6 +51,10 @@ data class Legislature(
         require(groups.distinctBy { it.name }.size == groups.size && required in 1..votingSeats)
     }
 
+    /** 선거나 정부 재구성 후의 의회. 이름과 특별 가결선 규칙은 그대로 둔다. */
+    internal fun withGroups(newGroups: List<ParliamentaryGroup>): Legislature =
+        copy(groups = newGroups, filledSeats = newGroups.sumOf { it.seats })
+
     internal fun forecast(
         policyScore: Double,
         constituencyMean: Double,
