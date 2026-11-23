@@ -273,7 +273,11 @@
    "hazard": "seismic",
    "effects": {
     "outputGap": -0.008,
-    "mood": -1.0
+    "mood": -1.0,
+    "sectorShocks": {
+     "CONSTRUCTION": 0.03,
+     "HEAVY_INDUSTRY": -0.03
+    }
    },
    "choices": [
     {
@@ -310,7 +314,11 @@
    },
    "effects": {
     "outputGap": -0.003,
-    "mood": -0.5
+    "mood": -0.5,
+    "sectorShocks": {
+     "AGRICULTURE": -0.05,
+     "CONSTRUCTION": 0.02
+    }
    },
    "choices": [
     {
@@ -369,7 +377,10 @@
     "groupMood": {
      "FARMERS": -6.0
     },
-    "crime": 2.0
+    "crime": 2.0,
+    "sectorShocks": {
+     "AGRICULTURE": -0.15
+    }
    }
   },
   {
@@ -412,6 +423,9 @@
     "identityMood": {
      "ENVIRONMENTALISTS": -1.5,
      "PARENTS": -1.0
+    },
+    "sectorShocks": {
+     "AGRICULTURE": -0.03
     }
    }
   },
@@ -433,7 +447,10 @@
      "UNIONISTS": -4.0,
      "EGALITARIANS": -2.0
     },
-    "outputGap": -0.0005
+    "outputGap": -0.0005,
+    "sectorShocks": {
+     "HEAVY_INDUSTRY": -0.02
+    }
    }
   },
   {
@@ -465,7 +482,10 @@
    },
    "effects": {
     "outputGap": -0.01,
-    "mood": -1.0
+    "mood": -1.0,
+    "sectorShocks": {
+     "SERVICES": -0.06
+    }
    },
    "choices": [
     {
@@ -509,7 +529,10 @@
    "major": true,
    "effects": {
     "outputGap": -0.025,
-    "mood": -1.0
+    "mood": -1.0,
+    "sectorShocks": {
+     "SERVICES": -0.1
+    }
    }
   },
   {
@@ -675,7 +698,11 @@
    },
    "effects": {
     "outputGap": -0.02,
-    "mood": -1.5
+    "mood": -1.5,
+    "sectorShocks": {
+     "FINANCE": -0.12,
+     "CONSTRUCTION": -0.08
+    }
    },
    "choices": [
     {
@@ -722,7 +749,10 @@
    "effects": {
     "outputGap": -0.01,
     "inflation": 0.05,
-    "mood": -1.5
+    "mood": -1.5,
+    "sectorShocks": {
+     "FINANCE": -0.05
+    }
    }
   },
   {
@@ -772,7 +802,7 @@
    "name": "군사 쿠데타",
    "category": "COUP",
    "scope": "WORLD",
-   "base": 0.0015,
+   "base": 0.0008,
    "texts": [
     "{country}에서 군부가 쿠데타를 일으켜 정권을 장악했다."
    ],
@@ -828,6 +858,9 @@
     "potentialGrowth": 0.001,
     "identityMood": {
      "FREE_MARKET": 1.0
+    },
+    "sectorShocks": {
+     "HIGH_TECH": 0.05
     }
    }
   },
@@ -843,7 +876,10 @@
    "major": true,
    "effects": {
     "potentialGrowth": 0.002,
-    "mood": 1.0
+    "mood": 1.0,
+    "sectorShocks": {
+     "ENERGY": 0.1
+    }
    }
   },
   {

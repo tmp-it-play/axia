@@ -2,6 +2,7 @@ package team.themoment.axia.simulation.events
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import team.themoment.axia.simulation.economy.Sector
 import team.themoment.axia.simulation.nation.PopulationGroup
 import team.themoment.axia.simulation.society.Identity
 import team.themoment.axia.simulation.text.josa
@@ -23,6 +24,7 @@ enum class EventCategory(
     FINANCIAL("금융 위기", true),
     COUP("쿠데타", true),
     MILITARY("군사", true),
+    DIPLOMATIC("외교", false),
     ECONOMIC("경제", false),
 }
 
@@ -59,6 +61,8 @@ data class EventEffects(
     val politicalCapital: Double = 0.0,
     val potentialGrowth: Double = 0.0,
     val debtRelief: Double = 0.0,
+    /** 한 달 동안 산업 부문 경기에 더하는 충격. */
+    val sectorShocks: Map<Sector, Double> = emptyMap(),
 )
 
 @Serializable
