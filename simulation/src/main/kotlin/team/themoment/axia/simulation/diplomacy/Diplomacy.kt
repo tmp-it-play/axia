@@ -113,6 +113,8 @@ internal class Diplomacy(
     states: List<String>,
     private val playerId: String,
     private val democracy: (String) -> Boolean?,
+    /** [a]의 수출 중 [b]로 가는 시작 시점 비중. 경제적 연결이 깊을수록 관계가 좋다. */
+    private val tradeShare: (String, String) -> Double,
     private val random: Random,
     private val data: DiplomacyFile = DiplomacyFile.default,
 ) {
@@ -226,6 +228,7 @@ internal class Diplomacy(
             membership.getValue(a).count { org -> org.id != "UN" && org.kind != OrganizationType.ALLIANCE && b in org.members }
         value += (shared * SHARED_ORG_BONUS).coerceAtMost(MAX_SHARED_ORG_BONUS)
         if (tradeAgreement(a, b)) value += TRADE_BONUS
+        value += (TRADE_TIES * (tradeShare(a, b) + tradeShare(b, a))).coerceAtMost(MAX_TRADE_TIES)
         value -= SANCTION_PENALTY * maxOf(sanction(a, b), sanction(b, a))
         if (pair(a, b) in wars) value -= WAR_PENALTY
         val da = democracy(a)
@@ -354,8 +357,7 @@ internal class Diplomacy(
         current: Double,
     ): Boolean {
         if (current < ALLIANCE_ACCEPT) return false
-        val commonRival = ids.any { relation(playerId, it) < RIVAL_RELATION && relation(target, it) < RIVAL_RELATION }
-        return commonRival || democracy(playerId) == democracy(target)
+        return hasCommonRival(playerId, target) || democracy(playerId) == democracy(target)
     }
 
     /** 다른 시스템(전쟁, 사건)이 관계를 바꾼다. */
@@ -364,6 +366,107 @@ internal class Diplomacy(
         b: String,
         points: Double,
     ) = shift(a, b, points)
+
+    /**
+     * 새 전쟁에 대한 국제 반응. 민주국가 중 피침국과 가깝고 침공국과 멀지 않은 나라는 침공국을 제재한다.
+     * 플레이어는 직접 고르므로 제외한다.
+     */
+    fun onWarStarted(
+        attacker: String,
+        defender: String,
+        date: LocalDate,
+    ) {
+        val responders =
+            ids.filter { id ->
+                id != playerId && id != attacker && id != defender && democracy(id) == true &&
+                    relation(id, defender) > AGGRESSION_RESPONSE_RELATION && relation(id, attacker) < ALLIANCE_ACCEPT
+            }
+        responders.forEach { id ->
+            if (random.nextDouble() < AGGRESSION_SANCTION_CHANCE) {
+                sanctions[id to attacker] = (sanction(id, attacker) + SANCTION_STEP).coerceAtMost(1.0)
+                shift(id, attacker, -CONDEMN_DROP)
+            }
+        }
+        if (responders.isNotEmpty()) report(date, attacker, "국제 제재", "침공에 맞서 여러 나라가 제재를 발표했다.", major = true)
+    }
+
+    /** AI 국가가 플레이어에게 보내는 제안(무역협정·방위조약). 시뮬레이션이 선택지 사건으로 바꾼다. */
+    data class Proposal(
+        val from: String,
+        val action: DiplomaticAction,
+    )
+
+    /**
+     * AI 국가의 월간 외교 결정. 관계가 회복되면 제재를 풀고, 가까운 나라끼리 무역협정과 동맹을 맺는다.
+     * 관계가 좋은 나라는 플레이어에게 협정을 제안한다.
+     * @param atWar 두 나라가 교전 중인지
+     * @param decisionMakers 스스로 외교 결정을 내리는 나라(정치 모델이 있는 플레이 가능 국가)
+     */
+    fun aiDecisions(
+        date: LocalDate,
+        atWar: (String, String) -> Boolean,
+        decisionMakers: Collection<String>,
+    ): List<Proposal> {
+        sanctions.keys
+            .filter { (by, target) -> by != playerId && !atWar(by, target) && relation(by, target) > LIFT_RELATION }
+            .sortedWith(compareBy({ it.first }, { it.second }))
+            .forEach { key ->
+                if (random.nextDouble() < LIFT_CHANCE) {
+                    sanctions.remove(key)
+                    report(date, key.first, "제재 해제", "관계 개선에 따라 대상국에 대한 제재를 풀었다.", major = false)
+                }
+            }
+        val makers = decisionMakers.filter { it != playerId }.sorted()
+        makers.forEach { a ->
+            makers.filter { it > a }.forEach { b ->
+                val value = relation(a, b)
+                if (!tradeAgreement(a, b) && value >= AI_TRADE_RELATION && random.nextDouble() < AI_TRADE_CHANCE) {
+                    tradePairs += pair(a, b)
+                    report(date, a, "무역협정", "양국이 새 무역협정에 서명했다.", major = false)
+                }
+                if (!allied(a, b) && value >= AI_ALLIANCE_RELATION && hasCommonRival(a, b) && random.nextDouble() < AI_ALLIANCE_CHANCE) {
+                    alliances[pair(a, b)] = "방위조약"
+                    report(date, a, "방위조약", "양국이 상호방위조약을 맺었다.", major = true)
+                }
+            }
+        }
+        return makers.mapNotNull { id ->
+            val value = relation(playerId, id)
+            when {
+                !allied(playerId, id) && value >= AI_ALLIANCE_RELATION && hasCommonRival(playerId, id) &&
+                    random.nextDouble() < PROPOSAL_CHANCE -> {
+                    Proposal(id, DiplomaticAction.ALLIANCE)
+                }
+
+                !tradeAgreement(playerId, id) && value >= PROPOSE_TRADE_RELATION && random.nextDouble() < PROPOSAL_CHANCE -> {
+                    Proposal(id, DiplomaticAction.TRADE_AGREEMENT)
+                }
+
+                else -> {
+                    null
+                }
+            }
+        }
+    }
+
+    /** 플레이어가 AI의 제안을 받아들인다. */
+    fun acceptProposal(
+        proposal: Proposal,
+        date: LocalDate,
+    ) {
+        when (proposal.action) {
+            DiplomaticAction.TRADE_AGREEMENT -> tradePairs += pair(playerId, proposal.from)
+            DiplomaticAction.ALLIANCE -> alliances[pair(playerId, proposal.from)] = "방위조약"
+            else -> return
+        }
+        shift(playerId, proposal.from, SUMMIT_BOOST)
+        report(date, proposal.from, proposal.action.label, "우리나라가 ${proposal.action.label} 제안을 받아들였다.", major = true)
+    }
+
+    private fun hasCommonRival(
+        a: String,
+        b: String,
+    ): Boolean = ids.any { relation(a, it) < RIVAL_RELATION && relation(b, it) < RIVAL_RELATION }
 
     private fun report(
         date: LocalDate,
@@ -413,6 +516,10 @@ internal class Diplomacy(
         const val SHARED_ORG_BONUS = 6.0
         const val MAX_SHARED_ORG_BONUS = 18.0
         const val TRADE_BONUS = 12.0
+
+        /** 양방향 수출 비중 합 1%p당 관계 +0.4(최대 15). */
+        const val TRADE_TIES = 40.0
+        const val MAX_TRADE_TIES = 15.0
         const val SANCTION_PENALTY = 40.0
         const val WAR_PENALTY = 100.0
         const val DEMOCRACY_BONUS = 8.0
@@ -434,5 +541,15 @@ internal class Diplomacy(
         const val ALLIANCE_ACCEPT = 55.0
         const val RIVAL_RELATION = -40.0
         const val NOTABLE_RELATION = 40.0
+        const val AGGRESSION_RESPONSE_RELATION = 20.0
+        const val AGGRESSION_SANCTION_CHANCE = 0.6
+        const val LIFT_RELATION = -10.0
+        const val LIFT_CHANCE = 0.03
+        const val AI_TRADE_RELATION = 45.0
+        const val AI_TRADE_CHANCE = 0.01
+        const val AI_ALLIANCE_RELATION = 65.0
+        const val AI_ALLIANCE_CHANCE = 0.005
+        const val PROPOSE_TRADE_RELATION = 35.0
+        const val PROPOSAL_CHANCE = 0.01
     }
 }
