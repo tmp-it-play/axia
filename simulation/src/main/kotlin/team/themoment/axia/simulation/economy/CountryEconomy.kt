@@ -50,6 +50,8 @@ internal class CountryEconomy(
     /** 산업 부문의 상대 수준(전체 경제 대비, 시작 = 1). */
     fun sectorLevel(sector: Sector): Double = sectors.relativeLevel(sector)
 
+    fun sectorGap(sector: Sector): Double = sectors.gap(sector)
+
     fun sectorLines(): List<SectorLine> = sectors.lines(realGdp / realGdpHistory[historyIndex] - 1.0)
 
     val naturalUnemployment = initial.unemployment

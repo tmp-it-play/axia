@@ -8,6 +8,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import team.themoment.axia.format.formatPercent
 import team.themoment.axia.format.formatPopulation
+import team.themoment.axia.game.panels.CommoditySection
 import team.themoment.axia.game.panels.KeyIndicatorRows
 import team.themoment.axia.simulation.WorldSnapshot
 import team.themoment.axia.simulation.economy.EconomyIndicators
@@ -79,6 +80,7 @@ fun SelectionPanel(
         if (economy != null) {
             SectionTitle("국가 경제 지표")
             KeyIndicatorRows(economy)
+            CommoditySection(id, snapshot.trade.commodities, snapshot.date) { world.country(it).name }
         }
     }
 }

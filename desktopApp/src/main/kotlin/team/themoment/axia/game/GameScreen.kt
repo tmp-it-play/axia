@@ -114,10 +114,13 @@ fun GameScreen(
 
                             GamePanel.ECONOMY -> {
                                 EconomyPanel(
-                                    countryName = playerName,
+                                    countryId = nation.countryId,
+                                    countryName = countryName,
                                     indicators = playerIndicators,
                                     history = playerHistory,
                                     sectors = economy.sectors.getValue(nation.countryId),
+                                    trade = worldState.trade,
+                                    date = worldState.date,
                                     monetary = economy.monetary.getValue(nation.countryId),
                                     politics = politics,
                                     onDirectRate = runner::directPolicyRate,

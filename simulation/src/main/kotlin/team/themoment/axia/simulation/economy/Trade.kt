@@ -4,7 +4,6 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import team.themoment.axia.simulation.world.Geography
 import team.themoment.axia.simulation.world.StructureData
-import kotlin.math.ln
 import kotlin.math.pow
 
 /** 무역·제재·전쟁 상태. 외교와 군사 시스템이 구현한다. */
@@ -67,36 +66,38 @@ internal data class ExternalConditions(
 }
 
 data class TradeSnapshot(
-    /** 유가 지수(2023년 평균 = 100). */
-    val oilPrice: Double,
+    /** 두 상품의 국제가격, 국가별 월 장부, 양자 선적. */
+    val commodities: Map<Commodity, CommodityQuote>,
     /** 나라별 주요 교역 상대와 수출 비중. */
     val partners: Map<String, List<Pair<String, Double>>>,
     /** 시작 대비 제재·무역협정으로 바뀐 교역 비율(-1~). */
     val tradeChange: Map<String, Double>,
-)
+) {
+    val oilPrice: Double get() = commodities.getValue(Commodity.CRUDE_OIL).priceIndex
+}
 
 /**
- * 국가 간 교역(중력 모형)과 국제 유가.
+ * 국가 간 교역(중력 모형)과 곡물·원유 시장.
  *
  * - 교역 비중: 상대 GDP^0.9 ÷ 거리, 인접국과 무역협정 상대는 가중, 제재는 강도만큼 끊는다.
  *   총교역은 World Bank 교역 개방도(GDP 대비)로 정한다.
  * - 2023년 데이터에는 이미 기존 제재와 협정의 효과가 들어 있으므로, 시작 대비 바뀐 만큼만 경제에 반영한다.
  * - 교역 상대의 경기는 수출 비중만큼 전해진다.
- * - 유가는 세계 경기와 산유국의 전쟁·제재로 움직이고, 수입국 물가와 산유국 경기에 영향을 준다.
+ * - 상품 시장에서 정산한 가격과 실제 미충족 수요를 물가와 경기에 전달한다.
  */
 internal class TradeNetwork(
-    initialGdp: Map<String, Double>,
+    private val countries: List<CountryEconomy>,
+    initial: EconomyData,
     data: TradeData = TradeData.default,
 ) {
-    private val ids = initialGdp.keys.sorted()
+    private val ids = countries.map { it.id }
     private val n = ids.size
     private val index = ids.withIndex().associate { it.value to it.index }
     private val structure = StructureData.default
     private val geography = Geography.default
     private val openness = DoubleArray(n) { structure.of(ids[it]).tradeOpenness }
     private val exportShare = DoubleArray(n) { structure.of(ids[it]).exportShare }
-    private val oilRents = DoubleArray(n) { structure.of(ids[it]).oilRents }
-    private val startGdp = DoubleArray(n) { initialGdp.getValue(ids[it]) }
+    private val startGdp = DoubleArray(n) { initial.country(ids[it]).gdp }
 
     /** 시작 시점 상대별 수출 비중(행 합 1). 실측(UN Comtrade)이 있으면 그 값, 빈 곳은 중력 모형으로 채운다. */
     private val baseShare = DoubleArray(n * n)
@@ -104,9 +105,9 @@ internal class TradeNetwork(
     /** 현재 상대별 수출 비중(행 합 1). */
     private val shares = DoubleArray(n * n)
     private val tradeLevel = DoubleArray(n) { 1.0 }
-    private var oilPrice = 100.0
-    private val oilHistory = ArrayDeque(List(12) { 100.0 })
-    private var startFactor: DoubleArray? = null
+    private val startFactor = DoubleArray(n * n) { 1.0 }
+    private val fundamentals = CommodityFundamentals(ids.map(initial::country))
+    private val market: CommodityMarket
 
     init {
         for (i in 0 until n) {
@@ -130,6 +131,7 @@ internal class TradeNetwork(
             for (j in 0 until n) baseShare[i * n + j] /= total
         }
         baseShare.copyInto(shares)
+        market = CommodityMarket(ids, fundamentals.baseline, baseShare)
     }
 
     /** [a]의 수출 중 [b]로 가는 시작 시점 비중. 외교 관계의 경제적 연결로도 쓴다. */
@@ -150,20 +152,15 @@ internal class TradeNetwork(
         return agreement * (1.0 - SANCTION_CUT * maxOf(state.sanction(a, b), state.sanction(b, a)))
     }
 
-    /**
-     * 이번 달 나라별 외부 여건을 계산한다.
-     * @param gaps 지난달 산출 갭
-     * @param gdp 달러 GDP
-     */
-    fun advanceMonth(
-        state: InternationalState,
-        gaps: Map<String, Double>,
-        gdp: Map<String, Double>,
-    ): Map<String, ExternalConditions> {
-        val gdpNow = DoubleArray(n) { gdp.getValue(ids[it]) }
-        val now = DoubleArray(n * n)
-        for (i in 0 until n) for (j in 0 until n) if (i != j) now[i * n + j] = factor(state, i, j)
-        val start = startFactor ?: now.copyOf().also { startFactor = it }
+    /** 시작부터 적용되던 협정·제재 배율은 2023년 교역 자료에 반영되어 있다. */
+    fun setStartingPolicy(state: InternationalState) {
+        for (i in ids.indices) for (j in ids.indices) if (i != j) startFactor[i * n + j] = factor(state, i, j)
+    }
+
+    /** 지난달 경기와 현재 외교 상태로 이번 달의 교역·상품 수급을 결정한다. */
+    fun advanceMonth(state: InternationalState): Map<String, ExternalConditions> {
+        val gdpNow = DoubleArray(n) { countries[it].dollarGdp }
+        val routeFactors = DoubleArray(n * n)
         // 정책 교역 강도: 시작 비중 × (협정·제재 배율의 시작 대비 변화). 상대 경제 성장 효과는 넣지 않는다.
         val policy = DoubleArray(n)
         for (i in 0 until n) {
@@ -172,7 +169,8 @@ internal class TradeNetwork(
             for (j in 0 until n) {
                 if (i == j) continue
                 val k = i * n + j
-                val change = now[k] / start[k]
+                val change = factor(state, i, j) / startFactor[k]
+                routeFactors[k] = change
                 policySum += baseShare[k] * change
                 shares[k] = baseShare[k] * change * (gdpNow[j] / startGdp[j]).pow(GDP_ELASTICITY)
                 sum += shares[k]
@@ -181,49 +179,44 @@ internal class TradeNetwork(
             policy[i] = policySum
         }
 
-        val worldGdp = gdpNow.sum()
-        val worldGap = ids.indices.sumOf { gdpNow[it] * gaps.getValue(ids[it]) } / worldGdp
-        // 산유국 차질: 석유 지대 × 경제 규모로 본 공급 몫 × (전쟁 강도 + 제재로 끊긴 교역).
-        val oilSupply = ids.indices.sumOf { oilRents[it] * gdpNow[it] }
-        val disruption =
-            ids.indices.sumOf { i ->
-                val sanctioned = (1.0 - policy[i]).coerceAtLeast(0.0)
-                oilRents[i] * gdpNow[i] * (state.warIntensity(ids[i]) * WAR_OIL_LOSS + sanctioned)
-            } / oilSupply
-        val disruptionStart = startDisruption ?: disruption.also { startDisruption = it }
-        val target = BASE_OIL * (1.0 + OIL_GAP_ELASTICITY * worldGap) * (1.0 + OIL_DISRUPTION_ELASTICITY * (disruption - disruptionStart))
-        oilPrice += (target.coerceIn(MIN_OIL, MAX_OIL) - oilPrice) * OIL_SMOOTHING
-        val oilYearAgo = oilHistory.removeFirst()
-        oilHistory.addLast(oilPrice)
-        val oilInflation = ln(oilPrice / oilYearAgo)
+        market.advanceMonth(fundamentals.monthlyInputs(countries, state), routeFactors)
+        val quotes = market.snapshot()
+        val oil = quotes.getValue(Commodity.CRUDE_OIL)
+        val grain = quotes.getValue(Commodity.GRAIN)
 
         return ids.indices.associate { i ->
             val id = ids[i]
             val change = policy[i] - 1.0
             val levelTarget = 1.0 + openness[i].coerceAtMost(MAX_OPENNESS) * TRADE_GAIN * change
             tradeLevel[i] += (levelTarget - tradeLevel[i]) / TRADE_ADJUST_MONTHS
-            val partnerGap = ids.indices.sumOf { j -> shares[i * n + j] * gaps.getValue(ids[j]) }
+            val partnerGap = ids.indices.sumOf { j -> shares[i * n + j] * countries[j].outputGap }
             // 산유국은 유가가 오르면 경기가 좋아지고, 수입국은 나빠진다.
-            val oilExposure = 1.0 - oilRents[i] * OIL_EXPORTER_GAIN
+            val food = grain.countries.getValue(id)
+            val fuel = oil.countries.getValue(id)
+            val oilScale = maxOf(fuel.demand, fuel.production)
+            val oilExposure = if (oilScale > 0.0) (fuel.demand - fuel.production) / oilScale else 0.0
+            val shortage = food.unmetShare() + fuel.unmetShare()
             id to
                 ExternalConditions(
                     gapShock =
-                        SPILLOVER * exportShare[i].coerceAtMost(1.0) * partnerGap - oilExposure * OIL_GAP * oilInflation -
-                            WAR_GAP * state.warIntensity(id),
-                    inflation = OIL_PASS_THROUGH * oilInflation * (1.0 - oilRents[i] * 2.0).coerceIn(0.2, 1.0),
+                        SPILLOVER * exportShare[i].coerceAtMost(1.0) * partnerGap - oilExposure * OIL_GAP * oil.yearlyLogChange -
+                            WAR_GAP * state.warIntensity(id) - SHORTAGE_GAP * shortage,
+                    inflation =
+                        OIL_PASS_THROUGH * oil.yearlyLogChange * oilExposure.coerceIn(DOMESTIC_OIL_PASS_THROUGH, 1.0) +
+                            GRAIN_PASS_THROUGH * grain.yearlyLogChange,
                     potentialLevel = tradeLevel[i] * (1.0 - state.occupied(id) * OCCUPATION_OUTPUT),
                     partnerGap = partnerGap,
-                    oilChange = oilInflation,
+                    oilChange = oil.yearlyLogChange,
                     warUnemployment = WAR_UNEMPLOYMENT * state.warIntensity(id),
                 )
         }
     }
 
-    private var startDisruption: Double? = null
+    private fun CommodityBalance.unmetShare(): Double = if (demand > 0.0) ((demand - consumption) / demand).coerceIn(0.0, 1.0) else 0.0
 
     fun snapshot(): TradeSnapshot =
         TradeSnapshot(
-            oilPrice = oilPrice,
+            commodities = market.snapshot(),
             partners =
                 ids.indices.associate { i ->
                     ids[i] to
@@ -254,15 +247,10 @@ internal class TradeNetwork(
         const val TRADE_GAIN = 0.15
         const val TRADE_ADJUST_MONTHS = 18.0
         const val SPILLOVER = 0.015
-        const val BASE_OIL = 100.0
-        const val MIN_OIL = 30.0
-        const val MAX_OIL = 300.0
-        const val OIL_GAP_ELASTICITY = 3.0
-        const val OIL_DISRUPTION_ELASTICITY = 4.0
-        const val WAR_OIL_LOSS = 0.3
-        const val OIL_SMOOTHING = 0.2
+        const val GRAIN_PASS_THROUGH = 0.035
+        const val SHORTAGE_GAP = 0.002
         const val OIL_PASS_THROUGH = 0.04
-        const val OIL_EXPORTER_GAIN = 6.0
+        const val DOMESTIC_OIL_PASS_THROUGH = 0.2
         const val OIL_GAP = 0.001
         const val OCCUPATION_OUTPUT = 0.8
         const val TOP_PARTNERS = 8

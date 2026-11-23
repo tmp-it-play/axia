@@ -1,0 +1,1200 @@
+{
+ "baseYear": 2023,
+ "sourceNote": "2023년. 곡물은 World Bank WDI AG.PRD.CREL.MT(FAO)의 연간 수확량이며 세계 집계는 3,124,587,500.48톤이다. 대만은 FAOSTAT QCL의 Cereals, primary(국가 214, 품목 1717), 코소보는 통계청 농가 조사 aeb02의 곡물 6종 합계로 보완한다. https://bulks-faostat.fao.org/production/Production_Crops_Livestock_E_Asia.zip https://askdata.rks-gov.net/pxweb/en/ASKdata/ASKdata__Agriculture__Agricultural%20Household%20Survey/aeb02.px/ 원유는 미국 EIA 국제에너지통계의 원유·리스 콘덴세이트 생산(57/1, TBPD)에 1,000 × 365를 곱한 연간 배럴이다. EIA 세계 일평균은 82,086.785천 배럴이다. 국별 생산량 0은 출처에 실린 값, null은 해당 국가의 자료가 없다는 뜻이다. oilDemandWeight는 EIA 석유·기타 액체연료 소비(5/2, TBPD)를 대용치로 삼아 원유 수요를 배분하는 가중치다. 소비 결측 국가(AND, CYN, LIE, MCO, MHL, PLW, SMR, SOL, TUV, VAT)에는 관측국의 합산 소비/GDP를 적용했다. 합계 1의 분모는 게임에 등장하는 국가들의 소비량이다. https://data.worldbank.org/indicator/AG.PRD.CREL.MT https://www.eia.gov/opendata/browser/international",
+ "countries": [
+  {
+   "id": "AFG",
+   "cerealTonnes": 5402975,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00075118921437
+  },
+  {
+   "id": "AGO",
+   "cerealTonnes": 3341642,
+   "crudeBarrels": 417706783.59,
+   "oilDemandWeight": 0.00122925329838
+  },
+  {
+   "id": "ALB",
+   "cerealTonnes": 701314.38,
+   "crudeBarrels": 5105175.0,
+   "oilDemandWeight": 0.00023843993543
+  },
+  {
+   "id": "AND",
+   "cerealTonnes": null,
+   "crudeBarrels": null,
+   "oilDemandWeight": 3.539378847e-05
+  },
+  {
+   "id": "ARE",
+   "cerealTonnes": 19133,
+   "crudeBarrels": 1319690000.0,
+   "oilDemandWeight": 0.00975049876231
+  },
+  {
+   "id": "ARG",
+   "cerealTonnes": 65403921.54,
+   "crudeBarrels": 231890766.38,
+   "oilDemandWeight": 0.00768668864969
+  },
+  {
+   "id": "ARM",
+   "cerealTonnes": 287928.5,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00016773127314
+  },
+  {
+   "id": "ATG",
+   "cerealTonnes": 51.69,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 6.557067274e-05
+  },
+  {
+   "id": "AUS",
+   "cerealTonnes": 43120957.25,
+   "crudeBarrels": 102077115.89,
+   "oilDemandWeight": 0.01095915960486
+  },
+  {
+   "id": "AUT",
+   "cerealTonnes": 5235050,
+   "crudeBarrels": 3281961.0,
+   "oilDemandWeight": 0.00238259878551
+  },
+  {
+   "id": "AZE",
+   "cerealTonnes": 3153905.6,
+   "crudeBarrels": 225255411.5,
+   "oilDemandWeight": 0.00124977997471
+  },
+  {
+   "id": "BDI",
+   "cerealTonnes": 788933.48,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 5.341968025e-05
+  },
+  {
+   "id": "BEL",
+   "cerealTonnes": 2754890,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00580613957872
+  },
+  {
+   "id": "BEN",
+   "cerealTonnes": 2737481.16,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.0004795889078
+  },
+  {
+   "id": "BFA",
+   "cerealTonnes": 5147923.87,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00049283336688
+  },
+  {
+   "id": "BGD",
+   "cerealTonnes": 66313385.01,
+   "crudeBarrels": 1095000.0,
+   "oilDemandWeight": 0.00284010044107
+  },
+  {
+   "id": "BGR",
+   "cerealTonnes": 10345650,
+   "crudeBarrels": 365000.0,
+   "oilDemandWeight": 0.00098071817718
+  },
+  {
+   "id": "BHR",
+   "cerealTonnes": null,
+   "crudeBarrels": 65670000.0,
+   "oilDemandWeight": 0.00056552629596
+  },
+  {
+   "id": "BHS",
+   "cerealTonnes": 603.81,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00024225049997
+  },
+  {
+   "id": "BIH",
+   "cerealTonnes": 1096610,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00034412599558
+  },
+  {
+   "id": "BLR",
+   "cerealTonnes": 6736789.82,
+   "crudeBarrels": 10805817.0,
+   "oilDemandWeight": 0.00141473136499
+  },
+  {
+   "id": "BLZ",
+   "cerealTonnes": 160169,
+   "crudeBarrels": 287300.04,
+   "oilDemandWeight": 6.058538962e-05
+  },
+  {
+   "id": "BOL",
+   "cerealTonnes": 3086273.49,
+   "crudeBarrels": 8599810.39,
+   "oilDemandWeight": 0.00103220794478
+  },
+  {
+   "id": "BRA",
+   "cerealTonnes": 155877081.97,
+   "crudeBarrels": 1241580676.89,
+   "oilDemandWeight": 0.03082348303324
+  },
+  {
+   "id": "BRB",
+   "cerealTonnes": 42.6,
+   "crudeBarrels": 365000.0,
+   "oilDemandWeight": 0.0001024995145
+  },
+  {
+   "id": "BRN",
+   "cerealTonnes": 3726,
+   "crudeBarrels": 31621212.0,
+   "oilDemandWeight": 0.00015872865542
+  },
+  {
+   "id": "BTN",
+   "cerealTonnes": 69975.77,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 5.07585051e-05
+  },
+  {
+   "id": "BWA",
+   "cerealTonnes": 74579.23,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00022135015928
+  },
+  {
+   "id": "CAF",
+   "cerealTonnes": 302591.56,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 3.043122421e-05
+  },
+  {
+   "id": "CAN",
+   "cerealTonnes": 61062324.86,
+   "crudeBarrels": 1676853165.0,
+   "oilDemandWeight": 0.02418548153122
+  },
+  {
+   "id": "CHE",
+   "cerealTonnes": 809466,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00190033807968
+  },
+  {
+   "id": "CHL",
+   "cerealTonnes": 2497164.62,
+   "crudeBarrels": 768303.07,
+   "oilDemandWeight": 0.00375287973326
+  },
+  {
+   "id": "CHN",
+   "cerealTonnes": 640582735.05,
+   "crudeBarrels": 1526662823.59,
+   "oilDemandWeight": 0.16227904972883
+  },
+  {
+   "id": "CIV",
+   "cerealTonnes": 3575695,
+   "crudeBarrels": 10732200.03,
+   "oilDemandWeight": 0.00088503834678
+  },
+  {
+   "id": "CMR",
+   "cerealTonnes": 3841420.33,
+   "crudeBarrels": 23212835.67,
+   "oilDemandWeight": 0.00038423507569
+  },
+  {
+   "id": "COD",
+   "cerealTonnes": 4207508.96,
+   "crudeBarrels": 6935000.0,
+   "oilDemandWeight": 0.00024119222105
+  },
+  {
+   "id": "COG",
+   "cerealTonnes": 30126.51,
+   "crudeBarrels": 95625000.0,
+   "oilDemandWeight": 0.0001390092137
+  },
+  {
+   "id": "COL",
+   "cerealTonnes": 4765426,
+   "crudeBarrels": 283660260.38,
+   "oilDemandWeight": 0.00405720663922
+  },
+  {
+   "id": "COM",
+   "cerealTonnes": 19755.9,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 4.089855372e-05
+  },
+  {
+   "id": "CPV",
+   "cerealTonnes": 464,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 5.615550841e-05
+  },
+  {
+   "id": "CRI",
+   "cerealTonnes": 83440,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00064272494634
+  },
+  {
+   "id": "CUB",
+   "cerealTonnes": 212284.07,
+   "crudeBarrels": 11106799.7,
+   "oilDemandWeight": 0.00135244009736
+  },
+  {
+   "id": "CYN",
+   "cerealTonnes": null,
+   "crudeBarrels": null,
+   "oilDemandWeight": 4.207314301e-05
+  },
+  {
+   "id": "CYP",
+   "cerealTonnes": 49910,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.000483404615
+  },
+  {
+   "id": "CZE",
+   "cerealTonnes": 7995530,
+   "crudeBarrels": 505809.0,
+   "oilDemandWeight": 0.00209367720099
+  },
+  {
+   "id": "DEU",
+   "cerealTonnes": 42462800,
+   "crudeBarrels": 11738115.0,
+   "oilDemandWeight": 0.02013234350736
+  },
+  {
+   "id": "DJI",
+   "cerealTonnes": 17.31,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 5.244322324e-05
+  },
+  {
+   "id": "DMA",
+   "cerealTonnes": 193.66,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 1.1986496e-05
+  },
+  {
+   "id": "DNK",
+   "cerealTonnes": 7001960,
+   "crudeBarrels": 21696829.43,
+   "oilDemandWeight": 0.00143617558254
+  },
+  {
+   "id": "DOM",
+   "cerealTonnes": 1007522.37,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00146472801636
+  },
+  {
+   "id": "DZA",
+   "cerealTonnes": 3439233.56,
+   "crudeBarrels": 431830000.0,
+   "oilDemandWeight": 0.00436892564417
+  },
+  {
+   "id": "ECU",
+   "cerealTonnes": 2754551.73,
+   "crudeBarrels": 173475142.81,
+   "oilDemandWeight": 0.0030033474966
+  },
+  {
+   "id": "EGY",
+   "cerealTonnes": 23796062.12,
+   "crudeBarrels": 205950000.0,
+   "oilDemandWeight": 0.00889159836894
+  },
+  {
+   "id": "ERI",
+   "cerealTonnes": 305240.47,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 5.171932861e-05
+  },
+  {
+   "id": "ESP",
+   "cerealTonnes": 11928280,
+   "crudeBarrels": 5005.0,
+   "oilDemandWeight": 0.01246163260224
+  },
+  {
+   "id": "EST",
+   "cerealTonnes": 1200650,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00026615634718
+  },
+  {
+   "id": "ETH",
+   "cerealTonnes": 31501750.81,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00100459523448
+  },
+  {
+   "id": "FIN",
+   "cerealTonnes": 3006670,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.0017306875829
+  },
+  {
+   "id": "FJI",
+   "cerealTonnes": 9194.64,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00015593864867
+  },
+  {
+   "id": "FRA",
+   "cerealTonnes": 64240810,
+   "crudeBarrels": 4295382.0,
+   "oilDemandWeight": 0.01518184074624
+  },
+  {
+   "id": "FSM",
+   "cerealTonnes": 289.36,
+   "crudeBarrels": null,
+   "oilDemandWeight": 1.255438451e-05
+  },
+  {
+   "id": "GAB",
+   "cerealTonnes": 47817.84,
+   "crudeBarrels": 74560000.0,
+   "oilDemandWeight": 0.00014378181883
+  },
+  {
+   "id": "GBR",
+   "cerealTonnes": 22047420,
+   "crudeBarrels": 242152886.19,
+   "oilDemandWeight": 0.01356154144934
+  },
+  {
+   "id": "GEO",
+   "cerealTonnes": 399780.69,
+   "crudeBarrels": 93851.0,
+   "oilDemandWeight": 0.00033814570156
+  },
+  {
+   "id": "GHA",
+   "cerealTonnes": 5679038.5,
+   "crudeBarrels": 59100575.74,
+   "oilDemandWeight": 0.00102678923383
+  },
+  {
+   "id": "GIN",
+   "cerealTonnes": 5291963.84,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00030329052689
+  },
+  {
+   "id": "GMB",
+   "cerealTonnes": 110196.6,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 5.702755604e-05
+  },
+  {
+   "id": "GNB",
+   "cerealTonnes": 307990.41,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 2.290024069e-05
+  },
+  {
+   "id": "GNQ",
+   "cerealTonnes": null,
+   "crudeBarrels": 32166146.48,
+   "oilDemandWeight": 6.033153851e-05
+  },
+  {
+   "id": "GRC",
+   "cerealTonnes": 3404050,
+   "crudeBarrels": 546405.0,
+   "oilDemandWeight": 0.00298566632013
+  },
+  {
+   "id": "GRD",
+   "cerealTonnes": 389.98,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 2.580477631e-05
+  },
+  {
+   "id": "GTM",
+   "cerealTonnes": 2167088.19,
+   "crudeBarrels": 2108595.97,
+   "oilDemandWeight": 0.00126490835949
+  },
+  {
+   "id": "GUY",
+   "cerealTonnes": 1009700,
+   "crudeBarrels": 142856551.8,
+   "oilDemandWeight": 0.00025189553482
+  },
+  {
+   "id": "HND",
+   "cerealTonnes": 777642.74,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00073296520426
+  },
+  {
+   "id": "HRV",
+   "cerealTonnes": 3191010,
+   "crudeBarrels": 3794507.0,
+   "oilDemandWeight": 0.00073135810214
+  },
+  {
+   "id": "HTI",
+   "cerealTonnes": 330000,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00011416995242
+  },
+  {
+   "id": "HUN",
+   "cerealTonnes": 15039690,
+   "crudeBarrels": 6831566.0,
+   "oilDemandWeight": 0.00172104772599
+  },
+  {
+   "id": "IDN",
+   "cerealTonnes": 68755426,
+   "crudeBarrels": 222029375.0,
+   "oilDemandWeight": 0.01630049129079
+  },
+  {
+   "id": "IND",
+   "cerealTonnes": 373583926.89,
+   "crudeBarrels": 216177310.84,
+   "oilDemandWeight": 0.05276690453345
+  },
+  {
+   "id": "IRL",
+   "cerealTonnes": 1902430,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00152175271121
+  },
+  {
+   "id": "IRN",
+   "cerealTonnes": 23976866.39,
+   "crudeBarrels": 1286555000.0,
+   "oilDemandWeight": 0.01954231750833
+  },
+  {
+   "id": "IRQ",
+   "cerealTonnes": 5224703.58,
+   "crudeBarrels": 1602045000.0,
+   "oilDemandWeight": 0.01029029386332
+  },
+  {
+   "id": "ISL",
+   "cerealTonnes": 7679,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00019832838577
+  },
+  {
+   "id": "ISR",
+   "cerealTonnes": 245369.87,
+   "crudeBarrels": 4745000.0,
+   "oilDemandWeight": 0.00224200207375
+  },
+  {
+   "id": "ITA",
+   "cerealTonnes": 15452820,
+   "crudeBarrels": 29585187.0,
+   "oilDemandWeight": 0.01216846321513
+  },
+  {
+   "id": "JAM",
+   "cerealTonnes": 2291,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00045382165474
+  },
+  {
+   "id": "JOR",
+   "cerealTonnes": 79359.9,
+   "crudeBarrels": 7300.0,
+   "oilDemandWeight": 0.00099024743943
+  },
+  {
+   "id": "JPN",
+   "cerealTonnes": 11498640.62,
+   "crudeBarrels": 1122643.0,
+   "oilDemandWeight": 0.03231388360779
+  },
+  {
+   "id": "KAZ",
+   "cerealTonnes": 16739554.8,
+   "crudeBarrels": 676867737.38,
+   "oilDemandWeight": 0.00370596640095
+  },
+  {
+   "id": "KEN",
+   "cerealTonnes": 5145990.97,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00114692973568
+  },
+  {
+   "id": "KGZ",
+   "cerealTonnes": 1671692.18,
+   "crudeBarrels": 2263000.0,
+   "oilDemandWeight": 0.00030145696389
+  },
+  {
+   "id": "KHM",
+   "cerealTonnes": 14699400,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00074398291847
+  },
+  {
+   "id": "KIR",
+   "cerealTonnes": null,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 5.15134168e-06
+  },
+  {
+   "id": "KNA",
+   "cerealTonnes": null,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 1.971508059e-05
+  },
+  {
+   "id": "KOR",
+   "cerealTonnes": 5134359.45,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.02390066309701
+  },
+  {
+   "id": "KOS",
+   "cerealTonnes": 477149.06,
+   "crudeBarrels": null,
+   "oilDemandWeight": 0.00015980935197
+  },
+  {
+   "id": "KWT",
+   "cerealTonnes": 31392.89,
+   "crudeBarrels": 977960000.0,
+   "oilDemandWeight": 0.00485679788671
+  },
+  {
+   "id": "LAO",
+   "cerealTonnes": 4358683,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00019824574696
+  },
+  {
+   "id": "LBN",
+   "cerealTonnes": 193177.69,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00109490024378
+  },
+  {
+   "id": "LBR",
+   "cerealTonnes": 324000,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 4.338359248e-05
+  },
+  {
+   "id": "LBY",
+   "cerealTonnes": 207966.28,
+   "crudeBarrels": 447282000.0,
+   "oilDemandWeight": 0.00286676943826
+  },
+  {
+   "id": "LCA",
+   "cerealTonnes": null,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 4.313652804e-05
+  },
+  {
+   "id": "LIE",
+   "cerealTonnes": null,
+   "crudeBarrels": null,
+   "oilDemandWeight": 7.703479355e-05
+  },
+  {
+   "id": "LKA",
+   "cerealTonnes": 4744648,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00095113247913
+  },
+  {
+   "id": "LSO",
+   "cerealTonnes": 142972.66,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 5.053127907e-05
+  },
+  {
+   "id": "LTU",
+   "cerealTonnes": 5629750,
+   "crudeBarrels": 255500.0,
+   "oilDemandWeight": 0.00067285571649
+  },
+  {
+   "id": "LUX",
+   "cerealTonnes": 148070,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00048961812609
+  },
+  {
+   "id": "LVA",
+   "cerealTonnes": 2715800,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.000340616762
+  },
+  {
+   "id": "MAR",
+   "cerealTonnes": 5626027.27,
+   "crudeBarrels": 9125.0,
+   "oilDemandWeight": 0.0029563476245
+  },
+  {
+   "id": "MCO",
+   "cerealTonnes": null,
+   "crudeBarrels": null,
+   "oilDemandWeight": 9.353231188e-05
+  },
+  {
+   "id": "MDA",
+   "cerealTonnes": 3177124.1,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00023122299431
+  },
+  {
+   "id": "MDG",
+   "cerealTonnes": 5388080.78,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00021715936923
+  },
+  {
+   "id": "MDV",
+   "cerealTonnes": 204.61,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00017895198934
+  },
+  {
+   "id": "MEX",
+   "cerealTonnes": 37015878.83,
+   "crudeBarrels": 706561681.0,
+   "oilDemandWeight": 0.01809095221683
+  },
+  {
+   "id": "MHL",
+   "cerealTonnes": null,
+   "crudeBarrels": null,
+   "oilDemandWeight": 2.47574268e-06
+  },
+  {
+   "id": "MKD",
+   "cerealTonnes": 522971.6,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00023044909775
+  },
+  {
+   "id": "MLI",
+   "cerealTonnes": 9979190.69,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00044440426658
+  },
+  {
+   "id": "MLT",
+   "cerealTonnes": 0,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00052458410487
+  },
+  {
+   "id": "MMR",
+   "cerealTonnes": 28283371.35,
+   "crudeBarrels": 2153085.0,
+   "oilDemandWeight": 0.00109483484299
+  },
+  {
+   "id": "MNE",
+   "cerealTonnes": 7067,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 8.466816848e-05
+  },
+  {
+   "id": "MNG",
+   "cerealTonnes": 470337.11,
+   "crudeBarrels": 5515798.0,
+   "oilDemandWeight": 0.00046112976042
+  },
+  {
+   "id": "MOZ",
+   "cerealTonnes": 2459322,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00040855097508
+  },
+  {
+   "id": "MRT",
+   "cerealTonnes": 579977.53,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00034169800544
+  },
+  {
+   "id": "MUS",
+   "cerealTonnes": 1501.5,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.0003278591243
+  },
+  {
+   "id": "MWI",
+   "cerealTonnes": 3810291,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00010511028756
+  },
+  {
+   "id": "MYS",
+   "cerealTonnes": 2175717,
+   "crudeBarrels": 182211000.0,
+   "oilDemandWeight": 0.00721391240157
+  },
+  {
+   "id": "NAM",
+   "cerealTonnes": 121305,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00023366019922
+  },
+  {
+   "id": "NER",
+   "cerealTonnes": 5062273.54,
+   "crudeBarrels": 4745000.0,
+   "oilDemandWeight": 0.00020431279443
+  },
+  {
+   "id": "NGA",
+   "cerealTonnes": 28048997.48,
+   "crudeBarrels": 526211282.83,
+   "oilDemandWeight": 0.0047223333387
+  },
+  {
+   "id": "NIC",
+   "cerealTonnes": 881420.38,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00036589056725
+  },
+  {
+   "id": "NLD",
+   "cerealTonnes": 1503200,
+   "crudeBarrels": 9674648.82,
+   "oilDemandWeight": 0.00829566276723
+  },
+  {
+   "id": "NOR",
+   "cerealTonnes": 785000,
+   "crudeBarrels": 662286680.0,
+   "oilDemandWeight": 0.00224772151917
+  },
+  {
+   "id": "NPL",
+   "cerealTonnes": 11151028.25,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00057370820463
+  },
+  {
+   "id": "NRU",
+   "cerealTonnes": null,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 5.26429446e-06
+  },
+  {
+   "id": "NZL",
+   "cerealTonnes": 987124,
+   "crudeBarrels": 2684683.0,
+   "oilDemandWeight": 0.00156135929252
+  },
+  {
+   "id": "OMN",
+   "cerealTonnes": 225134,
+   "crudeBarrels": 382492908.0,
+   "oilDemandWeight": 0.0022759024375
+  },
+  {
+   "id": "PAK",
+   "cerealTonnes": 53065396,
+   "crudeBarrels": 26645402.07,
+   "oilDemandWeight": 0.0045191670158
+  },
+  {
+   "id": "PAN",
+   "cerealTonnes": 493200,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.0016525346436
+  },
+  {
+   "id": "PER",
+   "cerealTonnes": 5538591.33,
+   "crudeBarrels": 14123810.02,
+   "oilDemandWeight": 0.00264744880296
+  },
+  {
+   "id": "PHL",
+   "cerealTonnes": 28465199.05,
+   "crudeBarrels": 194806.0,
+   "oilDemandWeight": 0.00471385070742
+  },
+  {
+   "id": "PLW",
+   "cerealTonnes": null,
+   "crudeBarrels": null,
+   "oilDemandWeight": 2.57071579e-06
+  },
+  {
+   "id": "PNG",
+   "cerealTonnes": 18805.66,
+   "crudeBarrels": 11705612.0,
+   "oilDemandWeight": 0.00040698183362
+  },
+  {
+   "id": "POL",
+   "cerealTonnes": 35183860,
+   "crudeBarrels": 6053759.0,
+   "oilDemandWeight": 0.00702441173927
+  },
+  {
+   "id": "PRK",
+   "cerealTonnes": 4787300.87,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00018034499117
+  },
+  {
+   "id": "PRT",
+   "cerealTonnes": 1042410,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00222575665725
+  },
+  {
+   "id": "PRY",
+   "cerealTonnes": 6475400,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00050991870839
+  },
+  {
+   "id": "PSX",
+   "cerealTonnes": 51014.38,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00032063771267
+  },
+  {
+   "id": "QAT",
+   "cerealTonnes": 2209.4,
+   "crudeBarrels": 474615000.0,
+   "oilDemandWeight": 0.00291507280241
+  },
+  {
+   "id": "ROU",
+   "cerealTonnes": 20784510,
+   "crudeBarrels": 21618625.0,
+   "oilDemandWeight": 0.00226440237114
+  },
+  {
+   "id": "RUS",
+   "cerealTonnes": 136335492.63,
+   "crudeBarrels": 3750944159.83,
+   "oilDemandWeight": 0.03627136957911
+  },
+  {
+   "id": "RWA",
+   "cerealTonnes": 846384.42,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.0001102747681
+  },
+  {
+   "id": "SAU",
+   "cerealTonnes": 1710085.85,
+   "crudeBarrels": 3546515000.0,
+   "oilDemandWeight": 0.03582769498179
+  },
+  {
+   "id": "SDN",
+   "cerealTonnes": 4162048.93,
+   "crudeBarrels": 24821202.69,
+   "oilDemandWeight": 0.00095131972599
+  },
+  {
+   "id": "SDS",
+   "cerealTonnes": 1086000,
+   "crudeBarrels": 53366703.64,
+   "oilDemandWeight": 0.00013458641711
+  },
+  {
+   "id": "SEN",
+   "cerealTonnes": 4009401,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00070731545731
+  },
+  {
+   "id": "SGP",
+   "cerealTonnes": null,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.01336861149115
+  },
+  {
+   "id": "SLB",
+   "cerealTonnes": 2751.39,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 4.032724085e-05
+  },
+  {
+   "id": "SLE",
+   "cerealTonnes": 1441518.4,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00010120714388
+  },
+  {
+   "id": "SLV",
+   "cerealTonnes": 881000,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00059635557195
+  },
+  {
+   "id": "SMR",
+   "cerealTonnes": null,
+   "crudeBarrels": null,
+   "oilDemandWeight": 1.895935499e-05
+  },
+  {
+   "id": "SOL",
+   "cerealTonnes": null,
+   "crudeBarrels": null,
+   "oilDemandWeight": 3.178859694e-05
+  },
+  {
+   "id": "SOM",
+   "cerealTonnes": 169059.86,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00011491977117
+  },
+  {
+   "id": "SRB",
+   "cerealTonnes": 10833928.79,
+   "crudeBarrels": 4821645.0,
+   "oilDemandWeight": 0.00083297311698
+  },
+  {
+   "id": "STP",
+   "cerealTonnes": 786.98,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 1.069533315e-05
+  },
+  {
+   "id": "SUR",
+   "cerealTonnes": 228993,
+   "crudeBarrels": 5013125.88,
+   "oilDemandWeight": 0.00017128172935
+  },
+  {
+   "id": "SVK",
+   "cerealTonnes": 4304610,
+   "crudeBarrels": 10373.0,
+   "oilDemandWeight": 0.00088802025173
+  },
+  {
+   "id": "SVN",
+   "cerealTonnes": 666890,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00047211066018
+  },
+  {
+   "id": "SWE",
+   "cerealTonnes": 4328000,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00272732390211
+  },
+  {
+   "id": "SWZ",
+   "cerealTonnes": 87923.33,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 6.009764656e-05
+  },
+  {
+   "id": "SYC",
+   "cerealTonnes": null,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 7.355256361e-05
+  },
+  {
+   "id": "SYR",
+   "cerealTonnes": 4878705,
+   "crudeBarrels": 20075000.0,
+   "oilDemandWeight": 0.00105852076154
+  },
+  {
+   "id": "TCD",
+   "cerealTonnes": 2643417,
+   "crudeBarrels": 45264000.0,
+   "oilDemandWeight": 0.00014144098192
+  },
+  {
+   "id": "TGO",
+   "cerealTonnes": 1529712.75,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00015722722328
+  },
+  {
+   "id": "THA",
+   "cerealTonnes": 38985513.53,
+   "crudeBarrels": 49875528.0,
+   "oilDemandWeight": 0.01332817534778
+  },
+  {
+   "id": "TJK",
+   "cerealTonnes": 1395441.73,
+   "crudeBarrels": 115340.0,
+   "oilDemandWeight": 0.00032098284077
+  },
+  {
+   "id": "TKM",
+   "cerealTonnes": 1468654.8,
+   "crudeBarrels": 69590144.45,
+   "oilDemandWeight": 0.00127661057917
+  },
+  {
+   "id": "TLS",
+   "cerealTonnes": 168000,
+   "crudeBarrels": 1825000.0,
+   "oilDemandWeight": 4.218389107e-05
+  },
+  {
+   "id": "TON",
+   "cerealTonnes": null,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 1.048280983e-05
+  },
+  {
+   "id": "TTO",
+   "cerealTonnes": 326,
+   "crudeBarrels": 19610077.41,
+   "oilDemandWeight": 0.0002644262809
+  },
+  {
+   "id": "TUN",
+   "cerealTonnes": 612415.4,
+   "crudeBarrels": 11447994.0,
+   "oilDemandWeight": 0.0009707763944
+  },
+  {
+   "id": "TUR",
+   "cerealTonnes": 42193311,
+   "crudeBarrels": 28787108.0,
+   "oilDemandWeight": 0.01060935949484
+  },
+  {
+   "id": "TUV",
+   "cerealTonnes": null,
+   "crudeBarrels": null,
+   "oilDemandWeight": 5.4400574e-07
+  },
+  {
+   "id": "TWN",
+   "cerealTonnes": 1692109.09,
+   "crudeBarrels": 71540.0,
+   "oilDemandWeight": 0.00786997530456
+  },
+  {
+   "id": "TZA",
+   "cerealTonnes": 12789709.5,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00083718916899
+  },
+  {
+   "id": "UGA",
+   "cerealTonnes": 5720000,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00045765173093
+  },
+  {
+   "id": "UKR",
+   "cerealTonnes": 59318005.32,
+   "crudeBarrels": 11629632.0,
+   "oilDemandWeight": 0.00194894162621
+  },
+  {
+   "id": "URY",
+   "cerealTonnes": 3937345.47,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00055288175325
+  },
+  {
+   "id": "USA",
+   "cerealTonnes": 462631157.55,
+   "crudeBarrels": 4734699625.0,
+   "oilDemandWeight": 0.19871449799867
+  },
+  {
+   "id": "UZB",
+   "cerealTonnes": 7913071.21,
+   "crudeBarrels": 11935447.0,
+   "oilDemandWeight": 0.0013063406992
+  },
+  {
+   "id": "VAT",
+   "cerealTonnes": null,
+   "crudeBarrels": null,
+   "oilDemandWeight": 2.8048762e-07
+  },
+  {
+   "id": "VCT",
+   "cerealTonnes": 633,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 1.796879353e-05
+  },
+  {
+   "id": "VEN",
+   "cerealTonnes": 3420179,
+   "crudeBarrels": 281235000.0,
+   "oilDemandWeight": 0.00244702038886
+  },
+  {
+   "id": "VNM",
+   "cerealTonnes": 47935652.71,
+   "crudeBarrels": 63286610.0,
+   "oilDemandWeight": 0.0056745496792
+  },
+  {
+   "id": "VUT",
+   "cerealTonnes": 983.57,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 2.167674668e-05
+  },
+  {
+   "id": "WSM",
+   "cerealTonnes": null,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 2.206067852e-05
+  },
+  {
+   "id": "YEM",
+   "cerealTonnes": 445220,
+   "crudeBarrels": 5475000.0,
+   "oilDemandWeight": 0.0012409561071
+  },
+  {
+   "id": "ZAF",
+   "cerealTonnes": 19016530.07,
+   "crudeBarrels": 202487.0,
+   "oilDemandWeight": 0.00682006540391
+  },
+  {
+   "id": "ZMB",
+   "cerealTonnes": 3658965.82,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00036094078495
+  },
+  {
+   "id": "ZWE",
+   "cerealTonnes": 1678835.24,
+   "crudeBarrels": 0.0,
+   "oilDemandWeight": 0.00036164098597
+  }
+ ]
+}

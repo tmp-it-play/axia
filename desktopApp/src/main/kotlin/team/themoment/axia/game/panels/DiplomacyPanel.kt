@@ -44,7 +44,7 @@ fun DiplomacyPanel(
     StatRow("정치 자본", "${politicalCapital.roundToInt()} / 100")
     Hint("외교 행위에는 정치 자본이 듭니다. 상대가 제안을 거절하면 자본은 돌려받습니다.")
     StatRow(
-        "국제 유가 (2023년 = 100)",
+        "국제 유가 (2024년 1월 = 100)",
         world.trade.oilPrice
             .roundToInt()
             .toString(),

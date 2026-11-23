@@ -71,7 +71,7 @@ fun SituationPanel(
     StatRow("세계 온실가스 배출 (2024년 = 100)", trends.emissions.roundToInt().toString())
     StatRow("기술 수준 (2024년 = 100)", trends.technology.roundToInt().toString())
     StatRow(
-        "국제 유가 (2023년 = 100)",
+        "국제 유가 (2024년 1월 = 100)",
         world.trade.oilPrice
             .roundToInt()
             .toString(),

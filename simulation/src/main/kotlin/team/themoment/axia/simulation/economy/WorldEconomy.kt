@@ -37,7 +37,7 @@ class WorldEconomy internal constructor(
             }
     private val countriesById = countries.associateBy(CountryEconomy::id)
     private val reserveCurrencyIssuer = countriesById.getValue(RESERVE_CURRENCY_ISSUER)
-    private val trade = TradeNetwork(countries.associate { it.id to it.dollarGdp })
+    private val trade = TradeNetwork(countries, data)
     private val histories = countries.associate { country -> country.id to EconomySeries.entries.associateWith { MonthlySeries() } }
 
     init {
@@ -51,12 +51,7 @@ class WorldEconomy internal constructor(
         international: InternationalState = InternationalState.PEACEFUL,
     ): Map<String, DebtNotice> {
         val dollarInflation = reserveCurrencyIssuer.inflation
-        val external =
-            trade.advanceMonth(
-                international,
-                gaps = countries.associate { it.id to it.outputGap },
-                gdp = countries.associate { it.id to it.dollarGdp },
-            )
+        val external = trade.advanceMonth(international)
         monetary.decide(countriesById)
         val us = monetary.conditions(RESERVE_CURRENCY_ISSUER)
         val usRealRate = us.effectiveRate - reserveCurrencyIssuer.expectedInflation
@@ -83,6 +78,8 @@ class WorldEconomy internal constructor(
         record()
         return debtNotices
     }
+
+    internal fun setStartingTradePolicy(state: InternationalState) = trade.setStartingPolicy(state)
 
     fun tradeSnapshot(): TradeSnapshot = trade.snapshot()
 

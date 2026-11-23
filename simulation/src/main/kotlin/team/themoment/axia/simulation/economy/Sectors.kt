@@ -111,7 +111,7 @@ internal class SectorEconomy(
                     if (sector ==
                         Sector.ENERGY
                     ) {
-                        OIL_SECTOR_RESPONSE * inputs.oilChange * (oilRents * OIL_WEIGHT).coerceIn(0.2, 1.0)
+                        OIL_SECTOR_RESPONSE * inputs.oilChange * (oilRents * OIL_WEIGHT).coerceIn(0.0, 1.0)
                     } else {
                         0.0
                     }
@@ -145,6 +145,8 @@ internal class SectorEconomy(
     }
 
     /** 부문 수준 지수(시작 = 1, 비중 변화와 경기 포함). 인구 집단 소득에 쓴다. 전체 경제 대비 상대값이다. */
+    fun gap(sector: Sector): Double = gaps.getValue(sector)
+
     fun relativeLevel(sector: Sector): Double = levels.getValue(sector)
 
     fun lines(realGdpGrowth: Double): List<SectorLine> {

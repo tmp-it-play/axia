@@ -18,6 +18,7 @@ import team.themoment.axia.simulation.economy.MonetaryPolicy
 import team.themoment.axia.simulation.economy.MonetaryStance
 import team.themoment.axia.simulation.economy.POLICY_RATE_FIELD
 import team.themoment.axia.simulation.economy.SectorLine
+import team.themoment.axia.simulation.economy.TradeSnapshot
 import team.themoment.axia.simulation.nation.InstitutionItem
 import team.themoment.axia.simulation.politics.PoliticsSnapshot
 import team.themoment.axia.theme.DossierColors
@@ -27,15 +28,19 @@ import team.themoment.axia.ui.dossier.LineChart
 import team.themoment.axia.ui.dossier.PaperTag
 import team.themoment.axia.ui.dossier.SectionTitle
 import team.themoment.axia.ui.dossier.StatRow
+import java.time.LocalDate
 import kotlin.math.ceil
 import kotlin.math.roundToInt
 
 @Composable
 fun EconomyPanel(
-    countryName: String,
+    countryId: String,
+    countryName: (String) -> String,
     indicators: EconomyIndicators,
     history: CountryHistory,
     sectors: List<SectorLine>,
+    trade: TradeSnapshot,
+    date: LocalDate,
     monetary: MonetaryPolicy,
     politics: PoliticsSnapshot,
     onDirectRate: (Double) -> Unit,
@@ -44,7 +49,7 @@ fun EconomyPanel(
 ) {
     SectionTitle("현재 지표")
     KeyIndicatorRows(indicators)
-    MonetarySection(countryName, indicators, history, monetary, politics, onDirectRate, onDraftIndependence, onViewBill)
+    MonetarySection(countryName(countryId), indicators, history, monetary, politics, onDirectRate, onDraftIndependence, onViewBill)
     SectionTitle("산업 구조 (부가가치 · 성장 · 고용)")
     sectors.sortedByDescending { it.share }.forEach { line ->
         StatRow(
@@ -54,6 +59,7 @@ fun EconomyPanel(
         )
     }
     Hint("부가가치 비중은 World Bank 2023년 구성에서 나눈 추정입니다. 성장률은 실질 부가가치의 전년 대비 증가율입니다.")
+    CommoditySection(countryId, trade.commodities, date, countryName)
     SectionTitle("경제성장률")
     LineChart(history[EconomySeries.GROWTH], history.start, signedPercentFormat, zeroLine = true)
     SectionTitle("물가상승률")

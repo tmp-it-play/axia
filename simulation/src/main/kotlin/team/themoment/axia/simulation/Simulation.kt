@@ -171,6 +171,7 @@ class Simulation(
         private set
 
     init {
+        economy.setStartingTradePolicy(international)
         val player = economy.country(playerCountryId)
         nation.start(player)
         politics.updateConstituencies(nation.groupSnapshots(player), nation.opinion(), nation.approval())
