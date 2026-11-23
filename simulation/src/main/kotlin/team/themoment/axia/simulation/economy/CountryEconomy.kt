@@ -37,7 +37,8 @@ internal class CountryEconomy(
             structure.exportShare,
         )
     private val pendingSectorShocks = Sector.entries.associateWith { 0.0 }.toMutableMap()
-    val externalAccount = ExternalAccount(initial.gdp, (structure.tradeOpenness - structure.exportShare).coerceAtLeast(0.0))
+    val externalAccount =
+        ExternalAccount(initial.gdp, (structure.tradeOpenness - structure.exportShare).coerceAtLeast(0.0), ReserveAssets.of(id))
     var reconstructionShare = 0.0
 
     fun applyMigration(net: Double) {

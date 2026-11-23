@@ -1,0 +1,727 @@
+{
+  "year": 2023,
+  "unit": "USD",
+  "countries": {
+    "AFG": null,
+    "AGO": {
+      "usd": 13942114198.88,
+      "source": "IL_DECEMBER"
+    },
+    "ALB": {
+      "usd": 6228581543.46,
+      "source": "IL_DECEMBER"
+    },
+    "AND": {
+      "usd": 374297755.0,
+      "source": "IIP_YEAR_COMPONENTS"
+    },
+    "ARE": {
+      "usd": 184551182266.88,
+      "source": "IL_DECEMBER"
+    },
+    "ARG": {
+      "usd": 18986771972.26,
+      "source": "IL_DECEMBER"
+    },
+    "ARM": {
+      "usd": 3607482711.25,
+      "source": "IL_DECEMBER"
+    },
+    "ATG": {
+      "usd": 364367020.2,
+      "source": "IL_DECEMBER"
+    },
+    "AUS": {
+      "usd": 56605094852.01,
+      "source": "IL_DECEMBER"
+    },
+    "AUT": {
+      "usd": 12646691521.99,
+      "source": "IL_DECEMBER"
+    },
+    "AZE": {
+      "usd": 13748751031.51,
+      "source": "IL_DECEMBER"
+    },
+    "BDI": {
+      "usd": 88357252.05,
+      "source": "IL_DECEMBER"
+    },
+    "BEL": {
+      "usd": 26596778231.41,
+      "source": "IL_DECEMBER"
+    },
+    "BEN": null,
+    "BFA": {
+      "usd": 883337452.31,
+      "source": "IIP_YEAR_MINUS_GOLD"
+    },
+    "BGD": {
+      "usd": 20928020362.12,
+      "source": "IL_DECEMBER"
+    },
+    "BGR": {
+      "usd": 43624306742.18,
+      "source": "IL_DECEMBER"
+    },
+    "BHR": {
+      "usd": 4808192034.51,
+      "source": "IL_DECEMBER"
+    },
+    "BHS": {
+      "usd": 2511681591.43,
+      "source": "IL_DECEMBER"
+    },
+    "BIH": {
+      "usd": 9105921633.89,
+      "source": "IL_DECEMBER"
+    },
+    "BLR": {
+      "usd": 4535616302.3,
+      "source": "IL_DECEMBER"
+    },
+    "BLZ": {
+      "usd": 473729034.13,
+      "source": "IL_DECEMBER"
+    },
+    "BOL": {
+      "usd": 241058645.16,
+      "source": "IL_DECEMBER"
+    },
+    "BRA": {
+      "usd": 346424359999.49,
+      "source": "IL_DECEMBER"
+    },
+    "BRB": {
+      "usd": 1504574004.38,
+      "source": "IL_DECEMBER"
+    },
+    "BRN": {
+      "usd": 4181486854.16,
+      "source": "IL_DECEMBER"
+    },
+    "BTN": {
+      "usd": 647849987.4,
+      "source": "IL_DECEMBER"
+    },
+    "BWA": {
+      "usd": 4755831848.94,
+      "source": "IL_DECEMBER"
+    },
+    "CAF": {
+      "usd": 479592712.61,
+      "source": "IL_DECEMBER"
+    },
+    "CAN": {
+      "usd": 117550899244.64,
+      "source": "IL_DECEMBER"
+    },
+    "CHE": {
+      "usd": 794931407635.07,
+      "source": "IL_DECEMBER"
+    },
+    "CHL": {
+      "usd": 46361054836.83,
+      "source": "IL_DECEMBER"
+    },
+    "CHN": {
+      "usd": 3301319727518.98,
+      "source": "IL_DECEMBER"
+    },
+    "CIV": {
+      "usd": 8328311032.58,
+      "source": "IIP_YEAR_MINUS_GOLD"
+    },
+    "CMR": {
+      "usd": 4882047276.68,
+      "source": "IL_DECEMBER"
+    },
+    "COD": {
+      "usd": 5104181646.55,
+      "source": "IL_DECEMBER"
+    },
+    "COG": {
+      "usd": 715391052.36,
+      "source": "IL_DECEMBER"
+    },
+    "COL": {
+      "usd": 58730697948.59,
+      "source": "IL_DECEMBER"
+    },
+    "COM": {
+      "usd": 323367095.52,
+      "source": "IL_DECEMBER"
+    },
+    "CPV": {
+      "usd": 771883765.13,
+      "source": "IL_DECEMBER"
+    },
+    "CRI": {
+      "usd": 13225042447.04,
+      "source": "IL_DECEMBER"
+    },
+    "CUB": null,
+    "CYN": null,
+    "CYP": {
+      "usd": 867344986.18,
+      "source": "IL_DECEMBER"
+    },
+    "CZE": {
+      "usd": 146345006364.8,
+      "source": "IL_DECEMBER"
+    },
+    "DEU": {
+      "usd": 100391427874.53,
+      "source": "IL_DECEMBER"
+    },
+    "DJI": {
+      "usd": 502033555.76,
+      "source": "IL_DECEMBER"
+    },
+    "DMA": {
+      "usd": 183530007.09,
+      "source": "IL_DECEMBER"
+    },
+    "DNK": {
+      "usd": 104958130783.92,
+      "source": "IL_DECEMBER"
+    },
+    "DOM": {
+      "usd": 15508981572.18,
+      "source": "IL_DECEMBER"
+    },
+    "DZA": {
+      "usd": 69708546411.62,
+      "source": "IL_DECEMBER"
+    },
+    "ECU": {
+      "usd": 2698912577.72,
+      "source": "IL_DECEMBER"
+    },
+    "EGY": {
+      "usd": 24695657741.43,
+      "source": "IL_DECEMBER"
+    },
+    "ERI": null,
+    "ESP": {
+      "usd": 84417408327.74,
+      "source": "IL_DECEMBER"
+    },
+    "EST": {
+      "usd": 2576769703.76,
+      "source": "IL_DECEMBER"
+    },
+    "ETH": {
+      "usd": 2028214254.61,
+      "source": "IL_DECEMBER"
+    },
+    "FIN": {
+      "usd": 13678349896.69,
+      "source": "IL_DECEMBER"
+    },
+    "FJI": {
+      "usd": 1546240437.63,
+      "source": "IL_DECEMBER"
+    },
+    "FRA": {
+      "usd": 79200640384.25,
+      "source": "IL_DECEMBER"
+    },
+    "FSM": null,
+    "GAB": {
+      "usd": 1447408422.7,
+      "source": "IL_DECEMBER"
+    },
+    "GBR": {
+      "usd": 157340769137.4,
+      "source": "IL_DECEMBER"
+    },
+    "GEO": {
+      "usd": 5002255638.46,
+      "source": "IL_DECEMBER"
+    },
+    "GHA": {
+      "usd": 3060759181.96,
+      "source": "IL_DECEMBER"
+    },
+    "GIN": {
+      "usd": 1204651457.88,
+      "source": "IL_DECEMBER"
+    },
+    "GMB": {
+      "usd": 577028229.49,
+      "source": "IL_DECEMBER"
+    },
+    "GNB": {
+      "usd": 391667876.27,
+      "source": "IIP_YEAR_COMPONENTS"
+    },
+    "GNQ": {
+      "usd": 1538461553.77,
+      "source": "IL_DECEMBER"
+    },
+    "GRC": {
+      "usd": 6023113428.77,
+      "source": "IL_DECEMBER"
+    },
+    "GRD": {
+      "usd": 404129916.31,
+      "source": "IL_DECEMBER"
+    },
+    "GTM": {
+      "usd": 20854062009.39,
+      "source": "IL_DECEMBER"
+    },
+    "GUY": {
+      "usd": 895275181.19,
+      "source": "IL_DECEMBER"
+    },
+    "HND": {
+      "usd": 7497278126.64,
+      "source": "IL_DECEMBER"
+    },
+    "HRV": {
+      "usd": 3175829868.25,
+      "source": "IL_DECEMBER"
+    },
+    "HTI": {
+      "usd": 2464133473.11,
+      "source": "IL_DECEMBER"
+    },
+    "HUN": {
+      "usd": 39453052373.41,
+      "source": "IL_DECEMBER"
+    },
+    "IDN": {
+      "usd": 141149364857.11,
+      "source": "IL_DECEMBER"
+    },
+    "IND": {
+      "usd": 574508789079.88,
+      "source": "IL_DECEMBER"
+    },
+    "IRL": {
+      "usd": 12106238978.18,
+      "source": "IL_DECEMBER"
+    },
+    "IRN": null,
+    "IRQ": {
+      "usd": 102778856113.46,
+      "source": "IL_DECEMBER"
+    },
+    "ISL": {
+      "usd": 5677129248.48,
+      "source": "IL_DECEMBER"
+    },
+    "ISR": {
+      "usd": 204660857567.02,
+      "source": "IL_DECEMBER"
+    },
+    "ITA": {
+      "usd": 84819484653.98,
+      "source": "IL_DECEMBER"
+    },
+    "JAM": {
+      "usd": 4868643492.72,
+      "source": "IL_DECEMBER"
+    },
+    "JOR": {
+      "usd": 14349060853.68,
+      "source": "IL_DECEMBER"
+    },
+    "JPN": {
+      "usd": 1238541063446.21,
+      "source": "IL_DECEMBER"
+    },
+    "KAZ": {
+      "usd": 16454546721.24,
+      "source": "IL_DECEMBER"
+    },
+    "KEN": {
+      "usd": 7340620173.4,
+      "source": "IL_DECEMBER"
+    },
+    "KGZ": {
+      "usd": 1806601842.09,
+      "source": "IL_DECEMBER"
+    },
+    "KHM": {
+      "usd": 17158428474.94,
+      "source": "IL_DECEMBER"
+    },
+    "KIR": {
+      "usd": 1086665670.0,
+      "source": "IIP_Q4_MINUS_GOLD"
+    },
+    "KNA": {
+      "usd": 286074596.98,
+      "source": "IL_DECEMBER"
+    },
+    "KOR": {
+      "usd": 414004455885.98,
+      "source": "IL_DECEMBER"
+    },
+    "KOS": {
+      "usd": 1245423955.08,
+      "source": "IL_DECEMBER"
+    },
+    "KWT": {
+      "usd": 47382988266.91,
+      "source": "IL_DECEMBER"
+    },
+    "LAO": {
+      "usd": 1769745792.21,
+      "source": "IL_DECEMBER"
+    },
+    "LBN": {
+      "usd": 8470245331.5,
+      "source": "IL_DECEMBER"
+    },
+    "LBR": {
+      "usd": 441429534.74,
+      "source": "IL_DECEMBER"
+    },
+    "LBY": {
+      "usd": 82703078786.86,
+      "source": "IL_DECEMBER"
+    },
+    "LCA": {
+      "usd": 424323643.9,
+      "source": "IL_DECEMBER"
+    },
+    "LIE": null,
+    "LKA": {
+      "usd": 4373974765.01,
+      "source": "IL_DECEMBER"
+    },
+    "LSO": {
+      "usd": 854088923.81,
+      "source": "IL_DECEMBER"
+    },
+    "LTU": {
+      "usd": 5782567555.75,
+      "source": "IL_DECEMBER"
+    },
+    "LUX": {
+      "usd": 2828893720.99,
+      "source": "IL_DECEMBER"
+    },
+    "LVA": {
+      "usd": 4515293780.02,
+      "source": "IL_DECEMBER"
+    },
+    "MAR": {
+      "usd": 34861268999.1,
+      "source": "IL_DECEMBER"
+    },
+    "MCO": null,
+    "MDA": {
+      "usd": 5448195393.51,
+      "source": "IL_DECEMBER"
+    },
+    "MDG": {
+      "usd": 2631980575.5,
+      "source": "IL_DECEMBER"
+    },
+    "MDV": {
+      "usd": 590522550.57,
+      "source": "IL_DECEMBER"
+    },
+    "MEX": {
+      "usd": 206351156443.45,
+      "source": "IL_DECEMBER"
+    },
+    "MHL": null,
+    "MKD": {
+      "usd": 4557918557.36,
+      "source": "IL_DECEMBER"
+    },
+    "MLI": null,
+    "MLT": {
+      "usd": 1204388221.48,
+      "source": "IL_DECEMBER"
+    },
+    "MMR": {
+      "usd": 8855836753.16,
+      "source": "WDI_YEAR_PROXY"
+    },
+    "MNE": {
+      "usd": 1573580964.09,
+      "source": "IL_DECEMBER"
+    },
+    "MNG": {
+      "usd": 4385614039.31,
+      "source": "IL_DECEMBER"
+    },
+    "MOZ": {
+      "usd": 3375952537.02,
+      "source": "IL_DECEMBER"
+    },
+    "MRT": null,
+    "MUS": {
+      "usd": 6424580180.5,
+      "source": "IL_DECEMBER"
+    },
+    "MWI": {
+      "usd": 211046632.89,
+      "source": "IIP_YEAR_MINUS_GOLD"
+    },
+    "MYS": {
+      "usd": 110884632023.73,
+      "source": "IL_DECEMBER"
+    },
+    "NAM": {
+      "usd": 2956284637.81,
+      "source": "IL_DECEMBER"
+    },
+    "NER": {
+      "usd": 1131072128.97,
+      "source": "IIP_YEAR_MINUS_GOLD"
+    },
+    "NGA": {
+      "usd": 32034797236.93,
+      "source": "IL_DECEMBER"
+    },
+    "NIC": {
+      "usd": 5446998877.8,
+      "source": "IL_DECEMBER"
+    },
+    "NLD": {
+      "usd": 29219300743.28,
+      "source": "IL_DECEMBER"
+    },
+    "NOR": {
+      "usd": 80459096008.34,
+      "source": "IL_DECEMBER"
+    },
+    "NPL": {
+      "usd": 11926470877.73,
+      "source": "IL_DECEMBER"
+    },
+    "NRU": null,
+    "NZL": {
+      "usd": 15487380827.54,
+      "source": "IL_DECEMBER"
+    },
+    "OMN": {
+      "usd": 17298247786.08,
+      "source": "IL_DECEMBER"
+    },
+    "PAK": {
+      "usd": 9442627601.77,
+      "source": "IL_DECEMBER"
+    },
+    "PAN": {
+      "usd": 6756683681.75,
+      "source": "IL_DECEMBER"
+    },
+    "PER": {
+      "usd": 69095470568.3,
+      "source": "IL_DECEMBER"
+    },
+    "PHL": {
+      "usd": 93196024815.59,
+      "source": "IL_DECEMBER"
+    },
+    "PLW": null,
+    "PNG": {
+      "usd": 3771400441.41,
+      "source": "IL_DECEMBER"
+    },
+    "POL": {
+      "usd": 169998923785.4,
+      "source": "IL_DECEMBER"
+    },
+    "PRK": null,
+    "PRT": {
+      "usd": 9870915847.8,
+      "source": "IL_DECEMBER"
+    },
+    "PRY": {
+      "usd": 9342395909.59,
+      "source": "IL_DECEMBER"
+    },
+    "PSX": {
+      "usd": 1323200000.0,
+      "source": "IL_DECEMBER"
+    },
+    "QAT": {
+      "usd": 44844912182.07,
+      "source": "IL_DECEMBER"
+    },
+    "ROU": {
+      "usd": 66128554681.5,
+      "source": "IL_DECEMBER"
+    },
+    "RUS": {
+      "usd": 442537063819.2,
+      "source": "IL_DECEMBER"
+    },
+    "RWA": {
+      "usd": 1834052909.65,
+      "source": "IL_DECEMBER"
+    },
+    "SAU": {
+      "usd": 436526608169.09,
+      "source": "IL_DECEMBER"
+    },
+    "SDN": null,
+    "SDS": {
+      "usd": 72880855.22,
+      "source": "IL_DECEMBER"
+    },
+    "SEN": null,
+    "SGP": {
+      "usd": 344581246445.92,
+      "source": "IL_DECEMBER"
+    },
+    "SLB": {
+      "usd": 679970466.97,
+      "source": "IL_DECEMBER"
+    },
+    "SLE": {
+      "usd": 495698793.82,
+      "source": "IL_DECEMBER"
+    },
+    "SLV": {
+      "usd": 2988196483.08,
+      "source": "IL_DECEMBER"
+    },
+    "SMR": {
+      "usd": 836088074.05,
+      "source": "IL_DECEMBER"
+    },
+    "SOL": null,
+    "SOM": null,
+    "SRB": {
+      "usd": 24920546115.06,
+      "source": "IL_DECEMBER"
+    },
+    "STP": {
+      "usd": 46247347.89,
+      "source": "IL_DECEMBER"
+    },
+    "SUR": {
+      "usd": 1249135526.4,
+      "source": "IL_DECEMBER"
+    },
+    "SVK": {
+      "usd": 9186932253.74,
+      "source": "IL_DECEMBER"
+    },
+    "SVN": {
+      "usd": 2159841036.31,
+      "source": "IL_DECEMBER"
+    },
+    "SWE": {
+      "usd": 52526540191.05,
+      "source": "IL_DECEMBER"
+    },
+    "SWZ": {
+      "usd": 479261051.17,
+      "source": "IL_DECEMBER"
+    },
+    "SYC": {
+      "usd": 682793969.31,
+      "source": "IL_DECEMBER"
+    },
+    "SYR": null,
+    "TCD": {
+      "usd": 1049788251.3,
+      "source": "IL_DECEMBER"
+    },
+    "TGO": null,
+    "THA": {
+      "usd": 208280624418.92,
+      "source": "IL_DECEMBER"
+    },
+    "TJK": {
+      "usd": 3303825209.69,
+      "source": "IL_DECEMBER"
+    },
+    "TKM": null,
+    "TLS": {
+      "usd": 825274260.79,
+      "source": "IL_DECEMBER"
+    },
+    "TON": {
+      "usd": 396530126.42,
+      "source": "IL_DECEMBER"
+    },
+    "TTO": {
+      "usd": 6126381288.82,
+      "source": "IL_DECEMBER"
+    },
+    "TUN": {
+      "usd": 8786017488.48,
+      "source": "IL_DECEMBER"
+    },
+    "TUR": {
+      "usd": 92703190401.7,
+      "source": "IL_DECEMBER"
+    },
+    "TUV": {
+      "usd": 84638910.98,
+      "source": "IIP_YEAR_MINUS_GOLD"
+    },
+    "TWN": {
+      "usd": 570595000000.0,
+      "source": "IL_DECEMBER"
+    },
+    "TZA": {
+      "usd": 5684861870.74,
+      "source": "IIP_YEAR_MINUS_GOLD"
+    },
+    "UGA": {
+      "usd": 3939109256.18,
+      "source": "IL_DECEMBER"
+    },
+    "UKR": {
+      "usd": 38715818307.89,
+      "source": "IL_DECEMBER"
+    },
+    "URY": {
+      "usd": 16250083310.18,
+      "source": "IL_DECEMBER"
+    },
+    "USA": {
+      "usd": 234110801811.75,
+      "source": "IL_DECEMBER"
+    },
+    "UZB": {
+      "usd": 9932455091.1,
+      "source": "IL_DECEMBER"
+    },
+    "VAT": null,
+    "VCT": {
+      "usd": 280564003.84,
+      "source": "IL_DECEMBER"
+    },
+    "VEN": null,
+    "VNM": {
+      "usd": 92237540812.25,
+      "source": "IL_DECEMBER"
+    },
+    "VUT": {
+      "usd": 643768389.58,
+      "source": "IL_DECEMBER"
+    },
+    "WSM": {
+      "usd": 447089817.09,
+      "source": "IL_DECEMBER"
+    },
+    "YEM": null,
+    "ZAF": {
+      "usd": 54176079020.31,
+      "source": "IL_DECEMBER"
+    },
+    "ZMB": {
+      "usd": 3173177777.14,
+      "source": "IL_DECEMBER"
+    },
+    "ZWE": {
+      "usd": 73941518.84,
+      "source": "IL_DECEMBER"
+    }
+  }
+}

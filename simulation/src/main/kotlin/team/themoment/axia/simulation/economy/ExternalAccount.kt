@@ -9,6 +9,7 @@ data class ExternalAccountSnapshot(
     val imports: Double,
     val currentAccount: Double,
     val reserves: Double,
+    val openingReserveSource: ReserveSource?,
     val importCover: Double?,
     val imfCredit: Double,
     val imfMonthsLeft: Int,
@@ -79,13 +80,15 @@ internal class TradePayments(
 internal class ExternalAccount(
     initialGdp: Double,
     importShare: Double,
+    opening: InitialReserveAssets?,
 ) {
     private val openingImports = initialGdp * importShare / 12
     private var settled = false
     private var imports = 0.0
     private var exports = 0.0
     private var current = 0.0
-    private var reserves = openingImports * 3
+    private val openingReserveSource = opening?.source
+    private var reserves = opening?.usd ?: (openingImports * 3)
     private var credit = 0.0
     private var payment = 0.0
     private var monthsLeft = 0
@@ -154,5 +157,18 @@ internal class ExternalAccount(
     }
 
     fun snapshot() =
-        ExternalAccountSnapshot(exports, imports, current, reserves, cover, credit, monthsLeft, arrears, pegFailed, canRequest, settled)
+        ExternalAccountSnapshot(
+            exports,
+            imports,
+            current,
+            reserves,
+            openingReserveSource,
+            cover,
+            credit,
+            monthsLeft,
+            arrears,
+            pegFailed,
+            canRequest,
+            settled,
+        )
 }

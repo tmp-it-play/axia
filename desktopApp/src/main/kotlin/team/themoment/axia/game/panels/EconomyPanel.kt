@@ -72,7 +72,8 @@ fun EconomyPanel(
         StatRow("월 수출 · 수입", "${formatCompactDollars(externalAccount.exports)} · ${formatCompactDollars(externalAccount.imports)}")
         StatRow("월 경상수지", formatCompactDollars(externalAccount.currentAccount))
     }
-    StatRow("외환보유액", formatCompactDollars(externalAccount.reserves))
+    StatRow("준비자산 (금 제외)", formatCompactDollars(externalAccount.reserves))
+    StatRow("시작 잔액 근거", externalAccount.openingReserveSource?.label ?: "추정 · 시작 월 수입액의 3배")
     externalAccount.importCover?.let { StatRow("수입 대금 충당 기간", "%.1f개월".format(java.util.Locale.KOREA, it)) }
     if (externalAccount.pegFailed) Hint("외환보유액 부족으로 고정환율 방어가 종료됐습니다.")
     if (externalAccount.tradeArrears > 0.0) StatRow("미결제 대외 지급액", formatCompactDollars(externalAccount.tradeArrears))
