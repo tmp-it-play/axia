@@ -1,0 +1,5993 @@
+{
+ "sourceNote": "면적은 world-map.bin 구면 근사, 도시 인구는 Natural Earth 10m populated places의 POP_MAX 합(광역 도시권 인구라 겹칠 수 있다). 퍼블릭 도메인.",
+ "regions": {
+  "AIA+99?": {
+   "areaKm2": 3,
+   "cityPopulation": 0
+  },
+  "AIA-5114": {
+   "areaKm2": 12,
+   "cityPopulation": 0
+  },
+  "AIA-5115": {
+   "areaKm2": 13,
+   "cityPopulation": 0
+  },
+  "AIA-5116": {
+   "areaKm2": 1,
+   "cityPopulation": 0
+  },
+  "AIA-5117": {
+   "areaKm2": 1,
+   "cityPopulation": 0
+  },
+  "AIA-5118": {
+   "areaKm2": 3,
+   "cityPopulation": 0
+  },
+  "AIA-5119": {
+   "areaKm2": 8,
+   "cityPopulation": 0
+  },
+  "AIA-5120": {
+   "areaKm2": 1,
+   "cityPopulation": 0
+  },
+  "AIA-5121": {
+   "areaKm2": 11,
+   "cityPopulation": 0
+  },
+  "AIA-5122": {
+   "areaKm2": 7,
+   "cityPopulation": 0
+  },
+  "AIA-5123": {
+   "areaKm2": 6,
+   "cityPopulation": 0
+  },
+  "AIA-5124": {
+   "areaKm2": 6,
+   "cityPopulation": 0
+  },
+  "AIA-5125": {
+   "areaKm2": 1,
+   "cityPopulation": 0
+  },
+  "AIA-5126": {
+   "areaKm2": 3,
+   "cityPopulation": 0
+  },
+  "AIA-5127": {
+   "areaKm2": 7,
+   "cityPopulation": 0
+  },
+  "ALD-4810": {
+   "areaKm2": 122,
+   "cityPopulation": 0
+  },
+  "ALD-4812": {
+   "areaKm2": 47,
+   "cityPopulation": 0
+  },
+  "ALD-4814": {
+   "areaKm2": 68,
+   "cityPopulation": 0
+  },
+  "ALD-4817": {
+   "areaKm2": 10,
+   "cityPopulation": 10682
+  },
+  "ALD-4818": {
+   "areaKm2": 71,
+   "cityPopulation": 0
+  },
+  "ALD-4819": {
+   "areaKm2": 30,
+   "cityPopulation": 0
+  },
+  "ALD-4820": {
+   "areaKm2": 22,
+   "cityPopulation": 0
+  },
+  "ALD-4821": {
+   "areaKm2": 6,
+   "cityPopulation": 0
+  },
+  "ALD-4822": {
+   "areaKm2": 27,
+   "cityPopulation": 0
+  },
+  "ALD-4823": {
+   "areaKm2": 4,
+   "cityPopulation": 0
+  },
+  "ALD-4824": {
+   "areaKm2": 15,
+   "cityPopulation": 0
+  },
+  "ASM-4998": {
+   "areaKm2": 32,
+   "cityPopulation": 0
+  },
+  "ASM-4999": {
+   "areaKm2": 37,
+   "cityPopulation": 0
+  },
+  "ASM-5000": {
+   "areaKm2": 1,
+   "cityPopulation": 0
+  },
+  "ASM-5001": {
+   "areaKm2": 1,
+   "cityPopulation": 0
+  },
+  "ASM-5002": {
+   "areaKm2": 67,
+   "cityPopulation": 0
+  },
+  "ATC+00?": {
+   "areaKm2": 3,
+   "cityPopulation": 0
+  },
+  "ATF-5916": {
+   "areaKm2": 6827,
+   "cityPopulation": 0
+  },
+  "ATF-5917": {
+   "areaKm2": 160,
+   "cityPopulation": 0
+  },
+  "ATF-5918": {
+   "areaKm2": 46,
+   "cityPopulation": 0
+  },
+  "ATF-5919": {
+   "areaKm2": 10,
+   "cityPopulation": 0
+  },
+  "AUS+00?": {
+   "areaKm2": 97,
+   "cityPopulation": 0
+  },
+  "AUS-1932": {
+   "areaKm2": 75,
+   "cityPopulation": 0
+  },
+  "AUS-2650": {
+   "areaKm2": 1355579,
+   "cityPopulation": 141697
+  },
+  "AUS-2651": {
+   "areaKm2": 2543579,
+   "cityPopulation": 1871509
+  },
+  "AUS-2653": {
+   "areaKm2": 2299,
+   "cityPopulation": 360302
+  },
+  "AUS-2654": {
+   "areaKm2": 808528,
+   "cityPopulation": 6413577
+  },
+  "AUS-2655": {
+   "areaKm2": 986817,
+   "cityPopulation": 1297804
+  },
+  "AUS-2656": {
+   "areaKm2": 227720,
+   "cityPopulation": 5255453
+  },
+  "AUS-2657": {
+   "areaKm2": 1739435,
+   "cityPopulation": 3393550
+  },
+  "AUS-2659": {
+   "areaKm2": 20,
+   "cityPopulation": 0
+  },
+  "AUS-2660": {
+   "areaKm2": 67930,
+   "cityPopulation": 217344
+  },
+  "BLM-5113": {
+   "areaKm2": 20,
+   "cityPopulation": 0
+  },
+  "BMU-5134": {
+   "areaKm2": 0,
+   "cityPopulation": 0
+  },
+  "BMU-5135": {
+   "areaKm2": 1,
+   "cityPopulation": 0
+  },
+  "BMU-5136": {
+   "areaKm2": 7,
+   "cityPopulation": 0
+  },
+  "BMU-5137": {
+   "areaKm2": 7,
+   "cityPopulation": 0
+  },
+  "BMU-5138": {
+   "areaKm2": 6,
+   "cityPopulation": 0
+  },
+  "BMU-5139": {
+   "areaKm2": 3,
+   "cityPopulation": 52320
+  },
+  "BMU-5140": {
+   "areaKm2": 16,
+   "cityPopulation": 0
+  },
+  "BMU-5141": {
+   "areaKm2": 4,
+   "cityPopulation": 0
+  },
+  "BMU-5142": {
+   "areaKm2": 5,
+   "cityPopulation": 0
+  },
+  "BMU-5143": {
+   "areaKm2": 5,
+   "cityPopulation": 0
+  },
+  "BMU-5144": {
+   "areaKm2": 6,
+   "cityPopulation": 0
+  },
+  "BRA-1294": {
+   "areaKm2": 342260,
+   "cityPopulation": 3111402
+  },
+  "BRA-1311": {
+   "areaKm2": 249544,
+   "cityPopulation": 32392787
+  },
+  "BRA-1313": {
+   "areaKm2": 98135,
+   "cityPopulation": 6464386
+  },
+  "BRA-576": {
+   "areaKm2": 155514,
+   "cityPopulation": 340696
+  },
+  "BRA-592": {
+   "areaKm2": 1573754,
+   "cityPopulation": 3480172
+  },
+  "BRA-593": {
+   "areaKm2": 327207,
+   "cityPopulation": 2270808
+  },
+  "BRA-594": {
+   "areaKm2": 1236198,
+   "cityPopulation": 3625817
+  },
+  "BRA-595": {
+   "areaKm2": 238716,
+   "cityPopulation": 615272
+  },
+  "BRA-596": {
+   "areaKm2": 280530,
+   "cityPopulation": 378659
+  },
+  "BRA-599": {
+   "areaKm2": 5737,
+   "cityPopulation": 3716996
+  },
+  "BRA-600": {
+   "areaKm2": 356766,
+   "cityPopulation": 1329255
+  },
+  "BRA-601": {
+   "areaKm2": 588971,
+   "cityPopulation": 10576891
+  },
+  "BRA-602": {
+   "areaKm2": 907680,
+   "cityPopulation": 1527828
+  },
+  "BRA-612": {
+   "areaKm2": 272845,
+   "cityPopulation": 8160680
+  },
+  "BRA-613": {
+   "areaKm2": 199318,
+   "cityPopulation": 6442389
+  },
+  "BRA-614": {
+   "areaKm2": 95749,
+   "cityPopulation": 3931574
+  },
+  "BRA-621": {
+   "areaKm2": 150968,
+   "cityPopulation": 4840882
+  },
+  "BRA-622": {
+   "areaKm2": 253116,
+   "cityPopulation": 1249290
+  },
+  "BRA-623": {
+   "areaKm2": 27798,
+   "cityPopulation": 1615405
+  },
+  "BRA-624": {
+   "areaKm2": 561968,
+   "cityPopulation": 6069408
+  },
+  "BRA-625": {
+   "areaKm2": 46078,
+   "cityPopulation": 3282302
+  },
+  "BRA-626": {
+   "areaKm2": 56752,
+   "cityPopulation": 1465836
+  },
+  "BRA-627": {
+   "areaKm2": 44094,
+   "cityPopulation": 16838647
+  },
+  "BRA-628": {
+   "areaKm2": 53141,
+   "cityPopulation": 1449340
+  },
+  "BRA-629": {
+   "areaKm2": 21600,
+   "cityPopulation": 741010
+  },
+  "BRA-670": {
+   "areaKm2": 225985,
+   "cityPopulation": 246518
+  },
+  "BRA-681": {
+   "areaKm2": 139605,
+   "cityPopulation": 1841873
+  },
+  "CAN-630": {
+   "areaKm2": 650933,
+   "cityPopulation": 731999
+  },
+  "CAN-631": {
+   "areaKm2": 649061,
+   "cityPopulation": 523713
+  },
+  "CAN-632": {
+   "areaKm2": 661587,
+   "cityPopulation": 2530765
+  },
+  "CAN-633": {
+   "areaKm2": 941015,
+   "cityPopulation": 3410061
+  },
+  "CAN-634": {
+   "areaKm2": 2062782,
+   "cityPopulation": 19676
+  },
+  "CAN-635": {
+   "areaKm2": 1340235,
+   "cityPopulation": 31176
+  },
+  "CAN-636": {
+   "areaKm2": 481996,
+   "cityPopulation": 25470
+  },
+  "CAN-682": {
+   "areaKm2": 1076010,
+   "cityPopulation": 9473488
+  },
+  "CAN-683": {
+   "areaKm2": 1502777,
+   "cityPopulation": 5125697
+  },
+  "CAN-684": {
+   "areaKm2": 72734,
+   "cityPopulation": 254834
+  },
+  "CAN-685": {
+   "areaKm2": 54762,
+   "cityPopulation": 452760
+  },
+  "CAN-686": {
+   "areaKm2": 400828,
+   "cityPopulation": 187104
+  },
+  "CAN-687": {
+   "areaKm2": 5590,
+   "cityPopulation": 42402
+  },
+  "CHN-1150": {
+   "areaKm2": 405600,
+   "cityPopulation": 6475116
+  },
+  "CHN-1151": {
+   "areaKm2": 715295,
+   "cityPopulation": 1185834
+  },
+  "CHN-1152": {
+   "areaKm2": 237919,
+   "cityPopulation": 11278122
+  },
+  "CHN-1153": {
+   "areaKm2": 175348,
+   "cityPopulation": 7515290
+  },
+  "CHN-1154": {
+   "areaKm2": 82282,
+   "cityPopulation": 8190168
+  },
+  "CHN-1155": {
+   "areaKm2": 16175,
+   "cityPopulation": 12348821
+  },
+  "CHN-1178": {
+   "areaKm2": 121124,
+   "cityPopulation": 9373689
+  },
+  "CHN-1179": {
+   "areaKm2": 140469,
+   "cityPopulation": 13444647
+  },
+  "CHN-1180": {
+   "areaKm2": 175285,
+   "cityPopulation": 30686998
+  },
+  "CHN-1662": {
+   "areaKm2": 1131507,
+   "cityPopulation": 422199
+  },
+  "CHN-1756": {
+   "areaKm2": 1630719,
+   "cityPopulation": 10133681
+  },
+  "CHN-1775": {
+   "areaKm2": 34114,
+   "cityPopulation": 2408878
+  },
+  "CHN-1803": {
+   "areaKm2": 51975,
+   "cityPopulation": 1127570
+  },
+  "CHN-1804": {
+   "areaKm2": 205843,
+   "cityPopulation": 8123356
+  },
+  "CHN-1805": {
+   "areaKm2": 155890,
+   "cityPopulation": 9936633
+  },
+  "CHN-1807": {
+   "areaKm2": 185594,
+   "cityPopulation": 16241421
+  },
+  "CHN-1808": {
+   "areaKm2": 211651,
+   "cityPopulation": 12697087
+  },
+  "CHN-1809": {
+   "areaKm2": 485405,
+   "cityPopulation": 17187726
+  },
+  "CHN-1810": {
+   "areaKm2": 386683,
+   "cityPopulation": 7117216
+  },
+  "CHN-1811": {
+   "areaKm2": 188646,
+   "cityPopulation": 12813212
+  },
+  "CHN-1812": {
+   "areaKm2": 166542,
+   "cityPopulation": 16170997
+  },
+  "CHN-1813": {
+   "areaKm2": 146166,
+   "cityPopulation": 21264786
+  },
+  "CHN-1814": {
+   "areaKm2": 156274,
+   "cityPopulation": 24693646
+  },
+  "CHN-1816": {
+   "areaKm2": 11441,
+   "cityPopulation": 7512793
+  },
+  "CHN-1817": {
+   "areaKm2": 168202,
+   "cityPopulation": 9676312
+  },
+  "CHN-1818": {
+   "areaKm2": 99826,
+   "cityPopulation": 19000327
+  },
+  "CHN-1819": {
+   "areaKm2": 6671,
+   "cityPopulation": 14987000
+  },
+  "CHN-1820": {
+   "areaKm2": 101366,
+   "cityPopulation": 11254601
+  },
+  "CHN-1828": {
+   "areaKm2": 190813,
+   "cityPopulation": 9956160
+  },
+  "CHN-1838": {
+   "areaKm2": 1145179,
+   "cityPopulation": 7795021
+  },
+  "CHN-1839": {
+   "areaKm2": 451144,
+   "cityPopulation": 15785866
+  },
+  "CLP+00?": {
+   "areaKm2": 4,
+   "cityPopulation": 0
+  },
+  "CSI+00?": {
+   "areaKm2": 1,
+   "cityPopulation": 0
+  },
+  "CYM+00?": {
+   "areaKm2": 299,
+   "cityPopulation": 4268
+  },
+  "DEU-1572": {
+   "areaKm2": 34339,
+   "cityPopulation": 7890512
+  },
+  "DEU-1573": {
+   "areaKm2": 35878,
+   "cityPopulation": 6365666
+  },
+  "DEU-1574": {
+   "areaKm2": 20871,
+   "cityPopulation": 3884408
+  },
+  "DEU-1575": {
+   "areaKm2": 396,
+   "cityPopulation": 862660
+  },
+  "DEU-1576": {
+   "areaKm2": 47992,
+   "cityPopulation": 1556876
+  },
+  "DEU-1577": {
+   "areaKm2": 15922,
+   "cityPopulation": 412625
+  },
+  "DEU-1578": {
+   "areaKm2": 743,
+   "cityPopulation": 1757000
+  },
+  "DEU-1579": {
+   "areaKm2": 15311,
+   "cityPopulation": 602747
+  },
+  "DEU-1580": {
+   "areaKm2": 19985,
+   "cityPopulation": 497630
+  },
+  "DEU-1581": {
+   "areaKm2": 2679,
+   "cityPopulation": 770001
+  },
+  "DEU-1591": {
+   "areaKm2": 69978,
+   "cityPopulation": 3538913
+  },
+  "DEU-1599": {
+   "areaKm2": 922,
+   "cityPopulation": 3406000
+  },
+  "DEU-1600": {
+   "areaKm2": 20654,
+   "cityPopulation": 229826
+  },
+  "DEU-1601": {
+   "areaKm2": 17939,
+   "cityPopulation": 1462687
+  },
+  "DEU-3487": {
+   "areaKm2": 31714,
+   "cityPopulation": 323162
+  },
+  "DEU-3488": {
+   "areaKm2": 23144,
+   "cityPopulation": 361089
+  },
+  "EGY-1530": {
+   "areaKm2": 1878,
+   "cityPopulation": 404901
+  },
+  "EGY-1531": {
+   "areaKm2": 5841,
+   "cityPopulation": 656135
+  },
+  "EGY-1532": {
+   "areaKm2": 1400,
+   "cityPopulation": 182900
+  },
+  "EGY-1533": {
+   "areaKm2": 3139,
+   "cityPopulation": 11893000
+  },
+  "EGY-1534": {
+   "areaKm2": 1071,
+   "cityPopulation": 167029
+  },
+  "EGY-1535": {
+   "areaKm2": 4882,
+   "cityPopulation": 285097
+  },
+  "EGY-1536": {
+   "areaKm2": 9027,
+   "cityPopulation": 508335
+  },
+  "EGY-1537": {
+   "areaKm2": 3635,
+   "cityPopulation": 600000
+  },
+  "EGY-1538": {
+   "areaKm2": 436,
+   "cityPopulation": 623864
+  },
+  "EGY-1539": {
+   "areaKm2": 707,
+   "cityPopulation": 299459
+  },
+  "EGY-1540": {
+   "areaKm2": 159484,
+   "cityPopulation": 155492
+  },
+  "EGY-1541": {
+   "areaKm2": 11859,
+   "cityPopulation": 500000
+  },
+  "EGY-1542": {
+   "areaKm2": 5912,
+   "cityPopulation": 316772
+  },
+  "EGY-1543": {
+   "areaKm2": 2343,
+   "cityPopulation": 4165000
+  },
+  "EGY-1544": {
+   "areaKm2": 37608,
+   "cityPopulation": 2681863
+  },
+  "EGY-1545": {
+   "areaKm2": 19453,
+   "cityPopulation": 949015
+  },
+  "EGY-1546": {
+   "areaKm2": 4782,
+   "cityPopulation": 489450
+  },
+  "EGY-1547": {
+   "areaKm2": 3514,
+   "cityPopulation": 343479
+  },
+  "EGY-1548": {
+   "areaKm2": 15238,
+   "cityPopulation": 617404
+  },
+  "EGY-1549": {
+   "areaKm2": 2573,
+   "cityPopulation": 420585
+  },
+  "EGY-1550": {
+   "areaKm2": 454545,
+   "cityPopulation": 56707
+  },
+  "EGY-1551": {
+   "areaKm2": 3452,
+   "cityPopulation": 1011275
+  },
+  "EGY-1552": {
+   "areaKm2": 2638,
+   "cityPopulation": 728250
+  },
+  "EGY-1556": {
+   "areaKm2": 192194,
+   "cityPopulation": 190158
+  },
+  "EGY-1557": {
+   "areaKm2": 29042,
+   "cityPopulation": 27628
+  },
+  "EGY-1558": {
+   "areaKm2": 27464,
+   "cityPopulation": 178651
+  },
+  "EGY-5494": {
+   "areaKm2": 12,
+   "cityPopulation": 0
+  },
+  "ESB-5132": {
+   "areaKm2": 115,
+   "cityPopulation": 0
+  },
+  "EST-1654": {
+   "areaKm2": 4456,
+   "cityPopulation": 394024
+  },
+  "EST-1655": {
+   "areaKm2": 3816,
+   "cityPopulation": 46060
+  },
+  "EST-1656": {
+   "areaKm2": 2563,
+   "cityPopulation": 0
+  },
+  "EST-1657": {
+   "areaKm2": 2884,
+   "cityPopulation": 0
+  },
+  "EST-1658": {
+   "areaKm2": 3546,
+   "cityPopulation": 0
+  },
+  "EST-1659": {
+   "areaKm2": 3690,
+   "cityPopulation": 101092
+  },
+  "EST-1660": {
+   "areaKm2": 1024,
+   "cityPopulation": 0
+  },
+  "EST-1661": {
+   "areaKm2": 2350,
+   "cityPopulation": 11805
+  },
+  "EST-2346": {
+   "areaKm2": 4836,
+   "cityPopulation": 44192
+  },
+  "EST-2347": {
+   "areaKm2": 2262,
+   "cityPopulation": 0
+  },
+  "EST-2348": {
+   "areaKm2": 2921,
+   "cityPopulation": 0
+  },
+  "EST-2349": {
+   "areaKm2": 2050,
+   "cityPopulation": 0
+  },
+  "EST-2350": {
+   "areaKm2": 3652,
+   "cityPopulation": 20309
+  },
+  "EST-2351": {
+   "areaKm2": 2443,
+   "cityPopulation": 0
+  },
+  "EST-2352": {
+   "areaKm2": 2938,
+   "cityPopulation": 0
+  },
+  "FIN-3176": {
+   "areaKm2": 97468,
+   "cityPopulation": 52606
+  },
+  "FIN-3177": {
+   "areaKm2": 19268,
+   "cityPopulation": 98136
+  },
+  "FIN-3178": {
+   "areaKm2": 19804,
+   "cityPopulation": 91900
+  },
+  "FIN-3179": {
+   "areaKm2": 24312,
+   "cityPopulation": 0
+  },
+  "FIN-3180": {
+   "areaKm2": 36779,
+   "cityPopulation": 136752
+  },
+  "FIN-3181": {
+   "areaKm2": 5317,
+   "cityPopulation": 46714
+  },
+  "FIN-3182": {
+   "areaKm2": 7239,
+   "cityPopulation": 57014
+  },
+  "FIN-3183": {
+   "areaKm2": 13826,
+   "cityPopulation": 0
+  },
+  "FIN-3184": {
+   "areaKm2": 5995,
+   "cityPopulation": 98826
+  },
+  "FIN-3185": {
+   "areaKm2": 5848,
+   "cityPopulation": 47261
+  },
+  "FIN-3186": {
+   "areaKm2": 15095,
+   "cityPopulation": 259279
+  },
+  "FIN-3187": {
+   "areaKm2": 5431,
+   "cityPopulation": 31133
+  },
+  "FIN-3188": {
+   "areaKm2": 7325,
+   "cityPopulation": 59276
+  },
+  "FIN-3189": {
+   "areaKm2": 19001,
+   "cityPopulation": 73903
+  },
+  "FIN-3190": {
+   "areaKm2": 21236,
+   "cityPopulation": 53388
+  },
+  "FIN-3191": {
+   "areaKm2": 9426,
+   "cityPopulation": 175945
+  },
+  "FIN-3192": {
+   "areaKm2": 8339,
+   "cityPopulation": 76772
+  },
+  "FIN-3193": {
+   "areaKm2": 9044,
+   "cityPopulation": 1127242
+  },
+  "FLK-5152": {
+   "areaKm2": 11397,
+   "cityPopulation": 2333
+  },
+  "FRA-1442": {
+   "areaKm2": 1028,
+   "cityPopulation": 253995
+  },
+  "FRA-2000": {
+   "areaKm2": 83371,
+   "cityPopulation": 116811
+  },
+  "FRA-4601": {
+   "areaKm2": 2525,
+   "cityPopulation": 225357
+  },
+  "FRA-4602": {
+   "areaKm2": 421,
+   "cityPopulation": 32057
+  },
+  "FRA-4603": {
+   "areaKm2": 1495,
+   "cityPopulation": 307
+  },
+  "FRA-5262": {
+   "areaKm2": 5672,
+   "cityPopulation": 0
+  },
+  "FRA-5263": {
+   "areaKm2": 7473,
+   "cityPopulation": 0
+  },
+  "FRA-5264": {
+   "areaKm2": 7390,
+   "cityPopulation": 43158
+  },
+  "FRA-5265": {
+   "areaKm2": 6994,
+   "cityPopulation": 0
+  },
+  "FRA-5266": {
+   "areaKm2": 4086,
+   "cityPopulation": 927000
+  },
+  "FRA-5267": {
+   "areaKm2": 5632,
+   "cityPopulation": 0
+  },
+  "FRA-5268": {
+   "areaKm2": 5245,
+   "cityPopulation": 0
+  },
+  "FRA-5269": {
+   "areaKm2": 4975,
+   "cityPopulation": 0
+  },
+  "FRA-5270": {
+   "areaKm2": 6133,
+   "cityPopulation": 61703
+  },
+  "FRA-5271": {
+   "areaKm2": 6448,
+   "cityPopulation": 0
+  },
+  "FRA-5272": {
+   "areaKm2": 8694,
+   "cityPopulation": 0
+  },
+  "FRA-5273": {
+   "areaKm2": 4646,
+   "cityPopulation": 439972
+  },
+  "FRA-5274": {
+   "areaKm2": 5086,
+   "cityPopulation": 1546821
+  },
+  "FRA-5275": {
+   "areaKm2": 5613,
+   "cityPopulation": 190099
+  },
+  "FRA-5276": {
+   "areaKm2": 5805,
+   "cityPopulation": 0
+  },
+  "FRA-5277": {
+   "areaKm2": 5952,
+   "cityPopulation": 0
+  },
+  "FRA-5278": {
+   "areaKm2": 6739,
+   "cityPopulation": 76997
+  },
+  "FRA-5279": {
+   "areaKm2": 7376,
+   "cityPopulation": 72340
+  },
+  "FRA-5280": {
+   "areaKm2": 5884,
+   "cityPopulation": 55448
+  },
+  "FRA-5281": {
+   "areaKm2": 4047,
+   "cityPopulation": 54364
+  },
+  "FRA-5282": {
+   "areaKm2": 8821,
+   "cityPopulation": 169946
+  },
+  "FRA-5283": {
+   "areaKm2": 7102,
+   "cityPopulation": 53223
+  },
+  "FRA-5284": {
+   "areaKm2": 5550,
+   "cityPopulation": 0
+  },
+  "FRA-5285": {
+   "areaKm2": 6100,
+   "cityPopulation": 0
+  },
+  "FRA-5286": {
+   "areaKm2": 9298,
+   "cityPopulation": 0
+  },
+  "FRA-5287": {
+   "areaKm2": 5238,
+   "cityPopulation": 128426
+  },
+  "FRA-5288": {
+   "areaKm2": 6724,
+   "cityPopulation": 0
+  },
+  "FRA-5289": {
+   "areaKm2": 1810,
+   "cityPopulation": 0
+  },
+  "FRA-5290": {
+   "areaKm2": 5964,
+   "cityPopulation": 0
+  },
+  "FRA-5291": {
+   "areaKm2": 5916,
+   "cityPopulation": 0
+  },
+  "FRA-5292": {
+   "areaKm2": 6718,
+   "cityPopulation": 144899
+  },
+  "FRA-5293": {
+   "areaKm2": 5873,
+   "cityPopulation": 169547
+  },
+  "FRA-5294": {
+   "areaKm2": 6342,
+   "cityPopulation": 0
+  },
+  "FRA-5295": {
+   "areaKm2": 10077,
+   "cityPopulation": 803000
+  },
+  "FRA-5296": {
+   "areaKm2": 3455,
+   "cityPopulation": 215454
+  },
+  "FRA-5297": {
+   "areaKm2": 4628,
+   "cityPopulation": 41001
+  },
+  "FRA-5298": {
+   "areaKm2": 6325,
+   "cityPopulation": 847000
+  },
+  "FRA-5299": {
+   "areaKm2": 5091,
+   "cityPopulation": 0
+  },
+  "FRA-5300": {
+   "areaKm2": 6318,
+   "cityPopulation": 0
+  },
+  "FRA-5301": {
+   "areaKm2": 5370,
+   "cityPopulation": 0
+  },
+  "FRA-5302": {
+   "areaKm2": 4650,
+   "cityPopulation": 105749
+  },
+  "FRA-5303": {
+   "areaKm2": 5555,
+   "cityPopulation": 152199
+  },
+  "FRA-5304": {
+   "areaKm2": 5586,
+   "cityPopulation": 0
+  },
+  "FRA-5305": {
+   "areaKm2": 4469,
+   "cityPopulation": 54854
+  },
+  "FRA-5306": {
+   "areaKm2": 164,
+   "cityPopulation": 0
+  },
+  "FRA-5307": {
+   "areaKm2": 6140,
+   "cityPopulation": 408692
+  },
+  "FRA-5308": {
+   "areaKm2": 6796,
+   "cityPopulation": 209375
+  },
+  "FRA-5309": {
+   "areaKm2": 6862,
+   "cityPopulation": 0
+  },
+  "FRA-5310": {
+   "areaKm2": 6042,
+   "cityPopulation": 236096
+  },
+  "FRA-5311": {
+   "areaKm2": 7866,
+   "cityPopulation": 388574
+  },
+  "FRA-5312": {
+   "areaKm2": 4865,
+   "cityPopulation": 0
+  },
+  "FRA-5313": {
+   "areaKm2": 9423,
+   "cityPopulation": 0
+  },
+  "FRA-5314": {
+   "areaKm2": 6368,
+   "cityPopulation": 0
+  },
+  "FRA-5315": {
+   "areaKm2": 4864,
+   "cityPopulation": 338999
+  },
+  "FRA-5316": {
+   "areaKm2": 6848,
+   "cityPopulation": 438537
+  },
+  "FRA-5317": {
+   "areaKm2": 6674,
+   "cityPopulation": 217301
+  },
+  "FRA-5318": {
+   "areaKm2": 5099,
+   "cityPopulation": 0
+  },
+  "FRA-5319": {
+   "areaKm2": 5353,
+   "cityPopulation": 58223
+  },
+  "FRA-5320": {
+   "areaKm2": 5117,
+   "cityPopulation": 0
+  },
+  "FRA-5321": {
+   "areaKm2": 7234,
+   "cityPopulation": 188380
+  },
+  "FRA-5322": {
+   "areaKm2": 6012,
+   "cityPopulation": 60991
+  },
+  "FRA-5323": {
+   "areaKm2": 8119,
+   "cityPopulation": 196565
+  },
+  "FRA-5324": {
+   "areaKm2": 5290,
+   "cityPopulation": 0
+  },
+  "FRA-5325": {
+   "areaKm2": 5185,
+   "cityPopulation": 268976
+  },
+  "FRA-5326": {
+   "areaKm2": 6181,
+   "cityPopulation": 0
+  },
+  "FRA-5327": {
+   "areaKm2": 6606,
+   "cityPopulation": 84952
+  },
+  "FRA-5328": {
+   "areaKm2": 6107,
+   "cityPopulation": 409186
+  },
+  "FRA-5329": {
+   "areaKm2": 6816,
+   "cityPopulation": 45929
+  },
+  "FRA-5330": {
+   "areaKm2": 5559,
+   "cityPopulation": 1044000
+  },
+  "FRA-5331": {
+   "areaKm2": 5823,
+   "cityPopulation": 0
+  },
+  "FRA-5332": {
+   "areaKm2": 6141,
+   "cityPopulation": 0
+  },
+  "FRA-5333": {
+   "areaKm2": 127,
+   "cityPopulation": 9904000
+  },
+  "FRA-5334": {
+   "areaKm2": 6644,
+   "cityPopulation": 64165
+  },
+  "FRA-5335": {
+   "areaKm2": 7899,
+   "cityPopulation": 233050
+  },
+  "FRA-5336": {
+   "areaKm2": 8040,
+   "cityPopulation": 145348
+  },
+  "FRA-5337": {
+   "areaKm2": 4269,
+   "cityPopulation": 146620
+  },
+  "FRA-5338": {
+   "areaKm2": 3268,
+   "cityPopulation": 1423000
+  },
+  "FRA-5339": {
+   "areaKm2": 8637,
+   "cityPopulation": 0
+  },
+  "FRA-5340": {
+   "areaKm2": 6222,
+   "cityPopulation": 144515
+  },
+  "FRA-5341": {
+   "areaKm2": 6184,
+   "cityPopulation": 0
+  },
+  "FRA-5342": {
+   "areaKm2": 5828,
+   "cityPopulation": 249432
+  },
+  "FRA-5343": {
+   "areaKm2": 6192,
+   "cityPopulation": 817144
+  },
+  "FRA-5344": {
+   "areaKm2": 234,
+   "cityPopulation": 0
+  },
+  "FRA-5345": {
+   "areaKm2": 6298,
+   "cityPopulation": 143086
+  },
+  "FRA-5346": {
+   "areaKm2": 5910,
+   "cityPopulation": 0
+  },
+  "FRA-5347": {
+   "areaKm2": 3746,
+   "cityPopulation": 0
+  },
+  "FRA-5348": {
+   "areaKm2": 633,
+   "cityPopulation": 0
+  },
+  "FRA-5349": {
+   "areaKm2": 1397,
+   "cityPopulation": 0
+  },
+  "FRA-5350": {
+   "areaKm2": 216,
+   "cityPopulation": 0
+  },
+  "FRA-5351": {
+   "areaKm2": 6011,
+   "cityPopulation": 357693
+  },
+  "FRA-5352": {
+   "areaKm2": 3491,
+   "cityPopulation": 0
+  },
+  "FRA-5353": {
+   "areaKm2": 6637,
+   "cityPopulation": 0
+  },
+  "FRA-5354": {
+   "areaKm2": 7030,
+   "cityPopulation": 85960
+  },
+  "FRA-5355": {
+   "areaKm2": 5961,
+   "cityPopulation": 0
+  },
+  "FRA-5356": {
+   "areaKm2": 7423,
+   "cityPopulation": 41516
+  },
+  "FRA-5357": {
+   "areaKm2": 2273,
+   "cityPopulation": 85416
+  },
+  "GBR-2001": {
+   "areaKm2": 1307,
+   "cityPopulation": 0
+  },
+  "GBR-2002": {
+   "areaKm2": 180,
+   "cityPopulation": 0
+  },
+  "GBR-2003": {
+   "areaKm2": 151,
+   "cityPopulation": 0
+  },
+  "GBR-2004": {
+   "areaKm2": 169,
+   "cityPopulation": 1160000
+  },
+  "GBR-2005": {
+   "areaKm2": 143,
+   "cityPopulation": 74635
+  },
+  "GBR-2006": {
+   "areaKm2": 481,
+   "cityPopulation": 0
+  },
+  "GBR-2007": {
+   "areaKm2": 465,
+   "cityPopulation": 0
+  },
+  "GBR-2008": {
+   "areaKm2": 270,
+   "cityPopulation": 0
+  },
+  "GBR-2009": {
+   "areaKm2": 1241,
+   "cityPopulation": 69042
+  },
+  "GBR-2010": {
+   "areaKm2": 1767,
+   "cityPopulation": 0
+  },
+  "GBR-2011": {
+   "areaKm2": 201,
+   "cityPopulation": 0
+  },
+  "GBR-2012": {
+   "areaKm2": 221,
+   "cityPopulation": 189364
+  },
+  "GBR-2013": {
+   "areaKm2": 6387,
+   "cityPopulation": 0
+  },
+  "GBR-2014": {
+   "areaKm2": 2217,
+   "cityPopulation": 0
+  },
+  "GBR-2015": {
+   "areaKm2": 236,
+   "cityPopulation": 0
+  },
+  "GBR-2016": {
+   "areaKm2": 2232,
+   "cityPopulation": 0
+  },
+  "GBR-2017": {
+   "areaKm2": 158,
+   "cityPopulation": 0
+  },
+  "GBR-2018": {
+   "areaKm2": 5448,
+   "cityPopulation": 39654
+  },
+  "GBR-2019": {
+   "areaKm2": 2121,
+   "cityPopulation": 0
+  },
+  "GBR-2020": {
+   "areaKm2": 60,
+   "cityPopulation": 151592
+  },
+  "GBR-2021": {
+   "areaKm2": 1282,
+   "cityPopulation": 0
+  },
+  "GBR-2022": {
+   "areaKm2": 695,
+   "cityPopulation": 0
+  },
+  "GBR-2023": {
+   "areaKm2": 316,
+   "cityPopulation": 504966
+  },
+  "GBR-2024": {
+   "areaKm2": 322,
+   "cityPopulation": 0
+  },
+  "GBR-2025": {
+   "areaKm2": 429,
+   "cityPopulation": 0
+  },
+  "GBR-2026": {
+   "areaKm2": 4637,
+   "cityPopulation": 0
+  },
+  "GBR-2028": {
+   "areaKm2": 208,
+   "cityPopulation": 0
+  },
+  "GBR-2029": {
+   "areaKm2": 2261,
+   "cityPopulation": 0
+  },
+  "GBR-2030": {
+   "areaKm2": 120,
+   "cityPopulation": 0
+  },
+  "GBR-2031": {
+   "areaKm2": 36,
+   "cityPopulation": 0
+  },
+  "GBR-2032": {
+   "areaKm2": 328,
+   "cityPopulation": 0
+  },
+  "GBR-2033": {
+   "areaKm2": 165,
+   "cityPopulation": 416042
+  },
+  "GBR-2034": {
+   "areaKm2": 4960,
+   "cityPopulation": 0
+  },
+  "GBR-2035": {
+   "areaKm2": 3673,
+   "cityPopulation": 0
+  },
+  "GBR-2036": {
+   "areaKm2": 33,
+   "cityPopulation": 384417
+  },
+  "GBR-2038": {
+   "areaKm2": 329,
+   "cityPopulation": 0
+  },
+  "GBR-2039": {
+   "areaKm2": 2630,
+   "cityPopulation": 0
+  },
+  "GBR-2040": {
+   "areaKm2": 1539,
+   "cityPopulation": 0
+  },
+  "GBR-2042": {
+   "areaKm2": 1600,
+   "cityPopulation": 0
+  },
+  "GBR-2043": {
+   "areaKm2": 310,
+   "cityPopulation": 93238
+  },
+  "GBR-2044": {
+   "areaKm2": 126,
+   "cityPopulation": 553528
+  },
+  "GBR-2045": {
+   "areaKm2": 351,
+   "cityPopulation": 0
+  },
+  "GBR-2046": {
+   "areaKm2": 537,
+   "cityPopulation": 0
+  },
+  "GBR-2047": {
+   "areaKm2": 3378,
+   "cityPopulation": 0
+  },
+  "GBR-2048": {
+   "areaKm2": 6604,
+   "cityPopulation": 113118
+  },
+  "GBR-2050": {
+   "areaKm2": 20,
+   "cityPopulation": 426945
+  },
+  "GBR-2051": {
+   "areaKm2": 2536,
+   "cityPopulation": 0
+  },
+  "GBR-2052": {
+   "areaKm2": 43,
+   "cityPopulation": 0
+  },
+  "GBR-2053": {
+   "areaKm2": 3025,
+   "cityPopulation": 128488
+  },
+  "GBR-2054": {
+   "areaKm2": 2138,
+   "cityPopulation": 457983
+  },
+  "GBR-2055": {
+   "areaKm2": 38,
+   "cityPopulation": 302296
+  },
+  "GBR-2056": {
+   "areaKm2": 173,
+   "cityPopulation": 0
+  },
+  "GBR-2057": {
+   "areaKm2": 869,
+   "cityPopulation": 0
+  },
+  "GBR-2058": {
+   "areaKm2": 57,
+   "cityPopulation": 0
+  },
+  "GBR-2059": {
+   "areaKm2": 2678,
+   "cityPopulation": 0
+  },
+  "GBR-2060": {
+   "areaKm2": 46,
+   "cityPopulation": 0
+  },
+  "GBR-2061": {
+   "areaKm2": 63,
+   "cityPopulation": 0
+  },
+  "GBR-2062": {
+   "areaKm2": 46,
+   "cityPopulation": 0
+  },
+  "GBR-2063": {
+   "areaKm2": 151,
+   "cityPopulation": 0
+  },
+  "GBR-2064": {
+   "areaKm2": 23,
+   "cityPopulation": 0
+  },
+  "GBR-2065": {
+   "areaKm2": 95,
+   "cityPopulation": 0
+  },
+  "GBR-2066": {
+   "areaKm2": 58,
+   "cityPopulation": 0
+  },
+  "GBR-2067": {
+   "areaKm2": 76,
+   "cityPopulation": 0
+  },
+  "GBR-2068": {
+   "areaKm2": 48,
+   "cityPopulation": 0
+  },
+  "GBR-2069": {
+   "areaKm2": 15,
+   "cityPopulation": 0
+  },
+  "GBR-2070": {
+   "areaKm2": 50,
+   "cityPopulation": 0
+  },
+  "GBR-2071": {
+   "areaKm2": 12,
+   "cityPopulation": 0
+  },
+  "GBR-2072": {
+   "areaKm2": 12,
+   "cityPopulation": 0
+  },
+  "GBR-2073": {
+   "areaKm2": 40,
+   "cityPopulation": 0
+  },
+  "GBR-2074": {
+   "areaKm2": 56,
+   "cityPopulation": 0
+  },
+  "GBR-2075": {
+   "areaKm2": 57,
+   "cityPopulation": 0
+  },
+  "GBR-2076": {
+   "areaKm2": 49,
+   "cityPopulation": 0
+  },
+  "GBR-2077": {
+   "areaKm2": 23,
+   "cityPopulation": 0
+  },
+  "GBR-2078": {
+   "areaKm2": 37,
+   "cityPopulation": 0
+  },
+  "GBR-2079": {
+   "areaKm2": 33,
+   "cityPopulation": 0
+  },
+  "GBR-2080": {
+   "areaKm2": 17,
+   "cityPopulation": 8567000
+  },
+  "GBR-2081": {
+   "areaKm2": 5910,
+   "cityPopulation": 0
+  },
+  "GBR-2082": {
+   "areaKm2": 122,
+   "cityPopulation": 450406
+  },
+  "GBR-2083": {
+   "areaKm2": 393,
+   "cityPopulation": 83652
+  },
+  "GBR-2084": {
+   "areaKm2": 1087,
+   "cityPopulation": 21056
+  },
+  "GBR-2085": {
+   "areaKm2": 674,
+   "cityPopulation": 0
+  },
+  "GBR-2086": {
+   "areaKm2": 915,
+   "cityPopulation": 0
+  },
+  "GBR-2087": {
+   "areaKm2": 480,
+   "cityPopulation": 0
+  },
+  "GBR-2088": {
+   "areaKm2": 384,
+   "cityPopulation": 0
+  },
+  "GBR-2089": {
+   "areaKm2": 775,
+   "cityPopulation": 0
+  },
+  "GBR-2090": {
+   "areaKm2": 439,
+   "cityPopulation": 12899
+  },
+  "GBR-2091": {
+   "areaKm2": 571,
+   "cityPopulation": 0
+  },
+  "GBR-2092": {
+   "areaKm2": 575,
+   "cityPopulation": 0
+  },
+  "GBR-2093": {
+   "areaKm2": 580,
+   "cityPopulation": 0
+  },
+  "GBR-2094": {
+   "areaKm2": 631,
+   "cityPopulation": 0
+  },
+  "GBR-2095": {
+   "areaKm2": 336,
+   "cityPopulation": 0
+  },
+  "GBR-2096": {
+   "areaKm2": 73,
+   "cityPopulation": 0
+  },
+  "GBR-2097": {
+   "areaKm2": 123,
+   "cityPopulation": 0
+  },
+  "GBR-2098": {
+   "areaKm2": 90,
+   "cityPopulation": 0
+  },
+  "GBR-2099": {
+   "areaKm2": 651,
+   "cityPopulation": 0
+  },
+  "GBR-2100": {
+   "areaKm2": 510,
+   "cityPopulation": 0
+  },
+  "GBR-2101": {
+   "areaKm2": 418,
+   "cityPopulation": 0
+  },
+  "GBR-2102": {
+   "areaKm2": 612,
+   "cityPopulation": 0
+  },
+  "GBR-2103": {
+   "areaKm2": 79,
+   "cityPopulation": 0
+  },
+  "GBR-2104": {
+   "areaKm2": 2366,
+   "cityPopulation": 0
+  },
+  "GBR-2105": {
+   "areaKm2": 1859,
+   "cityPopulation": 0
+  },
+  "GBR-2106": {
+   "areaKm2": 1573,
+   "cityPopulation": 0
+  },
+  "GBR-2108": {
+   "areaKm2": 144,
+   "cityPopulation": 0
+  },
+  "GBR-2110": {
+   "areaKm2": 3550,
+   "cityPopulation": 20812
+  },
+  "GBR-2111": {
+   "areaKm2": 5117,
+   "cityPopulation": 0
+  },
+  "GBR-2112": {
+   "areaKm2": 304,
+   "cityPopulation": 0
+  },
+  "GBR-2113": {
+   "areaKm2": 296,
+   "cityPopulation": 0
+  },
+  "GBR-2114": {
+   "areaKm2": 110,
+   "cityPopulation": 0
+  },
+  "GBR-2115": {
+   "areaKm2": 443,
+   "cityPopulation": 0
+  },
+  "GBR-2116": {
+   "areaKm2": 115,
+   "cityPopulation": 861400
+  },
+  "GBR-2117": {
+   "areaKm2": 269,
+   "cityPopulation": 0
+  },
+  "GBR-2118": {
+   "areaKm2": 412,
+   "cityPopulation": 0
+  },
+  "GBR-2119": {
+   "areaKm2": 396,
+   "cityPopulation": 294339
+  },
+  "GBR-2120": {
+   "areaKm2": 278,
+   "cityPopulation": 158947
+  },
+  "GBR-2121": {
+   "areaKm2": 276,
+   "cityPopulation": 0
+  },
+  "GBR-2122": {
+   "areaKm2": 123,
+   "cityPopulation": 0
+  },
+  "GBR-2123": {
+   "areaKm2": 2771,
+   "cityPopulation": 0
+  },
+  "GBR-2124": {
+   "areaKm2": 2476,
+   "cityPopulation": 0
+  },
+  "GBR-2125": {
+   "areaKm2": 833,
+   "cityPopulation": 0
+  },
+  "GBR-2126": {
+   "areaKm2": 418,
+   "cityPopulation": 0
+  },
+  "GBR-2127": {
+   "areaKm2": 674,
+   "cityPopulation": 0
+  },
+  "GBR-2128": {
+   "areaKm2": 677,
+   "cityPopulation": 0
+  },
+  "GBR-2129": {
+   "areaKm2": 1118,
+   "cityPopulation": 0
+  },
+  "GBR-2130": {
+   "areaKm2": 2554,
+   "cityPopulation": 0
+  },
+  "GBR-2131": {
+   "areaKm2": 99,
+   "cityPopulation": 0
+  },
+  "GBR-2132": {
+   "areaKm2": 839,
+   "cityPopulation": 0
+  },
+  "GBR-2133": {
+   "areaKm2": 149,
+   "cityPopulation": 0
+  },
+  "GBR-2134": {
+   "areaKm2": 113,
+   "cityPopulation": 0
+  },
+  "GBR-2135": {
+   "areaKm2": 857,
+   "cityPopulation": 0
+  },
+  "GBR-2136": {
+   "areaKm2": 1889,
+   "cityPopulation": 0
+  },
+  "GBR-2137": {
+   "areaKm2": 391,
+   "cityPopulation": 0
+  },
+  "GBR-2138": {
+   "areaKm2": 6281,
+   "cityPopulation": 31044
+  },
+  "GBR-2139": {
+   "areaKm2": 6879,
+   "cityPopulation": 72633
+  },
+  "GBR-2140": {
+   "areaKm2": 7921,
+   "cityPopulation": 70571
+  },
+  "GBR-2141": {
+   "areaKm2": 27,
+   "cityPopulation": 0
+  },
+  "GBR-2142": {
+   "areaKm2": 101,
+   "cityPopulation": 0
+  },
+  "GBR-2317": {
+   "areaKm2": 3348,
+   "cityPopulation": 0
+  },
+  "GBR-2318": {
+   "areaKm2": 3751,
+   "cityPopulation": 143767
+  },
+  "GBR-2319": {
+   "areaKm2": 5310,
+   "cityPopulation": 190756
+  },
+  "GBR-2674": {
+   "areaKm2": 83,
+   "cityPopulation": 503008
+  },
+  "GBR-2675": {
+   "areaKm2": 122,
+   "cityPopulation": 0
+  },
+  "GBR-2676": {
+   "areaKm2": 141,
+   "cityPopulation": 0
+  },
+  "GBR-2677": {
+   "areaKm2": 1690,
+   "cityPopulation": 0
+  },
+  "GBR-2678": {
+   "areaKm2": 193,
+   "cityPopulation": 0
+  },
+  "GBR-2679": {
+   "areaKm2": 36,
+   "cityPopulation": 618386
+  },
+  "GBR-2744": {
+   "areaKm2": 881,
+   "cityPopulation": 8500
+  },
+  "GBR-2745": {
+   "areaKm2": 25472,
+   "cityPopulation": 61957
+  },
+  "GBR-2746": {
+   "areaKm2": 7256,
+   "cityPopulation": 0
+  },
+  "GBR-2747": {
+   "areaKm2": 1266,
+   "cityPopulation": 6594
+  },
+  "GBR-2748": {
+   "areaKm2": 1992,
+   "cityPopulation": 0
+  },
+  "GBR-2749": {
+   "areaKm2": 2311,
+   "cityPopulation": 0
+  },
+  "GBR-2750": {
+   "areaKm2": 1955,
+   "cityPopulation": 0
+  },
+  "GBR-2751": {
+   "areaKm2": 2643,
+   "cityPopulation": 562600
+  },
+  "GBR-2752": {
+   "areaKm2": 53,
+   "cityPopulation": 235958
+  },
+  "GBR-2753": {
+   "areaKm2": 111,
+   "cityPopulation": 0
+  },
+  "GBR-2754": {
+   "areaKm2": 42,
+   "cityPopulation": 0
+  },
+  "GBR-2755": {
+   "areaKm2": 1614,
+   "cityPopulation": 0
+  },
+  "GBR-2756": {
+   "areaKm2": 238,
+   "cityPopulation": 0
+  },
+  "GBR-2757": {
+   "areaKm2": 3192,
+   "cityPopulation": 0
+  },
+  "GBR-2758": {
+   "areaKm2": 375,
+   "cityPopulation": 0
+  },
+  "GBR-2759": {
+   "areaKm2": 43,
+   "cityPopulation": 442252
+  },
+  "GBR-2760": {
+   "areaKm2": 361,
+   "cityPopulation": 140141
+  },
+  "GBR-2761": {
+   "areaKm2": 43,
+   "cityPopulation": 0
+  },
+  "GBR-2762": {
+   "areaKm2": 408,
+   "cityPopulation": 0
+  },
+  "GBR-2763": {
+   "areaKm2": 58,
+   "cityPopulation": 825600
+  },
+  "GBR-2764": {
+   "areaKm2": 2217,
+   "cityPopulation": 0
+  },
+  "GBR-2765": {
+   "areaKm2": 18,
+   "cityPopulation": 0
+  },
+  "GBR-2766": {
+   "areaKm2": 31,
+   "cityPopulation": 0
+  },
+  "GBR-2767": {
+   "areaKm2": 52,
+   "cityPopulation": 0
+  },
+  "GBR-2768": {
+   "areaKm2": 34,
+   "cityPopulation": 0
+  },
+  "GBR-2769": {
+   "areaKm2": 37,
+   "cityPopulation": 0
+  },
+  "GBR-2770": {
+   "areaKm2": 40,
+   "cityPopulation": 0
+  },
+  "GBR-2771": {
+   "areaKm2": 25,
+   "cityPopulation": 0
+  },
+  "GBR-2772": {
+   "areaKm2": 2731,
+   "cityPopulation": 0
+  },
+  "GBR-2773": {
+   "areaKm2": 454,
+   "cityPopulation": 0
+  },
+  "GBR-2774": {
+   "areaKm2": 185,
+   "cityPopulation": 0
+  },
+  "GBR-2775": {
+   "areaKm2": 2103,
+   "cityPopulation": 0
+  },
+  "GBR-2776": {
+   "areaKm2": 1753,
+   "cityPopulation": 0
+  },
+  "GBR-2777": {
+   "areaKm2": 2661,
+   "cityPopulation": 0
+  },
+  "GBR-2778": {
+   "areaKm2": 81,
+   "cityPopulation": 390801
+  },
+  "GBR-2779": {
+   "areaKm2": 3199,
+   "cityPopulation": 0
+  },
+  "GBR-3409": {
+   "areaKm2": 3415,
+   "cityPopulation": 36384
+  },
+  "GBR-4809": {
+   "areaKm2": 3,
+   "cityPopulation": 0
+  },
+  "GBR-5661": {
+   "areaKm2": 105,
+   "cityPopulation": 882000
+  },
+  "GBR-5662": {
+   "areaKm2": 73,
+   "cityPopulation": 0
+  },
+  "GBR-5663": {
+   "areaKm2": 82,
+   "cityPopulation": 0
+  },
+  "GBR-5664": {
+   "areaKm2": 127,
+   "cityPopulation": 452934
+  },
+  "GBR-5665": {
+   "areaKm2": 160,
+   "cityPopulation": 0
+  },
+  "GBR-5666": {
+   "areaKm2": 132,
+   "cityPopulation": 0
+  },
+  "GBR-5667": {
+   "areaKm2": 137,
+   "cityPopulation": 0
+  },
+  "GBR-5668": {
+   "areaKm2": 105,
+   "cityPopulation": 811000
+  },
+  "GBR-5669": {
+   "areaKm2": 143,
+   "cityPopulation": 0
+  },
+  "GBR-5670": {
+   "areaKm2": 76,
+   "cityPopulation": 0
+  },
+  "GBR-5671": {
+   "areaKm2": 424,
+   "cityPopulation": 0
+  },
+  "GBR-5672": {
+   "areaKm2": 400,
+   "cityPopulation": 0
+  },
+  "GBR-5673": {
+   "areaKm2": 292,
+   "cityPopulation": 501700
+  },
+  "GBR-5674": {
+   "areaKm2": 567,
+   "cityPopulation": 1529000
+  },
+  "GBR-5675": {
+   "areaKm2": 329,
+   "cityPopulation": 0
+  },
+  "GBR-5676": {
+   "areaKm2": 133,
+   "cityPopulation": 0
+  },
+  "GBR-5677": {
+   "areaKm2": 194,
+   "cityPopulation": 0
+  },
+  "GBR-5678": {
+   "areaKm2": 115,
+   "cityPopulation": 0
+  },
+  "GBR-5679": {
+   "areaKm2": 101,
+   "cityPopulation": 0
+  },
+  "GBR-5680": {
+   "areaKm2": 198,
+   "cityPopulation": 0
+  },
+  "GBR-5681": {
+   "areaKm2": 185,
+   "cityPopulation": 0
+  },
+  "GBR-5682": {
+   "areaKm2": 127,
+   "cityPopulation": 0
+  },
+  "GBR-5683": {
+   "areaKm2": 141,
+   "cityPopulation": 0
+  },
+  "GBR-5684": {
+   "areaKm2": 113,
+   "cityPopulation": 2230000
+  },
+  "GBR-5685": {
+   "areaKm2": 81,
+   "cityPopulation": 0
+  },
+  "GBR-5686": {
+   "areaKm2": 294,
+   "cityPopulation": 0
+  },
+  "GBR-5687": {
+   "areaKm2": 370,
+   "cityPopulation": 1292900
+  },
+  "GBR-5688": {
+   "areaKm2": 343,
+   "cityPopulation": 0
+  },
+  "GBR-5689": {
+   "areaKm2": 628,
+   "cityPopulation": 0
+  },
+  "GBR-5690": {
+   "areaKm2": 270,
+   "cityPopulation": 2285000
+  },
+  "GBR-5691": {
+   "areaKm2": 98,
+   "cityPopulation": 0
+  },
+  "GBR-5692": {
+   "areaKm2": 95,
+   "cityPopulation": 0
+  },
+  "GBR-5693": {
+   "areaKm2": 45,
+   "cityPopulation": 0
+  },
+  "GBR-5694": {
+   "areaKm2": 115,
+   "cityPopulation": 0
+  },
+  "GBR-5695": {
+   "areaKm2": 149,
+   "cityPopulation": 0
+  },
+  "GBR-5696": {
+   "areaKm2": 105,
+   "cityPopulation": 388271
+  },
+  "GBR-5697": {
+   "areaKm2": 741,
+   "cityPopulation": 0
+  },
+  "GBR-5698": {
+   "areaKm2": 389,
+   "cityPopulation": 0
+  },
+  "GBR-5699": {
+   "areaKm2": 41,
+   "cityPopulation": 0
+  },
+  "GBR-5700": {
+   "areaKm2": 631,
+   "cityPopulation": 0
+  },
+  "GBR-5701": {
+   "areaKm2": 194,
+   "cityPopulation": 0
+  },
+  "GBR-5702": {
+   "areaKm2": 108,
+   "cityPopulation": 0
+  },
+  "GBR-5703": {
+   "areaKm2": 194,
+   "cityPopulation": 0
+  },
+  "GBR-5704": {
+   "areaKm2": 50,
+   "cityPopulation": 0
+  },
+  "GBR-5705": {
+   "areaKm2": 106,
+   "cityPopulation": 0
+  },
+  "GBR-5706": {
+   "areaKm2": 1072,
+   "cityPopulation": 0
+  },
+  "GBR-5707": {
+   "areaKm2": 982,
+   "cityPopulation": 89531
+  },
+  "GBR-5708": {
+   "areaKm2": 88,
+   "cityPopulation": 0
+  },
+  "GBR-5988": {
+   "areaKm2": 5,
+   "cityPopulation": 0
+  },
+  "GGY+00?": {
+   "areaKm2": 62,
+   "cityPopulation": 0
+  },
+  "GIB+00?": {
+   "areaKm2": 3,
+   "cityPopulation": 187083
+  },
+  "GUM+00?": {
+   "areaKm2": 518,
+   "cityPopulation": 122411
+  },
+  "HKG-5153": {
+   "areaKm2": 12,
+   "cityPopulation": 0
+  },
+  "HKG-5154": {
+   "areaKm2": 6,
+   "cityPopulation": 0
+  },
+  "HKG-5155": {
+   "areaKm2": 13,
+   "cityPopulation": 0
+  },
+  "HKG-5156": {
+   "areaKm2": 52,
+   "cityPopulation": 0
+  },
+  "HKG-5157": {
+   "areaKm2": 4,
+   "cityPopulation": 0
+  },
+  "HKG-5158": {
+   "areaKm2": 12,
+   "cityPopulation": 7206000
+  },
+  "HKG-5159": {
+   "areaKm2": 6,
+   "cityPopulation": 0
+  },
+  "HKG-5160": {
+   "areaKm2": 8,
+   "cityPopulation": 0
+  },
+  "HKG-5161": {
+   "areaKm2": 14,
+   "cityPopulation": 0
+  },
+  "HKG-5162": {
+   "areaKm2": 118,
+   "cityPopulation": 0
+  },
+  "HKG-5163": {
+   "areaKm2": 60,
+   "cityPopulation": 0
+  },
+  "HKG-5164": {
+   "areaKm2": 15,
+   "cityPopulation": 0
+  },
+  "HKG-5165": {
+   "areaKm2": 65,
+   "cityPopulation": 0
+  },
+  "HKG-5166": {
+   "areaKm2": 76,
+   "cityPopulation": 0
+  },
+  "HKG-5167": {
+   "areaKm2": 171,
+   "cityPopulation": 0
+  },
+  "HKG-5168": {
+   "areaKm2": 144,
+   "cityPopulation": 0
+  },
+  "HKG-5169": {
+   "areaKm2": 134,
+   "cityPopulation": 0
+  },
+  "HKG-5170": {
+   "areaKm2": 174,
+   "cityPopulation": 0
+  },
+  "HMD+00?": {
+   "areaKm2": 365,
+   "cityPopulation": 0
+  },
+  "IDN-1136": {
+   "areaKm2": 55922,
+   "cityPopulation": 630954
+  },
+  "IDN-1185": {
+   "areaKm2": 196448,
+   "cityPopulation": 1332893
+  },
+  "IDN-1223": {
+   "areaKm2": 37283,
+   "cityPopulation": 6615329
+  },
+  "IDN-1224": {
+   "areaKm2": 34507,
+   "cityPopulation": 4045602
+  },
+  "IDN-1225": {
+   "areaKm2": 21136,
+   "cityPopulation": 0
+  },
+  "IDN-1226": {
+   "areaKm2": 9708,
+   "cityPopulation": 164767
+  },
+  "IDN-1227": {
+   "areaKm2": 737,
+   "cityPopulation": 9125000
+  },
+  "IDN-1228": {
+   "areaKm2": 148937,
+   "cityPopulation": 855323
+  },
+  "IDN-1229": {
+   "areaKm2": 32953,
+   "cityPopulation": 1789167
+  },
+  "IDN-1230": {
+   "areaKm2": 85080,
+   "cityPopulation": 1918376
+  },
+  "IDN-1231": {
+   "areaKm2": 16870,
+   "cityPopulation": 188307
+  },
+  "IDN-1232": {
+   "areaKm2": 5540,
+   "cityPopulation": 762356
+  },
+  "IDN-1233": {
+   "areaKm2": 47459,
+   "cityPopulation": 5629778
+  },
+  "IDN-1234": {
+   "areaKm2": 38699,
+   "cityPopulation": 801815
+  },
+  "IDN-1235": {
+   "areaKm2": 46305,
+   "cityPopulation": 566690
+  },
+  "IDN-1236": {
+   "areaKm2": 46797,
+   "cityPopulation": 1538764
+  },
+  "IDN-1237": {
+   "areaKm2": 16793,
+   "cityPopulation": 272377
+  },
+  "IDN-1796": {
+   "areaKm2": 6563,
+   "cityPopulation": 226666
+  },
+  "IDN-1837": {
+   "areaKm2": 12013,
+   "cityPopulation": 365497
+  },
+  "IDN-1930": {
+   "areaKm2": 50930,
+   "cityPopulation": 553003
+  },
+  "IDN-1931": {
+   "areaKm2": 152713,
+   "cityPopulation": 276631
+  },
+  "IDN-1933": {
+   "areaKm2": 95301,
+   "cityPopulation": 200039
+  },
+  "IDN-381": {
+   "areaKm2": 73502,
+   "cityPopulation": 3774721
+  },
+  "IDN-492": {
+   "areaKm2": 88182,
+   "cityPopulation": 799000
+  },
+  "IDN-513": {
+   "areaKm2": 14740,
+   "cityPopulation": 451893
+  },
+  "IDN-538": {
+   "areaKm2": 31112,
+   "cityPopulation": 0
+  },
+  "IDN-539": {
+   "areaKm2": 41902,
+   "cityPopulation": 601414
+  },
+  "IDN-540": {
+   "areaKm2": 3033,
+   "cityPopulation": 636660
+  },
+  "IDN-554": {
+   "areaKm2": 44276,
+   "cityPopulation": 355596
+  },
+  "IDN-555": {
+   "areaKm2": 19793,
+   "cityPopulation": 640693
+  },
+  "IDN-556": {
+   "areaKm2": 34727,
+   "cityPopulation": 189789
+  },
+  "IDN-557": {
+   "areaKm2": 60873,
+   "cityPopulation": 707333
+  },
+  "IDN-558": {
+   "areaKm2": 313274,
+   "cityPopulation": 377282
+  },
+  "IMN+00?": {
+   "areaKm2": 634,
+   "cityPopulation": 35854
+  },
+  "IND-20011": {
+   "areaKm2": 115005,
+   "cityPopulation": 8547448
+  },
+  "IND-20012": {
+   "areaKm2": 64254,
+   "cityPopulation": 30870
+  },
+  "IND-2427": {
+   "areaKm2": 101,
+   "cityPopulation": 979000
+  },
+  "IND-2428": {
+   "areaKm2": 1478,
+   "cityPopulation": 16243797
+  },
+  "IND-2429": {
+   "areaKm2": 55667,
+   "cityPopulation": 427490
+  },
+  "IND-2430": {
+   "areaKm2": 43923,
+   "cityPopulation": 3741073
+  },
+  "IND-2431": {
+   "areaKm2": 42500,
+   "cityPopulation": 2162021
+  },
+  "IND-2441": {
+   "areaKm2": 161306,
+   "cityPopulation": 12366725
+  },
+  "IND-2442": {
+   "areaKm2": 37979,
+   "cityPopulation": 1524946
+  },
+  "IND-2443": {
+   "areaKm2": 22,
+   "cityPopulation": 10688
+  },
+  "IND-2444": {
+   "areaKm2": 156075,
+   "cityPopulation": 2886435
+  },
+  "IND-2445": {
+   "areaKm2": 594,
+   "cityPopulation": 90875
+  },
+  "IND-2446": {
+   "areaKm2": 192689,
+   "cityPopulation": 13977722
+  },
+  "IND-2447": {
+   "areaKm2": 307860,
+   "cityPopulation": 38424005
+  },
+  "IND-2474": {
+   "areaKm2": 6880,
+   "cityPopulation": 127562
+  },
+  "IND-2477": {
+   "areaKm2": 79786,
+   "cityPopulation": 1445783
+  },
+  "IND-2478": {
+   "areaKm2": 21782,
+   "cityPopulation": 264986
+  },
+  "IND-2479": {
+   "areaKm2": 16367,
+   "cityPopulation": 92113
+  },
+  "IND-2489": {
+   "areaKm2": 23101,
+   "cityPopulation": 375527
+  },
+  "IND-3249": {
+   "areaKm2": 50437,
+   "cityPopulation": 4333969
+  },
+  "IND-3250": {
+   "areaKm2": 343514,
+   "cityPopulation": 8069097
+  },
+  "IND-3253": {
+   "areaKm2": 240823,
+   "cityPopulation": 20769513
+  },
+  "IND-3254": {
+   "areaKm2": 52584,
+   "cityPopulation": 714223
+  },
+  "IND-3256": {
+   "areaKm2": 78206,
+   "cityPopulation": 3590000
+  },
+  "IND-3257": {
+   "areaKm2": 86372,
+   "cityPopulation": 22699461
+  },
+  "IND-3258": {
+   "areaKm2": 95046,
+   "cityPopulation": 3570822
+  },
+  "IND-3259": {
+   "areaKm2": 7009,
+   "cityPopulation": 77900
+  },
+  "IND-3260": {
+   "areaKm2": 134689,
+   "cityPopulation": 2515454
+  },
+  "IND-3261": {
+   "areaKm2": 310296,
+   "cityPopulation": 7362052
+  },
+  "IND-3262": {
+   "areaKm2": 548,
+   "cityPopulation": 227411
+  },
+  "IND-3263": {
+   "areaKm2": 131555,
+   "cityPopulation": 15579391
+  },
+  "IND-3264": {
+   "areaKm2": 184427,
+   "cityPopulation": 13670982
+  },
+  "IND-3265": {
+   "areaKm2": 3382,
+   "cityPopulation": 0
+  },
+  "IND-3299": {
+   "areaKm2": 80830,
+   "cityPopulation": 44971
+  },
+  "IND-3300": {
+   "areaKm2": 21322,
+   "cityPopulation": 283021
+  },
+  "IND-3301": {
+   "areaKm2": 10786,
+   "cityPopulation": 203264
+  },
+  "IOA-1928": {
+   "areaKm2": 4,
+   "cityPopulation": 0
+  },
+  "IOA-2652": {
+   "areaKm2": 131,
+   "cityPopulation": 0
+  },
+  "IOT+00?": {
+   "areaKm2": 25,
+   "cityPopulation": 0
+  },
+  "IRN-3209": {
+   "areaKm2": 13478,
+   "cityPopulation": 96786
+  },
+  "IRN-3210": {
+   "areaKm2": 23687,
+   "cityPopulation": 169060
+  },
+  "IRN-3211": {
+   "areaKm2": 110387,
+   "cityPopulation": 2433439
+  },
+  "IRN-3212": {
+   "areaKm2": 126155,
+   "cityPopulation": 1489458
+  },
+  "IRN-3213": {
+   "areaKm2": 20861,
+   "cityPopulation": 441005
+  },
+  "IRN-3214": {
+   "areaKm2": 24852,
+   "cityPopulation": 493117
+  },
+  "IRN-3215": {
+   "areaKm2": 90628,
+   "cityPopulation": 256715
+  },
+  "IRN-3216": {
+   "areaKm2": 14541,
+   "cityPopulation": 8052603
+  },
+  "IRN-3217": {
+   "areaKm2": 127826,
+   "cityPopulation": 477905
+  },
+  "IRN-3218": {
+   "areaKm2": 15202,
+   "cityPopulation": 129153
+  },
+  "IRN-3219": {
+   "areaKm2": 63806,
+   "cityPopulation": 1921032
+  },
+  "IRN-3220": {
+   "areaKm2": 29263,
+   "cityPopulation": 627156
+  },
+  "IRN-3221": {
+   "areaKm2": 18660,
+   "cityPopulation": 152894
+  },
+  "IRN-3228": {
+   "areaKm2": 67045,
+   "cityPopulation": 461499
+  },
+  "IRN-3230": {
+   "areaKm2": 20394,
+   "cityPopulation": 414603
+  },
+  "IRN-3231": {
+   "areaKm2": 28033,
+   "cityPopulation": 679180
+  },
+  "IRN-3232": {
+   "areaKm2": 11514,
+   "cityPopulation": 973000
+  },
+  "IRN-3233": {
+   "areaKm2": 20542,
+   "cityPopulation": 704829
+  },
+  "IRN-3234": {
+   "areaKm2": 22103,
+   "cityPopulation": 357471
+  },
+  "IRN-3235": {
+   "areaKm2": 15837,
+   "cityPopulation": 464551
+  },
+  "IRN-3237": {
+   "areaKm2": 37223,
+   "cityPopulation": 942469
+  },
+  "IRN-3238": {
+   "areaKm2": 46233,
+   "cityPopulation": 1668024
+  },
+  "IRN-3239": {
+   "areaKm2": 23407,
+   "cityPopulation": 839515
+  },
+  "IRN-3240": {
+   "areaKm2": 14530,
+   "cityPopulation": 594590
+  },
+  "IRN-3241": {
+   "areaKm2": 29587,
+   "cityPopulation": 403047
+  },
+  "IRN-3244": {
+   "areaKm2": 83063,
+   "cityPopulation": 326703
+  },
+  "IRN-3245": {
+   "areaKm2": 136748,
+   "cityPopulation": 3324127
+  },
+  "IRN-3246": {
+   "areaKm2": 25226,
+   "cityPopulation": 208582
+  },
+  "IRN-3247": {
+   "areaKm2": 174896,
+   "cityPopulation": 898656
+  },
+  "IRN-3248": {
+   "areaKm2": 183169,
+   "cityPopulation": 851782
+  },
+  "IRN-5490": {
+   "areaKm2": 4630,
+   "cityPopulation": 1423000
+  },
+  "ISR-3053": {
+   "areaKm2": 14505,
+   "cityPopulation": 206408
+  },
+  "ISR-3054": {
+   "areaKm2": 859,
+   "cityPopulation": 1011000
+  },
+  "ISR-3055": {
+   "areaKm2": 1216,
+   "cityPopulation": 63860
+  },
+  "ISR-3056": {
+   "areaKm2": 4646,
+   "cityPopulation": 151459
+  },
+  "ISR-3057": {
+   "areaKm2": 164,
+   "cityPopulation": 3112000
+  },
+  "ISR-3058": {
+   "areaKm2": 660,
+   "cityPopulation": 1029300
+  },
+  "ITA-5358": {
+   "areaKm2": 2658,
+   "cityPopulation": 175502
+  },
+  "ITA-5359": {
+   "areaKm2": 2278,
+   "cityPopulation": 0
+  },
+  "ITA-5360": {
+   "areaKm2": 3528,
+   "cityPopulation": 166011
+  },
+  "ITA-5361": {
+   "areaKm2": 2603,
+   "cityPopulation": 0
+  },
+  "ITA-5362": {
+   "areaKm2": 3633,
+   "cityPopulation": 488172
+  },
+  "ITA-5363": {
+   "areaKm2": 2706,
+   "cityPopulation": 130992
+  },
+  "ITA-5364": {
+   "areaKm2": 1905,
+   "cityPopulation": 134631
+  },
+  "ITA-5365": {
+   "areaKm2": 2337,
+   "cityPopulation": 0
+  },
+  "ITA-5366": {
+   "areaKm2": 881,
+   "cityPopulation": 0
+  },
+  "ITA-5367": {
+   "areaKm2": 1850,
+   "cityPopulation": 647497
+  },
+  "ITA-5368": {
+   "areaKm2": 1542,
+   "cityPopulation": 0
+  },
+  "ITA-5369": {
+   "areaKm2": 1223,
+   "cityPopulation": 0
+  },
+  "ITA-5370": {
+   "areaKm2": 796,
+   "cityPopulation": 0
+  },
+  "ITA-5371": {
+   "areaKm2": 1514,
+   "cityPopulation": 0
+  },
+  "ITA-5372": {
+   "areaKm2": 1550,
+   "cityPopulation": 0
+  },
+  "ITA-5373": {
+   "areaKm2": 3126,
+   "cityPopulation": 0
+  },
+  "ITA-5374": {
+   "areaKm2": 4319,
+   "cityPopulation": 120729
+  },
+  "ITA-5375": {
+   "areaKm2": 3340,
+   "cityPopulation": 45366
+  },
+  "ITA-5376": {
+   "areaKm2": 3919,
+   "cityPopulation": 0
+  },
+  "ITA-5377": {
+   "areaKm2": 1944,
+   "cityPopulation": 0
+  },
+  "ITA-5378": {
+   "areaKm2": 4504,
+   "cityPopulation": 291511
+  },
+  "ITA-5379": {
+   "areaKm2": 4495,
+   "cityPopulation": 0
+  },
+  "ITA-5380": {
+   "areaKm2": 1217,
+   "cityPopulation": 0
+  },
+  "ITA-5381": {
+   "areaKm2": 2412,
+   "cityPopulation": 203336
+  },
+  "ITA-5382": {
+   "areaKm2": 1157,
+   "cityPopulation": 0
+  },
+  "ITA-5383": {
+   "areaKm2": 1774,
+   "cityPopulation": 0
+  },
+  "ITA-5384": {
+   "areaKm2": 963,
+   "cityPopulation": 0
+  },
+  "ITA-5385": {
+   "areaKm2": 352,
+   "cityPopulation": 0
+  },
+  "ITA-5386": {
+   "areaKm2": 3538,
+   "cityPopulation": 1500000
+  },
+  "ITA-5387": {
+   "areaKm2": 3195,
+   "cityPopulation": 91589
+  },
+  "ITA-5388": {
+   "areaKm2": 3764,
+   "cityPopulation": 52625
+  },
+  "ITA-5389": {
+   "areaKm2": 3416,
+   "cityPopulation": 0
+  },
+  "ITA-5390": {
+   "areaKm2": 6726,
+   "cityPopulation": 69060
+  },
+  "ITA-5391": {
+   "areaKm2": 6789,
+   "cityPopulation": 0
+  },
+  "ITA-5392": {
+   "areaKm2": 1801,
+   "cityPopulation": 60010
+  },
+  "ITA-5393": {
+   "areaKm2": 2385,
+   "cityPopulation": 95251
+  },
+  "ITA-5394": {
+   "areaKm2": 1078,
+   "cityPopulation": 33957
+  },
+  "ITA-5395": {
+   "areaKm2": 3126,
+   "cityPopulation": 180353
+  },
+  "ITA-5396": {
+   "areaKm2": 2587,
+   "cityPopulation": 250000
+  },
+  "ITA-5397": {
+   "areaKm2": 1225,
+   "cityPopulation": 2250000
+  },
+  "ITA-5398": {
+   "areaKm2": 2076,
+   "cityPopulation": 61791
+  },
+  "ITA-5399": {
+   "areaKm2": 2679,
+   "cityPopulation": 0
+  },
+  "ITA-5400": {
+   "areaKm2": 4907,
+   "cityPopulation": 954265
+  },
+  "ITA-5401": {
+   "areaKm2": 2967,
+   "cityPopulation": 50762
+  },
+  "ITA-5402": {
+   "areaKm2": 1601,
+   "cityPopulation": 0
+  },
+  "ITA-5403": {
+   "areaKm2": 3940,
+   "cityPopulation": 500577
+  },
+  "ITA-5404": {
+   "areaKm2": 6933,
+   "cityPopulation": 155203
+  },
+  "ITA-5405": {
+   "areaKm2": 1563,
+   "cityPopulation": 107830
+  },
+  "ITA-5406": {
+   "areaKm2": 1943,
+   "cityPopulation": 104437
+  },
+  "ITA-5407": {
+   "areaKm2": 2707,
+   "cityPopulation": 162582
+  },
+  "ITA-5408": {
+   "areaKm2": 2406,
+   "cityPopulation": 202033
+  },
+  "ITA-5409": {
+   "areaKm2": 2498,
+   "cityPopulation": 77784
+  },
+  "ITA-5410": {
+   "areaKm2": 5196,
+   "cityPopulation": 863000
+  },
+  "ITA-5411": {
+   "areaKm2": 3285,
+   "cityPopulation": 252026
+  },
+  "ITA-5412": {
+   "areaKm2": 2587,
+   "cityPopulation": 0
+  },
+  "ITA-5413": {
+   "areaKm2": 3510,
+   "cityPopulation": 674542
+  },
+  "ITA-5414": {
+   "areaKm2": 2205,
+   "cityPopulation": 123657
+  },
+  "ITA-5415": {
+   "areaKm2": 1661,
+   "cityPopulation": 68956
+  },
+  "ITA-5416": {
+   "areaKm2": 2177,
+   "cityPopulation": 0
+  },
+  "ITA-5417": {
+   "areaKm2": 2954,
+   "cityPopulation": 0
+  },
+  "ITA-5418": {
+   "areaKm2": 1174,
+   "cityPopulation": 314789
+  },
+  "ITA-5419": {
+   "areaKm2": 2006,
+   "cityPopulation": 0
+  },
+  "ITA-5420": {
+   "areaKm2": 5094,
+   "cityPopulation": 68503
+  },
+  "ITA-5421": {
+   "areaKm2": 2600,
+   "cityPopulation": 0
+  },
+  "ITA-5422": {
+   "areaKm2": 5370,
+   "cityPopulation": 3401148
+  },
+  "ITA-5423": {
+   "areaKm2": 3645,
+   "cityPopulation": 0
+  },
+  "ITA-5424": {
+   "areaKm2": 2723,
+   "cityPopulation": 0
+  },
+  "ITA-5425": {
+   "areaKm2": 3185,
+   "cityPopulation": 0
+  },
+  "ITA-5426": {
+   "areaKm2": 2218,
+   "cityPopulation": 0
+  },
+  "ITA-5427": {
+   "areaKm2": 2054,
+   "cityPopulation": 100507
+  },
+  "ITA-5428": {
+   "areaKm2": 2589,
+   "cityPopulation": 0
+  },
+  "ITA-5429": {
+   "areaKm2": 2825,
+   "cityPopulation": 0
+  },
+  "ITA-5430": {
+   "areaKm2": 901,
+   "cityPopulation": 0
+  },
+  "ITA-5431": {
+   "areaKm2": 1203,
+   "cityPopulation": 0
+  },
+  "ITA-5432": {
+   "areaKm2": 6360,
+   "cityPopulation": 149125
+  },
+  "ITA-5433": {
+   "areaKm2": 2112,
+   "cityPopulation": 0
+  },
+  "ITA-5434": {
+   "areaKm2": 6898,
+   "cityPopulation": 1652000
+  },
+  "ITA-5435": {
+   "areaKm2": 927,
+   "cityPopulation": 0
+  },
+  "ITA-5436": {
+   "areaKm2": 2059,
+   "cityPopulation": 0
+  },
+  "ITA-5437": {
+   "areaKm2": 2244,
+   "cityPopulation": 0
+  },
+  "ITA-5438": {
+   "areaKm2": 1353,
+   "cityPopulation": 100910
+  },
+  "ITA-5439": {
+   "areaKm2": 3537,
+   "cityPopulation": 0
+  },
+  "ITA-5440": {
+   "areaKm2": 1501,
+   "cityPopulation": 71276
+  },
+  "ITA-5441": {
+   "areaKm2": 6951,
+   "cityPopulation": 0
+  },
+  "ITA-5442": {
+   "areaKm2": 3312,
+   "cityPopulation": 34062
+  },
+  "ITA-5443": {
+   "areaKm2": 2782,
+   "cityPopulation": 200000
+  },
+  "ITA-5444": {
+   "areaKm2": 3254,
+   "cityPopulation": 0
+  },
+  "ITA-5445": {
+   "areaKm2": 4772,
+   "cityPopulation": 0
+  },
+  "ITA-5446": {
+   "areaKm2": 2272,
+   "cityPopulation": 0
+  },
+  "ITA-5447": {
+   "areaKm2": 1710,
+   "cityPopulation": 0
+  },
+  "ITA-5448": {
+   "areaKm2": 854,
+   "cityPopulation": 0
+  },
+  "ITA-5449": {
+   "areaKm2": 3060,
+   "cityPopulation": 0
+  },
+  "ITA-5450": {
+   "areaKm2": 1553,
+   "cityPopulation": 2945000
+  },
+  "ITA-5451": {
+   "areaKm2": 1081,
+   "cityPopulation": 0
+  },
+  "ITA-5452": {
+   "areaKm2": 1342,
+   "cityPopulation": 250000
+  },
+  "ITA-5453": {
+   "areaKm2": 816,
+   "cityPopulation": 0
+  },
+  "ITA-5454": {
+   "areaKm2": 369,
+   "cityPopulation": 0
+  },
+  "ITA-5455": {
+   "areaKm2": 4529,
+   "cityPopulation": 119009
+  },
+  "ITA-5456": {
+   "areaKm2": 2121,
+   "cityPopulation": 0
+  },
+  "ITA-5457": {
+   "areaKm2": 377,
+   "cityPopulation": 0
+  },
+  "ITA-5458": {
+   "areaKm2": 208,
+   "cityPopulation": 216035
+  },
+  "ITA-5459": {
+   "areaKm2": 7403,
+   "cityPopulation": 95895
+  },
+  "ITA-5460": {
+   "areaKm2": 6104,
+   "cityPopulation": 107808
+  },
+  "ITA-5461": {
+   "areaKm2": 2210,
+   "cityPopulation": 270816
+  },
+  "ITA-5462": {
+   "areaKm2": 1688,
+   "cityPopulation": 0
+  },
+  "ITA-5463": {
+   "areaKm2": 2103,
+   "cityPopulation": 0
+  },
+  "ITA-5464": {
+   "areaKm2": 3105,
+   "cityPopulation": 347459
+  },
+  "ITA-5465": {
+   "areaKm2": 2743,
+   "cityPopulation": 0
+  },
+  "ITA-5466": {
+   "areaKm2": 2537,
+   "cityPopulation": 177309
+  },
+  "ITA-5467": {
+   "areaKm2": 3741,
+   "cityPopulation": 0
+  },
+  "JEY+00?": {
+   "areaKm2": 129,
+   "cityPopulation": 0
+  },
+  "JPN-1821": {
+   "areaKm2": 8374,
+   "cityPopulation": 2241991
+  },
+  "JPN-1822": {
+   "areaKm2": 6936,
+   "cityPopulation": 866092
+  },
+  "JPN-1824": {
+   "areaKm2": 6725,
+   "cityPopulation": 156811
+  },
+  "JPN-1825": {
+   "areaKm2": 3741,
+   "cityPopulation": 154098
+  },
+  "JPN-1826": {
+   "areaKm2": 6034,
+   "cityPopulation": 245786
+  },
+  "JPN-1827": {
+   "areaKm2": 2327,
+   "cityPopulation": 0
+  },
+  "JPN-1829": {
+   "areaKm2": 5114,
+   "cityPopulation": 3789536
+  },
+  "JPN-1830": {
+   "areaKm2": 7120,
+   "cityPopulation": 718232
+  },
+  "JPN-1831": {
+   "areaKm2": 7899,
+   "cityPopulation": 324384
+  },
+  "JPN-1832": {
+   "areaKm2": 5597,
+   "cityPopulation": 533541
+  },
+  "JPN-1833": {
+   "areaKm2": 1916,
+   "cityPopulation": 334223
+  },
+  "JPN-1834": {
+   "areaKm2": 7068,
+   "cityPopulation": 335570
+  },
+  "JPN-1835": {
+   "areaKm2": 6627,
+   "cityPopulation": 448907
+  },
+  "JPN-1836": {
+   "areaKm2": 4277,
+   "cityPopulation": 443760
+  },
+  "JPN-1840": {
+   "areaKm2": 4945,
+   "cityPopulation": 3230000
+  },
+  "JPN-1841": {
+   "areaKm2": 10618,
+   "cityPopulation": 412895
+  },
+  "JPN-1842": {
+   "areaKm2": 4187,
+   "cityPopulation": 551249
+  },
+  "JPN-1843": {
+   "areaKm2": 5848,
+   "cityPopulation": 500000
+  },
+  "JPN-1844": {
+   "areaKm2": 13725,
+   "cityPopulation": 819237
+  },
+  "JPN-1845": {
+   "areaKm2": 7704,
+   "cityPopulation": 1678584
+  },
+  "JPN-1846": {
+   "areaKm2": 4317,
+   "cityPopulation": 502889
+  },
+  "JPN-1847": {
+   "areaKm2": 78823,
+   "cityPopulation": 3964897
+  },
+  "JPN-1848": {
+   "areaKm2": 4347,
+   "cityPopulation": 248707
+  },
+  "JPN-1849": {
+   "areaKm2": 8407,
+   "cityPopulation": 1528478
+  },
+  "JPN-1850": {
+   "areaKm2": 4565,
+   "cityPopulation": 1897465
+  },
+  "JPN-1851": {
+   "areaKm2": 3802,
+   "cityPopulation": 0
+  },
+  "JPN-1852": {
+   "areaKm2": 1797,
+   "cityPopulation": 11294000
+  },
+  "JPN-1853": {
+   "areaKm2": 4018,
+   "cityPopulation": 536976
+  },
+  "JPN-1854": {
+   "areaKm2": 4534,
+   "cityPopulation": 440006
+  },
+  "JPN-1855": {
+   "areaKm2": 5220,
+   "cityPopulation": 0
+  },
+  "JPN-1856": {
+   "areaKm2": 6379,
+   "cityPopulation": 353892
+  },
+  "JPN-1857": {
+   "areaKm2": 2350,
+   "cityPopulation": 5135160
+  },
+  "JPN-1858": {
+   "areaKm2": 3839,
+   "cityPopulation": 337931
+  },
+  "JPN-1859": {
+   "areaKm2": 6386,
+   "cityPopulation": 667752
+  },
+  "JPN-1860": {
+   "areaKm2": 2027,
+   "cityPopulation": 36255399
+  },
+  "JPN-1861": {
+   "areaKm2": 4526,
+   "cityPopulation": 197540
+  },
+  "JPN-1862": {
+   "areaKm2": 11842,
+   "cityPopulation": 320069
+  },
+  "JPN-1863": {
+   "areaKm2": 9788,
+   "cityPopulation": 712412
+  },
+  "JPN-1864": {
+   "areaKm2": 14080,
+   "cityPopulation": 992106
+  },
+  "JPN-1865": {
+   "areaKm2": 15313,
+   "cityPopulation": 295172
+  },
+  "JPN-1866": {
+   "areaKm2": 7540,
+   "cityPopulation": 2250000
+  },
+  "JPN-1867": {
+   "areaKm2": 12347,
+   "cityPopulation": 195318
+  },
+  "JPN-1868": {
+   "areaKm2": 9176,
+   "cityPopulation": 472475
+  },
+  "JPN-3500": {
+   "areaKm2": 3855,
+   "cityPopulation": 672899
+  },
+  "JPN-3501": {
+   "areaKm2": 7724,
+   "cityPopulation": 637687
+  },
+  "JPN-3502": {
+   "areaKm2": 3112,
+   "cityPopulation": 905238
+  },
+  "JPN-3503": {
+   "areaKm2": 6439,
+   "cityPopulation": 344871
+  },
+  "KAS+00?": {
+   "areaKm2": 2118,
+   "cityPopulation": 0
+  },
+  "KOR-2494": {
+   "areaKm2": 7648,
+   "cityPopulation": 785173
+  },
+  "KOR-2495": {
+   "areaKm2": 339,
+   "cityPopulation": 2550000
+  },
+  "KOR-2496": {
+   "areaKm2": 19529,
+   "cityPopulation": 735937
+  },
+  "KOR-2497": {
+   "areaKm2": 538,
+   "cityPopulation": 9796000
+  },
+  "KOR-2498": {
+   "areaKm2": 11181,
+   "cityPopulation": 4528493
+  },
+  "KOR-2499": {
+   "areaKm2": 8264,
+   "cityPopulation": 1239005
+  },
+  "KOR-2500": {
+   "areaKm2": 95,
+   "cityPopulation": 1440000
+  },
+  "KOR-2502": {
+   "areaKm2": 7470,
+   "cityPopulation": 0
+  },
+  "KOR-2503": {
+   "areaKm2": 390,
+   "cityPopulation": 1468000
+  },
+  "KOR-2504": {
+   "areaKm2": 480,
+   "cityPopulation": 2460000
+  },
+  "KOR-2505": {
+   "areaKm2": 10033,
+   "cityPopulation": 1081499
+  },
+  "KOR-2506": {
+   "areaKm2": 11440,
+   "cityPopulation": 268402
+  },
+  "KOR-2507": {
+   "areaKm2": 246,
+   "cityPopulation": 3480000
+  },
+  "KOR-2508": {
+   "areaKm2": 1005,
+   "cityPopulation": 1061000
+  },
+  "KOR-2509": {
+   "areaKm2": 19613,
+   "cityPopulation": 719822
+  },
+  "KOR-2510": {
+   "areaKm2": 1839,
+   "cityPopulation": 408364
+  },
+  "KOR-5129": {
+   "areaKm2": 422,
+   "cityPopulation": 0
+  },
+  "LTU-1067": {
+   "areaKm2": 5638,
+   "cityPopulation": 0
+  },
+  "LTU-1069": {
+   "areaKm2": 8136,
+   "cityPopulation": 374643
+  },
+  "LTU-1070": {
+   "areaKm2": 4777,
+   "cityPopulation": 0
+  },
+  "LTU-1071": {
+   "areaKm2": 7706,
+   "cityPopulation": 127405
+  },
+  "LTU-1072": {
+   "areaKm2": 8554,
+   "cityPopulation": 133528
+  },
+  "LTU-1073": {
+   "areaKm2": 3792,
+   "cityPopulation": 0
+  },
+  "LTU-1074": {
+   "areaKm2": 7036,
+   "cityPopulation": 0
+  },
+  "LTU-1075": {
+   "areaKm2": 9678,
+   "cityPopulation": 542366
+  },
+  "LTU-935": {
+   "areaKm2": 5353,
+   "cityPopulation": 192307
+  },
+  "LTU-936": {
+   "areaKm2": 3993,
+   "cityPopulation": 0
+  },
+  "LVA-1063": {
+   "areaKm2": 1029,
+   "cityPopulation": 0
+  },
+  "LVA-1064": {
+   "areaKm2": 1046,
+   "cityPopulation": 0
+  },
+  "LVA-1065": {
+   "areaKm2": 941,
+   "cityPopulation": 0
+  },
+  "LVA-1066": {
+   "areaKm2": 2538,
+   "cityPopulation": 38340
+  },
+  "LVA-1068": {
+   "areaKm2": 1607,
+   "cityPopulation": 0
+  },
+  "LVA-1076": {
+   "areaKm2": 1612,
+   "cityPopulation": 0
+  },
+  "LVA-1077": {
+   "areaKm2": 862,
+   "cityPopulation": 0
+  },
+  "LVA-1079": {
+   "areaKm2": 750,
+   "cityPopulation": 0
+  },
+  "LVA-1080": {
+   "areaKm2": 184,
+   "cityPopulation": 0
+  },
+  "LVA-1081": {
+   "areaKm2": 1956,
+   "cityPopulation": 111564
+  },
+  "LVA-1082": {
+   "areaKm2": 932,
+   "cityPopulation": 0
+  },
+  "LVA-1083": {
+   "areaKm2": 1881,
+   "cityPopulation": 0
+  },
+  "LVA-1084": {
+   "areaKm2": 1355,
+   "cityPopulation": 0
+  },
+  "LVA-1085": {
+   "areaKm2": 22,
+   "cityPopulation": 0
+  },
+  "LVA-1086": {
+   "areaKm2": 1149,
+   "cityPopulation": 0
+  },
+  "LVA-1087": {
+   "areaKm2": 2096,
+   "cityPopulation": 0
+  },
+  "LVA-1088": {
+   "areaKm2": 977,
+   "cityPopulation": 0
+  },
+  "LVA-1089": {
+   "areaKm2": 376,
+   "cityPopulation": 0
+  },
+  "LVA-1091": {
+   "areaKm2": 1728,
+   "cityPopulation": 0
+  },
+  "LVA-1092": {
+   "areaKm2": 1167,
+   "cityPopulation": 0
+  },
+  "LVA-1093": {
+   "areaKm2": 21,
+   "cityPopulation": 0
+  },
+  "LVA-1094": {
+   "areaKm2": 327,
+   "cityPopulation": 742572
+  },
+  "LVA-4848": {
+   "areaKm2": 47,
+   "cityPopulation": 85132
+  },
+  "LVA-4849": {
+   "areaKm2": 65,
+   "cityPopulation": 67207
+  },
+  "LVA-4850": {
+   "areaKm2": 96,
+   "cityPopulation": 0
+  },
+  "LVA-4851": {
+   "areaKm2": 28,
+   "cityPopulation": 0
+  },
+  "LVA-4852": {
+   "areaKm2": 74,
+   "cityPopulation": 42884
+  },
+  "LVA-5709": {
+   "areaKm2": 1734,
+   "cityPopulation": 0
+  },
+  "LVA-5710": {
+   "areaKm2": 194,
+   "cityPopulation": 0
+  },
+  "LVA-5711": {
+   "areaKm2": 548,
+   "cityPopulation": 0
+  },
+  "LVA-5712": {
+   "areaKm2": 537,
+   "cityPopulation": 0
+  },
+  "LVA-5713": {
+   "areaKm2": 316,
+   "cityPopulation": 0
+  },
+  "LVA-5714": {
+   "areaKm2": 634,
+   "cityPopulation": 0
+  },
+  "LVA-5715": {
+   "areaKm2": 527,
+   "cityPopulation": 0
+  },
+  "LVA-5716": {
+   "areaKm2": 495,
+   "cityPopulation": 0
+  },
+  "LVA-5717": {
+   "areaKm2": 315,
+   "cityPopulation": 0
+  },
+  "LVA-5718": {
+   "areaKm2": 462,
+   "cityPopulation": 0
+  },
+  "LVA-5719": {
+   "areaKm2": 506,
+   "cityPopulation": 0
+  },
+  "LVA-5720": {
+   "areaKm2": 344,
+   "cityPopulation": 0
+  },
+  "LVA-5721": {
+   "areaKm2": 704,
+   "cityPopulation": 0
+  },
+  "LVA-5722": {
+   "areaKm2": 229,
+   "cityPopulation": 0
+  },
+  "LVA-5723": {
+   "areaKm2": 134,
+   "cityPopulation": 0
+  },
+  "LVA-5724": {
+   "areaKm2": 638,
+   "cityPopulation": 0
+  },
+  "LVA-5725": {
+   "areaKm2": 896,
+   "cityPopulation": 0
+  },
+  "LVA-5726": {
+   "areaKm2": 830,
+   "cityPopulation": 0
+  },
+  "LVA-5727": {
+   "areaKm2": 324,
+   "cityPopulation": 0
+  },
+  "LVA-5728": {
+   "areaKm2": 391,
+   "cityPopulation": 0
+  },
+  "LVA-5729": {
+   "areaKm2": 359,
+   "cityPopulation": 0
+  },
+  "LVA-5730": {
+   "areaKm2": 91,
+   "cityPopulation": 0
+  },
+  "LVA-5731": {
+   "areaKm2": 107,
+   "cityPopulation": 0
+  },
+  "LVA-5732": {
+   "areaKm2": 732,
+   "cityPopulation": 0
+  },
+  "LVA-5733": {
+   "areaKm2": 641,
+   "cityPopulation": 0
+  },
+  "LVA-5734": {
+   "areaKm2": 293,
+   "cityPopulation": 0
+  },
+  "LVA-5735": {
+   "areaKm2": 915,
+   "cityPopulation": 0
+  },
+  "LVA-5736": {
+   "areaKm2": 333,
+   "cityPopulation": 0
+  },
+  "LVA-5737": {
+   "areaKm2": 293,
+   "cityPopulation": 0
+  },
+  "LVA-5738": {
+   "areaKm2": 205,
+   "cityPopulation": 0
+  },
+  "LVA-5739": {
+   "areaKm2": 236,
+   "cityPopulation": 0
+  },
+  "LVA-5740": {
+   "areaKm2": 498,
+   "cityPopulation": 0
+  },
+  "LVA-5741": {
+   "areaKm2": 546,
+   "cityPopulation": 0
+  },
+  "LVA-5742": {
+   "areaKm2": 563,
+   "cityPopulation": 0
+  },
+  "LVA-5743": {
+   "areaKm2": 170,
+   "cityPopulation": 0
+  },
+  "LVA-5744": {
+   "areaKm2": 581,
+   "cityPopulation": 0
+  },
+  "LVA-5745": {
+   "areaKm2": 502,
+   "cityPopulation": 0
+  },
+  "LVA-5746": {
+   "areaKm2": 318,
+   "cityPopulation": 0
+  },
+  "LVA-5747": {
+   "areaKm2": 946,
+   "cityPopulation": 0
+  },
+  "LVA-5748": {
+   "areaKm2": 402,
+   "cityPopulation": 0
+  },
+  "LVA-5749": {
+   "areaKm2": 768,
+   "cityPopulation": 0
+  },
+  "LVA-5750": {
+   "areaKm2": 577,
+   "cityPopulation": 0
+  },
+  "LVA-5751": {
+   "areaKm2": 290,
+   "cityPopulation": 0
+  },
+  "LVA-5752": {
+   "areaKm2": 664,
+   "cityPopulation": 0
+  },
+  "LVA-5753": {
+   "areaKm2": 227,
+   "cityPopulation": 0
+  },
+  "LVA-5754": {
+   "areaKm2": 148,
+   "cityPopulation": 0
+  },
+  "LVA-5755": {
+   "areaKm2": 674,
+   "cityPopulation": 0
+  },
+  "LVA-5756": {
+   "areaKm2": 239,
+   "cityPopulation": 0
+  },
+  "LVA-5757": {
+   "areaKm2": 164,
+   "cityPopulation": 0
+  },
+  "LVA-5758": {
+   "areaKm2": 96,
+   "cityPopulation": 0
+  },
+  "LVA-5759": {
+   "areaKm2": 422,
+   "cityPopulation": 0
+  },
+  "LVA-5760": {
+   "areaKm2": 158,
+   "cityPopulation": 0
+  },
+  "LVA-5761": {
+   "areaKm2": 103,
+   "cityPopulation": 0
+  },
+  "LVA-5762": {
+   "areaKm2": 112,
+   "cityPopulation": 0
+  },
+  "LVA-5763": {
+   "areaKm2": 218,
+   "cityPopulation": 0
+  },
+  "LVA-5764": {
+   "areaKm2": 103,
+   "cityPopulation": 0
+  },
+  "LVA-5765": {
+   "areaKm2": 669,
+   "cityPopulation": 0
+  },
+  "LVA-5766": {
+   "areaKm2": 518,
+   "cityPopulation": 0
+  },
+  "LVA-5767": {
+   "areaKm2": 302,
+   "cityPopulation": 0
+  },
+  "LVA-5768": {
+   "areaKm2": 350,
+   "cityPopulation": 0
+  },
+  "LVA-5769": {
+   "areaKm2": 180,
+   "cityPopulation": 0
+  },
+  "LVA-5770": {
+   "areaKm2": 226,
+   "cityPopulation": 0
+  },
+  "LVA-5771": {
+   "areaKm2": 112,
+   "cityPopulation": 0
+  },
+  "LVA-5772": {
+   "areaKm2": 290,
+   "cityPopulation": 0
+  },
+  "LVA-5773": {
+   "areaKm2": 347,
+   "cityPopulation": 0
+  },
+  "LVA-5774": {
+   "areaKm2": 608,
+   "cityPopulation": 0
+  },
+  "LVA-5775": {
+   "areaKm2": 119,
+   "cityPopulation": 0
+  },
+  "LVA-5776": {
+   "areaKm2": 63,
+   "cityPopulation": 0
+  },
+  "LVA-5777": {
+   "areaKm2": 215,
+   "cityPopulation": 0
+  },
+  "LVA-5778": {
+   "areaKm2": 355,
+   "cityPopulation": 0
+  },
+  "LVA-5780": {
+   "areaKm2": 44,
+   "cityPopulation": 0
+  },
+  "LVA-5781": {
+   "areaKm2": 694,
+   "cityPopulation": 0
+  },
+  "LVA-5782": {
+   "areaKm2": 464,
+   "cityPopulation": 0
+  },
+  "LVA-5783": {
+   "areaKm2": 305,
+   "cityPopulation": 0
+  },
+  "LVA-5784": {
+   "areaKm2": 657,
+   "cityPopulation": 0
+  },
+  "LVA-5785": {
+   "areaKm2": 210,
+   "cityPopulation": 0
+  },
+  "LVA-5786": {
+   "areaKm2": 412,
+   "cityPopulation": 0
+  },
+  "LVA-5787": {
+   "areaKm2": 234,
+   "cityPopulation": 0
+  },
+  "LVA-5788": {
+   "areaKm2": 504,
+   "cityPopulation": 0
+  },
+  "LVA-5789": {
+   "areaKm2": 184,
+   "cityPopulation": 0
+  },
+  "LVA-5790": {
+   "areaKm2": 304,
+   "cityPopulation": 0
+  },
+  "LVA-5791": {
+   "areaKm2": 435,
+   "cityPopulation": 0
+  },
+  "LVA-5792": {
+   "areaKm2": 290,
+   "cityPopulation": 0
+  },
+  "LVA-5793": {
+   "areaKm2": 550,
+   "cityPopulation": 0
+  },
+  "LVA-5794": {
+   "areaKm2": 285,
+   "cityPopulation": 0
+  },
+  "LVA-5795": {
+   "areaKm2": 385,
+   "cityPopulation": 0
+  },
+  "LVA-5796": {
+   "areaKm2": 298,
+   "cityPopulation": 0
+  },
+  "LVA-5797": {
+   "areaKm2": 538,
+   "cityPopulation": 0
+  },
+  "LVA-5798": {
+   "areaKm2": 947,
+   "cityPopulation": 0
+  },
+  "LVA-5799": {
+   "areaKm2": 327,
+   "cityPopulation": 0
+  },
+  "LVA-5800": {
+   "areaKm2": 311,
+   "cityPopulation": 0
+  },
+  "LVA-934": {
+   "areaKm2": 2465,
+   "cityPopulation": 0
+  },
+  "MAC+00?": {
+   "areaKm2": 31,
+   "cityPopulation": 568700
+  },
+  "MAF-5145": {
+   "areaKm2": 64,
+   "cityPopulation": 0
+  },
+  "MNP-4937": {
+   "areaKm2": 79,
+   "cityPopulation": 0
+  },
+  "MNP-4938": {
+   "areaKm2": 95,
+   "cityPopulation": 0
+  },
+  "MNP-4939": {
+   "areaKm2": 136,
+   "cityPopulation": 2500
+  },
+  "MNP-4940": {
+   "areaKm2": 183,
+   "cityPopulation": 0
+  },
+  "MSR-5087": {
+   "areaKm2": 42,
+   "cityPopulation": 0
+  },
+  "MSR-5088": {
+   "areaKm2": 16,
+   "cityPopulation": 0
+  },
+  "MSR-5089": {
+   "areaKm2": 27,
+   "cityPopulation": 0
+  },
+  "NCL-1258": {
+   "areaKm2": 2084,
+   "cityPopulation": 0
+  },
+  "NCL-1259": {
+   "areaKm2": 7226,
+   "cityPopulation": 93060
+  },
+  "NCL-559": {
+   "areaKm2": 9458,
+   "cityPopulation": 0
+  },
+  "NFK+00?": {
+   "areaKm2": 32,
+   "cityPopulation": 0
+  },
+  "PAK-1108": {
+   "areaKm2": 349187,
+   "cityPopulation": 1144616
+  },
+  "PAK-1109": {
+   "areaKm2": 11970,
+   "cityPopulation": 0
+  },
+  "PAK-1110": {
+   "areaKm2": 813,
+   "cityPopulation": 780000
+  },
+  "PAK-1111": {
+   "areaKm2": 65148,
+   "cityPopulation": 216760
+  },
+  "PAK-1112": {
+   "areaKm2": 27305,
+   "cityPopulation": 55685
+  },
+  "PAK-1113": {
+   "areaKm2": 204040,
+   "cityPopulation": 18429970
+  },
+  "PAK-1114": {
+   "areaKm2": 141035,
+   "cityPopulation": 14956739
+  },
+  "PAK-1123": {
+   "areaKm2": 75031,
+   "cityPopulation": 5780929
+  },
+  "PCN+00?": {
+   "areaKm2": 29,
+   "cityPopulation": 0
+  },
+  "PFA+00?": {
+   "areaKm2": 4,
+   "cityPopulation": 0
+  },
+  "POL-3139": {
+   "areaKm2": 24317,
+   "cityPopulation": 369997
+  },
+  "POL-3140": {
+   "areaKm2": 18483,
+   "cityPopulation": 1054664
+  },
+  "POL-3141": {
+   "areaKm2": 19770,
+   "cityPopulation": 634893
+  },
+  "POL-3142": {
+   "areaKm2": 23387,
+   "cityPopulation": 515261
+  },
+  "POL-3143": {
+   "areaKm2": 13856,
+   "cityPopulation": 118433
+  },
+  "POL-3144": {
+   "areaKm2": 29416,
+   "cityPopulation": 623997
+  },
+  "POL-3145": {
+   "areaKm2": 17777,
+   "cityPopulation": 547902
+  },
+  "POL-3146": {
+   "areaKm2": 12187,
+   "cityPopulation": 3915917
+  },
+  "POL-3147": {
+   "areaKm2": 18483,
+   "cityPopulation": 758000
+  },
+  "POL-3148": {
+   "areaKm2": 35040,
+   "cityPopulation": 1707000
+  },
+  "POL-3149": {
+   "areaKm2": 11216,
+   "cityPopulation": 215733
+  },
+  "POL-3150": {
+   "areaKm2": 20998,
+   "cityPopulation": 291855
+  },
+  "POL-3151": {
+   "areaKm2": 24595,
+   "cityPopulation": 360044
+  },
+  "POL-3152": {
+   "areaKm2": 17979,
+   "cityPopulation": 245686
+  },
+  "POL-3167": {
+   "areaKm2": 9091,
+   "cityPopulation": 131412
+  },
+  "POL-3170": {
+   "areaKm2": 15477,
+   "cityPopulation": 756000
+  },
+  "PRI-5260": {
+   "areaKm2": 9078,
+   "cityPopulation": 520980
+  },
+  "PRK-3303": {
+   "areaKm2": 9267,
+   "cityPopulation": 559357
+  },
+  "PRK-3304": {
+   "areaKm2": 8063,
+   "cityPopulation": 342410
+  },
+  "PRK-3305": {
+   "areaKm2": 2701,
+   "cityPopulation": 3300000
+  },
+  "PRK-3307": {
+   "areaKm2": 17417,
+   "cityPopulation": 1041195
+  },
+  "PRK-3308": {
+   "areaKm2": 11240,
+   "cityPopulation": 440968
+  },
+  "PRK-3310": {
+   "areaKm2": 15922,
+   "cityPopulation": 494127
+  },
+  "PRK-3311": {
+   "areaKm2": 18521,
+   "cityPopulation": 773000
+  },
+  "PRK-3312": {
+   "areaKm2": 12168,
+   "cityPopulation": 431765
+  },
+  "PRK-3313": {
+   "areaKm2": 12299,
+   "cityPopulation": 420092
+  },
+  "PRK-3314": {
+   "areaKm2": 13777,
+   "cityPopulation": 231300
+  },
+  "PRK-5495": {
+   "areaKm2": 792,
+   "cityPopulation": 60864
+  },
+  "PYF-4963": {
+   "areaKm2": 1009,
+   "cityPopulation": 131695
+  },
+  "PYF-4964": {
+   "areaKm2": 265,
+   "cityPopulation": 0
+  },
+  "PYF-4965": {
+   "areaKm2": 502,
+   "cityPopulation": 0
+  },
+  "PYF-4966": {
+   "areaKm2": 85,
+   "cityPopulation": 0
+  },
+  "PYF-4967": {
+   "areaKm2": 1005,
+   "cityPopulation": 0
+  },
+  "RUS+99?": {
+   "areaKm2": 34,
+   "cityPopulation": 0
+  },
+  "RUS-2167": {
+   "areaKm2": 313343,
+   "cityPopulation": 642391
+  },
+  "RUS-2279": {
+   "areaKm2": 7998,
+   "cityPopulation": 158451
+  },
+  "RUS-2280": {
+   "areaKm2": 14451,
+   "cityPopulation": 116224
+  },
+  "RUS-2303": {
+   "areaKm2": 3280,
+   "cityPopulation": 93357
+  },
+  "RUS-2304": {
+   "areaKm2": 12606,
+   "cityPopulation": 307866
+  },
+  "RUS-2305": {
+   "areaKm2": 7944,
+   "cityPopulation": 410332
+  },
+  "RUS-2306": {
+   "areaKm2": 66684,
+   "cityPopulation": 923030
+  },
+  "RUS-2321": {
+   "areaKm2": 712609,
+   "cityPopulation": 23797
+  },
+  "RUS-2324": {
+   "areaKm2": 13547,
+   "cityPopulation": 523450
+  },
+  "RUS-2333": {
+   "areaKm2": 142515,
+   "cityPopulation": 598904
+  },
+  "RUS-2334": {
+   "areaKm2": 54959,
+   "cityPopulation": 310907
+  },
+  "RUS-2335": {
+   "areaKm2": 55669,
+   "cityPopulation": 305139
+  },
+  "RUS-2336": {
+   "areaKm2": 82424,
+   "cityPopulation": 488853
+  },
+  "RUS-2337": {
+   "areaKm2": 2042,
+   "cityPopulation": 4778801
+  },
+  "RUS-2342": {
+   "areaKm2": 35144,
+   "cityPopulation": 570633
+  },
+  "RUS-2343": {
+   "areaKm2": 49976,
+   "cityPopulation": 480099
+  },
+  "RUS-2353": {
+   "areaKm2": 172814,
+   "cityPopulation": 358733
+  },
+  "RUS-2354": {
+   "areaKm2": 401053,
+   "cityPopulation": 662897
+  },
+  "RUS-2355": {
+   "areaKm2": 23402,
+   "cityPopulation": 613598
+  },
+  "RUS-2356": {
+   "areaKm2": 59870,
+   "cityPopulation": 339674
+  },
+  "RUS-2357": {
+   "areaKm2": 74737,
+   "cityPopulation": 1801881
+  },
+  "RUS-2358": {
+   "areaKm2": 84412,
+   "cityPopulation": 703269
+  },
+  "RUS-2359": {
+   "areaKm2": 144964,
+   "cityPopulation": 682150
+  },
+  "RUS-2360": {
+   "areaKm2": 35935,
+   "cityPopulation": 894989
+  },
+  "RUS-2361": {
+   "areaKm2": 29309,
+   "cityPopulation": 485689
+  },
+  "RUS-2362": {
+   "areaKm2": 30057,
+   "cityPopulation": 530831
+  },
+  "RUS-2363": {
+   "areaKm2": 24142,
+   "cityPopulation": 678987
+  },
+  "RUS-2364": {
+   "areaKm2": 43949,
+   "cityPopulation": 991968
+  },
+  "RUS-2365": {
+   "areaKm2": 2758,
+   "cityPopulation": 10772635
+  },
+  "RUS-2366": {
+   "areaKm2": 24780,
+   "cityPopulation": 435076
+  },
+  "RUS-2367": {
+   "areaKm2": 100996,
+   "cityPopulation": 2319952
+  },
+  "RUS-2368": {
+   "areaKm2": 25309,
+   "cityPopulation": 858491
+  },
+  "RUS-2369": {
+   "areaKm2": 112813,
+   "cityPopulation": 1610526
+  },
+  "RUS-2370": {
+   "areaKm2": 27668,
+   "cityPopulation": 693467
+  },
+  "RUS-2371": {
+   "areaKm2": 91278,
+   "cityPopulation": 1957161
+  },
+  "RUS-2372": {
+   "areaKm2": 25884,
+   "cityPopulation": 352705
+  },
+  "RUS-2373": {
+   "areaKm2": 43253,
+   "cityPopulation": 661388
+  },
+  "RUS-2374": {
+   "areaKm2": 39325,
+   "cityPopulation": 588161
+  },
+  "RUS-2375": {
+   "areaKm2": 34304,
+   "cityPopulation": 495383
+  },
+  "RUS-2376": {
+   "areaKm2": 29372,
+   "cityPopulation": 604159
+  },
+  "RUS-2377": {
+   "areaKm2": 52098,
+   "cityPopulation": 912597
+  },
+  "RUS-2378": {
+   "areaKm2": 142483,
+   "cityPopulation": 1999525
+  },
+  "RUS-2379": {
+   "areaKm2": 88386,
+   "cityPopulation": 2183363
+  },
+  "RUS-2380": {
+   "areaKm2": 71927,
+   "cityPopulation": 440544
+  },
+  "RUS-2381": {
+   "areaKm2": 176371,
+   "cityPopulation": 22560
+  },
+  "RUS-2382": {
+   "areaKm2": 682172,
+   "cityPopulation": 504968
+  },
+  "RUS-2383": {
+   "areaKm2": 415254,
+   "cityPopulation": 568075
+  },
+  "RUS-2384": {
+   "areaKm2": 119809,
+   "cityPopulation": 687136
+  },
+  "RUS-2385": {
+   "areaKm2": 23205,
+   "cityPopulation": 324406
+  },
+  "RUS-2386": {
+   "areaKm2": 193638,
+   "cityPopulation": 2731981
+  },
+  "RUS-2387": {
+   "areaKm2": 41816,
+   "cityPopulation": 978961
+  },
+  "RUS-2388": {
+   "areaKm2": 45831,
+   "cityPopulation": 547084
+  },
+  "RUS-2389": {
+   "areaKm2": 18313,
+   "cityPopulation": 578324
+  },
+  "RUS-2390": {
+   "areaKm2": 73244,
+   "cityPopulation": 106971
+  },
+  "RUS-2391": {
+   "areaKm2": 124438,
+   "cityPopulation": 1153721
+  },
+  "RUS-2392": {
+   "areaKm2": 53079,
+   "cityPopulation": 2338842
+  },
+  "RUS-2393": {
+   "areaKm2": 101781,
+   "cityPopulation": 1487275
+  },
+  "RUS-2394": {
+   "areaKm2": 67645,
+   "cityPopulation": 2270783
+  },
+  "RUS-2395": {
+   "areaKm2": 37102,
+   "cityPopulation": 772906
+  },
+  "RUS-2396": {
+   "areaKm2": 530553,
+   "cityPopulation": 1036827
+  },
+  "RUS-2397": {
+   "areaKm2": 140681,
+   "cityPopulation": 1231587
+  },
+  "RUS-2398": {
+   "areaKm2": 159161,
+   "cityPopulation": 749997
+  },
+  "RUS-2399": {
+   "areaKm2": 171235,
+   "cityPopulation": 1216711
+  },
+  "RUS-2400": {
+   "areaKm2": 92556,
+   "cityPopulation": 59868
+  },
+  "RUS-2401": {
+   "areaKm2": 94806,
+   "cityPopulation": 1808456
+  },
+  "RUS-2402": {
+   "areaKm2": 59236,
+   "cityPopulation": 99034
+  },
+  "RUS-2403": {
+   "areaKm2": 177026,
+   "cityPopulation": 1645248
+  },
+  "RUS-2416": {
+   "areaKm2": 16170,
+   "cityPopulation": 226100
+  },
+  "RUS-2417": {
+   "areaKm2": 50002,
+   "cityPopulation": 818498
+  },
+  "RUS-2602": {
+   "areaKm2": 770510,
+   "cityPopulation": 1653782
+  },
+  "RUS-2603": {
+   "areaKm2": 2326356,
+   "cityPopulation": 2041658
+  },
+  "RUS-2605": {
+   "areaKm2": 168796,
+   "cityPopulation": 111972
+  },
+  "RUS-2606": {
+   "areaKm2": 351617,
+   "cityPopulation": 447811
+  },
+  "RUS-2609": {
+   "areaKm2": 359656,
+   "cityPopulation": 462821
+  },
+  "RUS-2610": {
+   "areaKm2": 430969,
+   "cityPopulation": 584033
+  },
+  "RUS-2611": {
+   "areaKm2": 165040,
+   "cityPopulation": 1147588
+  },
+  "RUS-2612": {
+   "areaKm2": 3060987,
+   "cityPopulation": 519913
+  },
+  "RUS-2613": {
+   "areaKm2": 35747,
+   "cityPopulation": 86146
+  },
+  "RUS-2614": {
+   "areaKm2": 786295,
+   "cityPopulation": 1037663
+  },
+  "RUS-2615": {
+   "areaKm2": 461784,
+   "cityPopulation": 130366
+  },
+  "RUS-2616": {
+   "areaKm2": 85593,
+   "cityPopulation": 363892
+  },
+  "RUS-283": {
+   "areaKm2": 26436,
+   "cityPopulation": 738914
+  },
+  "RUS-3200": {
+   "areaKm2": 160115,
+   "cityPopulation": 1542733
+  },
+  "RUS-3468": {
+   "areaKm2": 462551,
+   "cityPopulation": 198965
+  },
+  "RUS-5482": {
+   "areaKm2": 727,
+   "cityPopulation": 379200
+  },
+  "RWA-3491": {
+   "areaKm2": 5839,
+   "cityPopulation": 404822
+  },
+  "RWA-3492": {
+   "areaKm2": 6102,
+   "cityPopulation": 151547
+  },
+  "RWA-3493": {
+   "areaKm2": 9498,
+   "cityPopulation": 46240
+  },
+  "RWA-3494": {
+   "areaKm2": 3209,
+   "cityPopulation": 157278
+  },
+  "RWA-3495": {
+   "areaKm2": 789,
+   "cityPopulation": 860000
+  },
+  "SAU-1096": {
+   "areaKm2": 90158,
+   "cityPopulation": 369609
+  },
+  "SAU-1097": {
+   "areaKm2": 377709,
+   "cityPopulation": 5390842
+  },
+  "SAU-1098": {
+   "areaKm2": 555750,
+   "cityPopulation": 3943467
+  },
+  "SAU-845": {
+   "areaKm2": 144603,
+   "cityPopulation": 1277590
+  },
+  "SAU-846": {
+   "areaKm2": 54273,
+   "cityPopulation": 398581
+  },
+  "SAU-847": {
+   "areaKm2": 121879,
+   "cityPopulation": 385257
+  },
+  "SAU-848": {
+   "areaKm2": 99450,
+   "cityPopulation": 591194
+  },
+  "SAU-861": {
+   "areaKm2": 124556,
+   "cityPopulation": 286771
+  },
+  "SAU-862": {
+   "areaKm2": 117805,
+   "cityPopulation": 160915
+  },
+  "SAU-885": {
+   "areaKm2": 10314,
+   "cityPopulation": 0
+  },
+  "SAU-886": {
+   "areaKm2": 77745,
+   "cityPopulation": 299177
+  },
+  "SAU-887": {
+   "areaKm2": 14994,
+   "cityPopulation": 105198
+  },
+  "SAU-888": {
+   "areaKm2": 138324,
+   "cityPopulation": 5054439
+  },
+  "SGS+00?": {
+   "areaKm2": 3989,
+   "cityPopulation": 99
+  },
+  "SHN-4863": {
+   "areaKm2": 77,
+   "cityPopulation": 0
+  },
+  "SHN-4864": {
+   "areaKm2": 88,
+   "cityPopulation": 0
+  },
+  "SHN-4865": {
+   "areaKm2": 126,
+   "cityPopulation": 0
+  },
+  "SPM-4866": {
+   "areaKm2": 24,
+   "cityPopulation": 0
+  },
+  "SPM-4867": {
+   "areaKm2": 190,
+   "cityPopulation": 0
+  },
+  "TCA-5003": {
+   "areaKm2": 162,
+   "cityPopulation": 0
+  },
+  "TCA-5004": {
+   "areaKm2": 70,
+   "cityPopulation": 0
+  },
+  "TCA-5005": {
+   "areaKm2": 111,
+   "cityPopulation": 0
+  },
+  "TCA-5006": {
+   "areaKm2": 55,
+   "cityPopulation": 0
+  },
+  "TCA-5007": {
+   "areaKm2": 8,
+   "cityPopulation": 5801
+  },
+  "TCA-5008": {
+   "areaKm2": 4,
+   "cityPopulation": 0
+  },
+  "THA-374": {
+   "areaKm2": 13689,
+   "cityPopulation": 9109
+  },
+  "THA-375": {
+   "areaKm2": 5758,
+   "cityPopulation": 85686
+  },
+  "THA-376": {
+   "areaKm2": 10329,
+   "cityPopulation": 260558
+  },
+  "THA-377": {
+   "areaKm2": 543,
+   "cityPopulation": 141618
+  },
+  "THA-378": {
+   "areaKm2": 3867,
+   "cityPopulation": 9676
+  },
+  "THA-379": {
+   "areaKm2": 3534,
+   "cityPopulation": 24561
+  },
+  "THA-380": {
+   "areaKm2": 13573,
+   "cityPopulation": 157627
+  },
+  "THA-382": {
+   "areaKm2": 4319,
+   "cityPopulation": 31219
+  },
+  "THA-383": {
+   "areaKm2": 3201,
+   "cityPopulation": 43522
+  },
+  "THA-385": {
+   "areaKm2": 2534,
+   "cityPopulation": 34544
+  },
+  "THA-386": {
+   "areaKm2": 7506,
+   "cityPopulation": 366570
+  },
+  "THA-387": {
+   "areaKm2": 4776,
+   "cityPopulation": 147820
+  },
+  "THA-388": {
+   "areaKm2": 4764,
+   "cityPopulation": 148140
+  },
+  "THA-389": {
+   "areaKm2": 11326,
+   "cityPopulation": 117127
+  },
+  "THA-390": {
+   "areaKm2": 22691,
+   "cityPopulation": 397211
+  },
+  "THA-391": {
+   "areaKm2": 12665,
+   "cityPopulation": 204081
+  },
+  "THA-392": {
+   "areaKm2": 4158,
+   "cityPopulation": 14030
+  },
+  "THA-393": {
+   "areaKm2": 11687,
+   "cityPopulation": 82483
+  },
+  "THA-394": {
+   "areaKm2": 6044,
+   "cityPopulation": 21058
+  },
+  "THA-395": {
+   "areaKm2": 6593,
+   "cityPopulation": 38538
+  },
+  "THA-396": {
+   "areaKm2": 10575,
+   "cityPopulation": 164017
+  },
+  "THA-397": {
+   "areaKm2": 7019,
+   "cityPopulation": 10276
+  },
+  "THA-398": {
+   "areaKm2": 7666,
+   "cityPopulation": 76630
+  },
+  "THA-399": {
+   "areaKm2": 20152,
+   "cityPopulation": 63699
+  },
+  "THA-400": {
+   "areaKm2": 8844,
+   "cityPopulation": 58787
+  },
+  "THA-401": {
+   "areaKm2": 4324,
+   "cityPopulation": 35760
+  },
+  "THA-402": {
+   "areaKm2": 12540,
+   "cityPopulation": 50656
+  },
+  "THA-403": {
+   "areaKm2": 5325,
+   "cityPopulation": 53399
+  },
+  "THA-404": {
+   "areaKm2": 16490,
+   "cityPopulation": 78927
+  },
+  "THA-405": {
+   "areaKm2": 6586,
+   "cityPopulation": 22219
+  },
+  "THA-406": {
+   "areaKm2": 988,
+   "cityPopulation": 13738
+  },
+  "THA-407": {
+   "areaKm2": 2359,
+   "cityPopulation": 15469
+  },
+  "THA-408": {
+   "areaKm2": 6648,
+   "cityPopulation": 57761
+  },
+  "THA-409": {
+   "areaKm2": 2196,
+   "cityPopulation": 21309
+  },
+  "THA-410": {
+   "areaKm2": 4714,
+   "cityPopulation": 79757
+  },
+  "THA-411": {
+   "areaKm2": 9719,
+   "cityPopulation": 111915
+  },
+  "THA-412": {
+   "areaKm2": 2523,
+   "cityPopulation": 145615
+  },
+  "THA-413": {
+   "areaKm2": 1441,
+   "cityPopulation": 154412
+  },
+  "THA-414": {
+   "areaKm2": 803,
+   "cityPopulation": 20046
+  },
+  "THA-415": {
+   "areaKm2": 2935,
+   "cityPopulation": 70769
+  },
+  "THA-416": {
+   "areaKm2": 1603,
+   "cityPopulation": 6704000
+  },
+  "THA-417": {
+   "areaKm2": 607,
+   "cityPopulation": 258550
+  },
+  "THA-418": {
+   "areaKm2": 2179,
+   "cityPopulation": 117927
+  },
+  "THA-419": {
+   "areaKm2": 6658,
+   "cityPopulation": 90497
+  },
+  "THA-420": {
+   "areaKm2": 6857,
+   "cityPopulation": 83977
+  },
+  "THA-421": {
+   "areaKm2": 5362,
+   "cityPopulation": 106996
+  },
+  "THA-422": {
+   "areaKm2": 904,
+   "cityPopulation": 388920
+  },
+  "THA-423": {
+   "areaKm2": 805,
+   "cityPopulation": 63498
+  },
+  "THA-424": {
+   "areaKm2": 404,
+   "cityPopulation": 35065
+  },
+  "THA-425": {
+   "areaKm2": 8893,
+   "cityPopulation": 44751
+  },
+  "THA-426": {
+   "areaKm2": 14443,
+   "cityPopulation": 273893
+  },
+  "THA-427": {
+   "areaKm2": 4032,
+   "cityPopulation": 0
+  },
+  "THA-428": {
+   "areaKm2": 4082,
+   "cityPopulation": 21643
+  },
+  "THA-430": {
+   "areaKm2": 4358,
+   "cityPopulation": 405534
+  },
+  "THA-431": {
+   "areaKm2": 5506,
+   "cityPopulation": 49741
+  },
+  "THA-432": {
+   "areaKm2": 5880,
+   "cityPopulation": 99819
+  },
+  "THA-433": {
+   "areaKm2": 7096,
+   "cityPopulation": 22472
+  },
+  "THA-434": {
+   "areaKm2": 3683,
+   "cityPopulation": 37035
+  },
+  "THA-435": {
+   "areaKm2": 2720,
+   "cityPopulation": 21590
+  },
+  "THA-436": {
+   "areaKm2": 10139,
+   "cityPopulation": 47292
+  },
+  "THA-437": {
+   "areaKm2": 13203,
+   "cityPopulation": 58350
+  },
+  "THA-438": {
+   "areaKm2": 10672,
+   "cityPopulation": 251056
+  },
+  "THA-439": {
+   "areaKm2": 6846,
+   "cityPopulation": 55102
+  },
+  "THA-440": {
+   "areaKm2": 5823,
+   "cityPopulation": 51584
+  },
+  "THA-441": {
+   "areaKm2": 20800,
+   "cityPopulation": 353253
+  },
+  "THA-442": {
+   "areaKm2": 7671,
+   "cityPopulation": 39328
+  },
+  "THA-443": {
+   "areaKm2": 8633,
+   "cityPopulation": 62536
+  },
+  "THA-445": {
+   "areaKm2": 10440,
+   "cityPopulation": 35273
+  },
+  "THA-446": {
+   "areaKm2": 3521,
+   "cityPopulation": 104505
+  },
+  "THA-447": {
+   "areaKm2": 9586,
+   "cityPopulation": 76237
+  },
+  "THA-448": {
+   "areaKm2": 10756,
+   "cityPopulation": 247231
+  },
+  "THA-449": {
+   "areaKm2": 4376,
+   "cityPopulation": 0
+  },
+  "THA-472": {
+   "areaKm2": 5734,
+   "cityPopulation": 55377
+  },
+  "THA-473": {
+   "areaKm2": 4083,
+   "cityPopulation": 0
+  },
+  "THA-493": {
+   "areaKm2": 4462,
+   "cityPopulation": 68112
+  },
+  "THA-494": {
+   "areaKm2": 1972,
+   "cityPopulation": 150000
+  },
+  "THA-5499": {
+   "areaKm2": 3937,
+   "cityPopulation": 0
+  },
+  "TUR-2229": {
+   "areaKm2": 8013,
+   "cityPopulation": 276198
+  },
+  "TUR-2230": {
+   "areaKm2": 12843,
+   "cityPopulation": 2587000
+  },
+  "TUR-2238": {
+   "areaKm2": 14547,
+   "cityPopulation": 261516
+  },
+  "TUR-2239": {
+   "areaKm2": 9543,
+   "cityPopulation": 87791
+  },
+  "TUR-2240": {
+   "areaKm2": 5377,
+   "cityPopulation": 126470
+  },
+  "TUR-2241": {
+   "areaKm2": 6981,
+   "cityPopulation": 149122
+  },
+  "TUR-2242": {
+   "areaKm2": 6858,
+   "cityPopulation": 122287
+  },
+  "TUR-2263": {
+   "areaKm2": 5322,
+   "cityPopulation": 40285
+  },
+  "TUR-2264": {
+   "areaKm2": 10877,
+   "cityPopulation": 1492000
+  },
+  "TUR-2265": {
+   "areaKm2": 4926,
+   "cityPopulation": 10061000
+  },
+  "TUR-2266": {
+   "areaKm2": 3889,
+   "cityPopulation": 466504
+  },
+  "TUR-2267": {
+   "areaKm2": 4214,
+   "cityPopulation": 546896
+  },
+  "TUR-2268": {
+   "areaKm2": 8545,
+   "cityPopulation": 96629
+  },
+  "TUR-2269": {
+   "areaKm2": 13641,
+   "cityPopulation": 514869
+  },
+  "TUR-2270": {
+   "areaKm2": 13131,
+   "cityPopulation": 70402
+  },
+  "TUR-2271": {
+   "areaKm2": 21316,
+   "cityPopulation": 783000
+  },
+  "TUR-2272": {
+   "areaKm2": 14713,
+   "cityPopulation": 156992
+  },
+  "TUR-2273": {
+   "areaKm2": 7262,
+   "cityPopulation": 66158
+  },
+  "TUR-2274": {
+   "areaKm2": 11102,
+   "cityPopulation": 372344
+  },
+  "TUR-2275": {
+   "areaKm2": 8762,
+   "cityPopulation": 172334
+  },
+  "TUR-2276": {
+   "areaKm2": 12060,
+   "cityPopulation": 185008
+  },
+  "TUR-2277": {
+   "areaKm2": 12884,
+   "cityPopulation": 243971
+  },
+  "TUR-2278": {
+   "areaKm2": 12884,
+   "cityPopulation": 48183
+  },
+  "TUR-2281": {
+   "areaKm2": 7270,
+   "cityPopulation": 223744
+  },
+  "TUR-2282": {
+   "areaKm2": 9144,
+   "cityPopulation": 271492
+  },
+  "TUR-2283": {
+   "areaKm2": 14480,
+   "cityPopulation": 376045
+  },
+  "TUR-2284": {
+   "areaKm2": 11811,
+   "cityPopulation": 461574
+  },
+  "TUR-2285": {
+   "areaKm2": 15427,
+   "cityPopulation": 1511308
+  },
+  "TUR-2286": {
+   "areaKm2": 6402,
+   "cityPopulation": 94336
+  },
+  "TUR-2287": {
+   "areaKm2": 17474,
+   "cityPopulation": 592840
+  },
+  "TUR-2288": {
+   "areaKm2": 5284,
+   "cityPopulation": 75527
+  },
+  "TUR-2289": {
+   "areaKm2": 5628,
+   "cityPopulation": 546384
+  },
+  "TUR-2290": {
+   "areaKm2": 6197,
+   "cityPopulation": 82896
+  },
+  "TUR-2291": {
+   "areaKm2": 12463,
+   "cityPopulation": 183418
+  },
+  "TUR-2292": {
+   "areaKm2": 6759,
+   "cityPopulation": 98864
+  },
+  "TUR-2293": {
+   "areaKm2": 5812,
+   "cityPopulation": 0
+  },
+  "TUR-2294": {
+   "areaKm2": 6258,
+   "cityPopulation": 34834
+  },
+  "TUR-2295": {
+   "areaKm2": 28064,
+   "cityPopulation": 264022
+  },
+  "TUR-2296": {
+   "areaKm2": 9459,
+   "cityPopulation": 706791
+  },
+  "TUR-2297": {
+   "areaKm2": 9339,
+   "cityPopulation": 129702
+  },
+  "TUR-2298": {
+   "areaKm2": 7783,
+   "cityPopulation": 32272
+  },
+  "TUR-2299": {
+   "areaKm2": 23700,
+   "cityPopulation": 420691
+  },
+  "TUR-2300": {
+   "areaKm2": 11348,
+   "cityPopulation": 129407
+  },
+  "TUR-2301": {
+   "areaKm2": 3744,
+   "cityPopulation": 279450
+  },
+  "TUR-2302": {
+   "areaKm2": 4971,
+   "cityPopulation": 764714
+  },
+  "TUR-2307": {
+   "areaKm2": 9943,
+   "cityPopulation": 87854
+  },
+  "TUR-2308": {
+   "areaKm2": 8461,
+   "cityPopulation": 80568
+  },
+  "TUR-2309": {
+   "areaKm2": 15239,
+   "cityPopulation": 644763
+  },
+  "TUR-2310": {
+   "areaKm2": 7793,
+   "cityPopulation": 82536
+  },
+  "TUR-2311": {
+   "areaKm2": 8936,
+   "cityPopulation": 136033
+  },
+  "TUR-3008": {
+   "areaKm2": 25811,
+   "cityPopulation": 3809262
+  },
+  "TUR-3009": {
+   "areaKm2": 7741,
+   "cityPopulation": 71379
+  },
+  "TUR-3010": {
+   "areaKm2": 3301,
+   "cityPopulation": 156918
+  },
+  "TUR-3011": {
+   "areaKm2": 40440,
+   "cityPopulation": 1011117
+  },
+  "TUR-3012": {
+   "areaKm2": 8889,
+   "cityPopulation": 120399
+  },
+  "TUR-3014": {
+   "areaKm2": 4433,
+   "cityPopulation": 152862
+  },
+  "TUR-3016": {
+   "areaKm2": 7322,
+   "cityPopulation": 1044000
+  },
+  "TUR-3017": {
+   "areaKm2": 19930,
+   "cityPopulation": 449549
+  },
+  "TUR-3018": {
+   "areaKm2": 15414,
+   "cityPopulation": 1293000
+  },
+  "TUR-3019": {
+   "areaKm2": 4636,
+   "cityPopulation": 211138
+  },
+  "TUR-3020": {
+   "areaKm2": 6693,
+   "cityPopulation": 91039
+  },
+  "TUR-3021": {
+   "areaKm2": 7701,
+   "cityPopulation": 0
+  },
+  "TUR-3026": {
+   "areaKm2": 13826,
+   "cityPopulation": 87881
+  },
+  "TUR-3031": {
+   "areaKm2": 6277,
+   "cityPopulation": 32250
+  },
+  "TUR-3032": {
+   "areaKm2": 3492,
+   "cityPopulation": 0
+  },
+  "TUR-3040": {
+   "areaKm2": 10520,
+   "cityPopulation": 77486
+  },
+  "TUR-3041": {
+   "areaKm2": 10077,
+   "cityPopulation": 71373
+  },
+  "TUR-3042": {
+   "areaKm2": 4063,
+   "cityPopulation": 302074
+  },
+  "TUR-3043": {
+   "areaKm2": 6342,
+   "cityPopulation": 114034
+  },
+  "TUR-3044": {
+   "areaKm2": 6487,
+   "cityPopulation": 0
+  },
+  "TUR-3045": {
+   "areaKm2": 7976,
+   "cityPopulation": 29062
+  },
+  "TUR-3047": {
+   "areaKm2": 7522,
+   "cityPopulation": 77699
+  },
+  "TUR-3048": {
+   "areaKm2": 19530,
+   "cityPopulation": 371713
+  },
+  "TUR-4839": {
+   "areaKm2": 5129,
+   "cityPopulation": 0
+  },
+  "TUR-4840": {
+   "areaKm2": 4020,
+   "cityPopulation": 0
+  },
+  "TUR-4841": {
+   "areaKm2": 1258,
+   "cityPopulation": 82301
+  },
+  "TUR-4842": {
+   "areaKm2": 2857,
+   "cityPopulation": 0
+  },
+  "TUR-5518": {
+   "areaKm2": 721,
+   "cityPopulation": 0
+  },
+  "TUR-5519": {
+   "areaKm2": 2555,
+   "cityPopulation": 0
+  },
+  "TUR-5520": {
+   "areaKm2": 3883,
+   "cityPopulation": 128564
+  },
+  "TUR-5521": {
+   "areaKm2": 2070,
+   "cityPopulation": 0
+  },
+  "TWN-1156": {
+   "areaKm2": 3085,
+   "cityPopulation": 2769072
+  },
+  "TWN-1158": {
+   "areaKm2": 3008,
+   "cityPopulation": 503530
+  },
+  "TWN-1160": {
+   "areaKm2": 2072,
+   "cityPopulation": 1876312
+  },
+  "TWN-1161": {
+   "areaKm2": 145,
+   "cityPopulation": 750000
+  },
+  "TWN-1162": {
+   "areaKm2": 1349,
+   "cityPopulation": 200000
+  },
+  "TWN-1163": {
+   "areaKm2": 2127,
+   "cityPopulation": 150000
+  },
+  "TWN-1164": {
+   "areaKm2": 96,
+   "cityPopulation": 500000
+  },
+  "TWN-1165": {
+   "areaKm2": 1799,
+   "cityPopulation": 150000
+  },
+  "TWN-1166": {
+   "areaKm2": 246,
+   "cityPopulation": 6900273
+  },
+  "TWN-1167": {
+   "areaKm2": 2363,
+   "cityPopulation": 3893740
+  },
+  "TWN-1168": {
+   "areaKm2": 1307,
+   "cityPopulation": 2681313
+  },
+  "TWN-1169": {
+   "areaKm2": 1178,
+   "cityPopulation": 750000
+  },
+  "TWN-1170": {
+   "areaKm2": 2087,
+   "cityPopulation": 585000
+  },
+  "TWN-1171": {
+   "areaKm2": 55,
+   "cityPopulation": 0
+  },
+  "TWN-1172": {
+   "areaKm2": 4520,
+   "cityPopulation": 350468
+  },
+  "TWN-1173": {
+   "areaKm2": 4097,
+   "cityPopulation": 165000
+  },
+  "TWN-1174": {
+   "areaKm2": 2351,
+   "cityPopulation": 2629323
+  },
+  "TWN-1176": {
+   "areaKm2": 1328,
+   "cityPopulation": 106653
+  },
+  "TWN-1177": {
+   "areaKm2": 3406,
+   "cityPopulation": 0
+  },
+  "TWN-3414": {
+   "areaKm2": 112,
+   "cityPopulation": 56435
+  },
+  "TWN-3415": {
+   "areaKm2": 150,
+   "cityPopulation": 0
+  },
+  "UKR-284": {
+   "areaKm2": 23523,
+   "cityPopulation": 554836
+  },
+  "UKR-285": {
+   "areaKm2": 31576,
+   "cityPopulation": 423972
+  },
+  "UKR-286": {
+   "areaKm2": 20226,
+   "cityPopulation": 255106
+  },
+  "UKR-288": {
+   "areaKm2": 8070,
+   "cityPopulation": 298251
+  },
+  "UKR-289": {
+   "areaKm2": 13814,
+   "cityPopulation": 241239
+  },
+  "UKR-290": {
+   "areaKm2": 20302,
+   "cityPopulation": 513004
+  },
+  "UKR-291": {
+   "areaKm2": 21693,
+   "cityPopulation": 928149
+  },
+  "UKR-292": {
+   "areaKm2": 14083,
+   "cityPopulation": 244768
+  },
+  "UKR-293": {
+   "areaKm2": 13053,
+   "cityPopulation": 150832
+  },
+  "UKR-318": {
+   "areaKm2": 19768,
+   "cityPopulation": 284962
+  },
+  "UKR-319": {
+   "areaKm2": 21158,
+   "cityPopulation": 385226
+  },
+  "UKR-320": {
+   "areaKm2": 24278,
+   "cityPopulation": 249454
+  },
+  "UKR-321": {
+   "areaKm2": 30268,
+   "cityPopulation": 2996669
+  },
+  "UKR-322": {
+   "areaKm2": 33044,
+   "cityPopulation": 1128296
+  },
+  "UKR-323": {
+   "areaKm2": 26590,
+   "cityPopulation": 352115
+  },
+  "UKR-324": {
+   "areaKm2": 29656,
+   "cityPopulation": 355176
+  },
+  "UKR-325": {
+   "areaKm2": 23285,
+   "cityPopulation": 494828
+  },
+  "UKR-326": {
+   "areaKm2": 31727,
+   "cityPopulation": 1832880
+  },
+  "UKR-327": {
+   "areaKm2": 26478,
+   "cityPopulation": 2427226
+  },
+  "UKR-328": {
+   "areaKm2": 31296,
+   "cityPopulation": 1539870
+  },
+  "UKR-329": {
+   "areaKm2": 26252,
+   "cityPopulation": 576421
+  },
+  "UKR-330": {
+   "areaKm2": 28351,
+   "cityPopulation": 550589
+  },
+  "UKR-331": {
+   "areaKm2": 27101,
+   "cityPopulation": 1064284
+  },
+  "UKR-4826": {
+   "areaKm2": 1667,
+   "cityPopulation": 0
+  },
+  "UKR-4827": {
+   "areaKm2": 25982,
+   "cityPopulation": 0
+  },
+  "UMI-5171": {
+   "areaKm2": 1,
+   "cityPopulation": 0
+  },
+  "UMI-5172": {
+   "areaKm2": 0,
+   "cityPopulation": 0
+  },
+  "UMI-5173": {
+   "areaKm2": 2,
+   "cityPopulation": 0
+  },
+  "UMI-5174": {
+   "areaKm2": 2,
+   "cityPopulation": 0
+  },
+  "UMI-5176": {
+   "areaKm2": 3,
+   "cityPopulation": 0
+  },
+  "UMI-5177": {
+   "areaKm2": 4,
+   "cityPopulation": 0
+  },
+  "UMI-5178": {
+   "areaKm2": 6,
+   "cityPopulation": 0
+  },
+  "UMI-5179": {
+   "areaKm2": 6,
+   "cityPopulation": 0
+  },
+  "USA-3513": {
+   "areaKm2": 21409,
+   "cityPopulation": 6082086
+  },
+  "USA-3514": {
+   "areaKm2": 224010,
+   "cityPopulation": 4171464
+  },
+  "USA-3515": {
+   "areaKm2": 378629,
+   "cityPopulation": 436966
+  },
+  "USA-3516": {
+   "areaKm2": 182303,
+   "cityPopulation": 377575
+  },
+  "USA-3517": {
+   "areaKm2": 16554,
+   "cityPopulation": 1090711
+  },
+  "USA-3518": {
+   "areaKm2": 216005,
+   "cityPopulation": 766730
+  },
+  "USA-3519": {
+   "areaKm2": 173650,
+   "cityPopulation": 5357413
+  },
+  "USA-3520": {
+   "areaKm2": 295397,
+   "cityPopulation": 6428412
+  },
+  "USA-3521": {
+   "areaKm2": 409818,
+   "cityPopulation": 37354729
+  },
+  "USA-3522": {
+   "areaKm2": 269033,
+   "cityPopulation": 4180189
+  },
+  "USA-3523": {
+   "areaKm2": 287270,
+   "cityPopulation": 2260800
+  },
+  "USA-3524": {
+   "areaKm2": 315263,
+   "cityPopulation": 1417258
+  },
+  "USA-3525": {
+   "areaKm2": 251396,
+   "cityPopulation": 3430704
+  },
+  "USA-3526": {
+   "areaKm2": 219625,
+   "cityPopulation": 1949781
+  },
+  "USA-3527": {
+   "areaKm2": 253087,
+   "cityPopulation": 253784
+  },
+  "USA-3528": {
+   "areaKm2": 137476,
+   "cityPopulation": 854845
+  },
+  "USA-3529": {
+   "areaKm2": 145101,
+   "cityPopulation": 1437840
+  },
+  "USA-3530": {
+   "areaKm2": 212803,
+   "cityPopulation": 1398770
+  },
+  "USA-3531": {
+   "areaKm2": 180456,
+   "cityPopulation": 5072815
+  },
+  "USA-3532": {
+   "areaKm2": 200837,
+   "cityPopulation": 1304932
+  },
+  "USA-3533": {
+   "areaKm2": 180565,
+   "cityPopulation": 2233587
+  },
+  "USA-3534": {
+   "areaKm2": 198802,
+   "cityPopulation": 328502
+  },
+  "USA-3535": {
+   "areaKm2": 119707,
+   "cityPopulation": 2456026
+  },
+  "USA-3536": {
+   "areaKm2": 686503,
+   "cityPopulation": 19488384
+  },
+  "USA-3537": {
+   "areaKm2": 12431,
+   "cityPopulation": 3795100
+  },
+  "USA-3538": {
+   "areaKm2": 23999,
+   "cityPopulation": 241172
+  },
+  "USA-3539": {
+   "areaKm2": 2810,
+   "cityPopulation": 1322968
+  },
+  "USA-3540": {
+   "areaKm2": 24577,
+   "cityPopulation": 102345
+  },
+  "USA-3541": {
+   "areaKm2": 133829,
+   "cityPopulation": 2181003
+  },
+  "USA-3542": {
+   "areaKm2": 146646,
+   "cityPopulation": 18803338
+  },
+  "USA-3543": {
+   "areaKm2": 152198,
+   "cityPopulation": 5797003
+  },
+  "USA-3544": {
+   "areaKm2": 123908,
+   "cityPopulation": 758611
+  },
+  "USA-3545": {
+   "areaKm2": 80219,
+   "cityPopulation": 1712192
+  },
+  "USA-3546": {
+   "areaKm2": 150075,
+   "cityPopulation": 12347054
+  },
+  "USA-3547": {
+   "areaKm2": 94319,
+   "cityPopulation": 3547580
+  },
+  "USA-3548": {
+   "areaKm2": 103927,
+   "cityPopulation": 2080779
+  },
+  "USA-3549": {
+   "areaKm2": 127679,
+   "cityPopulation": 4125616
+  },
+  "USA-3550": {
+   "areaKm2": 116085,
+   "cityPopulation": 7669443
+  },
+  "USA-3551": {
+   "areaKm2": 109707,
+   "cityPopulation": 3753570
+  },
+  "USA-3552": {
+   "areaKm2": 103311,
+   "cityPopulation": 4706659
+  },
+  "USA-3553": {
+   "areaKm2": 169580,
+   "cityPopulation": 3105571
+  },
+  "USA-3554": {
+   "areaKm2": 62791,
+   "cityPopulation": 451446
+  },
+  "USA-3555": {
+   "areaKm2": 5064,
+   "cityPopulation": 237599
+  },
+  "USA-3556": {
+   "areaKm2": 163,
+   "cityPopulation": 4338000
+  },
+  "USA-3557": {
+   "areaKm2": 25423,
+   "cityPopulation": 2425186
+  },
+  "USA-3558": {
+   "areaKm2": 19482,
+   "cityPopulation": 874414
+  },
+  "USA-3559": {
+   "areaKm2": 136833,
+   "cityPopulation": 23349637
+  },
+  "USA-3560": {
+   "areaKm2": 119279,
+   "cityPopulation": 9688945
+  },
+  "USA-3561": {
+   "areaKm2": 84126,
+   "cityPopulation": 176570
+  },
+  "USA-3562": {
+   "areaKm2": 248810,
+   "cityPopulation": 6724496
+  },
+  "USA-3563": {
+   "areaKm2": 1496766,
+   "cityPopulation": 402853
+  },
+  "USG+00?": {
+   "areaKm2": 59,
+   "cityPopulation": 0
+  },
+  "VGB+00?": {
+   "areaKm2": 159,
+   "cityPopulation": 0
+  },
+  "VIR-4868": {
+   "areaKm2": 82,
+   "cityPopulation": 0
+  },
+  "VIR-4869": {
+   "areaKm2": 50,
+   "cityPopulation": 0
+  },
+  "VIR-4870": {
+   "areaKm2": 208,
+   "cityPopulation": 32543
+  },
+  "VNM-429": {
+   "areaKm2": 5323,
+   "cityPopulation": 308392
+  },
+  "VNM-444": {
+   "areaKm2": 4250,
+   "cityPopulation": 126370
+  },
+  "VNM-450": {
+   "areaKm2": 11764,
+   "cityPopulation": 7335
+  },
+  "VNM-451": {
+   "areaKm2": 4796,
+   "cityPopulation": 29227
+  },
+  "VNM-452": {
+   "areaKm2": 3367,
+   "cityPopulation": 500000
+  },
+  "VNM-453": {
+   "areaKm2": 5919,
+   "cityPopulation": 0
+  },
+  "VNM-454": {
+   "areaKm2": 7650,
+   "cityPopulation": 148000
+  },
+  "VNM-455": {
+   "areaKm2": 14737,
+   "cityPopulation": 19054
+  },
+  "VNM-456": {
+   "areaKm2": 11102,
+   "cityPopulation": 197551
+  },
+  "VNM-457": {
+   "areaKm2": 6219,
+   "cityPopulation": 36430
+  },
+  "VNM-458": {
+   "areaKm2": 6715,
+   "cityPopulation": 96540
+  },
+  "VNM-459": {
+   "areaKm2": 4163,
+   "cityPopulation": 105260
+  },
+  "VNM-460": {
+   "areaKm2": 1711,
+   "cityPopulation": 58030
+  },
+  "VNM-4600": {
+   "areaKm2": 971,
+   "cityPopulation": 1969000
+  },
+  "VNM-461": {
+   "areaKm2": 881,
+   "cityPopulation": 0
+  },
+  "VNM-462": {
+   "areaKm2": 3321,
+   "cityPopulation": 4567547
+  },
+  "VNM-463": {
+   "areaKm2": 776,
+   "cityPopulation": 0
+  },
+  "VNM-464": {
+   "areaKm2": 1383,
+   "cityPopulation": 0
+  },
+  "VNM-466": {
+   "areaKm2": 1201,
+   "cityPopulation": 130517
+  },
+  "VNM-467": {
+   "areaKm2": 978,
+   "cityPopulation": 0
+  },
+  "VNM-468": {
+   "areaKm2": 1502,
+   "cityPopulation": 243186
+  },
+  "VNM-469": {
+   "areaKm2": 3398,
+   "cityPopulation": 350000
+  },
+  "VNM-470": {
+   "areaKm2": 3854,
+   "cityPopulation": 53728
+  },
+  "VNM-471": {
+   "areaKm2": 1571,
+   "cityPopulation": 210000
+  },
+  "VNM-474": {
+   "areaKm2": 6279,
+   "cityPopulation": 165396
+  },
+  "VNM-475": {
+   "areaKm2": 17200,
+   "cityPopulation": 593645
+  },
+  "VNM-476": {
+   "areaKm2": 8423,
+   "cityPopulation": 189265
+  },
+  "VNM-477": {
+   "areaKm2": 13204,
+   "cityPopulation": 349945
+  },
+  "VNM-478": {
+   "areaKm2": 16287,
+   "cityPopulation": 142900
+  },
+  "VNM-479": {
+   "areaKm2": 4887,
+   "cityPopulation": 558327
+  },
+  "VNM-480": {
+   "areaKm2": 9963,
+   "cityPopulation": 256019
+  },
+  "VNM-481": {
+   "areaKm2": 3292,
+   "cityPopulation": 179773
+  },
+  "VNM-482": {
+   "areaKm2": 5100,
+   "cityPopulation": 69596
+  },
+  "VNM-483": {
+   "areaKm2": 2561,
+   "cityPopulation": 244277
+  },
+  "VNM-4834": {
+   "areaKm2": 2273,
+   "cityPopulation": 124143
+  },
+  "VNM-4835": {
+   "areaKm2": 6472,
+   "cityPopulation": 0
+  },
+  "VNM-484": {
+   "areaKm2": 7137,
+   "cityPopulation": 40279
+  },
+  "VNM-485": {
+   "areaKm2": 6278,
+   "cityPopulation": 805290
+  },
+  "VNM-486": {
+   "areaKm2": 10878,
+   "cityPopulation": 105489
+  },
+  "VNM-487": {
+   "areaKm2": 11219,
+   "cityPopulation": 0
+  },
+  "VNM-488": {
+   "areaKm2": 4560,
+   "cityPopulation": 250000
+  },
+  "VNM-489": {
+   "areaKm2": 5001,
+   "cityPopulation": 90384
+  },
+  "VNM-490": {
+   "areaKm2": 4811,
+   "cityPopulation": 950000
+  },
+  "VNM-491": {
+   "areaKm2": 695,
+   "cityPopulation": 0
+  },
+  "VNM-495": {
+   "areaKm2": 1812,
+   "cityPopulation": 248767
+  },
+  "VNM-496": {
+   "areaKm2": 7610,
+   "cityPopulation": 336846
+  },
+  "VNM-497": {
+   "areaKm2": 5965,
+   "cityPopulation": 652646
+  },
+  "VNM-498": {
+   "areaKm2": 3640,
+   "cityPopulation": 420239
+  },
+  "VNM-499": {
+   "areaKm2": 1615,
+   "cityPopulation": 0
+  },
+  "VNM-500": {
+   "areaKm2": 2657,
+   "cityPopulation": 149837
+  },
+  "VNM-501": {
+   "areaKm2": 1910,
+   "cityPopulation": 5314000
+  },
+  "VNM-502": {
+   "areaKm2": 6258,
+   "cityPopulation": 300000
+  },
+  "VNM-503": {
+   "areaKm2": 4203,
+   "cityPopulation": 137498
+  },
+  "VNM-504": {
+   "areaKm2": 2092,
+   "cityPopulation": 59442
+  },
+  "VNM-505": {
+   "areaKm2": 2206,
+   "cityPopulation": 1121000
+  },
+  "VNM-506": {
+   "areaKm2": 2422,
+   "cityPopulation": 225000
+  },
+  "VNM-507": {
+   "areaKm2": 5346,
+   "cityPopulation": 356636
+  },
+  "VNM-508": {
+   "areaKm2": 3035,
+   "cityPopulation": 300000
+  },
+  "VNM-509": {
+   "areaKm2": 1927,
+   "cityPopulation": 131360
+  },
+  "VNM-510": {
+   "areaKm2": 1440,
+   "cityPopulation": 103314
+  },
+  "VNM-511": {
+   "areaKm2": 6237,
+   "cityPopulation": 41112
+  },
+  "VNM-512": {
+   "areaKm2": 7945,
+   "cityPopulation": 38362
+  },
+  "VNM-5483": {
+   "areaKm2": 7820,
+   "cityPopulation": 67206
+  },
+  "WLF-4995": {
+   "areaKm2": 16,
+   "cityPopulation": 0
+  },
+  "WLF-4996": {
+   "areaKm2": 47,
+   "cityPopulation": 0
+  },
+  "WLF-4997": {
+   "areaKm2": 57,
+   "cityPopulation": 0
+  },
+  "WSB-5133": {
+   "areaKm2": 124,
+   "cityPopulation": 0
+  },
+  "ZAF-1188": {
+   "areaKm2": 373569,
+   "cityPopulation": 324563
+  },
+  "ZAF-1189": {
+   "areaKm2": 129866,
+   "cityPopulation": 3989820
+  },
+  "ZAF-1201": {
+   "areaKm2": 105206,
+   "cityPopulation": 762201
+  },
+  "ZAF-1206": {
+   "areaKm2": 129894,
+   "cityPopulation": 1094745
+  },
+  "ZAF-1208": {
+   "areaKm2": 18333,
+   "cityPopulation": 9069083
+  },
+  "ZAF-1209": {
+   "areaKm2": 75699,
+   "cityPopulation": 742670
+  },
+  "ZAF-1210": {
+   "areaKm2": 126028,
+   "cityPopulation": 610496
+  },
+  "ZAF-1216": {
+   "areaKm2": 93846,
+   "cityPopulation": 3751342
+  },
+  "ZAF-1926": {
+   "areaKm2": 169578,
+   "cityPopulation": 2292030
+  }
+ }
+}
