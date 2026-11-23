@@ -49,10 +49,12 @@ fun SelectionPanel(
         Text(text = region.name, style = DossierType.number(14.sp), color = DossierColors.ink)
         if (country.id != region.countryId) StatRow("평화협정에 따른 관할", country.name)
         playerRegion?.takeIf { playerId == country.id }?.let { r ->
-            SectionTitle("지역 현황 (추정)")
+            SectionTitle("지역 현황")
             if (!r.participatesInDistricts) StatRow("지역구 배분", "본국 지역구 배분에서 제외")
             StatRow("인구", formatPopulation(r.population))
-            StatRow("도시화율", "${(r.urbanShare * 100).roundToInt()}%")
+            val source = r.populationSource ?: "도시 인구·면적 추정"
+            Text("초기 인구 비중 · $source", style = DossierType.number(11.sp), color = DossierColors.inkMuted)
+            StatRow("도시화율 (추정)", "${(r.urbanShare * 100).roundToInt()}%")
             StatRow("1인당 소득 (전국 = 100)", "${(r.relativeIncome * 100).roundToInt()}")
             val largest = r.groupShares.maxBy { it.value }
             StatRow("가장 큰 직업·은퇴 집단", largest.key.label, note = formatPercent(largest.value))

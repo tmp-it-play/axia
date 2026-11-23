@@ -23,8 +23,54 @@ internal data class RegionBaseline(
     val urban: Double,
 )
 
-/** 면적·도시 자료가 아예 없는 국가에서는 행정구역 수로 균분한다. */
+/**
+ * 공식 지역 인구는 그 자료가 포함하는 구역 사이의 상대 지분을 결정한다.
+ * 통계 밖 영토는 기존 추정 몫을 유지한다. 관할 변경 뒤에는 양도 직전 장부의 지분을 쓴다.
+ */
 internal fun regionalDemographics(
+    regions: List<Region>,
+    nationalUrban: Double,
+    records: Map<String, RegionRecord>,
+    holdings: Map<String, TerritorialShare> = emptyMap(),
+): List<RegionBaseline> {
+    val estimates = estimatedDemographics(regions, nationalUrban, records)
+    if (holdings.isNotEmpty()) {
+        return reweightPopulation(estimates, estimates.map { holdings.getValue(it.region.id).population }, nationalUrban)
+    }
+    val country = regions.firstOrNull()?.countryId ?: return emptyList()
+    val observed = RegionalPopulation.byCountry[country] ?: return estimates
+    val covered = estimates.filter { it.region.id in observed.counts }
+    if (covered.isEmpty()) return estimates
+    val observedTotal = covered.sumOf { observed.counts.getValue(it.region.id) }
+    require(observedTotal > 0)
+    val coveredShare = covered.sumOf { it.share }
+    val nationalShares = covered.map { coveredShare * observed.counts.getValue(it.region.id) / observedTotal }
+    val urbanTarget = covered.sumOf { it.share * it.urban } / coveredShare
+    val measured = reweightPopulation(covered, nationalShares, urbanTarget).associateBy { it.region.id }
+    return estimates.map { measured[it.region.id] ?: it }
+}
+
+/** 도시화율은 여전히 추정치다. 새 인구 비중으로 재가중해도 같은 범위의 도시 인구 총량을 보존한다. */
+private fun reweightPopulation(
+    regions: List<RegionBaseline>,
+    shares: List<Double>,
+    urbanTarget: Double,
+): List<RegionBaseline> {
+    val total = shares.sum()
+    val meanUrban = regions.indices.sumOf { shares[it] * regions[it].urban } / total
+    val target = urbanTarget.coerceIn(0.0, 1.0)
+    return regions.mapIndexed { index, baseline ->
+        val urban =
+            when {
+                meanUrban < target -> baseline.urban + (1.0 - baseline.urban) * (target - meanUrban) / (1.0 - meanUrban)
+                meanUrban > target -> baseline.urban * target / meanUrban
+                else -> baseline.urban
+            }
+        baseline.copy(share = shares[index], urban = urban.coerceIn(0.0, 1.0))
+    }
+}
+
+private fun estimatedDemographics(
     regions: List<Region>,
     nationalUrban: Double,
     records: Map<String, RegionRecord>,

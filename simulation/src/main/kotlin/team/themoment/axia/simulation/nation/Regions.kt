@@ -32,6 +32,8 @@ data class RegionSnapshot(
     /** 나라 인구 중 이 지역 비중. */
     val populationShare: Double,
     val population: Double,
+    /** 초기 인구 지분의 통계 출처·기준일. 도시·면적 추정 지역이면 null. */
+    val populationSource: String?,
     /** 지역 인구 중 도시 인구 비율. */
     val urbanShare: Double,
     /** 1인당 소득의 전국 대비 배율. */
@@ -69,10 +71,34 @@ internal data class RegionFile(
     }
 }
 
+/** 공식 통계 구역을 겹치지 않게 지도 구역에 대응한 초기 인구. */
+@Serializable
+internal data class RegionalPopulation(
+    val date: String,
+    val source: String,
+    val url: String,
+    val total: Long,
+    val counts: Map<String, Long>,
+) {
+    init {
+        require(total > 0 && counts.values.all { it >= 0 } && counts.values.sum() == total)
+    }
+
+    companion object {
+        val byCountry: Map<String, RegionalPopulation> by lazy {
+            val text =
+                requireNotNull(RegionalPopulation::class.java.getResourceAsStream("/world/region_population.json"))
+                    .bufferedReader(Charsets.UTF_8)
+                    .use { it.readText() }
+            Json.decodeFromString<Map<String, RegionalPopulation>>(text)
+        }
+    }
+}
+
 /**
  * 플레이어 국가의 지역 분포(1차 행정구역).
  *
- * - 지역 인구 = 도시 인구(도시화율 × Natural Earth 도시 인구 비중) + 농촌 인구(나머지 × 면적 비중). 추정이다.
+ * - 인구는 공식 통계 구역별 비중을 사용하고, 자료 밖 구역은 도시 표본과 면적으로 추정한다.
  * - 지역 집단 구성: 도시화율이 높을수록 전문·관리직·사무직·자본가가 많고, 낮을수록 농림어업·은퇴층이 많다.
  * - 지역 지지율 = 전국 지지율 + 지역 구성 차이 × (집단 만족도 − 평균). 모든 집단이 같은 만족도면 전국과 같다.
  * - 1인당 소득은 도시화율이 높을수록 높다(전국 평균 = 1).
@@ -172,9 +198,7 @@ internal class Regions(
                     }
                 }.sortedBy { it.id }
         val raw =
-            regionalDemographics(own, nationalUrbanShare, file.regions).map {
-                it.copy(share = holdings[it.region.id]?.population ?: it.share)
-            }
+            regionalDemographics(own, nationalUrbanShare, file.regions, holdings)
         val urbanWeight = raw.sumOf { it.share * it.urban }
         val incomeRaw = raw.associate { (region, _, urban) -> region.id to (INCOME_BASE + INCOME_URBAN * urban) }
         val average = raw.sumOf { (region, share, _) -> share * incomeRaw.getValue(region.id) }.coerceAtLeast(1e-9)
@@ -214,6 +238,10 @@ internal class Regions(
                 name = region.name,
                 populationShare = region.share,
                 population = population * region.share,
+                populationSource =
+                    RegionalPopulation.byCountry[world.regions.getValue(region.id).countryId]
+                        ?.takeIf { region.id in it.counts }
+                        ?.let { "${it.source} · ${it.date}" },
                 urbanShare = region.urban,
                 relativeIncome = region.income,
                 approval = sentiments.getValue(region.id).approval,
