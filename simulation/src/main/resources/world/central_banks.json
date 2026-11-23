@@ -382,5 +382,31 @@
    "sourceNote": "유로 고정(덴마크, 불가리아, 보스니아, CFA 프랑 국가) 또는 유로 일방 사용국. IMF AREAER 환율제도 분류 기준.",
    "currency": "유로"
   }
- ]
+ ],
+ "bisPolicyRates": {
+  "period": "2023-12",
+  "source": "https://data.bis.org/topics/CBPOL",
+  "rates": {
+   "ARG": 1.0,
+   "CHE": 0.0175,
+   "CHL": 0.0825,
+   "COL": 0.13,
+   "CZE": 0.0675,
+   "DNK": 0.036,
+   "HUN": 0.1075,
+   "ISL": 0.0925,
+   "KWT": 0.0425,
+   "MAR": 0.03,
+   "MEX": 0.1125,
+   "MKD": 0.063,
+   "MYS": 0.03,
+   "NOR": 0.045,
+   "NZL": 0.055,
+   "PER": 0.0675,
+   "PHL": 0.065,
+   "ROU": 0.07,
+   "SRB": 0.065,
+   "SWE": 0.04
+  }
+ }
 }

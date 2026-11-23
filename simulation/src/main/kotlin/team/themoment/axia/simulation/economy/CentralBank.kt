@@ -40,6 +40,7 @@ data class MonetaryPolicy(
     val realRate: Double,
     /** 경기에 중립적인 실질금리. 시작 시점 값에서 장기 수준으로 수렴한다. */
     val neutralRealRate: Double,
+    /** 시작 기준금리의 추정 여부. 통화 체제와 신뢰도는 별도로 모형화한다. */
     val estimated: Boolean,
     /** 통화동맹이면 금리를 정하는 동맹 중앙은행 이름. */
     val unionBank: String?,
@@ -106,6 +107,7 @@ class CentralBankData private constructor(
     internal val banks: Map<String, CentralBankEntry>,
     internal val unions: List<MonetaryUnionEntry>,
     internal val pegs: List<PegEntry>,
+    internal val observedRates: Map<String, Double>,
 ) {
     companion object {
         private const val DEFAULT_DATA = "/world/central_banks.json"
@@ -147,15 +149,29 @@ class CentralBankData private constructor(
                     }
                 }
             }
-            return CentralBankData(file.banks, file.unions, file.pegs)
+            val observations = file.bisPolicyRates
+            require(observations.period == "2023-12" && observations.source.isNotBlank() && observations.rates.isNotEmpty())
+            observations.rates.forEach { (id, rate) ->
+                require(id in known && id !in file.banks && id !in unionMembers) { "Unexpected supplementary rate for $id" }
+                require(rate in RateSetter.MIN_POLICY_RATE..RateSetter.MAX_POLICY_RATE) { "Invalid policy rate for $id" }
+            }
+            return CentralBankData(file.banks, file.unions, file.pegs, observations.rates)
         }
     }
+
+    @Serializable
+    private data class PolicyRateObservations(
+        val period: String,
+        val source: String,
+        val rates: Map<String, Double>,
+    )
 
     @Serializable
     private data class CentralBankFile(
         val banks: Map<String, CentralBankEntry>,
         val unions: List<MonetaryUnionEntry>,
         val pegs: List<PegEntry>,
+        val bisPolicyRates: PolicyRateObservations,
     )
 }
 
@@ -435,8 +451,8 @@ internal class MonetarySystem(
             val target =
                 entry?.inflationTarget ?: union?.inflationTarget ?: anchor?.let { anchorTarget(it, data) }
                     ?: estimatedTarget(economy.inflation)
-            val rate =
-                entry?.policyRate ?: union?.policyRate ?: anchor?.let { anchorRate(it, data) } ?: estimatedRate(economy.inflation)
+            val observedRate = entry?.policyRate ?: union?.policyRate ?: data.observedRates[economy.id]
+            val rate = observedRate ?: anchor?.let { anchorRate(it, data) } ?: estimatedRate(economy.inflation)
             val framework =
                 when {
                     unionId != null -> MonetaryFramework.MONETARY_UNION
@@ -452,7 +468,7 @@ internal class MonetarySystem(
                     independent = entry?.independent ?: true,
                     baseCredibility = entry?.credibility ?: union?.credibility ?: estimatedCredibility(economy.society.incomeGroup),
                     setter = RateSetter(rate, economy.inflation, target),
-                    estimated = entry?.estimated ?: (union == null),
+                    estimated = entry?.estimated ?: (observedRate == null),
                     unionId = unionId,
                     pegAnchor = anchor,
                     pegSpread = if (anchor == null) 0.0 else rate - anchorRate(anchor, data),
