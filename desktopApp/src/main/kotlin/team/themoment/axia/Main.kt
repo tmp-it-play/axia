@@ -18,8 +18,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import org.jetbrains.compose.resources.painterResource
 import team.themoment.axia.map.MapGeometry
 import team.themoment.axia.map.WorldMapModel
+import team.themoment.axia.resources.Res
+import team.themoment.axia.resources.logo
 import team.themoment.axia.simulation.Simulation
 import team.themoment.axia.simulation.SimulationRunner
 import team.themoment.axia.simulation.economy.EconomyData
@@ -65,6 +68,7 @@ fun main() {
         Window(
             onCloseRequest = exit,
             title = "Axia",
+            icon = painterResource(Res.drawable.logo),
             state = rememberWindowState(width = 1440.dp, height = 900.dp),
             onPreviewKeyEvent = { event -> session?.let { handleTimeKey(event, it.runner) } ?: false },
         ) {

@@ -40,8 +40,10 @@ compose.desktop {
             modules("java.net.http")
             macOS {
                 bundleID = "team.themoment.axia"
+                iconFile.set(rootProject.layout.projectDirectory.file("assets/logo.icns"))
             }
             windows {
+                iconFile.set(rootProject.layout.projectDirectory.file("assets/logo.ico"))
                 upgradeUuid = "18d0e1a8-ecc4-4df7-a2c7-79be983afabd"
                 perUserInstall = true
                 menuGroup = "Axia"
