@@ -13,6 +13,7 @@ enum class SatisfactionFactor(
     TAXES("세금"),
     SERVICES("공공서비스"),
     ECONOMY("경기"),
+    EVENTS("사건"),
 }
 
 /**

@@ -4,9 +4,23 @@ import team.themoment.axia.simulation.economy.FiscalPolicy
 import team.themoment.axia.simulation.economy.FiscalShares
 import team.themoment.axia.simulation.economy.InitialEconomy
 
-sealed interface BudgetItem {
+/** 법안 하나에 담을 수 있는 변경 대상. 예산 항목과 제도 항목이 있다. */
+sealed interface PolicyItem {
     val label: String
     val maxTarget: Double
+}
+
+sealed interface BudgetItem : PolicyItem
+
+/** 예산이 아닌 제도. 값 1은 현재 제도가 온전한 상태, 0은 폐지 또는 정부 통제다. */
+enum class InstitutionItem(
+    override val label: String,
+) : PolicyItem {
+    /** 1 = 독립 중앙은행, 0 = 정부가 기준금리를 정한다. */
+    CENTRAL_BANK_INDEPENDENCE("중앙은행 독립성"),
+    ;
+
+    override val maxTarget: Double get() = 1.0
 }
 
 /**
@@ -102,6 +116,15 @@ internal class PlayerBudget(
     private val levels = initialLevels.toMutableMap()
     private val revenues = TaxKind.entries.associateWith { 0.0 }.toMutableMap()
 
+    /** 조직 보조금(GDP 대비 연간). 예산 항목 밖에서 기초지출에 더한다. */
+    var organizationSubsidies = 0.0
+
+    /** 대외 원조(경제 원조와 군사 지원, GDP 대비 연간). */
+    var foreignAid = 0.0
+
+    /** 동원 태세 유지비(GDP 대비 연간). 국방 예산 밖의 전시 추가 지출이다. */
+    var mobilizationCost = 0.0
+
     init {
         updateRevenues(outputGap = 0.0)
     }
@@ -152,7 +175,11 @@ internal class PlayerBudget(
         consumptionLagged += (rates.getValue(TaxKind.CONSUMPTION) - consumptionLagged) / PRICE_PASS_THROUGH_MONTHS
 
         updateRevenues(outputGap)
-        return FiscalShares(revenue = revenues.values.sum() + otherRevenue, primarySpending = levels.values.sum())
+        return FiscalShares(
+            revenue = revenues.values.sum() + otherRevenue,
+            primarySpending =
+                levels.values.sum() + organizationSubsidies + foreignAid + mobilizationCost,
+        )
     }
 
     private fun updateRevenues(outputGap: Double) {

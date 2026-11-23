@@ -1,10 +1,37 @@
 package team.themoment.axia.simulation.nation
 
+import team.themoment.axia.simulation.country.CountryEffects
+import team.themoment.axia.simulation.country.CountryIndicator
+import team.themoment.axia.simulation.country.CountryModule
+import team.themoment.axia.simulation.country.CountryMonthContext
+import team.themoment.axia.simulation.country.CountryPolicyLine
 import team.themoment.axia.simulation.economy.CountryEconomy
+import team.themoment.axia.simulation.economy.FiscalPolicy
+import team.themoment.axia.simulation.economy.FiscalShares
 import team.themoment.axia.simulation.economy.InitialEconomy
+import team.themoment.axia.simulation.events.EventEffects
 import team.themoment.axia.simulation.history.MonthlySeries
+import team.themoment.axia.simulation.politics.PoliticalProfile
+import team.themoment.axia.simulation.society.CivilSociety
+import team.themoment.axia.simulation.society.CivilSocietyInputs
+import team.themoment.axia.simulation.society.CivilSocietySnapshot
+import team.themoment.axia.simulation.society.Demography
+import team.themoment.axia.simulation.society.DemographyInputs
+import team.themoment.axia.simulation.society.DemographySnapshot
+import team.themoment.axia.simulation.society.Electorate
+import team.themoment.axia.simulation.society.GovernmentAction
+import team.themoment.axia.simulation.society.Identity
+import team.themoment.axia.simulation.society.IdentityBase
+import team.themoment.axia.simulation.society.OpinionWeights
+import team.themoment.axia.simulation.society.OrganizationSeed
+import team.themoment.axia.simulation.society.OrganizationStake
+import team.themoment.axia.simulation.society.SocialIndicators
+import team.themoment.axia.simulation.society.SocietyProfile
+import team.themoment.axia.simulation.world.CountryStructure
+import java.time.LocalDate
 import java.time.YearMonth
 import kotlin.math.pow
+import kotlin.random.Random
 
 data class GroupSnapshot(
     val group: PopulationGroup,
@@ -28,12 +55,46 @@ data class BudgetSnapshot(
     val debtRatio: Double,
     /** 달러 기준 명목 GDP. 비율을 금액으로 바꿀 때 쓴다. */
     val gdp: Double,
+    /** 조직 보조금(GDP 대비 연간). 기초지출에 포함돼 있다. */
+    val organizationSubsidies: Double,
+)
+
+data class IdentitySnapshot(
+    val identity: Identity,
+    /** 성인 중 이 성향에 속한 비율. */
+    val memberShare: Double,
+    val satisfaction: Double,
+    /** 정책(세금, 지출, 규제, 제도)이 시작 때보다 바뀌어 생긴 만족도 변화. */
+    val policyEffect: Double,
+    /** 오염, 범죄, 실업, 경기 같은 결과 지표로 생긴 만족도 변화. */
+    val outcomeEffect: Double,
+    /** 정부의 공개 비판·탄압이 남긴 일시적 변화. */
+    val governmentEffect: Double,
+    /** 이 성향 소속자 중 다른 성향에도 속한 비율. */
+    val overlaps: Map<Identity, Double>,
+)
+
+data class SocialSnapshot(
+    /** 시작 = 100. */
+    val pollution: Double,
+    val crime: Double,
+    val regulations: List<RegulationLine>,
 )
 
 data class NationHistory(
     val start: YearMonth,
     val approval: List<Double>,
     val satisfaction: Map<PopulationGroup, List<Double>>,
+    val identities: Map<Identity, List<Double>>,
+    val pollution: List<Double>,
+    val crime: List<Double>,
+)
+
+/** 국가별 특화 모듈의 고유 정책과 지표. */
+data class CountrySpecialSnapshot(
+    val specialized: Boolean,
+    val policies: List<CountryPolicyLine>,
+    val indicators: List<CountryIndicator>,
 )
 
 data class NationSnapshot(
@@ -42,23 +103,64 @@ data class NationSnapshot(
     /** 여론조사 자료가 없어 시작 지지율이 50%가 되도록 정한 기준선. */
     val baseline: Double,
     val approvalFactors: Map<SatisfactionFactor, Double>,
+    /** 성향 만족도가 지지율에 더하는 몫(점). */
+    val identityContributions: Map<Identity, Double>,
+    /** 조직의 시위·파업·과격 행동이 지지율에서 빼는 몫(점). */
+    val unrest: Double,
     val groups: List<GroupSnapshot>,
+    val identities: List<IdentitySnapshot>,
+    val social: SocialSnapshot,
     val budget: BudgetSnapshot,
+    val society: CivilSocietySnapshot,
+    val special: CountrySpecialSnapshot,
+    val demography: DemographySnapshot,
     val history: NationHistory,
 )
 
+/** 이번 달 여론. 정치 계산이 법안 지지를 구할 때 쓴다. */
+internal data class Opinion(
+    val groups: Map<PopulationGroup, Double>,
+    val identities: Map<Identity, Double>,
+    /** 시민사회 참여도로 가중한 정치적 영향력 계수. */
+    val weights: OpinionWeights,
+    /** 법안에 입장을 내는 조직들. */
+    val stakes: List<OrganizationStake>,
+)
+
 /**
- * 플레이어 국가의 인구 집단, 예산, 지지율. 1c에서는 국가 단위로 계산한다(지역 분포는 이후).
+ * 플레이어 국가의 인구 집단, 성향 집단, 예산, 규제, 지지율. 국가 단위로 계산한다(지역 분포는 이후).
  *
- * 집단 만족도 = 기준선 + 요인별 기여도. 기여도는 매달 목표값으로 천천히 움직인다(지연).
- * 지지율 = 집단 만족도를 인구 × 영향력으로 가중 평균한 값.
+ * 직업 집단 만족도 = 기준선 + 경제 요인별 기여도. 성향 만족도 = 기준선 + 정책 반응 + 결과 지표 반응.
+ * 기여도는 매달 목표값으로 천천히 움직인다(지연).
+ * 유권자 한 사람의 만족도는 직업 집단과 소속 성향의 가중 평균이고, 지지율은 이를 영향력으로 가중 평균한 값이다.
+ * 소속이 고정이므로 지지율은 집단·성향 만족도의 선형 결합([OpinionWeights])으로 계산한다.
  */
 class Nation internal constructor(
     initial: InitialEconomy,
-    private val startMonth: YearMonth,
+    identityBase: IdentityBase,
+    profile: PoliticalProfile,
+    organizations: List<OrganizationSeed>,
+    internal val module: CountryModule,
+    private val specialized: Boolean,
+    structure: CountryStructure,
+    startDate: LocalDate,
+    seed: Long,
 ) {
+    private val initialCountryPolicies = module.policies.associateWith(module::policyValue)
+
+    private val startMonth = YearMonth.from(startDate)
+    private val civilParticipation = profile.civilParticipation
     val countryId = initial.id
     internal val budget = PlayerBudget(initial)
+    internal val regulations = Regulations(initial.society.incomeGroup, identityBase.civilLiberties)
+
+    /** 거시 모델에 넘기는 플레이어 국가의 재정·구조 정책. */
+    internal val policy: FiscalPolicy = PlayerPolicy(budget, regulations) { demography.laborGrowthEffect }
+    private val indicators = SocialIndicators(initial.society.industryEmployment)
+    private val demography = Demography(initial, structure)
+
+    /** 사건이 집단 만족도에 남긴 점수. 매달 [EVENT_DECAY]만큼 남는다. */
+    private val eventMood = PopulationGroup.entries.associateWith { 0.0 }.toMutableMap()
 
     private val composition = composeGroups(initial.society, initial.gdp, initial.population)
     private val adultShare = 1.0 - initial.society.childShare
@@ -66,32 +168,260 @@ class Nation internal constructor(
         PopulationGroup.entries.map { group ->
             GroupState(group, composition.shares.getValue(group), composition.incomes.getValue(group), initial.growth)
         }
+    private val electorate =
+        Electorate(
+            composition.shares,
+            SocietyProfile(
+                base = identityBase,
+                incomeGroup = initial.society.incomeGroup,
+                gini = initial.society.gini,
+                defenseShare = initial.budget.defense,
+                childShare = initial.society.childShare,
+                elderlyShare = initial.society.elderlyShare,
+            ),
+            Random(seed),
+        )
+    private val civilSociety =
+        CivilSociety(
+            seeds = organizations,
+            baseShares = { kind -> kind.identity?.let(electorate::memberShare) ?: kind.group?.let(composition.shares::getValue) ?: 0.0 },
+            legislativeConstraints = profile.legislativeConstraints,
+            autocratic = profile.regime.autocratic,
+            start = startDate,
+            random = Random(seed xor ORGANIZATION_SEED_SALT),
+        )
+
+    /** 조직의 과격 행동이 다음 달 범죄 지수에 더하는 값. */
+    private var pendingCrime = 0.0
+    private val approvalWeights = electorate.weights { it.influence }
+    private val politicalWeights = electorate.weights { civilParticipation + (1.0 - civilParticipation) * it.influence }
+    private val overlaps =
+        Identity.entries.associateWith { first -> Identity.entries.filter { it != first }.associateWith { electorate.overlap(first, it) } }
+    private val identityPolicy = Identity.entries.associateWith { 0.0 }.toMutableMap()
+    private val identityOutcome = Identity.entries.associateWith { 0.0 }.toMutableMap()
+
     private var initialRealGdpPerCapita = 0.0
+    private var initialRealGdp = 0.0
+    private var initialUnemployment = 0.0
+    private var months = 0
     private var baseline = BASELINE
     private val approvalSeries = MonthlySeries()
     private val satisfactionSeries = PopulationGroup.entries.associateWith { MonthlySeries() }
+    private val identitySeries = Identity.entries.associateWith { MonthlySeries() }
+    private val pollutionSeries = MonthlySeries()
+    private val crimeSeries = MonthlySeries()
 
     internal fun start(economy: CountryEconomy) {
         initialRealGdpPerCapita = economy.realGdpPerCapita
+        initialRealGdp = economy.realGdpPerCapita * economy.populationCount
+        initialUnemployment = economy.unemployment
         groups.forEach { it.start(burdenOf(it.group)) }
-        update(economy, smoothing = 1.0)
-        baseline = BASELINE + (BASELINE - weighted { it.satisfaction(BASELINE) })
+        update(economy, emptyMap(), smoothing = 1.0)
+        baseline = BASELINE + (BASELINE - approvalAt(BASELINE))
         record()
     }
 
-    internal fun advanceMonth(economy: CountryEconomy) {
-        update(economy, smoothing = FACTOR_SMOOTHING)
+    /** @param institutionChanges 제도 항목의 시작 대비 변화(예: 중앙은행 독립 1 → 0이면 -1). */
+    internal fun advanceMonth(
+        economy: CountryEconomy,
+        institutionChanges: Map<InstitutionItem, Double>,
+        date: LocalDate,
+    ) {
+        months++
+        val incomeIndex = economy.realGdpPerCapita / initialRealGdpPerCapita
+        demography.advanceMonth(
+            DemographyInputs(
+                socialChange = budget.level(SpendingKind.SOCIAL) - budget.initialLevel(SpendingKind.SOCIAL),
+                healthChange = budget.level(SpendingKind.HEALTH) - budget.initialLevel(SpendingKind.HEALTH),
+                educationChange = budget.level(SpendingKind.EDUCATION) - budget.initialLevel(SpendingKind.EDUCATION),
+                immigrationChange = regulations.change(RegulationItem.IMMIGRATION),
+                incomeIndex = incomeIndex,
+                realRate = economy.policyRate - economy.expectedInflation,
+            ),
+        )
+        update(economy, institutionChanges, smoothing = FACTOR_SMOOTHING)
+        eventMood.keys.forEach { eventMood[it] = eventMood.getValue(it) * EVENT_DECAY }
+        val orderInitial = budget.initialLevel(SpendingKind.ORDER)
+        val effects =
+            civilSociety.advanceMonth(
+                date,
+                CivilSocietyInputs(
+                    identityMood = Identity.entries.associateWith { identitySatisfaction(it) - baseline },
+                    groupMood = groups.associate { it.group to it.satisfaction(baseline) - baseline },
+                    approval = approval(),
+                    civilLiberties = regulations.level(RegulationItem.CIVIL_LIBERTIES),
+                    defenseChange = budget.level(SpendingKind.DEFENSE) - budget.initialLevel(SpendingKind.DEFENSE),
+                    orderChange = if (orderInitial > 0.0) budget.level(SpendingKind.ORDER) / orderInitial - 1.0 else 0.0,
+                    policingChange = regulations.change(RegulationItem.POLICING),
+                ),
+            )
+        pendingCrime += effects.crime
+        economy.addOutputGapShock(effects.outputGapShock)
+        budget.organizationSubsidies = civilSociety.subsidySpending
         record()
     }
 
-    internal fun snapshot(economy: CountryEconomy): NationSnapshot {
+    /** 국가별 특화 모듈의 월간 갱신과 그 결과 반영. */
+    internal fun advanceCountryModule(
+        economy: CountryEconomy,
+        date: LocalDate,
+        relations: (String) -> Double,
+    ) {
+        val effects =
+            module.advanceMonth(
+                CountryMonthContext(
+                    date = date,
+                    approval = approval(),
+                    outputGap = economy.outputGap,
+                    inflation = economy.inflation,
+                    unemployment = economy.unemployment,
+                    debtRatio = economy.debtRatio,
+                    debt = economy.debtRatio * economy.nominalGdp,
+                    defenseChange = budget.level(SpendingKind.DEFENSE) - budget.initialLevel(SpendingKind.DEFENSE),
+                    relations = relations,
+                ),
+            )
+        applyEffects(economy, effects, date)
+    }
+
+    internal fun applyEffects(
+        economy: CountryEconomy,
+        effects: CountryEffects,
+        date: LocalDate,
+    ) {
+        economy.addOutputGapShock(effects.outputGapShock)
+        economy.riskPremium = effects.interestPremium
+        effects.identityMood.forEach { (identity, points) -> civilSociety.shiftMood(identity, points) }
+        effects.news.forEach { report(date, it.source, it.text, it.major) }
+    }
+
+    /** 사건(또는 사건 선택지)의 결과를 반영한다. */
+    internal fun applyEvent(
+        economy: CountryEconomy,
+        effects: EventEffects,
+    ) {
+        economy.addOutputGapShock(effects.outputGap)
+        economy.addInflationShock(effects.inflation)
+        economy.addSpending(effects.spending)
+        economy.addPotentialGrowth(effects.potentialGrowth)
+        economy.relieveDebt(effects.debtRelief)
+        PopulationGroup.entries.forEach { group ->
+            eventMood[group] = eventMood.getValue(group) + effects.mood + (effects.groupMood[group] ?: 0.0)
+        }
+        effects.identityMood.forEach { (identity, points) -> civilSociety.shiftMood(identity, points) }
+        pendingCrime += effects.crime
+        civilSociety.adjustCapital(effects.politicalCapital)
+    }
+
+    /** 사건 확률에 쓰는 국내 상태. 모두 "보통 = 0"으로 맞춘 값이다. */
+    internal fun eventValues(economy: CountryEconomy): Map<String, Double> {
+        fun relative(kind: SpendingKind): Double {
+            val initialLevel = budget.initialLevel(kind)
+            return if (initialLevel > 0.0) budget.level(kind) / initialLevel - 1.0 else 0.0
+        }
+        return mapOf(
+            "laborProtection" to regulations.level(RegulationItem.LABOR) - 0.5,
+            "healthSpending" to relative(SpendingKind.HEALTH),
+            "educationSpending" to relative(SpendingKind.EDUCATION),
+            "civilLiberties" to regulations.level(RegulationItem.CIVIL_LIBERTIES) - 0.5,
+            "policing" to regulations.level(RegulationItem.POLICING) - 0.5,
+            "unemploymentGap" to economy.unemployment - initialUnemployment,
+            "inflation" to (economy.inflation - 0.03).coerceAtLeast(0.0),
+            "crime" to (indicators.crime - 100.0) / 100.0,
+            "unrest" to civilSociety.unrest / MAX_UNREST,
+            "coupRisk" to civilSociety.coupRisk,
+            "approval" to (approval() - 50.0) / 50.0,
+            "debtRatio" to (economy.debtRatio - 0.9).coerceAtLeast(0.0),
+            "policyRate" to (economy.policyRate - 0.05).coerceAtLeast(0.0),
+            "outputGap" to economy.outputGap,
+        )
+    }
+
+    /** 쿠데타 뒤 군사평의회가 시민 자유를 줄인다. */
+    internal fun suppressLiberties(cut: Double) {
+        val item = RegulationItem.CIVIL_LIBERTIES
+        regulations.enact(item, (regulations.target(item) - cut).coerceAtLeast(0.0))
+    }
+
+    /** 외교·군사 행위의 정치 자본. 모자라면 false다. */
+    internal fun spendCapital(cost: Double): Boolean = civilSociety.spendCapital(cost)
+
+    /** 원조·동원 비용을 예산에 반영한다(GDP 대비 연간). */
+    internal fun setExternalSpending(
+        aid: Double,
+        mobilization: Double,
+    ) {
+        budget.foreignAid = aid
+        budget.mobilizationCost = mobilization
+    }
+
+    /** 정치·사건·외교 소식을 국가 소식 목록에 남긴다. */
+    internal fun report(
+        date: LocalDate,
+        source: String,
+        text: String,
+        major: Boolean,
+    ) = civilSociety.report(date, source, text, major)
+
+    internal fun performAction(
+        organizationId: Int,
+        action: GovernmentAction,
+        date: LocalDate,
+    ): Boolean {
+        val done = civilSociety.perform(organizationId, action, date)
+        if (done) budget.organizationSubsidies = civilSociety.subsidySpending
+        return done
+    }
+
+    internal fun renameOrganization(
+        organizationId: Int,
+        name: String,
+    ) = civilSociety.rename(organizationId, name)
+
+    /** 통과한 법안의 변경(항목, 변화량)으로 조직과의 약속 위반을 확인한다. */
+    internal fun onPolicyEnacted(
+        changes: List<Pair<PolicyItem, Double>>,
+        date: LocalDate,
+    ) = civilSociety.onPolicyEnacted(changes, date)
+
+    internal fun opinion(): Opinion =
+        Opinion(
+            groups = groups.associate { it.group to it.satisfaction(baseline) },
+            identities = Identity.entries.associateWith { identitySatisfaction(it) },
+            weights = politicalWeights,
+            stakes = civilSociety.stakes(),
+        )
+
+    internal fun snapshot(
+        economy: CountryEconomy,
+        date: LocalDate,
+    ): NationSnapshot {
         val gdp = economy.nominalGdp
         return NationSnapshot(
             countryId = countryId,
             approval = approval(),
             baseline = baseline,
-            approvalFactors = SatisfactionFactor.entries.associateWith { factor -> weighted { it.factor(factor) } },
+            approvalFactors =
+                SatisfactionFactor.entries.associateWith { factor ->
+                    groups.sumOf { approvalWeights.groups.getValue(it.group) * it.factor(factor) }
+                },
+            identityContributions =
+                Identity.entries.associateWith { approvalWeights.identities.getValue(it) * (identitySatisfaction(it) - baseline) },
+            unrest = civilSociety.unrest.coerceAtMost(MAX_UNREST),
             groups = groupSnapshots(economy),
+            identities =
+                Identity.entries.map {
+                    IdentitySnapshot(
+                        identity = it,
+                        memberShare = electorate.memberShare(it),
+                        satisfaction = identitySatisfaction(it),
+                        policyEffect = identityPolicy.getValue(it),
+                        outcomeEffect = identityOutcome.getValue(it),
+                        governmentEffect = civilSociety.identityMood.getValue(it),
+                        overlaps = overlaps.getValue(it),
+                    )
+                },
+            social = SocialSnapshot(indicators.pollution, indicators.crime, regulations.lines()),
             budget =
                 BudgetSnapshot(
                     taxes = budget.taxLines(),
@@ -103,12 +433,25 @@ class Nation internal constructor(
                     balance = (economy.monthlyRevenue - economy.monthlyPrimarySpending - economy.monthlyInterest) * 12.0 / gdp,
                     debtRatio = economy.debtRatio,
                     gdp = economy.dollarGdp,
+                    organizationSubsidies = budget.organizationSubsidies,
+                ),
+            society = civilSociety.snapshot(date),
+            demography = demography.snapshot(economy.realGdpPerCapita / initialRealGdpPerCapita),
+            special =
+                CountrySpecialSnapshot(
+                    specialized = specialized,
+                    policies =
+                        module.policies.map { CountryPolicyLine(it, initialCountryPolicies.getValue(it), module.policyValue(it)) },
+                    indicators = module.indicators(),
                 ),
             history =
                 NationHistory(
                     start = startMonth.plusMonths(approvalSeries.dropped.toLong()),
                     approval = approvalSeries.toList(),
                     satisfaction = satisfactionSeries.mapValues { it.value.toList() },
+                    identities = identitySeries.mapValues { it.value.toList() },
+                    pollution = pollutionSeries.toList(),
+                    crime = crimeSeries.toList(),
                 ),
         )
     }
@@ -130,14 +473,28 @@ class Nation internal constructor(
 
     private fun update(
         economy: CountryEconomy,
+        institutionChanges: Map<InstitutionItem, Double>,
         smoothing: Double,
     ) {
         val incomeIndex = economy.realGdpPerCapita / initialRealGdpPerCapita
         val socialChange = budget.level(SpendingKind.SOCIAL) - budget.initialLevel(SpendingKind.SOCIAL)
+        val orderInitial = budget.initialLevel(SpendingKind.ORDER)
+        indicators.advanceMonth(
+            realGdpIndex = economy.realGdpPerCapita * economy.populationCount / initialRealGdp,
+            incomeIndex = incomeIndex,
+            months = months,
+            unemploymentGap = economy.unemployment - initialUnemployment,
+            orderChange = if (orderInitial > 0.0) budget.level(SpendingKind.ORDER) / orderInitial - 1.0 else 0.0,
+            environmentChange = regulations.change(RegulationItem.ENVIRONMENT),
+            policingChange = regulations.change(RegulationItem.POLICING),
+            extraCrime = pendingCrime,
+        )
+        pendingCrime = 0.0
+        updateIdentities(economy, institutionChanges, smoothing)
         groups.forEach { state ->
             val group = state.group
             val burden = burdenOf(group)
-            state.updateIncome(incomeIndex, burden, 1.0 + group.transferWeight * socialChange)
+            state.updateIncome(incomeIndex, burden, (1.0 + group.transferWeight * socialChange) * regulations.incomeEffect(group))
             val excessInflation = economy.inflation - INFLATION_COMFORT
             val targets =
                 mapOf(
@@ -149,6 +506,7 @@ class Nation internal constructor(
                     SatisfactionFactor.TAXES to -TAX_WEIGHT * (burden - state.initialBurden),
                     SatisfactionFactor.SERVICES to SERVICE_WEIGHT * serviceChange(group),
                     SatisfactionFactor.ECONOMY to ECONOMY_WEIGHT * group.economySensitivity * economy.outputGap,
+                    SatisfactionFactor.EVENTS to eventMood.getValue(group),
                 ).mapValues { (factor, value) -> value.coerceIn(FACTOR_LIMITS.getValue(factor)) }
             state.moveFactors(targets, smoothing)
         }
@@ -163,21 +521,70 @@ class Nation internal constructor(
         val totalWeight = group.serviceWeights.values.sum()
         return group.serviceWeights.entries.sumOf { (kind, weight) ->
             val initialLevel = budget.initialLevel(kind)
-            val change = if (initialLevel > 0.0) budget.level(kind) / initialLevel - 1.0 else 0.0
+            // 고령화로 연금 수요가 늘면 같은 사회보장 지출로도 1인당 수준이 낮아진다.
+            val need = if (kind == SpendingKind.SOCIAL) demography.pensionPressure else 1.0
+            val change = if (initialLevel > 0.0) budget.level(kind) / (initialLevel * need) - 1.0 else 0.0
             weight * change.coerceIn(-1.0, 1.5)
         } / totalWeight
     }
 
-    private fun approval(): Double = weighted { it.satisfaction(baseline) }
-
-    private fun weighted(value: (GroupState) -> Double): Double {
-        val weights = groups.map { it.share * it.group.influence }
-        return groups.zip(weights).sumOf { (state, weight) -> value(state) * weight } / weights.sum()
+    /** 성향마다 정책 반응(시작 대비 실제값 변화 × 반응 계수)과 결과 지표 반응을 목표로 두고 천천히 따라간다. */
+    private fun updateIdentities(
+        economy: CountryEconomy,
+        institutionChanges: Map<InstitutionItem, Double>,
+        smoothing: Double,
+    ) {
+        val changes =
+            TaxKind.entries.associateWith { budget.rate(it) - budget.initialRate(it) } +
+                SpendingKind.entries.associateWith { budget.level(it) - budget.initialLevel(it) } +
+                RegulationItem.entries.associateWith { regulations.change(it) } +
+                institutionChanges +
+                module.policies.associateWith { module.policyValue(it) - initialCountryPolicies.getValue(it) }
+        val unemploymentChange = economy.unemployment - initialUnemployment
+        val housing = AFFORDABILITY_WEIGHT * demography.affordability(economy.realGdpPerCapita / initialRealGdpPerCapita)
+        val pollution = indicators.pollution - 100.0
+        val crime = indicators.crime - 100.0
+        Identity.entries.forEach { identity ->
+            val policyTarget = changes.entries.sumOf { (item, change) -> identity.reaction(item) * change }
+            val outcomeTarget =
+                when (identity) {
+                    Identity.ENVIRONMENTALISTS -> -0.35 * pollution
+                    Identity.PATRIOTS -> -0.15 * crime
+                    Identity.PARENTS -> -0.12 * crime - 0.1 * pollution + 0.5 * housing
+                    Identity.YOUTH -> -YOUTH_UNEMPLOYMENT_WEIGHT * YOUTH_UNEMPLOYMENT_RATIO * unemploymentChange + housing
+                    Identity.UNIONISTS -> -UNION_UNEMPLOYMENT_WEIGHT * unemploymentChange
+                    Identity.EGALITARIANS -> -EGALITARIAN_UNEMPLOYMENT_WEIGHT * unemploymentChange
+                    Identity.FREE_MARKET -> MARKET_GROWTH_WEIGHT * economy.outputGap
+                    Identity.RELIGIOUS, Identity.LIBERTARIANS -> 0.0
+                }
+            identityPolicy[identity] =
+                identityPolicy.getValue(identity) + (policyTarget.coerceIn(IDENTITY_LIMITS) - identityPolicy.getValue(identity)) * smoothing
+            identityOutcome[identity] =
+                identityOutcome.getValue(identity) +
+                (outcomeTarget.coerceIn(IDENTITY_LIMITS) - identityOutcome.getValue(identity)) * smoothing
+        }
     }
+
+    private fun identitySatisfaction(
+        identity: Identity,
+        level: Double = baseline,
+    ): Double =
+        (level + identityPolicy.getValue(identity) + identityOutcome.getValue(identity) + civilSociety.identityMood.getValue(identity))
+            .coerceIn(0.0, 100.0)
+
+    /** 지지율 = 집단·성향 만족도의 선형 결합 − 사회 불안. */
+    internal fun approval(): Double = (approvalAt(baseline) - civilSociety.unrest.coerceAtMost(MAX_UNREST)).coerceIn(0.0, 100.0)
+
+    private fun approvalAt(level: Double): Double =
+        groups.sumOf { approvalWeights.groups.getValue(it.group) * it.satisfaction(level) } +
+            Identity.entries.sumOf { approvalWeights.identities.getValue(it) * identitySatisfaction(it, level) }
 
     private fun record() {
         approvalSeries.record(approval())
         groups.forEach { satisfactionSeries.getValue(it.group).record(it.satisfaction(baseline)) }
+        Identity.entries.forEach { identitySeries.getValue(it).record(identitySatisfaction(it)) }
+        pollutionSeries.record(indicators.pollution)
+        crimeSeries.record(indicators.crime)
     }
 
     private class GroupState(
@@ -241,6 +648,16 @@ class Nation internal constructor(
         const val TAX_WEIGHT = 120.0
         const val SERVICE_WEIGHT = 20.0
         const val ECONOMY_WEIGHT = 150.0
+        const val YOUTH_UNEMPLOYMENT_RATIO = 2.0
+        const val YOUTH_UNEMPLOYMENT_WEIGHT = 250.0
+        const val UNION_UNEMPLOYMENT_WEIGHT = 200.0
+        const val EGALITARIAN_UNEMPLOYMENT_WEIGHT = 100.0
+        const val MARKET_GROWTH_WEIGHT = 100.0
+        val IDENTITY_LIMITS = -40.0..30.0
+        const val MAX_UNREST = 15.0
+        const val EVENT_DECAY = 0.85
+        const val AFFORDABILITY_WEIGHT = 25.0
+        const val ORGANIZATION_SEED_SALT = 0x0A61_7A71_0000L
         val FACTOR_LIMITS =
             mapOf(
                 SatisfactionFactor.PRICES to -20.0..3.0,
@@ -249,6 +666,7 @@ class Nation internal constructor(
                 SatisfactionFactor.TAXES to -25.0..15.0,
                 SatisfactionFactor.SERVICES to -20.0..15.0,
                 SatisfactionFactor.ECONOMY to -15.0..10.0,
+                SatisfactionFactor.EVENTS to -20.0..10.0,
             )
 
         /** 세목별로 세율이 집단 소득에 닿는 정도. */
@@ -261,4 +679,28 @@ class Nation internal constructor(
                 TaxKind.TARIFF to 0.25,
             )
     }
+}
+
+/** 플레이어 예산과 규제를 거시 모델 하나의 정책으로 묶는다. */
+private class PlayerPolicy(
+    private val budget: PlayerBudget,
+    private val regulations: Regulations,
+    private val laborGrowth: () -> Double,
+) : FiscalPolicy {
+    override fun advanceMonth(
+        debtRatio: Double,
+        outputGap: Double,
+    ): FiscalShares {
+        regulations.advanceMonth()
+        return budget.advanceMonth(debtRatio, outputGap)
+    }
+
+    override val potentialGrowthEffect: Double
+        get() = budget.potentialGrowthEffect + regulations.potentialGrowthEffect + laborGrowth()
+
+    override val inflationImpulse: Double get() = budget.inflationImpulse
+
+    override val naturalUnemploymentShift: Double get() = regulations.naturalUnemploymentShift
+
+    override val populationGrowthShift: Double get() = regulations.populationGrowthShift
 }

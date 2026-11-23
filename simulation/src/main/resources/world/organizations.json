@@ -1,0 +1,1007 @@
+{
+ "sourceNote": "2024년 1월 1일 시점의 실존 조직. 이름은 한국어로 옮겼다. membership(성인 대비 회원 비율), capacity(조직력), stance(정부에 대한 태도)는 공개 보도의 회원 규모와 시작 시점 정부 관계를 바탕으로 정한 게임 가정이다.",
+ "countries": {
+  "KOR": [
+   {
+    "name": "전국민주노동조합총연맹",
+    "kind": "LABOR_UNION",
+    "membership": 0.025,
+    "capacity": 0.75,
+    "stance": -45
+   },
+   {
+    "name": "한국노동조합총연맹",
+    "kind": "LABOR_UNION",
+    "membership": 0.027,
+    "capacity": 0.65,
+    "stance": -10
+   },
+   {
+    "name": "한국경제인협회",
+    "kind": "BUSINESS",
+    "membership": 0.001,
+    "capacity": 0.8,
+    "stance": 30
+   },
+   {
+    "name": "환경운동연합",
+    "kind": "ENVIRONMENTAL",
+    "membership": 0.002,
+    "capacity": 0.5,
+    "stance": -25
+   },
+   {
+    "name": "한국교회총연합",
+    "kind": "RELIGIOUS",
+    "membership": 0.05,
+    "capacity": 0.55,
+    "stance": 15
+   },
+   {
+    "name": "참여연대",
+    "kind": "EGALITARIAN",
+    "membership": 0.001,
+    "capacity": 0.5,
+    "stance": -35
+   },
+   {
+    "name": "대한민국재향군인회",
+    "kind": "VETERANS",
+    "membership": 0.02,
+    "capacity": 0.45,
+    "stance": 25
+   }
+  ],
+  "USA": [
+   {
+    "name": "AFL-CIO",
+    "kind": "LABOR_UNION",
+    "membership": 0.045,
+    "capacity": 0.7,
+    "stance": 10
+   },
+   {
+    "name": "미국 상공회의소",
+    "kind": "BUSINESS",
+    "membership": 0.001,
+    "capacity": 0.85,
+    "stance": 0
+   },
+   {
+    "name": "시에라 클럽",
+    "kind": "ENVIRONMENTAL",
+    "membership": 0.003,
+    "capacity": 0.55,
+    "stance": 20
+   },
+   {
+    "name": "남침례회",
+    "kind": "RELIGIOUS",
+    "membership": 0.05,
+    "capacity": 0.6,
+    "stance": -30
+   },
+   {
+    "name": "미국시민자유연맹(ACLU)",
+    "kind": "CIVIL_LIBERTIES",
+    "membership": 0.007,
+    "capacity": 0.6,
+    "stance": 0
+   },
+   {
+    "name": "미국 재향군인회",
+    "kind": "VETERANS",
+    "membership": 0.007,
+    "capacity": 0.5,
+    "stance": -5
+   }
+  ],
+  "CHN": [
+   {
+    "name": "중화전국총공회",
+    "kind": "LABOR_UNION",
+    "membership": 0.25,
+    "capacity": 0.5,
+    "stance": 40
+   },
+   {
+    "name": "중화전국공상업연합회",
+    "kind": "BUSINESS",
+    "membership": 0.003,
+    "capacity": 0.6,
+    "stance": 30
+   },
+   {
+    "name": "중국공산당 중앙 관료",
+    "kind": "PARTY_APPARATUS",
+    "membership": 0.07,
+    "capacity": 0.9,
+    "stance": 50
+   },
+   {
+    "name": "중국인민해방군",
+    "kind": "MILITARY",
+    "membership": 0.002,
+    "capacity": 0.9,
+    "stance": 45
+   },
+   {
+    "name": "공안·국가안전 기관",
+    "kind": "SECURITY",
+    "membership": 0.002,
+    "capacity": 0.85,
+    "stance": 45
+   }
+  ],
+  "JPN": [
+   {
+    "name": "일본노동조합총연합회(렌고)",
+    "kind": "LABOR_UNION",
+    "membership": 0.065,
+    "capacity": 0.6,
+    "stance": 0
+   },
+   {
+    "name": "일본경제단체연합회(게이단렌)",
+    "kind": "BUSINESS",
+    "membership": 0.001,
+    "capacity": 0.85,
+    "stance": 35
+   },
+   {
+    "name": "일본회의",
+    "kind": "VETERANS",
+    "membership": 0.0004,
+    "capacity": 0.5,
+    "stance": 30
+   },
+   {
+    "name": "창가학회",
+    "kind": "RELIGIOUS",
+    "membership": 0.07,
+    "capacity": 0.7,
+    "stance": 20
+   },
+   {
+    "name": "일본자연보호협회",
+    "kind": "ENVIRONMENTAL",
+    "membership": 0.0003,
+    "capacity": 0.4,
+    "stance": 0
+   }
+  ],
+  "DEU": [
+   {
+    "name": "독일노동조합총연맹(DGB)",
+    "kind": "LABOR_UNION",
+    "membership": 0.08,
+    "capacity": 0.7,
+    "stance": 10
+   },
+   {
+    "name": "독일산업연맹(BDI)",
+    "kind": "BUSINESS",
+    "membership": 0.001,
+    "capacity": 0.85,
+    "stance": -5
+   },
+   {
+    "name": "독일환경자연보호연맹(BUND)",
+    "kind": "ENVIRONMENTAL",
+    "membership": 0.008,
+    "capacity": 0.6,
+    "stance": 0
+   },
+   {
+    "name": "독일개신교회(EKD)",
+    "kind": "RELIGIOUS",
+    "membership": 0.25,
+    "capacity": 0.45,
+    "stance": 0
+   },
+   {
+    "name": "미래를 위한 금요일 독일",
+    "kind": "YOUTH",
+    "membership": 0.001,
+    "capacity": 0.5,
+    "stance": -20
+   }
+  ],
+  "GBR": [
+   {
+    "name": "영국노동조합회의(TUC)",
+    "kind": "LABOR_UNION",
+    "membership": 0.1,
+    "capacity": 0.65,
+    "stance": -30
+   },
+   {
+    "name": "영국산업연맹(CBI)",
+    "kind": "BUSINESS",
+    "membership": 0.001,
+    "capacity": 0.6,
+    "stance": 0
+   },
+   {
+    "name": "그린피스 영국",
+    "kind": "ENVIRONMENTAL",
+    "membership": 0.002,
+    "capacity": 0.5,
+    "stance": -20
+   },
+   {
+    "name": "잉글랜드 성공회",
+    "kind": "RELIGIOUS",
+    "membership": 0.02,
+    "capacity": 0.4,
+    "stance": -5
+   },
+   {
+    "name": "리버티",
+    "kind": "CIVIL_LIBERTIES",
+    "membership": 0.0003,
+    "capacity": 0.5,
+    "stance": -25
+   }
+  ],
+  "FRA": [
+   {
+    "name": "노동총동맹(CGT)",
+    "kind": "LABOR_UNION",
+    "membership": 0.011,
+    "capacity": 0.7,
+    "stance": -40
+   },
+   {
+    "name": "프랑스민주노동연맹(CFDT)",
+    "kind": "LABOR_UNION",
+    "membership": 0.011,
+    "capacity": 0.6,
+    "stance": -15
+   },
+   {
+    "name": "프랑스기업운동(MEDEF)",
+    "kind": "BUSINESS",
+    "membership": 0.001,
+    "capacity": 0.8,
+    "stance": 15
+   },
+   {
+    "name": "전국농업경영자연맹(FNSEA)",
+    "kind": "FARMERS",
+    "membership": 0.004,
+    "capacity": 0.75,
+    "stance": -10
+   },
+   {
+    "name": "인권연맹(LDH)",
+    "kind": "CIVIL_LIBERTIES",
+    "membership": 0.0002,
+    "capacity": 0.45,
+    "stance": -25
+   }
+  ],
+  "RUS": [
+   {
+    "name": "러시아독립노조연맹",
+    "kind": "LABOR_UNION",
+    "membership": 0.15,
+    "capacity": 0.4,
+    "stance": 40
+   },
+   {
+    "name": "러시아산업기업가연맹",
+    "kind": "BUSINESS",
+    "membership": 0.001,
+    "capacity": 0.6,
+    "stance": 25
+   },
+   {
+    "name": "러시아정교회",
+    "kind": "RELIGIOUS",
+    "membership": 0.03,
+    "capacity": 0.65,
+    "stance": 50
+   },
+   {
+    "name": "러시아군",
+    "kind": "MILITARY",
+    "membership": 0.008,
+    "capacity": 0.85,
+    "stance": 40
+   },
+   {
+    "name": "연방보안국(FSB)",
+    "kind": "SECURITY",
+    "membership": 0.002,
+    "capacity": 0.95,
+    "stance": 55
+   }
+  ],
+  "UKR": [
+   {
+    "name": "우크라이나노조연맹",
+    "kind": "LABOR_UNION",
+    "membership": 0.1,
+    "capacity": 0.4,
+    "stance": 10
+   },
+   {
+    "name": "우크라이나정교회",
+    "kind": "RELIGIOUS",
+    "membership": 0.03,
+    "capacity": 0.5,
+    "stance": 40
+   },
+   {
+    "name": "우크라이나 기업가·산업가 연맹",
+    "kind": "BUSINESS",
+    "membership": 0.001,
+    "capacity": 0.5,
+    "stance": 10
+   },
+   {
+    "name": "우크라이나 참전용사 단체",
+    "kind": "VETERANS",
+    "membership": 0.02,
+    "capacity": 0.55,
+    "stance": 30
+   }
+  ],
+  "IND": [
+   {
+    "name": "민족봉사단(RSS)",
+    "kind": "RELIGIOUS",
+    "membership": 0.006,
+    "capacity": 0.85,
+    "stance": 50
+   },
+   {
+    "name": "인도노동자연맹(BMS)",
+    "kind": "LABOR_UNION",
+    "membership": 0.02,
+    "capacity": 0.6,
+    "stance": 30
+   },
+   {
+    "name": "인도노동조합센터(CITU)",
+    "kind": "LABOR_UNION",
+    "membership": 0.007,
+    "capacity": 0.6,
+    "stance": -35
+   },
+   {
+    "name": "인도상공회의소연합(FICCI)",
+    "kind": "BUSINESS",
+    "membership": 0.001,
+    "capacity": 0.75,
+    "stance": 25
+   },
+   {
+    "name": "전인도농민연맹",
+    "kind": "FARMERS",
+    "membership": 0.015,
+    "capacity": 0.6,
+    "stance": -40
+   }
+  ],
+  "BRA": [
+   {
+    "name": "노동자단일중앙(CUT)",
+    "kind": "LABOR_UNION",
+    "membership": 0.04,
+    "capacity": 0.65,
+    "stance": 30
+   },
+   {
+    "name": "전국산업연맹(CNI)",
+    "kind": "BUSINESS",
+    "membership": 0.001,
+    "capacity": 0.8,
+    "stance": -10
+   },
+   {
+    "name": "무토지농민운동(MST)",
+    "kind": "FARMERS",
+    "membership": 0.002,
+    "capacity": 0.7,
+    "stance": 15
+   },
+   {
+    "name": "브라질 가톨릭 주교회의",
+    "kind": "RELIGIOUS",
+    "membership": 0.3,
+    "capacity": 0.45,
+    "stance": 5
+   },
+   {
+    "name": "복음주의 연합회",
+    "kind": "RELIGIOUS",
+    "membership": 0.1,
+    "capacity": 0.6,
+    "stance": -35
+   }
+  ],
+  "CAN": [
+   {
+    "name": "캐나다노동회의(CLC)",
+    "kind": "LABOR_UNION",
+    "membership": 0.1,
+    "capacity": 0.6,
+    "stance": 5
+   },
+   {
+    "name": "캐나다상공회의소",
+    "kind": "BUSINESS",
+    "membership": 0.001,
+    "capacity": 0.75,
+    "stance": -10
+   },
+   {
+    "name": "데이비드 스즈키 재단",
+    "kind": "ENVIRONMENTAL",
+    "membership": 0.001,
+    "capacity": 0.45,
+    "stance": 10
+   }
+  ],
+  "PRK": [
+   {
+    "name": "조선노동당 중앙 관료",
+    "kind": "PARTY_APPARATUS",
+    "membership": 0.3,
+    "capacity": 0.95,
+    "stance": 60
+   },
+   {
+    "name": "조선인민군",
+    "kind": "MILITARY",
+    "membership": 0.06,
+    "capacity": 0.95,
+    "stance": 55
+   },
+   {
+    "name": "국가보위성",
+    "kind": "SECURITY",
+    "membership": 0.002,
+    "capacity": 0.95,
+    "stance": 60
+   },
+   {
+    "name": "조선직업총동맹",
+    "kind": "LABOR_UNION",
+    "membership": 0.4,
+    "capacity": 0.3,
+    "stance": 40
+   }
+  ],
+  "AUS": [
+   {
+    "name": "호주노동조합평의회(ACTU)",
+    "kind": "LABOR_UNION",
+    "membership": 0.07,
+    "capacity": 0.65,
+    "stance": 30
+   },
+   {
+    "name": "호주산업그룹",
+    "kind": "BUSINESS",
+    "membership": 0.001,
+    "capacity": 0.7,
+    "stance": -5
+   },
+   {
+    "name": "호주자연보호재단",
+    "kind": "ENVIRONMENTAL",
+    "membership": 0.003,
+    "capacity": 0.5,
+    "stance": 0
+   }
+  ],
+  "POL": [
+   {
+    "name": "독립자치노조 연대(솔리다르노시치)",
+    "kind": "LABOR_UNION",
+    "membership": 0.01,
+    "capacity": 0.6,
+    "stance": 30
+   },
+   {
+    "name": "전폴란드노조연맹(OPZZ)",
+    "kind": "LABOR_UNION",
+    "membership": 0.01,
+    "capacity": 0.45,
+    "stance": -15
+   },
+   {
+    "name": "폴란드 가톨릭 주교회의",
+    "kind": "RELIGIOUS",
+    "membership": 0.5,
+    "capacity": 0.55,
+    "stance": 25
+   },
+   {
+    "name": "레비아탄 고용주 연맹",
+    "kind": "BUSINESS",
+    "membership": 0.001,
+    "capacity": 0.6,
+    "stance": -5
+   }
+  ],
+  "ITA": [
+   {
+    "name": "이탈리아노동총연맹(CGIL)",
+    "kind": "LABOR_UNION",
+    "membership": 0.1,
+    "capacity": 0.65,
+    "stance": -35
+   },
+   {
+    "name": "이탈리아노조연맹(CISL)",
+    "kind": "LABOR_UNION",
+    "membership": 0.075,
+    "capacity": 0.6,
+    "stance": 0
+   },
+   {
+    "name": "이탈리아산업연맹(콘핀두스트리아)",
+    "kind": "BUSINESS",
+    "membership": 0.001,
+    "capacity": 0.8,
+    "stance": 15
+   },
+   {
+    "name": "콜디레티 농민연맹",
+    "kind": "FARMERS",
+    "membership": 0.03,
+    "capacity": 0.7,
+    "stance": 20
+   },
+   {
+    "name": "이탈리아 주교회의",
+    "kind": "RELIGIOUS",
+    "membership": 0.3,
+    "capacity": 0.5,
+    "stance": 5
+   }
+  ],
+  "FIN": [
+   {
+    "name": "핀란드노조중앙조직(SAK)",
+    "kind": "LABOR_UNION",
+    "membership": 0.18,
+    "capacity": 0.7,
+    "stance": -40
+   },
+   {
+    "name": "핀란드전문직노조연맹(STTK)",
+    "kind": "LABOR_UNION",
+    "membership": 0.11,
+    "capacity": 0.6,
+    "stance": -20
+   },
+   {
+    "name": "핀란드산업연맹(EK)",
+    "kind": "BUSINESS",
+    "membership": 0.001,
+    "capacity": 0.8,
+    "stance": 30
+   },
+   {
+    "name": "농림업생산자연맹(MTK)",
+    "kind": "FARMERS",
+    "membership": 0.06,
+    "capacity": 0.65,
+    "stance": 10
+   }
+  ],
+  "EST": [
+   {
+    "name": "에스토니아노조연맹",
+    "kind": "LABOR_UNION",
+    "membership": 0.03,
+    "capacity": 0.4,
+    "stance": -10
+   },
+   {
+    "name": "에스토니아고용주연맹",
+    "kind": "BUSINESS",
+    "membership": 0.001,
+    "capacity": 0.6,
+    "stance": 10
+   },
+   {
+    "name": "국방연맹(카이트셀리트)",
+    "kind": "VETERANS",
+    "membership": 0.02,
+    "capacity": 0.65,
+    "stance": 25
+   }
+  ],
+  "LVA": [
+   {
+    "name": "라트비아자유노조연맹",
+    "kind": "LABOR_UNION",
+    "membership": 0.06,
+    "capacity": 0.4,
+    "stance": 0
+   },
+   {
+    "name": "라트비아고용주연맹",
+    "kind": "BUSINESS",
+    "membership": 0.001,
+    "capacity": 0.6,
+    "stance": 5
+   }
+  ],
+  "LTU": [
+   {
+    "name": "리투아니아노조연맹",
+    "kind": "LABOR_UNION",
+    "membership": 0.03,
+    "capacity": 0.4,
+    "stance": -5
+   },
+   {
+    "name": "리투아니아산업가연맹",
+    "kind": "BUSINESS",
+    "membership": 0.001,
+    "capacity": 0.6,
+    "stance": 10
+   },
+   {
+    "name": "리투아니아소총수연맹",
+    "kind": "VETERANS",
+    "membership": 0.006,
+    "capacity": 0.6,
+    "stance": 25
+   }
+  ],
+  "TUR": [
+   {
+    "name": "튀르키예노동조합연맹(Türk-İş)",
+    "kind": "LABOR_UNION",
+    "membership": 0.02,
+    "capacity": 0.45,
+    "stance": 10
+   },
+   {
+    "name": "혁명노조연맹(DİSK)",
+    "kind": "LABOR_UNION",
+    "membership": 0.004,
+    "capacity": 0.5,
+    "stance": -45
+   },
+   {
+    "name": "튀르키예산업기업인협회(TÜSİAD)",
+    "kind": "BUSINESS",
+    "membership": 0.001,
+    "capacity": 0.75,
+    "stance": -15
+   },
+   {
+    "name": "종교청(디야네트)",
+    "kind": "RELIGIOUS",
+    "membership": 0.002,
+    "capacity": 0.7,
+    "stance": 55
+   },
+   {
+    "name": "튀르키예군",
+    "kind": "MILITARY",
+    "membership": 0.006,
+    "capacity": 0.7,
+    "stance": 20
+   }
+  ],
+  "ISR": [
+   {
+    "name": "히스타드루트",
+    "kind": "LABOR_UNION",
+    "membership": 0.12,
+    "capacity": 0.7,
+    "stance": -15
+   },
+   {
+    "name": "이스라엘제조업협회",
+    "kind": "BUSINESS",
+    "membership": 0.001,
+    "capacity": 0.7,
+    "stance": -10
+   },
+   {
+    "name": "예샤 정착촌 협의회",
+    "kind": "VETERANS",
+    "membership": 0.01,
+    "capacity": 0.75,
+    "stance": 45
+   },
+   {
+    "name": "이스라엘시민권협회(ACRI)",
+    "kind": "CIVIL_LIBERTIES",
+    "membership": 0.0003,
+    "capacity": 0.5,
+    "stance": -45
+   }
+  ],
+  "IRN": [
+   {
+    "name": "이슬람혁명수비대",
+    "kind": "MILITARY",
+    "membership": 0.004,
+    "capacity": 0.95,
+    "stance": 55
+   },
+   {
+    "name": "바시즈·정보부",
+    "kind": "SECURITY",
+    "membership": 0.01,
+    "capacity": 0.85,
+    "stance": 50
+   },
+   {
+    "name": "보수 성직자 집단",
+    "kind": "RELIGIOUS",
+    "membership": 0.003,
+    "capacity": 0.75,
+    "stance": 45
+   },
+   {
+    "name": "바자르 상인 조합",
+    "kind": "BUSINESS",
+    "membership": 0.004,
+    "capacity": 0.6,
+    "stance": 0
+   }
+  ],
+  "SAU": [
+   {
+    "name": "사우디군·국가방위대",
+    "kind": "MILITARY",
+    "membership": 0.01,
+    "capacity": 0.85,
+    "stance": 50
+   },
+   {
+    "name": "국가안보처",
+    "kind": "SECURITY",
+    "membership": 0.001,
+    "capacity": 0.9,
+    "stance": 55
+   },
+   {
+    "name": "고위 울라마 위원회",
+    "kind": "RELIGIOUS",
+    "membership": 0.0001,
+    "capacity": 0.6,
+    "stance": 30
+   },
+   {
+    "name": "사우디 상공회의소 연합",
+    "kind": "BUSINESS",
+    "membership": 0.001,
+    "capacity": 0.65,
+    "stance": 35
+   }
+  ],
+  "EGY": [
+   {
+    "name": "이집트군",
+    "kind": "MILITARY",
+    "membership": 0.007,
+    "capacity": 0.95,
+    "stance": 55
+   },
+   {
+    "name": "국가안보국",
+    "kind": "SECURITY",
+    "membership": 0.001,
+    "capacity": 0.9,
+    "stance": 50
+   },
+   {
+    "name": "알아즈하르",
+    "kind": "RELIGIOUS",
+    "membership": 0.003,
+    "capacity": 0.7,
+    "stance": 25
+   },
+   {
+    "name": "이집트노조총연맹",
+    "kind": "LABOR_UNION",
+    "membership": 0.06,
+    "capacity": 0.35,
+    "stance": 35
+   }
+  ],
+  "ZAF": [
+   {
+    "name": "남아프리카노조회의(COSATU)",
+    "kind": "LABOR_UNION",
+    "membership": 0.045,
+    "capacity": 0.65,
+    "stance": 10
+   },
+   {
+    "name": "비즈니스 유니티 남아공",
+    "kind": "BUSINESS",
+    "membership": 0.001,
+    "capacity": 0.7,
+    "stance": -10
+   },
+   {
+    "name": "남아공교회협의회",
+    "kind": "RELIGIOUS",
+    "membership": 0.1,
+    "capacity": 0.45,
+    "stance": -5
+   }
+  ],
+  "TWN": [
+   {
+    "name": "중화민국전국총공회",
+    "kind": "LABOR_UNION",
+    "membership": 0.15,
+    "capacity": 0.45,
+    "stance": 0
+   },
+   {
+    "name": "중화민국전국공업총회",
+    "kind": "BUSINESS",
+    "membership": 0.001,
+    "capacity": 0.7,
+    "stance": -10
+   },
+   {
+    "name": "대만환경보호연맹",
+    "kind": "ENVIRONMENTAL",
+    "membership": 0.0005,
+    "capacity": 0.5,
+    "stance": 10
+   }
+  ],
+  "IDN": [
+   {
+    "name": "나흐다툴 울라마",
+    "kind": "RELIGIOUS",
+    "membership": 0.25,
+    "capacity": 0.7,
+    "stance": 35
+   },
+   {
+    "name": "무함마디야",
+    "kind": "RELIGIOUS",
+    "membership": 0.12,
+    "capacity": 0.7,
+    "stance": 15
+   },
+   {
+    "name": "인도네시아노조총연맹(KSPI)",
+    "kind": "LABOR_UNION",
+    "membership": 0.01,
+    "capacity": 0.55,
+    "stance": -30
+   },
+   {
+    "name": "인도네시아상공회의소(KADIN)",
+    "kind": "BUSINESS",
+    "membership": 0.001,
+    "capacity": 0.7,
+    "stance": 25
+   },
+   {
+    "name": "인도네시아국군",
+    "kind": "MILITARY",
+    "membership": 0.003,
+    "capacity": 0.75,
+    "stance": 30
+   }
+  ],
+  "VNM": [
+   {
+    "name": "베트남공산당 중앙 관료",
+    "kind": "PARTY_APPARATUS",
+    "membership": 0.07,
+    "capacity": 0.9,
+    "stance": 55
+   },
+   {
+    "name": "베트남인민군",
+    "kind": "MILITARY",
+    "membership": 0.007,
+    "capacity": 0.9,
+    "stance": 50
+   },
+   {
+    "name": "공안부",
+    "kind": "SECURITY",
+    "membership": 0.002,
+    "capacity": 0.9,
+    "stance": 50
+   },
+   {
+    "name": "베트남노동총연맹",
+    "kind": "LABOR_UNION",
+    "membership": 0.15,
+    "capacity": 0.4,
+    "stance": 40
+   }
+  ],
+  "THA": [
+   {
+    "name": "태국왕립군",
+    "kind": "MILITARY",
+    "membership": 0.006,
+    "capacity": 0.9,
+    "stance": 30
+   },
+   {
+    "name": "태국산업연맹",
+    "kind": "BUSINESS",
+    "membership": 0.001,
+    "capacity": 0.7,
+    "stance": 0
+   },
+   {
+    "name": "태국 승가회",
+    "kind": "RELIGIOUS",
+    "membership": 0.005,
+    "capacity": 0.6,
+    "stance": 10
+   }
+  ],
+  "RWA": [
+   {
+    "name": "르완다방위군",
+    "kind": "MILITARY",
+    "membership": 0.005,
+    "capacity": 0.9,
+    "stance": 55
+   },
+   {
+    "name": "르완다애국전선 당 조직",
+    "kind": "PARTY_APPARATUS",
+    "membership": 0.1,
+    "capacity": 0.85,
+    "stance": 60
+   },
+   {
+    "name": "르완다민간부문연합",
+    "kind": "BUSINESS",
+    "membership": 0.001,
+    "capacity": 0.55,
+    "stance": 30
+   }
+  ],
+  "PAK": [
+   {
+    "name": "파키스탄군",
+    "kind": "MILITARY",
+    "membership": 0.005,
+    "capacity": 0.95,
+    "stance": 40
+   },
+   {
+    "name": "정보부(ISI)",
+    "kind": "SECURITY",
+    "membership": 0.001,
+    "capacity": 0.9,
+    "stance": 40
+   },
+   {
+    "name": "자마아트에이슬라미",
+    "kind": "RELIGIOUS",
+    "membership": 0.002,
+    "capacity": 0.65,
+    "stance": -25
+   },
+   {
+    "name": "파키스탄 상공회의소연맹",
+    "kind": "BUSINESS",
+    "membership": 0.001,
+    "capacity": 0.6,
+    "stance": 5
+   }
+  ]
+ }
+}

@@ -1,0 +1,244 @@
+{
+ "sourceNote": "노조 조직률: ILOSTAT ILR_TUMT_NOC_RT_A(국가별 최신 연도, https://rplumber.ilo.org/data/indicator/?id=ILR_TUMT_NOC_RT_A). 종교 중요도: Gallup 2009 '종교가 일상에서 중요한가' 긍정 비율(https://en.wikipedia.org/wiki/Importance_of_religion_by_country). 시민 자유: V-Dem v2x_civlib 2023, Our World in Data 경유(https://ourworldindata.org/grapher/civil-liberties-index-vdem). estimated 항목은 자료가 없어 지역·체제로 추정했다.",
+ "countries": {
+  "KOR": {
+   "unionDensity": 0.1237,
+   "unionYear": 2020,
+   "religionImportance": 0.43,
+   "civilLiberties": 0.878,
+   "estimated": []
+  },
+  "USA": {
+   "unionDensity": 0.1029,
+   "unionYear": 2020,
+   "religionImportance": 0.65,
+   "civilLiberties": 0.931,
+   "estimated": []
+  },
+  "CHN": {
+   "unionDensity": 0.4425,
+   "unionYear": 2017,
+   "religionImportance": 0.1,
+   "civilLiberties": 0.169,
+   "estimated": [
+    "religionImportance"
+   ]
+  },
+  "JPN": {
+   "unionDensity": 0.168,
+   "unionYear": 2019,
+   "religionImportance": 0.24,
+   "civilLiberties": 0.931,
+   "estimated": []
+  },
+  "DEU": {
+   "unionDensity": 0.1626,
+   "unionYear": 2019,
+   "religionImportance": 0.4,
+   "civilLiberties": 0.951,
+   "estimated": []
+  },
+  "GBR": {
+   "unionDensity": 0.2336,
+   "unionYear": 2019,
+   "religionImportance": 0.27,
+   "civilLiberties": 0.891,
+   "estimated": [
+    "religionImportance"
+   ]
+  },
+  "FRA": {
+   "unionDensity": 0.0889,
+   "unionYear": 2018,
+   "religionImportance": 0.3,
+   "civilLiberties": 0.916,
+   "estimated": []
+  },
+  "RUS": {
+   "unionDensity": 0.2745,
+   "unionYear": 2017,
+   "religionImportance": 0.34,
+   "civilLiberties": 0.299,
+   "estimated": []
+  },
+  "UKR": {
+   "unionDensity": 0.3664,
+   "unionYear": 2019,
+   "religionImportance": 0.46,
+   "civilLiberties": 0.589,
+   "estimated": []
+  },
+  "IND": {
+   "unionDensity": 0.198,
+   "unionYear": 2017,
+   "religionImportance": 0.9,
+   "civilLiberties": 0.529,
+   "estimated": []
+  },
+  "BRA": {
+   "unionDensity": 0.1303,
+   "unionYear": 2019,
+   "religionImportance": 0.87,
+   "civilLiberties": 0.846,
+   "estimated": []
+  },
+  "CAN": {
+   "unionDensity": 0.2939,
+   "unionYear": 2020,
+   "religionImportance": 0.42,
+   "civilLiberties": 0.896,
+   "estimated": []
+  },
+  "PRK": {
+   "unionDensity": 0.05,
+   "religionImportance": 0.1,
+   "civilLiberties": 0.018,
+   "estimated": [
+    "unionDensity",
+    "religionImportance"
+   ]
+  },
+  "AUS": {
+   "unionDensity": 0.1366,
+   "unionYear": 2018,
+   "religionImportance": 0.32,
+   "civilLiberties": 0.921,
+   "estimated": [
+    "religionImportance"
+   ]
+  },
+  "POL": {
+   "unionDensity": 0.1271,
+   "unionYear": 2018,
+   "religionImportance": 0.75,
+   "civilLiberties": 0.837,
+   "estimated": []
+  },
+  "ITA": {
+   "unionDensity": 0.325,
+   "unionYear": 2019,
+   "religionImportance": 0.72,
+   "civilLiberties": 0.914,
+   "estimated": []
+  },
+  "FIN": {
+   "unionDensity": 0.5883,
+   "unionYear": 2019,
+   "religionImportance": 0.28,
+   "civilLiberties": 0.949,
+   "estimated": [
+    "religionImportance"
+   ]
+  },
+  "EST": {
+   "unionDensity": 0.0602,
+   "unionYear": 2019,
+   "religionImportance": 0.16,
+   "civilLiberties": 0.963,
+   "estimated": []
+  },
+  "LVA": {
+   "unionDensity": 0.1065,
+   "unionYear": 2019,
+   "religionImportance": 0.39,
+   "civilLiberties": 0.921,
+   "estimated": []
+  },
+  "LTU": {
+   "unionDensity": 0.0736,
+   "unionYear": 2019,
+   "religionImportance": 0.42,
+   "civilLiberties": 0.91,
+   "estimated": []
+  },
+  "TUR": {
+   "unionDensity": 0.0985,
+   "unionYear": 2019,
+   "religionImportance": 0.82,
+   "civilLiberties": 0.388,
+   "estimated": []
+  },
+  "ISR": {
+   "unionDensity": 0.2509,
+   "unionYear": 2017,
+   "religionImportance": 0.51,
+   "civilLiberties": 0.801,
+   "estimated": []
+  },
+  "IRN": {
+   "unionDensity": 0.05,
+   "religionImportance": 0.8,
+   "civilLiberties": 0.198,
+   "estimated": [
+    "unionDensity",
+    "religionImportance"
+   ]
+  },
+  "SAU": {
+   "unionDensity": 0.0,
+   "religionImportance": 0.93,
+   "civilLiberties": 0.158,
+   "estimated": [
+    "unionDensity"
+   ]
+  },
+  "EGY": {
+   "unionDensity": 0.238,
+   "unionYear": 2010,
+   "religionImportance": 0.97,
+   "civilLiberties": 0.231,
+   "estimated": []
+  },
+  "ZAF": {
+   "unionDensity": 0.2906,
+   "unionYear": 2019,
+   "religionImportance": 0.85,
+   "civilLiberties": 0.85,
+   "estimated": []
+  },
+  "TWN": {
+   "unionDensity": 0.3223,
+   "unionYear": 2017,
+   "religionImportance": 0.45,
+   "civilLiberties": 0.935,
+   "estimated": [
+    "religionImportance"
+   ]
+  },
+  "IDN": {
+   "unionDensity": 0.1299,
+   "unionYear": 2019,
+   "religionImportance": 1.0,
+   "civilLiberties": 0.7,
+   "estimated": []
+  },
+  "VNM": {
+   "unionDensity": 0.4961,
+   "unionYear": 2018,
+   "religionImportance": 0.3,
+   "civilLiberties": 0.349,
+   "estimated": []
+  },
+  "THA": {
+   "unionDensity": 0.0332,
+   "unionYear": 2019,
+   "religionImportance": 0.97,
+   "civilLiberties": 0.479,
+   "estimated": []
+  },
+  "RWA": {
+   "unionDensity": 0.0586,
+   "unionYear": 2019,
+   "religionImportance": 0.95,
+   "civilLiberties": 0.19,
+   "estimated": []
+  },
+  "PAK": {
+   "unionDensity": 0.0473,
+   "unionYear": 2016,
+   "religionImportance": 0.92,
+   "civilLiberties": 0.424,
+   "estimated": []
+  }
+ }
+}
