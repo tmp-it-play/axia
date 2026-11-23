@@ -56,7 +56,10 @@ internal class AiCountryPolitics(
     private var nextExecutive: LocalDate? = rules.executive?.next
     private var lastElection: ElectionResult? = null
     private var monthsInOffice = 0
-    var approval = BASELINE
+
+    /** 지지율이 돌아가는 기준. 시작 정부는 2024년 1월 여론조사, 새 정부는 50이다. */
+    private var base = InitialApproval.forCountry(countryId).approval
+    var approval = base
         private set
     private var initial: EconomyIndicators? = null
 
@@ -89,7 +92,7 @@ internal class AiCountryPolitics(
         val prices = (-PRICE_WEIGHT * (indicators.inflation - comfort)).coerceIn(-20.0, 3.0)
         val growth = (GROWTH_WEIGHT * (indicators.growth - start.growth)).coerceIn(-12.0, 8.0)
         val fatigue = -(monthsInOffice * FATIGUE_PER_MONTH).coerceAtMost(MAX_FATIGUE)
-        val target = BASELINE + damping * (jobs + prices + growth + fatigue)
+        val target = base + damping * (jobs + prices + growth + fatigue)
         approval = (approval + (target - approval) * SMOOTHING + random.nextGaussian() * APPROVAL_NOISE).coerceIn(5.0, 95.0)
         return departure?.let { WorldNews(date, countryId, "지도자 교체", it, major = true) }
     }
@@ -118,6 +121,7 @@ internal class AiCountryPolitics(
             }
         if (before != after) {
             monthsInOffice = 0
+            base = BASELINE
             approval = BASELINE + HONEYMOON
         }
         return listOf(WorldNews(date, countryId, "선거", text, major = before != after))

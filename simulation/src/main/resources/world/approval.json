@@ -1,0 +1,165 @@
+{
+ "sourceNote": "2023-12~2024-01 정부·지도자 지지율. 각 조사의 공표 수치를 반올림한 대략값이고, 조사마다 문항(직무 긍정, 신뢰, 만족)이 다르다. 공개 여론조사가 없는 나라는 estimated다.",
+ "countries": {
+  "KOR": {
+   "approval": 31,
+   "estimated": false,
+   "source": "한국갤럽 2024-01 대통령 직무 긍정률 약 31%"
+  },
+  "USA": {
+   "approval": 40,
+   "estimated": false,
+   "source": "Gallup 2024-01 대통령 직무 지지율 약 40%"
+  },
+  "CHN": {
+   "approval": 50,
+   "estimated": true,
+   "source": "공개 여론조사 없음"
+  },
+  "JPN": {
+   "approval": 26,
+   "estimated": false,
+   "source": "NHK 2024-01 내각 지지율 약 26%"
+  },
+  "DEU": {
+   "approval": 22,
+   "estimated": false,
+   "source": "ARD-DeutschlandTrend 2024-01 연방정부 만족도 약 20%"
+  },
+  "GBR": {
+   "approval": 25,
+   "estimated": false,
+   "source": "YouGov 2024-01 총리 호감도 약 25%"
+  },
+  "FRA": {
+   "approval": 31,
+   "estimated": false,
+   "source": "Ifop 2024-01 대통령 지지율 약 31%"
+  },
+  "RUS": {
+   "approval": 80,
+   "estimated": false,
+   "source": "Levada 2024-01 대통령 지지율 약 85%(권위주의 체제 응답 편향을 감안해 낮춤)"
+  },
+  "UKR": {
+   "approval": 64,
+   "estimated": false,
+   "source": "KIIS 2023-12~2024-01 대통령 신뢰도 약 64%"
+  },
+  "IND": {
+   "approval": 75,
+   "estimated": false,
+   "source": "Morning Consult 2024-01 총리 지지율 약 75%"
+  },
+  "BRA": {
+   "approval": 52,
+   "estimated": false,
+   "source": "Quaest 2023-12 대통령 직무 긍정률 약 52%"
+  },
+  "CAN": {
+   "approval": 31,
+   "estimated": false,
+   "source": "Angus Reid 2024-01 총리 지지율 약 31%"
+  },
+  "PRK": {
+   "approval": 50,
+   "estimated": true,
+   "source": "공개 여론조사 없음"
+  },
+  "AUS": {
+   "approval": 42,
+   "estimated": false,
+   "source": "Newspoll 2024-01 총리 직무 지지율 약 42%"
+  },
+  "POL": {
+   "approval": 48,
+   "estimated": false,
+   "source": "CBOS 2024-01 신임 정부 지지 약 48%"
+  },
+  "ITA": {
+   "approval": 42,
+   "estimated": false,
+   "source": "2024-01 주요 여론조사 총리 지지율 약 42%"
+  },
+  "FIN": {
+   "approval": 38,
+   "estimated": false,
+   "source": "Yle 2024-01 정부 지지 대략값"
+  },
+  "EST": {
+   "approval": 22,
+   "estimated": false,
+   "source": "ERR·Kantar Emor 2024-01 총리 지지율 약 22%"
+  },
+  "LVA": {
+   "approval": 40,
+   "estimated": true,
+   "source": "신정부 출범 직후 대략값"
+  },
+  "LTU": {
+   "approval": 28,
+   "estimated": false,
+   "source": "Vilmorus 2024-01 정부 지지 대략값"
+  },
+  "TUR": {
+   "approval": 45,
+   "estimated": false,
+   "source": "2024-01 주요 여론조사 대통령 직무 지지율 약 45%"
+  },
+  "ISR": {
+   "approval": 30,
+   "estimated": false,
+   "source": "채널12 2024-01 총리 적합도 약 30%"
+  },
+  "IRN": {
+   "approval": 40,
+   "estimated": true,
+   "source": "신뢰할 만한 공개 여론조사 없음"
+  },
+  "SAU": {
+   "approval": 50,
+   "estimated": true,
+   "source": "공개 여론조사 없음"
+  },
+  "EGY": {
+   "approval": 45,
+   "estimated": true,
+   "source": "신뢰할 만한 공개 여론조사 없음"
+  },
+  "ZAF": {
+   "approval": 35,
+   "estimated": false,
+   "source": "Ipsos 2023-11 대통령 지지 약 35%"
+  },
+  "TWN": {
+   "approval": 46,
+   "estimated": false,
+   "source": "대만민의기금회 2023-12 총통 지지율 약 46%"
+  },
+  "IDN": {
+   "approval": 76,
+   "estimated": false,
+   "source": "Indikator 2024-01 대통령 직무 만족도 약 76%"
+  },
+  "VNM": {
+   "approval": 50,
+   "estimated": true,
+   "source": "공개 여론조사 없음"
+  },
+  "THA": {
+   "approval": 55,
+   "estimated": false,
+   "source": "NIDA 2023-12 총리 지지 대략값"
+  },
+  "RWA": {
+   "approval": 50,
+   "estimated": true,
+   "source": "공개 여론조사 없음"
+  },
+  "PAK": {
+   "approval": 40,
+   "estimated": true,
+   "source": "과도 내각, 대략값"
+  }
+ }
+}
