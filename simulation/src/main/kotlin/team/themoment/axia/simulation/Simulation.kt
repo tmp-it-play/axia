@@ -231,7 +231,7 @@ class Simulation(
 
     /** @return 플레이어가 결정해야 할 제안이 새로 생겼는지 */
     private fun advanceMonth(pauseFor: MutableSet<EventCategory>): Boolean {
-        val debtNotices = economy.advanceMonth(random, international)
+        val debtNotices = economy.advanceMonth(random, international, YearMonth.from(date).minusMonths(1))
         processDebtNotices(debtNotices)
         val debtDecision = debtNotices[playerCountryId] == DebtNotice.DEFAULT
         if (debtDecision) pauseFor += EventCategory.FINANCIAL

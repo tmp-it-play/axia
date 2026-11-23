@@ -42,18 +42,27 @@ internal fun CommoditySection(
         }
     }
     StatRow("국제 가격지수 (시작 = 100)", String.format(Locale.KOREA, "%.1f", quote.priceIndex))
-    val settled = remember(quote.countries) { quote.countries.values.any { it.demand > 0.0 } }
-    if (!settled) {
+    val period = quote.period
+    if (period == null) {
         StatRow("시작 재고", quantity(balance.openingStock, selected.unit))
         Hint("월간 수급과 거래량은 첫 월 정산 후 표시됩니다.")
         return
     }
 
-    Hint("${date.year}년 ${date.monthValue}월 1일 정산 · 단위 ${selected.unit}")
+    Hint("${period.year}년 ${period.monthValue}월 수급 · ${date.monthValue}월 1일 정산 · 단위 ${selected.unit}")
     StatRow("기초 재고", quantity(balance.openingStock))
     StatRow("생산", quantity(balance.production), note = if (countryId in quote.unreportedProduction) "기준연도 생산 미보고" else null)
     if (selected == Commodity.GRAIN && supportedGrainTonnes != null) {
         StatRow("생산 중 농가 가격차 보조 물량", quantity(supportedGrainTonnes))
+    }
+    if (selected == Commodity.GRAIN && countryId !in quote.unreportedProduction) {
+        val harvest = balance.harvestFactor
+        if (harvest != null) {
+            StatRow("평년 연간 수확 중 ${period.monthValue}월 몫 (추정)", String.format(Locale.KOREA, "%.0f%%", harvest * 100.0 / 12.0))
+            Hint("수확기에 농가와 유통 창고에 비축한 곡물은 비수기에 출하됩니다.")
+        } else {
+            Hint("국가별 수확 달력이 없어 기준 생산량을 매달 균등하게 배분합니다.")
+        }
     }
     StatRow("수입", quantity(balance.imports))
     StatRow("수출", quantity(balance.exports))

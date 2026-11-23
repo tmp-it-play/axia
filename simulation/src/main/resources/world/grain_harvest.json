@@ -1,0 +1,45 @@
+{
+  "modelNote": "각 배열은 1~12월의 전국 곡물 수확 비중(%, 합 100)이다. 주요 작물 수확 시기는 아래 자료를 따르며, 월별 배분은 작물·지역을 합친 게임 추정이다. 달력이 없는 국가는 연간 생산을 열두 달에 균등 배분한다.",
+  "countries": {
+    "ARG": {
+      "percent": [10, 3, 9, 13, 13, 11, 11, 7, 2, 2, 6, 13],
+      "sourceNote": "FAO GIEWS 아르헨티나 곡물 달력. 옥수수는 남반구 가을·겨울, 밀·보리는 11~1월에 수확한다. https://www.fao.org/giews/countrybrief/country/ARG/pdf_archive/ARG_Archive.pdf"
+    },
+    "AUS": {
+      "percent": [12, 3, 3, 3, 2, 1, 1, 1, 2, 9, 27, 36],
+      "sourceNote": "호주 농림수산부. 주요 겨울작물인 밀·보리·귀리 수확은 남반구 늦봄~초여름에 집중되고 수수 등 여름작물이 일부를 차지한다. https://www.agriculture.gov.au/agriculture-land/farm-food-drought/crops/grains"
+    },
+    "BGD": {
+      "percent": [5, 2, 3, 13, 22, 15, 6, 5, 2, 2, 10, 15],
+      "sourceNote": "FAO GIEWS 방글라데시 곡물 달력. 벼는 봄~초여름의 보로, 여름의 아우스, 늦가을~겨울의 아만 세 작기로 나뉜다. https://www.fao.org/giews/countrybrief/country/BGD/pdf_archive/BGD_Archive.pdf"
+    },
+    "BRA": {
+      "percent": [3, 7, 10, 8, 4, 11, 24, 19, 7, 3, 2, 2],
+      "sourceNote": "USDA FAS 브라질 옥수수 작기 달력. 남부 첫 옥수수와 쌀 수확 뒤에 중서부의 큰 두 번째 옥수수 수확이 온다. https://ipad.fas.usda.gov/highlights/2013/05/br_15may2013/BrazilCornCropCalendar.htm"
+    },
+    "CHN": {
+      "percent": [1, 1, 1, 2, 4, 14, 9, 4, 13, 32, 16, 3],
+      "sourceNote": "중국 국가통계국의 2023년 하곡·조도·추곡 작기 구분. 초여름 밀과 이른 벼, 가을 옥수수·벼 수확을 반영한다. 국가통계국의 양식 총량에는 콩·서류도 포함되어 월 가중치는 별도로 추정했다. https://www.stats.gov.cn/english/PressRelease/202312/t20231221_1945708.html"
+    },
+    "IDN": {
+      "percent": [5, 7, 17, 15, 10, 6, 8, 10, 7, 7, 4, 4],
+      "sourceNote": "FAO 인도네시아 벼 작기표. 자바의 우기 주작은 3~4월, 건기작은 그 뒤에 수확하며 지역마다 시기가 다르다. https://www.fao.org/4/y4347e/y4347e0x.htm"
+    },
+    "IND": {
+      "percent": [2, 2, 5, 17, 14, 4, 2, 3, 7, 18, 19, 7],
+      "sourceNote": "FAO GIEWS 인도 곡물 달력. 봄 라비 밀 수확과 우기 뒤 가을 카리프 벼·옥수수 수확을 반영한다. https://www.fao.org/giews/countrybrief/country/IND/pdf_archive/IND_Archive.pdf"
+    },
+    "RUS": {
+      "percent": [1, 1, 1, 1, 1, 3, 16, 29, 28, 14, 4, 1],
+      "sourceNote": "USDA FAS 러시아 밀 보고서. 겨울밀은 7~8월 수확하고 동쪽 봄밀은 더 늦게 수확한다. https://ipad.fas.usda.gov/highlights/2018/02/russia/index.pdf"
+    },
+    "UKR": {
+      "percent": [2, 1, 1, 1, 1, 3, 15, 18, 14, 24, 15, 5],
+      "sourceNote": "FAO GIEWS 우크라이나 곡물 달력. 7~8월의 밀·보리 수확과 늦은 옥수수 수확을 반영한다. https://www.fao.org/giews/countrybrief/country/UKR/pdf_archive/UKR_Archive.pdf"
+    },
+    "USA": {
+      "percent": [1, 1, 1, 1, 2, 5, 6, 6, 17, 37, 20, 3],
+      "sourceNote": "USDA NASS 작물별·주별 통상 수확일. 여름의 밀과 가을의 옥수수·쌀 수확을 반영한다. https://www.nass.usda.gov/Publications/Todays_Reports/reports/fcdate10.pdf"
+    }
+  }
+}

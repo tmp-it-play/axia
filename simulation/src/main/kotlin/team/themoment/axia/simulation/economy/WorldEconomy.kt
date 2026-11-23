@@ -37,7 +37,7 @@ class WorldEconomy internal constructor(
             }
     private val countriesById = countries.associateBy(CountryEconomy::id)
     private val reserveCurrencyIssuer = countriesById.getValue(RESERVE_CURRENCY_ISSUER)
-    private val trade = TradeNetwork(countries, data)
+    private val trade = TradeNetwork(countries, data, startMonth)
     private val histories = countries.associate { country -> country.id to EconomySeries.entries.associateWith { MonthlySeries() } }
 
     init {
@@ -48,10 +48,11 @@ class WorldEconomy internal constructor(
     /** 국가 순서와 난수 사용 순서가 고정돼 있어 같은 시드면 같은 결과가 나온다. */
     internal fun advanceMonth(
         random: Random,
-        international: InternationalState = InternationalState.PEACEFUL,
+        international: InternationalState,
+        period: YearMonth,
     ): Map<String, DebtNotice> {
         val dollarInflation = reserveCurrencyIssuer.inflation
-        val external = trade.advanceMonth(international)
+        val external = trade.advanceMonth(international, period)
         monetary.decide(countriesById)
         val us = monetary.conditions(RESERVE_CURRENCY_ISSUER)
         val usRealRate = us.effectiveRate - reserveCurrencyIssuer.expectedInflation

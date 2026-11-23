@@ -55,8 +55,8 @@ internal class CommodityFundamentals(
                     CommodityBaseline(
                         production[i] ?: 0.0,
                         totalSupply * (demandWeights[i] / totalWeight),
-                        productionReported =
-                            production[i] != null,
+                        productionReported = production[i] != null,
+                        harvest = if (commodity == Commodity.GRAIN) GrainHarvest.forCountry(initial[i].id) else null,
                     )
                 }
             }

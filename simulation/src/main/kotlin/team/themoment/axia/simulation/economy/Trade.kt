@@ -4,6 +4,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import team.themoment.axia.simulation.world.Geography
 import team.themoment.axia.simulation.world.StructureData
+import java.time.YearMonth
 import kotlin.math.pow
 
 /** 무역·제재·전쟁 상태. 외교와 군사 시스템이 구현한다. */
@@ -91,6 +92,7 @@ data class TradeSnapshot(
 internal class TradeNetwork(
     private val countries: List<CountryEconomy>,
     initial: EconomyData,
+    startMonth: YearMonth,
     data: TradeData = TradeData.default,
 ) {
     private val ids = countries.map { it.id }
@@ -134,7 +136,7 @@ internal class TradeNetwork(
             for (j in 0 until n) baseShare[i * n + j] /= total
         }
         baseShare.copyInto(shares)
-        market = CommodityMarket(ids, fundamentals.baseline, baseShare)
+        market = CommodityMarket(ids, fundamentals.baseline, baseShare, startMonth)
     }
 
     /** [a]의 수출 중 [b]로 가는 시작 시점 비중. 외교 관계의 경제적 연결로도 쓴다. */
@@ -161,7 +163,10 @@ internal class TradeNetwork(
     }
 
     /** 지난달 경기와 현재 외교 상태로 이번 달의 교역·상품 수급을 결정한다. */
-    fun advanceMonth(state: InternationalState): Map<String, ExternalConditions> {
+    fun advanceMonth(
+        state: InternationalState,
+        period: YearMonth,
+    ): Map<String, ExternalConditions> {
         val gdpNow = DoubleArray(n) { countries[it].dollarGdp }
         val routeFactors = DoubleArray(n * n)
         // 정책 교역 강도: 시작 비중 × (협정·제재 배율의 시작 대비 변화). 상대 경제 성장 효과는 넣지 않는다.
@@ -182,7 +187,7 @@ internal class TradeNetwork(
             policy[i] = policySum
         }
 
-        market.advanceMonth(fundamentals.monthlyInputs(countries, state), routeFactors)
+        market.advanceMonth(fundamentals.monthlyInputs(countries, state), routeFactors, period)
         val quotes = market.snapshot()
         val oil = quotes.getValue(Commodity.CRUDE_OIL)
         val grain = quotes.getValue(Commodity.GRAIN)
