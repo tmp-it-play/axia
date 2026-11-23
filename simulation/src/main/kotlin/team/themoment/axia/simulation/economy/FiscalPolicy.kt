@@ -29,6 +29,9 @@ interface FiscalPolicy {
 
     /** 정책이 인구 증가율(연율)에 더하는 값(이민 등). */
     val populationGrowthShift: Double get() = 0.0
+
+    /** 정책(규제, 관세)이 산업 구조 목표에 곱하는 부문별 배율. 없으면 1. */
+    val sectorPolicy: Map<Sector, Double> get() = emptyMap()
 }
 
 /**

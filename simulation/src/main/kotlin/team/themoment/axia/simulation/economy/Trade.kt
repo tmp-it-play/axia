@@ -1,5 +1,7 @@
 package team.themoment.axia.simulation.economy
 
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 import team.themoment.axia.simulation.world.Geography
 import team.themoment.axia.simulation.world.StructureData
 import kotlin.math.ln
@@ -18,7 +20,7 @@ internal interface InternationalState {
         b: String,
     ): Boolean
 
-    /** 시작 대비 늘어난 전쟁 강도(0~1). 내전 포함. */
+    /** 시작 대비 전쟁 강도 변화(-1~1). 내전 포함. 시작 때 치르던 전쟁이 끝나면 음수다. */
     fun warIntensity(country: String): Double
 
     /** 시작 대비 늘어난 점령 비율(되찾으면 음수). */
@@ -52,6 +54,12 @@ internal data class ExternalConditions(
     val inflation: Double,
     /** 잠재 GDP 수준의 목표 배율(제재·무역협정에 따른 교역 이득·손실, 점령). 시작 = 1. */
     val potentialLevel: Double,
+    /** 수출 비중으로 가중한 교역 상대의 산출 갭. 수출 부문 경기에 쓴다. */
+    val partnerGap: Double = 0.0,
+    /** 유가의 전년 대비 로그 변화. */
+    val oilChange: Double = 0.0,
+    /** 전쟁 동원·피란으로 생긴 구조적 실업 변화의 목표(시작 대비). */
+    val warUnemployment: Double = 0.0,
 ) {
     companion object {
         val NONE = ExternalConditions(0.0, 0.0, 1.0)
@@ -77,48 +85,69 @@ data class TradeSnapshot(
  * - 유가는 세계 경기와 산유국의 전쟁·제재로 움직이고, 수입국 물가와 산유국 경기에 영향을 준다.
  */
 internal class TradeNetwork(
-    ids: List<String>,
+    initialGdp: Map<String, Double>,
+    data: TradeData = TradeData.default,
 ) {
-    private val ids = ids.sorted()
-    private val n = this.ids.size
+    private val ids = initialGdp.keys.sorted()
+    private val n = ids.size
+    private val index = ids.withIndex().associate { it.value to it.index }
     private val structure = StructureData.default
     private val geography = Geography.default
-    private val openness = DoubleArray(n) { structure.of(this.ids[it]).tradeOpenness }
-    private val exportShare = DoubleArray(n) { structure.of(this.ids[it]).exportShare }
-    private val oilRents = DoubleArray(n) { structure.of(this.ids[it]).oilRents }
+    private val openness = DoubleArray(n) { structure.of(ids[it]).tradeOpenness }
+    private val exportShare = DoubleArray(n) { structure.of(ids[it]).exportShare }
+    private val oilRents = DoubleArray(n) { structure.of(ids[it]).oilRents }
+    private val startGdp = DoubleArray(n) { initialGdp.getValue(ids[it]) }
 
-    /** 거리·인접만 반영한 기본 가중치. */
-    private val baseWeight = DoubleArray(n * n)
+    /** 시작 시점 상대별 수출 비중(행 합 1). 실측(UN Comtrade)이 있으면 그 값, 빈 곳은 중력 모형으로 채운다. */
+    private val baseShare = DoubleArray(n * n)
 
     /** 현재 상대별 수출 비중(행 합 1). */
     private val shares = DoubleArray(n * n)
     private val tradeLevel = DoubleArray(n) { 1.0 }
     private var oilPrice = 100.0
     private val oilHistory = ArrayDeque(List(12) { 100.0 })
+    private var startFactor: DoubleArray? = null
 
     init {
         for (i in 0 until n) {
+            val observed =
+                data.countries[ids[i]]
+                    ?.partners
+                    .orEmpty()
+                    .filterKeys { it in index && it != ids[i] }
+            val gravity = DoubleArray(n)
             for (j in 0 until n) {
-                if (i == j) continue
-                val distance = geography.distanceKm(this.ids[i], this.ids[j]).coerceAtLeast(MIN_DISTANCE_KM)
-                val neighbor = if (geography.neighbors(this.ids[i], this.ids[j])) NEIGHBOR_BONUS else 1.0
-                baseWeight[i * n + j] = neighbor / distance.pow(DISTANCE_ELASTICITY)
+                if (i == j || ids[j] in observed) continue
+                val distance = geography.distanceKm(ids[i], ids[j]).coerceAtLeast(MIN_DISTANCE_KM)
+                val neighbor = if (geography.neighbors(ids[i], ids[j])) NEIGHBOR_BONUS else 1.0
+                gravity[j] = neighbor * startGdp[j].pow(GDP_ELASTICITY) / distance.pow(DISTANCE_ELASTICITY)
             }
+            val residual = (1.0 - observed.values.sum()).coerceAtLeast(MIN_RESIDUAL)
+            val gravitySum = gravity.sum()
+            for (j in 0 until n) baseShare[i * n + j] = if (gravitySum > 0.0) residual * gravity[j] / gravitySum else 0.0
+            observed.forEach { (partner, share) -> baseShare[i * n + index.getValue(partner)] = share }
+            val total = (0 until n).sumOf { baseShare[i * n + it] }
+            for (j in 0 until n) baseShare[i * n + j] /= total
         }
+        baseShare.copyInto(shares)
     }
 
-    /** 두 나라 사이 교역 가중치. 무역협정은 늘리고 제재는 강도만큼 끊는다. */
-    private fun weight(
+    /** [a]의 수출 중 [b]로 가는 시작 시점 비중. 외교 관계의 경제적 연결로도 쓴다. */
+    fun baseShare(
+        a: String,
+        b: String,
+    ): Double = baseShare[index.getValue(a) * n + index.getValue(b)]
+
+    /** 협정·제재에 따른 교역 배율. 시작 대비 비율로만 쓴다. */
+    private fun factor(
         state: InternationalState,
         i: Int,
         j: Int,
-        gdp: DoubleArray,
     ): Double {
         val a = ids[i]
         val b = ids[j]
         val agreement = if (state.tradeAgreement(a, b)) AGREEMENT_BONUS else 1.0
-        val cut = 1.0 - SANCTION_CUT * maxOf(state.sanction(a, b), state.sanction(b, a))
-        return baseWeight[i * n + j] * gdp[j].pow(GDP_ELASTICITY) * agreement * cut
+        return agreement * (1.0 - SANCTION_CUT * maxOf(state.sanction(a, b), state.sanction(b, a)))
     }
 
     /**
@@ -132,21 +161,25 @@ internal class TradeNetwork(
         gdp: Map<String, Double>,
     ): Map<String, ExternalConditions> {
         val gdpNow = DoubleArray(n) { gdp.getValue(ids[it]) }
-        val gdpStart = startGdp ?: gdpNow.copyOf().also { startGdp = it }
-        // 정책 교역 강도는 시작 GDP로 고정해 계산한다. 상대 경제가 커진 효과와 제재·협정 효과를 섞지 않기 위해서다.
+        val now = DoubleArray(n * n)
+        for (i in 0 until n) for (j in 0 until n) if (i != j) now[i * n + j] = factor(state, i, j)
+        val start = startFactor ?: now.copyOf().also { startFactor = it }
+        // 정책 교역 강도: 시작 비중 × (협정·제재 배율의 시작 대비 변화). 상대 경제 성장 효과는 넣지 않는다.
         val policy = DoubleArray(n)
         for (i in 0 until n) {
             var sum = 0.0
             var policySum = 0.0
             for (j in 0 until n) {
                 if (i == j) continue
-                sum += weight(state, i, j, gdpNow).also { shares[i * n + j] = it }
-                policySum += weight(state, i, j, gdpStart)
+                val k = i * n + j
+                val change = now[k] / start[k]
+                policySum += baseShare[k] * change
+                shares[k] = baseShare[k] * change * (gdpNow[j] / startGdp[j]).pow(GDP_ELASTICITY)
+                sum += shares[k]
             }
             for (j in 0 until n) shares[i * n + j] = if (sum > 0.0) shares[i * n + j] / sum else 0.0
             policy[i] = policySum
         }
-        val policyStart = startPolicy ?: policy.copyOf().also { startPolicy = it }
 
         val worldGdp = gdpNow.sum()
         val worldGap = ids.indices.sumOf { gdpNow[it] * gaps.getValue(ids[it]) } / worldGdp
@@ -154,7 +187,7 @@ internal class TradeNetwork(
         val oilSupply = ids.indices.sumOf { oilRents[it] * gdpNow[it] }
         val disruption =
             ids.indices.sumOf { i ->
-                val sanctioned = (1.0 - policy[i] / policyStart[i]).coerceAtLeast(0.0)
+                val sanctioned = (1.0 - policy[i]).coerceAtLeast(0.0)
                 oilRents[i] * gdpNow[i] * (state.warIntensity(ids[i]) * WAR_OIL_LOSS + sanctioned)
             } / oilSupply
         val disruptionStart = startDisruption ?: disruption.also { startDisruption = it }
@@ -166,7 +199,7 @@ internal class TradeNetwork(
 
         return ids.indices.associate { i ->
             val id = ids[i]
-            val change = policy[i] / policyStart[i] - 1.0
+            val change = policy[i] - 1.0
             val levelTarget = 1.0 + openness[i].coerceAtMost(MAX_OPENNESS) * TRADE_GAIN * change
             tradeLevel[i] += (levelTarget - tradeLevel[i]) / TRADE_ADJUST_MONTHS
             val partnerGap = ids.indices.sumOf { j -> shares[i * n + j] * gaps.getValue(ids[j]) }
@@ -179,12 +212,13 @@ internal class TradeNetwork(
                             WAR_GAP * state.warIntensity(id),
                     inflation = OIL_PASS_THROUGH * oilInflation * (1.0 - oilRents[i] * 2.0).coerceIn(0.2, 1.0),
                     potentialLevel = tradeLevel[i] * (1.0 - state.occupied(id) * OCCUPATION_OUTPUT),
+                    partnerGap = partnerGap,
+                    oilChange = oilInflation,
+                    warUnemployment = WAR_UNEMPLOYMENT * state.warIntensity(id),
                 )
         }
     }
 
-    private var startGdp: DoubleArray? = null
-    private var startPolicy: DoubleArray? = null
     private var startDisruption: Double? = null
 
     fun snapshot(): TradeSnapshot =
@@ -204,6 +238,9 @@ internal class TradeNetwork(
 
     private companion object {
         const val MIN_DISTANCE_KM = 1000.0
+
+        /** 실측 상대가 비중을 거의 다 차지해도 중력 모형 몫을 조금 남긴다(새 협정 상대가 생길 수 있도록). */
+        const val MIN_RESIDUAL = 0.02
 
         /** 중심점 거리는 이웃 나라 사이를 과장하므로 표준값(1)보다 낮게 둔다. */
         const val DISTANCE_ELASTICITY = 0.8
@@ -232,5 +269,31 @@ internal class TradeNetwork(
 
         /** 새 전쟁 강도 1이 매월 산출 갭에서 빼는 비율. 유지되면 갭이 약 -3%까지 내려간다. */
         const val WAR_GAP = 0.002
+
+        /** 전쟁 강도 1이 구조적 실업률에 더하는 몫. 2023년 전시 국가는 휴전하면 그만큼 내려간다. */
+        const val WAR_UNEMPLOYMENT = 0.1
+    }
+}
+
+@Serializable
+internal data class TradePartners(
+    val source: String,
+    val partners: Map<String, Double>,
+)
+
+/** 국가별 상품 수출 상대 비중(trade.json, UN Comtrade). */
+@Serializable
+internal data class TradeData(
+    val sourceNote: String,
+    val countries: Map<String, TradePartners>,
+) {
+    companion object {
+        val default: TradeData by lazy {
+            val text =
+                requireNotNull(TradeData::class.java.getResourceAsStream("/world/trade.json")) { "Missing trade.json" }
+                    .bufferedReader(Charsets.UTF_8)
+                    .use { it.readText() }
+            Json.decodeFromString<TradeData>(text)
+        }
     }
 }

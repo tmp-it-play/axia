@@ -30,8 +30,10 @@ data class MonetaryPolicy(
     val policyRate: Double,
     /** 금리 하한에 닿아 자산을 매입하고 있는지. */
     val quantitativeEasing: Boolean,
-    /** 플레이어가 정해 두었고 다음 달부터 적용되는 금리. */
+    /** 플레이어가 지시해 적용 중인 금리. 없으면 정부 지시 준칙으로 자동 결정한다. */
     val directedRate: Double?,
+    /** 지시 금리가 유지되는 남은 개월 수. */
+    val directiveMonths: Int,
     val inflationTarget: Double,
     /** 기준금리 − 기대 물가. */
     val realRate: Double,
@@ -268,8 +270,10 @@ internal class CentralBank(
         private set
     private var credibilityGoal = baseCredibility
 
-    /** 플레이어가 정한 금리. 다음 달 결정 때 반영한다. */
+    /** 플레이어가 정한 금리. 다음 달부터 [DIRECTIVE_MONTHS] 동안 적용한다. */
     var directedRate: Double? = null
+        private set
+    var directiveMonths = 0
         private set
     private var pendingShock = 0.0
 
@@ -279,17 +283,19 @@ internal class CentralBank(
     fun direct(rate: Double) {
         if (framework == MonetaryFramework.GOVERNMENT_DIRECTED && rate.isFinite()) {
             directedRate = rate.coerceIn(RateSetter.MIN_POLICY_RATE, RateSetter.MAX_POLICY_RATE)
+            directiveMonths = DIRECTIVE_MONTHS
         }
     }
 
-    /** 정부가 금리 결정권을 가져간다. 시장 신뢰가 무너지고 기대 물가가 뛴다. 정부가 정하기 전까지는 지금 금리를 유지한다. */
+    /** 정부가 금리 결정권을 가져간다. 시장 신뢰가 무너지고 기대 물가가 뛴다. 정부가 금리를 지시하기 전까지는 정부 지시 준칙으로 정한다. */
     fun revokeIndependence() {
         if (framework != MonetaryFramework.INFLATION_TARGETING) return
         framework = MonetaryFramework.GOVERNMENT_DIRECTED
         independent = false
         credibility = minOf(credibility, REVOKED_CREDIBILITY)
         credibilityGoal = credibility
-        directedRate = setter.rate
+        directedRate = null
+        directiveMonths = 0
         pendingShock += REVOCATION_EXPECTATION_SHOCK
     }
 
@@ -299,6 +305,7 @@ internal class CentralBank(
         framework = MonetaryFramework.INFLATION_TARGETING
         independent = true
         directedRate = null
+        directiveMonths = 0
         credibilityGoal = maxOf(baseCredibility, INDEPENDENT_CREDIBILITY)
     }
 
@@ -306,9 +313,23 @@ internal class CentralBank(
         credibility += (credibilityGoal - credibility) / RECOVERY_MONTHS
     }
 
-    /** 플레이어가 정한 금리가 있으면 그 금리로 바꾼다. 없으면 그대로 둔다. */
-    fun applyDirectedRate() {
-        directedRate?.let(setter::set)
+    /**
+     * 플레이어가 지시한 금리가 유지 중이면 그 금리를 쓰고, 기간이 끝났거나 지시가 없으면 정부 지시 준칙으로 정한다.
+     * 지시를 무기한 고정하면 명목금리 고정의 불안정(디플레이션·인플레이션 악순환)이 생기므로 유지 기간을 둔다.
+     */
+    fun applyDirectedRate(
+        inflation: Double,
+        outputGap: Double,
+        response: Double,
+    ) {
+        val rate = directedRate
+        if (rate != null && directiveMonths > 0) {
+            setter.set(rate)
+            directiveMonths--
+        } else {
+            directedRate = null
+            setter.followRule(inflation, outputGap, response)
+        }
     }
 
     /** 이번 달 기대 물가 충격을 꺼내 비운다. */
@@ -318,6 +339,9 @@ internal class CentralBank(
 
     companion object {
         const val REVOKED_CREDIBILITY = 0.4
+
+        /** 정부 지시 금리가 유지되는 기간. 지나면 정부 지시 준칙으로 돌아간다. */
+        const val DIRECTIVE_MONTHS = 12
         const val INDEPENDENT_CREDIBILITY = 0.7
         const val REVOCATION_EXPECTATION_SHOCK = 0.01
         const val RECOVERY_MONTHS = 60.0
@@ -417,7 +441,7 @@ internal class MonetarySystem(
 
                 MonetaryFramework.GOVERNMENT_DIRECTED -> {
                     if (bank.countryId == playerCountryId) {
-                        bank.applyDirectedRate()
+                        bank.applyDirectedRate(economy.inflation, economy.outputGap, DIRECTED_RESPONSE)
                     } else {
                         bank.setter.followRule(economy.inflation, economy.outputGap, DIRECTED_RESPONSE)
                     }
@@ -468,6 +492,7 @@ internal class MonetarySystem(
             policyRate = setter.rate,
             quantitativeEasing = setter.quantitativeEasing,
             directedRate = bank.directedRate,
+            directiveMonths = bank.directiveMonths,
             inflationTarget = setter.inflationTarget,
             realRate = setter.rate - expectedInflation,
             neutralRealRate = setter.neutralRealRate,

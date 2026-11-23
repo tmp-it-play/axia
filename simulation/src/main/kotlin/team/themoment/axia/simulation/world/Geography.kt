@@ -34,6 +34,15 @@ data class CountryStructure(
     val lifeExpectancy: Double,
     val urbanShare: Double,
     val netMigration: Double,
+    /** 부가가치 구성(GDP 대비): 농업, 산업(광업·제조·전기·건설), 제조업, 서비스. */
+    val agricultureValueAdded: Double,
+    val industryValueAdded: Double,
+    val manufacturingValueAdded: Double,
+    val servicesValueAdded: Double,
+    /** 제조업 부가가치 중 중고위 기술, 식품·음료·담배, 섬유·의복 비중. */
+    val techManufacturing: Double,
+    val foodManufacturing: Double,
+    val textileManufacturing: Double,
     val estimated: Set<String>,
 )
 

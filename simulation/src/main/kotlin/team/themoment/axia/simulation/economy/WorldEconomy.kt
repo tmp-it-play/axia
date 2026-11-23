@@ -37,7 +37,7 @@ class WorldEconomy internal constructor(
             }
     private val countriesById = countries.associateBy(CountryEconomy::id)
     private val reserveCurrencyIssuer = countriesById.getValue(RESERVE_CURRENCY_ISSUER)
-    private val trade = TradeNetwork(countries.map { it.id })
+    private val trade = TradeNetwork(countries.associate { it.id to it.dollarGdp })
     private val histories = countries.associate { country -> country.id to EconomySeries.entries.associateWith { MonthlySeries() } }
 
     init {
@@ -83,6 +83,12 @@ class WorldEconomy internal constructor(
 
     fun tradeSnapshot(): TradeSnapshot = trade.snapshot()
 
+    /** [a]의 시작 시점 수출 중 [b]로 가는 비중. */
+    internal fun tradeShare(
+        a: String,
+        b: String,
+    ): Double = trade.baseShare(a, b)
+
     internal fun country(id: String): CountryEconomy = countriesById.getValue(id)
 
     fun snapshot(date: LocalDate): EconomySnapshot =
@@ -95,6 +101,7 @@ class WorldEconomy internal constructor(
                     CountryHistory(startMonth.plusMonths(dropped.toLong()), series.mapValues { it.value.toList() })
                 },
             monetary = countries.associate { it.id to monetary.policy(it.id, it.expectedInflation) },
+            sectors = countries.associate { it.id to it.sectorLines() },
         )
 
     private fun record() {

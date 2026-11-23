@@ -1,5 +1,6 @@
 package team.themoment.axia.simulation.economy
 
+import team.themoment.axia.simulation.world.StructureData
 import kotlin.math.exp
 import kotlin.math.ln
 import kotlin.math.max
@@ -24,6 +25,33 @@ internal class CountryEconomy(
     private var populationGrowth = initial.populationGrowth
     private var potentialGrowth = initial.potentialGrowth
     private val growthVolatility = initial.growthVolatility
+    private val structure = StructureData.default.of(id)
+    private val sectors =
+        SectorEconomy(
+            structure,
+            initial.society.incomeGroup,
+            initial.society.agricultureEmployment,
+            initial.society.industryEmployment,
+            initial.society.servicesEmployment,
+            structure.oilRents,
+            structure.exportShare,
+        )
+    private val pendingSectorShocks = Sector.entries.associateWith { 0.0 }.toMutableMap()
+    private val initialRealGdpPerCapita = initial.gdp / initial.population
+
+    /** 다음 달 한 부문 경기에 더할 충격(가뭄 → 농업 등). */
+    fun addSectorShock(
+        sector: Sector,
+        shock: Double,
+    ) {
+        pendingSectorShocks[sector] = pendingSectorShocks.getValue(sector) + shock
+    }
+
+    /** 산업 부문의 상대 수준(전체 경제 대비, 시작 = 1). */
+    fun sectorLevel(sector: Sector): Double = sectors.relativeLevel(sector) / (1.0 + outputGap)
+
+    fun sectorLines(): List<SectorLine> = sectors.lines(realGdp / realGdpHistory[historyIndex] - 1.0)
+
     val naturalUnemployment = initial.unemployment
     private val initialDebtPremium = debtPremium(initial.debt)
     private val initialInterestRate = initial.interestRate
@@ -56,6 +84,9 @@ internal class CountryEconomy(
         private set
     private val exchangeHistory = ArrayDeque(List(12) { 0.0 })
     private var startRealRateGap: Double? = null
+
+    /** 전쟁으로 생긴 구조적 실업 변화. 목표로 1년쯤에 걸쳐 따라간다. */
+    private var warUnemployment = 0.0
 
     /** 교역·제재·점령으로 정해진 잠재 GDP 수준 배율. */
     private var externalLevel = 1.0
@@ -141,6 +172,7 @@ internal class CountryEconomy(
     ) {
         policyRate = monetary.policyRate
         updateExchange(monetary, exchange)
+        warUnemployment += (external.warUnemployment.coerceAtLeast(-naturalUnemployment / 2) - warUnemployment) / WAR_ADJUST_MONTHS
         potentialGdp *= external.potentialLevel / externalLevel
         externalLevel = external.potentialLevel
         val startDebtRatio = debtRatio
@@ -174,6 +206,18 @@ internal class CountryEconomy(
         historyIndex = (historyIndex + 1) % realGdpHistory.size
         realGdp = potentialGdp * (1.0 + outputGap)
 
+        sectors.advanceMonth(
+            SectorInputs(
+                outputGap = outputGap,
+                realRateGap = laggedRealRateGap,
+                partnerGap = external.partnerGap,
+                oilChange = external.oilChange,
+                incomeIndex = realGdpPerCapita / initialRealGdpPerCapita,
+                policy = fiscalPolicy.sectorPolicy,
+                shocks = pendingSectorShocks.toMap(),
+            ),
+        )
+        pendingSectorShocks.keys.forEach { pendingSectorShocks[it] = 0.0 }
         val importPrices = external.inflation - EXCHANGE_PASS_THROUGH * (realExchange - exchangeHistory.first()) + pendingInflation
         pendingInflation = 0.0
         inflation =
@@ -189,7 +233,7 @@ internal class CountryEconomy(
         dollarPriceLevel *= monthly(dollarInflation)
 
         unemployment =
-            (naturalUnemployment + fiscalPolicy.naturalUnemploymentShift - OKUN_COEFFICIENT * outputGap)
+            (naturalUnemployment + fiscalPolicy.naturalUnemploymentShift + warUnemployment - OKUN_COEFFICIENT * outputGap)
                 .coerceIn(MIN_UNEMPLOYMENT, MAX_UNEMPLOYMENT)
         populationGrowth += (LONG_RUN_POPULATION_GROWTH - populationGrowth) / DEMOGRAPHIC_TRANSITION_MONTHS
         population *= monthly(populationGrowth + fiscalPolicy.populationGrowthShift)
@@ -263,6 +307,7 @@ internal class CountryEconomy(
         /** 미국과의 실질금리 차 1%p가 1년에 올리는 실질환율(로그). */
         const val CARRY = 2.0
         const val MAX_CARRY_GAP = 0.05
+        const val WAR_ADJUST_MONTHS = 12.0
         const val EXCHANGE_REVERSION_MONTHS = 36.0
         const val EXCHANGE_VOLATILITY = 0.01
         const val MAX_EXCHANGE = 1.0

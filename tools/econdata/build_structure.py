@@ -1,7 +1,8 @@
 """World Bank 지표로 국가별 구조 초기값(structure.json)을 만든다. economy.json과 따로 두어 거시 초기값을 바꾸지 않는다.
 
 항목: 교역 개방도(수출+수입, GDP 대비), 수출 비중, 총 자원 지대·석유 지대(GDP 대비), 병력(명), 합계출산율,
-조출생률·조사망률(인구 1,000명당), 기대수명, 도시화율, 순이동(명, 연간).
+조출생률·조사망률(인구 1,000명당), 기대수명, 도시화율, 순이동(명, 연간),
+부가가치 구성(농업·산업·제조업·서비스, GDP 대비)과 제조업 내 중고위 기술·식품·섬유 비중.
 2019~2023년 중 가장 최근 값을 쓰고, 없으면 같은 소득 그룹의 중앙값으로 채워 estimated에 적는다.
 
 사용법:
@@ -32,6 +33,13 @@ INDICATORS = {
     "lifeExpectancy": ("SP.DYN.LE00.IN", 1.0),
     "urbanShare": ("SP.URB.TOTL.IN.ZS", 0.01),
     "netMigration": ("SM.POP.NETM", 1.0),
+    "agricultureValueAdded": ("NV.AGR.TOTL.ZS", 0.01),
+    "industryValueAdded": ("NV.IND.TOTL.ZS", 0.01),
+    "manufacturingValueAdded": ("NV.IND.MANF.ZS", 0.01),
+    "servicesValueAdded": ("NV.SRV.TOTL.ZS", 0.01),
+    "techManufacturing": ("NV.MNF.TECH.ZS.UN", 0.01),
+    "foodManufacturing": ("NV.MNF.FBTO.ZS.UN", 0.01),
+    "textileManufacturing": ("NV.MNF.TXTL.ZS.UN", 0.01),
 }
 
 # World Bank에 없는 국가의 대략값. 대만은 내정부·주계총처 2023년 통계, 나머지는 국제기구 추정 기반.
@@ -39,7 +47,8 @@ MANUAL = {
     "TWN": {
         "tradeOpenness": 1.1, "exportShare": 0.62, "resourceRents": 0.0, "oilRents": 0.0, "armedForces": 169000,
         "fertility": 0.87, "birthRate": 0.0058, "deathRate": 0.0089, "lifeExpectancy": 80.2, "urbanShare": 0.8,
-        "netMigration": 20000,
+        "netMigration": 20000, "agricultureValueAdded": 0.015, "industryValueAdded": 0.37, "manufacturingValueAdded": 0.32,
+        "servicesValueAdded": 0.615, "techManufacturing": 0.75, "foodManufacturing": 0.05, "textileManufacturing": 0.03,
     },
     "PRK": {"tradeOpenness": 0.1, "exportShare": 0.02, "resourceRents": 0.08, "armedForces": 1280000},
 }
@@ -54,6 +63,13 @@ LIMITS = {
     "deathRate": (0.001, 0.03),
     "lifeExpectancy": (45.0, 88.0),
     "urbanShare": (0.1, 1.0),
+    "agricultureValueAdded": (0.0, 0.7),
+    "industryValueAdded": (0.03, 0.9),
+    "manufacturingValueAdded": (0.0, 0.5),
+    "servicesValueAdded": (0.1, 0.95),
+    "techManufacturing": (0.0, 0.9),
+    "foodManufacturing": (0.0, 0.9),
+    "textileManufacturing": (0.0, 0.7),
 }
 
 
