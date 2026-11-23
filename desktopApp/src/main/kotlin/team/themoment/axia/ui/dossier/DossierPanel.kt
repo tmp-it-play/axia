@@ -91,6 +91,8 @@ fun DossierPanel(
                             .align(Alignment.TopEnd)
                             .offset(x = (-56).dp, y = 4.dp)
                             .clickable(onClick = onClose)
+                            // 스크롤한 내용이 아래로 지나갈 때 글자가 겹치지 않도록 종이를 덧댄다.
+                            .background(DossierColors.paper)
                             .padding(horizontal = 6.dp, vertical = 2.dp),
                 )
             }
