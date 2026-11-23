@@ -98,27 +98,31 @@
 | 파일 | 내용 | 만드는 방법 |
 |---|---|---|
 | `world.json`, (`desktopApp`) `map/world-map.bin` | 국가·영역·행정구역, 지도 형상 | `tools/mapdata/build_map.py` (Natural Earth) |
-| `economy.json` | 2023년 거시·사회·예산 초기값 | `tools/econdata/build_economy.py` (IMF, World Bank) |
+| `economy.json` | 2023년 거시·사회·예산 초기값 | `tools/econdata/build_economy.py` (IMF WEO·GFS·WoRLD, World Bank) |
 | `structure.json` | 교역 개방도, 자원 지대, 병력, 인구 동태, 부가가치 구성 | `tools/econdata/build_structure.py` (World Bank) |
 | `geography.json` | 중심점, 면적, 해안, 육상 인접국 | `tools/geodata/build_geography.py` (지도 형상) |
+| `reserve_assets.json` | 2023년 말 금 제외 준비자산(USD), 관측 경로 및 미수록국 | `tools/econdata/build_reserve_assets.py` (IMF IL·IIP, WDI 연간 대용치) |
+| `region_population.json` | 공식 지역 인구와 관측일, 통계상의 전국 합 | `tools/geodata/build_region_population.py`, 원표 지역 코드 대응은 `region_population_codes.csv` |
+| `central_banks.json` | 중앙은행·통화 체제와 2023년 말 금리 | 국가별 정책수단은 수작업 조사, 보완 금리는 `tools/econdata/build_policy_rates.py` (BIS) |
 | `regions.json` | 플레이 가능국 행정구역별 면적·도시 인구 | `tools/geodata/build_regions.py` (Natural Earth 거주지) |
-| `commodities.json` | 2023년 곡물·원유 생산량과 석유 수요 가중치 | `tools/econdata/build_commodities.py` (WDI·EIA, 대만·코소보 보완) |
+| `commodities.json` | 2023년 곡물·원유 생산량, 곡물 국내 공급과 석유 수요 가중치 | `tools/econdata/build_commodities.py` (WDI·FAO·EIA, 대만·코소보 보완) |
 | `grain_harvest.json` | 국가별 12개월 곡물 수확 비중 | 국가별 출처·연간 합 100 확인 |
 | `housing_programs.json` | 영국·캐나다·호주 주택 제도와 효과 계수 | 제도 근거는 국가별 `sourceNote` |
 | `trade.json` | 국가별 수출 상대 비중 | `tools/tradedata/build_trade.py` (UN Comtrade 공개 API, 매우 느림, 캐시 사용 권장) |
 | `regimes.json` | 모든 나라의 V-Dem 체제 분류 | `tools/politicsdata/build_regimes.py` (OWID) |
-| `playable.json`, `politics.json`, `parliaments.json`, `elections.json`, `constitutions.json`, `leaders.json`, `approval.json`, `central_banks.json`, `society_identities.json`, `organizations.json`, `diplomacy.json`, `military.json`, `events.json`, `names.json` | 손으로 조사·작성한 자료 | 직접 편집. 근거는 `sourceNote`/`source`에 |
+| `playable.json`, `politics.json`, `parliaments.json`, `elections.json`, `constitutions.json`, `leaders.json`, `approval.json`, `society_identities.json`, `organizations.json`, `diplomacy.json`, `military.json`, `events.json`, `names.json` | 손으로 조사·작성한 자료 | 직접 편집. 근거는 `sourceNote`/`source`에 |
 
 - 도구는 모두 `--cache-dir <폴더>`를 받는다. 원본 응답을 캐시해 두고 다시 돌리면 내려받지 않는다. 세션 스크래치패드를 캐시로 쓰면 된다.
 - Python은 시스템 `curl`로 받는다. python.org판 Python에는 인증서가 없어 urllib HTTPS가 실패한다.
 - `economy.json`을 다시 만들면 거시 초기값이 바뀔 수 있다. 원본 자료가 갱신되면 결과가 달라지므로 필요할 때만 돌린다.
+- 예산 자료를 재생성할 때는 `budget.revenueCompositionSource`로 일반정부·중앙정부·범위 미상·WDI 구성을 구분한다. 총세입과 다섯 세목의 연도·단위·보고 범위가 일치하는지 검사하고, 국가별 시작 세목과 기타 수입의 합을 게임 총세입과 대조한다.
 - JSON 로더는 모르는 키를 허용하지 않는다(`ignoreUnknownKeys = false`). 필드를 추가하면 Kotlin 데이터 클래스도 함께 고친다.
 
 ## 6. 검증 방법
 
 영구 테스트 코드는 두지 않는다. 대신 임시 검증을 하고 끝나면 지운다(AGENTS.md 2번).
 
-기본 시스템 통합 검증은 시드 `408`로 32개 플레이 국가를 각각 2024-01-01부터 2054-01-01까지 진행했다. 960개 연말 상태에서 곡물·원유 장부 382,080건의 수급과 양자 선적, 국채 장부 191,040건의 채권자별 잔액을 대조했다. 채무 감면 이력이 있는 연말 관측 1,021건에서는 채권자별 확정 손실 합이 국가 감면액과 일치했다.
+기본 시스템 통합 검증은 시드 `408`로 32개 플레이 국가를 각각 2024-01-01부터 2054-01-01까지 진행했다. 960개 연말 상태에서 곡물·원유 장부 382,080건의 수급과 양자 선적, 국채 장부 191,040건의 채권자별 잔액을 대조했다. 시작 데이터를 보완한 뒤 채무 감면 이력이 있는 연말 관측 1,023건에서는 채권자별 확정 손실 합이 국가 감면액과 일치했다.
 
 - **장기 실행 검증**
   1. `simulation/build.gradle.kts`를 백업한다.
