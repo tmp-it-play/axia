@@ -31,10 +31,12 @@ import team.themoment.axia.simulation.people.PeopleRegistry
 import team.themoment.axia.simulation.people.Person
 import team.themoment.axia.simulation.politics.ConstitutionProfile
 import team.themoment.axia.simulation.politics.GovernmentSystem
+import team.themoment.axia.simulation.politics.InitialApproval
 import team.themoment.axia.simulation.politics.InstitutionControl
 import team.themoment.axia.simulation.politics.PoliticalProfile
 import team.themoment.axia.simulation.politics.Politics
 import team.themoment.axia.simulation.politics.PoliticsSnapshot
+import team.themoment.axia.simulation.politics.Regimes
 import team.themoment.axia.simulation.politics.WorldNews
 import team.themoment.axia.simulation.politics.WorldPolitics
 import team.themoment.axia.simulation.politics.toWorld
@@ -87,6 +89,8 @@ class Simulation(
             module,
             playerCountryId in CountryModules.specialized,
             StructureData.default.of(playerCountryId),
+            world,
+            InitialApproval.forCountry(playerCountryId),
             startDate,
             seed xor SOCIETY_SEED_SALT,
         )
@@ -126,7 +130,7 @@ class Simulation(
             seed xor WORLD_POLITICS_SEED_SALT,
         )
     private val diplomacy =
-        Diplomacy(states, playerCountryId, ::democratic, Random(seed xor DIPLOMACY_SEED_SALT))
+        Diplomacy(states, playerCountryId, ::democratic, economy::tradeShare, Random(seed xor DIPLOMACY_SEED_SALT))
     private val military =
         Military(
             states,
@@ -139,6 +143,9 @@ class Simulation(
     private val events = EventSystem(Random(seed xor EVENT_SEED_SALT), ::countryName)
     private val trends = WorldTrends()
     private val worldNews = ArrayDeque<WorldNews>()
+
+    /** 플레이어의 답을 기다리는 AI 국가의 외교 제안. */
+    private val pendingProposals = HashMap<String, Diplomacy.Proposal>()
     private val international =
         object : InternationalState {
             override fun sanction(
@@ -202,6 +209,7 @@ class Simulation(
         if (passed) {
             politics.snapshot(date).lastDecision?.let { bill -> nation.onPolicyEnacted(bill.changes.map { it.item to it.delta }, date) }
         }
+        if (politics.takeMandateRenewal()) nation.renewMandate()
         politics.drainNews().forEach { nation.report(date, it.source, it.text, it.major) }
         (diplomacy.drainNews() + military.drainNews()).forEach(::addWorldNews)
         return DayUpdate(newMonth, passed, electionHeld, pauseFor, decisionNeeded = offered || happened.any { it.choices.isNotEmpty() })
@@ -212,7 +220,10 @@ class Simulation(
         economy.advanceMonth(random, international)
         val player = economy.country(playerCountryId)
         nation.advanceMonth(player, institutions.changes(), date)
-        nation.advanceCountryModule(player, date) { diplomacy.relation(playerCountryId, it) }
+        nation
+            .advanceCountryModule(player, date) { diplomacy.relation(playerCountryId, it) }
+            .relationShifts
+            .forEach { (other, points) -> diplomacy.nudge(playerCountryId, other, points) }
         applyWarWeariness()
         nation.setExternalSpending(aid = diplomacy.aidSpending + military.aidSpending, mobilization = military.mobilization.cost)
 
@@ -221,6 +232,12 @@ class Simulation(
         states.forEach { a -> states.filter { it > a }.forEach { b -> diplomacy.setWar(a, b, military.atWar(a, b)) } }
         diplomacy.advanceMonth(date)
         military.advanceMonth(date, defenseInputs())
+        military.updateDisputes()
+        military.aiWarDecisions(date, ::democratic, diplomacy::allies).forEach { (attacker, defender) ->
+            diplomacy.setWar(attacker, defender, true)
+            diplomacy.onWarStarted(attacker, defender, date)
+        }
+        val proposals = diplomacy.aiDecisions(date, military::atWar, playable)
         val worldGdp = states.sumOf { economy.country(it).dollarGdp }
         trends.advanceMonth(
             worldRealGdp = states.sumOf { economy.country(it).realGdpPerCapita * economy.country(it).populationCount },
@@ -230,6 +247,21 @@ class Simulation(
         rollWorldEvents(pauseFor)
         politics.updateConstituencies(nation.groupSnapshots(player), nation.opinion(), nation.approval())
         politics.monthlyReview(date)
+        proposals.forEach { proposal ->
+            pendingProposals[proposal.from] = proposal
+            events.custom(
+                name = "${proposal.action.label} 제안",
+                category = EventCategory.DIPLOMATIC,
+                countryId = proposal.from,
+                date = date,
+                text = "${countryName(proposal.from).josa("이", "가")} 우리나라에 ${proposal.action.label.josa("을", "를")} 제안했다.",
+                choices =
+                    listOf(
+                        EventChoice("정중히 거절한다", "지금의 관계를 유지한다.", EventEffects()),
+                        EventChoice("받아들인다", proposal.action.description, EventEffects(), action = "$PROPOSAL_ACTION${proposal.from}"),
+                    ),
+            )
+        }
         val offers = military.peaceOffers(date)
         offers.forEach { (warId, enemy) ->
             events.custom(
@@ -245,13 +277,16 @@ class Simulation(
                     ),
             )
         }
-        return offers.isNotEmpty()
+        return offers.isNotEmpty() || proposals.isNotEmpty()
     }
 
     private fun applyChoice(choice: EventChoice) {
         nation.applyEvent(economy.country(playerCountryId), choice.effects)
         choice.action?.let { action ->
             if (action.startsWith(PEACE_ACTION)) military.acceptPeace(action.removePrefix(PEACE_ACTION).toInt(), date)
+            if (action.startsWith(PROPOSAL_ACTION)) {
+                pendingProposals.remove(action.removePrefix(PROPOSAL_ACTION))?.let { diplomacy.acceptProposal(it, date) }
+            }
         }
     }
 
@@ -301,6 +336,7 @@ class Simulation(
         country.addSpending(effects.spending)
         country.addPotentialGrowth(effects.potentialGrowth)
         country.relieveDebt(effects.debtRelief)
+        effects.sectorShocks.forEach { (sector, shock) -> country.addSectorShock(sector, shock) }
         worldPolitics.country(countryId)?.shiftApproval(effects.mood * AI_MOOD_TO_APPROVAL)
     }
 
@@ -380,14 +416,11 @@ class Simulation(
             )
         }
 
-    private fun democratic(countryId: String): Boolean? =
-        if (countryId in
-            playable
-        ) {
-            !PoliticalProfile.forCountry(countryId).regime.autocratic
-        } else {
-            null
-        }
+    /** 플레이 가능 국가는 정치 자료, 나머지는 V-Dem 체제 분류로 본다. 자료가 없으면 null. */
+    private fun democratic(countryId: String): Boolean? {
+        val regime = if (countryId in playable) PoliticalProfile.forCountry(countryId).regime else Regimes.of(countryId)
+        return regime?.let { !it.autocratic }
+    }
 
     private fun countryName(id: String): String = world.country(id).name
 
@@ -493,6 +526,7 @@ class Simulation(
                     ) == true && it != playerCountryId
                 }.forEach { diplomacy.nudge(playerCountryId, it, -AGGRESSION_PENALTY) }
             diplomacy.setWar(playerCountryId, target, true)
+            diplomacy.onWarStarted(playerCountryId, target, date)
         }
         nation.setExternalSpending(aid = diplomacy.aidSpending + military.aidSpending, mobilization = military.mobilization.cost)
         return true
@@ -537,6 +571,7 @@ class Simulation(
         private const val WORLD_COUP = "coup_world"
         private const val COUP_ATTEMPT = "coup_attempt"
         private const val PEACE_ACTION = "peace:"
+        private const val PROPOSAL_ACTION = "proposal:"
         private const val INSURGENCY = "insurgency"
         private val REBEL_TEMPLATES =
             listOf("{country} 해방전선", "{country} 인민무장대", "{country} 구국연합군", "{country} 민족저항운동", "{country} 혁명수비대", "신{country} 민병연합")
