@@ -1,0 +1,872 @@
+{
+ "sourceNote": "사건 정의와 확률은 게임 가정이다. base는 월간 기본 확률이고, factors는 변수 1단위당 로그 확률 증가(확률 × exp(계수 × 값)), hazard는 나라별 재해 위험(0~1)을 곱한다. 재해 위험은 각국 재해 이력을 바탕으로 정한 대략값이다. requires는 변수가 그 값 이상일 때만 일어난다는 조건이다.",
+ "defaultHazard": 0.3,
+ "hazards": {
+  "KOR": {
+   "seismic": 0.2,
+   "flood": 0.4,
+   "storm": 0.6,
+   "drought": 0.2,
+   "wildfire": 0.2,
+   "heat": 0.4
+  },
+  "USA": {
+   "seismic": 0.5,
+   "flood": 0.5,
+   "storm": 0.9,
+   "drought": 0.5,
+   "wildfire": 0.8,
+   "heat": 0.5
+  },
+  "CHN": {
+   "seismic": 0.7,
+   "flood": 0.8,
+   "storm": 0.7,
+   "drought": 0.5,
+   "wildfire": 0.3,
+   "heat": 0.5
+  },
+  "JPN": {
+   "seismic": 1.0,
+   "flood": 0.6,
+   "storm": 0.9,
+   "drought": 0.1,
+   "wildfire": 0.1,
+   "heat": 0.4
+  },
+  "DEU": {
+   "seismic": 0.05,
+   "flood": 0.5,
+   "storm": 0.3,
+   "drought": 0.3,
+   "wildfire": 0.2,
+   "heat": 0.3
+  },
+  "GBR": {
+   "seismic": 0.05,
+   "flood": 0.5,
+   "storm": 0.4,
+   "drought": 0.2,
+   "wildfire": 0.1,
+   "heat": 0.2
+  },
+  "FRA": {
+   "seismic": 0.1,
+   "flood": 0.5,
+   "storm": 0.3,
+   "drought": 0.4,
+   "wildfire": 0.4,
+   "heat": 0.4
+  },
+  "RUS": {
+   "seismic": 0.3,
+   "flood": 0.5,
+   "storm": 0.2,
+   "drought": 0.4,
+   "wildfire": 0.8,
+   "heat": 0.3
+  },
+  "UKR": {
+   "seismic": 0.1,
+   "flood": 0.4,
+   "storm": 0.2,
+   "drought": 0.4,
+   "wildfire": 0.3,
+   "heat": 0.4
+  },
+  "IND": {
+   "seismic": 0.6,
+   "flood": 0.9,
+   "storm": 0.8,
+   "drought": 0.7,
+   "wildfire": 0.2,
+   "heat": 0.9
+  },
+  "BRA": {
+   "seismic": 0.05,
+   "flood": 0.7,
+   "storm": 0.3,
+   "drought": 0.6,
+   "wildfire": 0.7,
+   "heat": 0.6
+  },
+  "CAN": {
+   "seismic": 0.3,
+   "flood": 0.4,
+   "storm": 0.3,
+   "drought": 0.3,
+   "wildfire": 0.9,
+   "heat": 0.2
+  },
+  "PRK": {
+   "seismic": 0.2,
+   "flood": 0.6,
+   "storm": 0.5,
+   "drought": 0.6,
+   "wildfire": 0.1,
+   "heat": 0.3
+  },
+  "AUS": {
+   "seismic": 0.1,
+   "flood": 0.5,
+   "storm": 0.6,
+   "drought": 0.8,
+   "wildfire": 1.0,
+   "heat": 0.7
+  },
+  "POL": {
+   "seismic": 0.05,
+   "flood": 0.4,
+   "storm": 0.2,
+   "drought": 0.3,
+   "wildfire": 0.2,
+   "heat": 0.3
+  },
+  "ITA": {
+   "seismic": 0.7,
+   "flood": 0.5,
+   "storm": 0.3,
+   "drought": 0.5,
+   "wildfire": 0.5,
+   "heat": 0.6
+  },
+  "FIN": {
+   "seismic": 0.05,
+   "flood": 0.2,
+   "storm": 0.2,
+   "drought": 0.1,
+   "wildfire": 0.3,
+   "heat": 0.1
+  },
+  "EST": {
+   "seismic": 0.05,
+   "flood": 0.2,
+   "storm": 0.2,
+   "drought": 0.1,
+   "wildfire": 0.2,
+   "heat": 0.1
+  },
+  "LVA": {
+   "seismic": 0.05,
+   "flood": 0.3,
+   "storm": 0.2,
+   "drought": 0.1,
+   "wildfire": 0.2,
+   "heat": 0.1
+  },
+  "LTU": {
+   "seismic": 0.05,
+   "flood": 0.3,
+   "storm": 0.2,
+   "drought": 0.1,
+   "wildfire": 0.2,
+   "heat": 0.1
+  },
+  "TUR": {
+   "seismic": 1.0,
+   "flood": 0.4,
+   "storm": 0.2,
+   "drought": 0.5,
+   "wildfire": 0.6,
+   "heat": 0.6
+  },
+  "ISR": {
+   "seismic": 0.4,
+   "flood": 0.1,
+   "storm": 0.1,
+   "drought": 0.6,
+   "wildfire": 0.5,
+   "heat": 0.7
+  },
+  "IRN": {
+   "seismic": 0.9,
+   "flood": 0.3,
+   "storm": 0.1,
+   "drought": 0.8,
+   "wildfire": 0.2,
+   "heat": 0.8
+  },
+  "SAU": {
+   "seismic": 0.1,
+   "flood": 0.2,
+   "storm": 0.1,
+   "drought": 0.9,
+   "wildfire": 0.1,
+   "heat": 1.0
+  },
+  "EGY": {
+   "seismic": 0.2,
+   "flood": 0.2,
+   "storm": 0.1,
+   "drought": 0.8,
+   "wildfire": 0.1,
+   "heat": 0.9
+  },
+  "ZAF": {
+   "seismic": 0.1,
+   "flood": 0.4,
+   "storm": 0.3,
+   "drought": 0.7,
+   "wildfire": 0.5,
+   "heat": 0.6
+  },
+  "TWN": {
+   "seismic": 0.9,
+   "flood": 0.6,
+   "storm": 0.9,
+   "drought": 0.3,
+   "wildfire": 0.1,
+   "heat": 0.4
+  },
+  "IDN": {
+   "seismic": 1.0,
+   "flood": 0.8,
+   "storm": 0.3,
+   "drought": 0.4,
+   "wildfire": 0.6,
+   "heat": 0.6
+  },
+  "VNM": {
+   "seismic": 0.1,
+   "flood": 0.8,
+   "storm": 0.8,
+   "drought": 0.4,
+   "wildfire": 0.2,
+   "heat": 0.6
+  },
+  "THA": {
+   "seismic": 0.1,
+   "flood": 0.8,
+   "storm": 0.5,
+   "drought": 0.5,
+   "wildfire": 0.3,
+   "heat": 0.7
+  },
+  "RWA": {
+   "seismic": 0.3,
+   "flood": 0.5,
+   "storm": 0.1,
+   "drought": 0.4,
+   "wildfire": 0.1,
+   "heat": 0.4
+  },
+  "PAK": {
+   "seismic": 0.7,
+   "flood": 0.9,
+   "storm": 0.4,
+   "drought": 0.7,
+   "wildfire": 0.2,
+   "heat": 0.9
+  }
+ },
+ "events": [
+  {
+   "id": "earthquake",
+   "name": "대지진",
+   "category": "DISASTER",
+   "scope": "BOTH",
+   "base": 0.006,
+   "texts": [
+    "{country}에서 규모 7 안팎의 강진이 발생해 큰 인명·재산 피해가 났다."
+   ],
+   "major": true,
+   "hazard": "seismic",
+   "effects": {
+    "outputGap": -0.008,
+    "mood": -1.0
+   },
+   "choices": [
+    {
+     "label": "긴급 복구 예산 투입",
+     "description": "GDP의 0.5%를 들여 복구를 서두른다.",
+     "effects": {
+      "spending": 0.005,
+      "outputGap": 0.004,
+      "mood": 3.0
+     }
+    },
+    {
+     "label": "기존 예산으로 대응",
+     "description": "재정을 아끼지만 민심이 나빠진다.",
+     "effects": {
+      "mood": -2.0
+     }
+    }
+   ]
+  },
+  {
+   "id": "flood",
+   "name": "대홍수",
+   "category": "DISASTER",
+   "scope": "BOTH",
+   "base": 0.012,
+   "texts": [
+    "{country} 곳곳이 폭우로 침수돼 이재민이 속출했다."
+   ],
+   "major": true,
+   "hazard": "flood",
+   "factors": {
+    "climate": 0.6
+   },
+   "effects": {
+    "outputGap": -0.003,
+    "mood": -0.5
+   },
+   "choices": [
+    {
+     "label": "특별재난지역 선포·지원",
+     "description": "GDP의 0.2%를 지원한다.",
+     "effects": {
+      "spending": 0.002,
+      "mood": 2.0
+     }
+    },
+    {
+     "label": "지방정부에 맡긴다",
+     "description": "재정 부담은 없지만 비판을 받는다.",
+     "effects": {
+      "mood": -1.5
+     }
+    }
+   ]
+  },
+  {
+   "id": "typhoon",
+   "name": "초대형 태풍·허리케인",
+   "category": "DISASTER",
+   "scope": "BOTH",
+   "base": 0.012,
+   "texts": [
+    "초대형 폭풍이 {country}을(를) 강타했다."
+   ],
+   "major": true,
+   "hazard": "storm",
+   "factors": {
+    "climate": 0.5
+   },
+   "effects": {
+    "outputGap": -0.004,
+    "mood": -0.5
+   }
+  },
+  {
+   "id": "drought",
+   "name": "극심한 가뭄",
+   "category": "DISASTER",
+   "scope": "BOTH",
+   "base": 0.008,
+   "texts": [
+    "{country}에 수십 년 만의 가뭄이 들어 농작물 피해와 식량 가격 상승이 이어진다."
+   ],
+   "major": true,
+   "hazard": "drought",
+   "factors": {
+    "climate": 0.8
+   },
+   "effects": {
+    "outputGap": -0.002,
+    "inflation": 0.01,
+    "groupMood": {
+     "FARMERS": -6.0
+    },
+    "crime": 2.0
+   }
+  },
+  {
+   "id": "wildfire",
+   "name": "대형 산불",
+   "category": "DISASTER",
+   "scope": "BOTH",
+   "base": 0.01,
+   "texts": [
+    "{country}에서 대형 산불이 번져 주민들이 대피했다."
+   ],
+   "major": true,
+   "hazard": "wildfire",
+   "factors": {
+    "climate": 0.8
+   },
+   "effects": {
+    "outputGap": -0.001,
+    "identityMood": {
+     "ENVIRONMENTALISTS": -2.0
+    }
+   }
+  },
+  {
+   "id": "heatwave",
+   "name": "기록적 폭염",
+   "category": "DISASTER",
+   "scope": "BOTH",
+   "base": 0.012,
+   "texts": [
+    "{country}에 기록적 폭염이 이어져 온열 질환자가 급증했다."
+   ],
+   "major": false,
+   "hazard": "heat",
+   "factors": {
+    "climate": 1.0
+   },
+   "effects": {
+    "outputGap": -0.001,
+    "identityMood": {
+     "ENVIRONMENTALISTS": -1.5,
+     "PARENTS": -1.0
+    }
+   }
+  },
+  {
+   "id": "industrial_accident",
+   "name": "대형 산업 재해",
+   "category": "ACCIDENT",
+   "scope": "PLAYER",
+   "base": 0.01,
+   "texts": [
+    "{country}의 공장에서 폭발 사고가 일어나 노동자 수십 명이 숨졌다."
+   ],
+   "major": false,
+   "factors": {
+    "laborProtection": -1.5
+   },
+   "effects": {
+    "identityMood": {
+     "UNIONISTS": -4.0,
+     "EGALITARIANS": -2.0
+    },
+    "outputGap": -0.0005
+   }
+  },
+  {
+   "id": "transport_disaster",
+   "name": "대형 교통 참사",
+   "category": "ACCIDENT",
+   "scope": "PLAYER",
+   "base": 0.006,
+   "texts": [
+    "{country}에서 대형 교통 참사가 일어나 정부 안전 관리 책임론이 거세다."
+   ],
+   "major": true,
+   "effects": {
+    "mood": -1.5
+   }
+  },
+  {
+   "id": "epidemic",
+   "name": "신종 감염병 유행",
+   "category": "EPIDEMIC",
+   "scope": "BOTH",
+   "base": 0.003,
+   "texts": [
+    "{country}에서 신종 호흡기 감염병이 빠르게 번지고 있다."
+   ],
+   "major": true,
+   "factors": {
+    "healthSpending": -2.0
+   },
+   "effects": {
+    "outputGap": -0.01,
+    "mood": -1.0
+   },
+   "choices": [
+    {
+     "label": "강력한 봉쇄",
+     "description": "확산을 막지만 경기가 크게 위축된다.",
+     "effects": {
+      "outputGap": -0.01,
+      "mood": 1.0,
+      "identityMood": {
+       "LIBERTARIANS": -5.0
+      }
+     }
+    },
+    {
+     "label": "방역 지원금 지급",
+     "description": "GDP의 0.4%로 의료·소득을 지원한다.",
+     "effects": {
+      "spending": 0.004,
+      "mood": 2.0
+     }
+    },
+    {
+     "label": "일상 유지",
+     "description": "경제는 지키지만 피해가 커진다.",
+     "effects": {
+      "outputGap": 0.003,
+      "mood": -3.0
+     }
+    }
+   ]
+  },
+  {
+   "id": "pandemic",
+   "name": "세계적 대유행",
+   "category": "EPIDEMIC",
+   "scope": "GLOBAL",
+   "base": 0.0006,
+   "texts": [
+    "세계보건기구가 신종 감염병의 세계적 대유행을 선언했다."
+   ],
+   "major": true,
+   "effects": {
+    "outputGap": -0.025,
+    "mood": -1.0
+   }
+  },
+  {
+   "id": "corruption_scandal",
+   "name": "권력형 비리 의혹",
+   "category": "SCANDAL",
+   "scope": "PLAYER",
+   "base": 0.02,
+   "texts": [
+    "{country} 정부 고위 인사의 비리 의혹이 언론 보도로 드러났다."
+   ],
+   "major": true,
+   "factors": {
+    "civilLiberties": 1.0,
+    "judicial": 0.8
+   },
+   "effects": {
+    "mood": -2.5
+   },
+   "choices": [
+    {
+     "label": "특별검사 수용",
+     "description": "의혹을 털고 가지만 정치 자본이 든다.",
+     "effects": {
+      "politicalCapital": -15.0,
+      "mood": 1.5
+     }
+    },
+    {
+     "label": "의혹 부인",
+     "description": "지지층은 결집하지만 중도층이 등을 돌린다.",
+     "effects": {
+      "mood": -1.5,
+      "identityMood": {
+       "LIBERTARIANS": -3.0
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "minister_scandal",
+   "name": "장관 낙마",
+   "category": "SCANDAL",
+   "scope": "PLAYER",
+   "base": 0.03,
+   "texts": [
+    "{country}의 한 장관이 부적절한 언행으로 물러났다."
+   ],
+   "major": false,
+   "factors": {
+    "civilLiberties": 1.0
+   },
+   "effects": {
+    "mood": -0.8
+   }
+  },
+  {
+   "id": "riot",
+   "name": "대규모 폭동",
+   "category": "UNREST",
+   "scope": "BOTH",
+   "base": 0.004,
+   "texts": [
+    "{country}의 도시에서 실업과 물가에 분노한 군중이 폭동을 일으켰다."
+   ],
+   "major": true,
+   "factors": {
+    "unemploymentGap": 40.0,
+    "inflation": 6.0,
+    "crime": 1.5,
+    "unrest": 3.0
+   },
+   "effects": {
+    "crime": 6.0,
+    "outputGap": -0.002,
+    "mood": -1.0
+   },
+   "choices": [
+    {
+     "label": "치안 병력 투입",
+     "description": "질서를 회복하지만 시민 자유 성향이 반발한다.",
+     "effects": {
+      "crime": -4.0,
+      "identityMood": {
+       "LIBERTARIANS": -4.0,
+       "PATRIOTS": 2.0
+      }
+     }
+    },
+    {
+     "label": "대화와 지원 약속",
+     "description": "GDP의 0.1%를 쓴다.",
+     "effects": {
+      "spending": 0.001,
+      "mood": 1.0
+     }
+    }
+   ]
+  },
+  {
+   "id": "general_strike",
+   "name": "총파업",
+   "category": "UNREST",
+   "scope": "BOTH",
+   "base": 0.006,
+   "texts": [
+    "{country}의 노동계가 정부 정책에 항의해 총파업에 들어갔다."
+   ],
+   "major": true,
+   "factors": {
+    "unemploymentGap": 20.0,
+    "unrest": 4.0,
+    "laborProtection": -1.0
+   },
+   "requires": {
+    "democracy": 1.0
+   },
+   "effects": {
+    "outputGap": -0.004,
+    "identityMood": {
+     "UNIONISTS": -2.0
+    }
+   }
+  },
+  {
+   "id": "terror_attack",
+   "name": "테러 공격",
+   "category": "TERROR",
+   "scope": "BOTH",
+   "base": 0.004,
+   "texts": [
+    "{country}의 도심에서 테러 공격이 일어나 다수의 사상자가 났다."
+   ],
+   "major": true,
+   "factors": {
+    "warIntensity": 2.0,
+    "unrest": 2.0,
+    "policing": -1.5
+   },
+   "effects": {
+    "mood": -0.5,
+    "identityMood": {
+     "PATRIOTS": 3.0
+    },
+    "outputGap": -0.001
+   }
+  },
+  {
+   "id": "banking_crisis",
+   "name": "은행 위기",
+   "category": "FINANCIAL",
+   "scope": "BOTH",
+   "base": 0.002,
+   "texts": [
+    "{country}의 대형 은행이 유동성 위기에 빠져 금융시장이 요동쳤다."
+   ],
+   "major": true,
+   "factors": {
+    "debtRatio": 1.0,
+    "policyRate": 8.0,
+    "outputGap": -10.0
+   },
+   "effects": {
+    "outputGap": -0.02,
+    "mood": -1.5
+   },
+   "choices": [
+    {
+     "label": "공적 자금 투입",
+     "description": "GDP의 3%로 은행을 구제한다.",
+     "effects": {
+      "spending": 0.03,
+      "outputGap": 0.012,
+      "identityMood": {
+       "EGALITARIANS": -4.0
+      }
+     }
+    },
+    {
+     "label": "파산 허용",
+     "description": "재정은 지키지만 충격이 깊다.",
+     "effects": {
+      "outputGap": -0.015,
+      "identityMood": {
+       "FREE_MARKET": 2.0
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "currency_crisis",
+   "name": "통화 위기",
+   "category": "FINANCIAL",
+   "scope": "BOTH",
+   "base": 0.002,
+   "texts": [
+    "{country} 통화 가치가 급락하며 외환시장이 패닉에 빠졌다."
+   ],
+   "major": true,
+   "factors": {
+    "inflation": 5.0,
+    "debtRatio": 1.2,
+    "credibility": -3.0
+   },
+   "requires": {
+    "floating": 1.0
+   },
+   "effects": {
+    "outputGap": -0.01,
+    "inflation": 0.05,
+    "mood": -1.5
+   }
+  },
+  {
+   "id": "sovereign_default",
+   "name": "국가 부도 위기",
+   "category": "FINANCIAL",
+   "scope": "BOTH",
+   "base": 0.001,
+   "texts": [
+    "{country} 정부가 국채 이자를 제때 갚지 못해 채무불이행에 빠졌다."
+   ],
+   "major": true,
+   "factors": {
+    "debtRatio": 2.5,
+    "policyRate": 6.0
+   },
+   "requires": {
+    "debtRatio": 1.0
+   },
+   "effects": {
+    "outputGap": -0.04,
+    "inflation": 0.03,
+    "mood": -3.0,
+    "debtRelief": 0.3
+   }
+  },
+  {
+   "id": "coup_attempt",
+   "name": "쿠데타 시도",
+   "category": "COUP",
+   "scope": "PLAYER",
+   "base": 0.02,
+   "texts": [
+    "{country}에서 일부 군부대가 정부 전복을 시도했다."
+   ],
+   "major": true,
+   "factors": {
+    "coupRisk": 3.0
+   },
+   "effects": {},
+   "requires": {
+    "coupRisk": 0.05
+   }
+  },
+  {
+   "id": "coup_world",
+   "name": "군사 쿠데타",
+   "category": "COUP",
+   "scope": "WORLD",
+   "base": 0.0015,
+   "texts": [
+    "{country}에서 군부가 쿠데타를 일으켜 정권을 장악했다."
+   ],
+   "major": true,
+   "factors": {
+    "approval": -3.0,
+    "warIntensity": 2.0
+   },
+   "requires": {
+    "coupProne": 1.0
+   },
+   "effects": {
+    "outputGap": -0.01
+   }
+  },
+  {
+   "id": "border_clash",
+   "name": "국경 충돌",
+   "category": "MILITARY",
+   "scope": "BOTH",
+   "base": 0.003,
+   "texts": [
+    "{country} 국경에서 이웃 나라 군과 총격전이 벌어졌다."
+   ],
+   "major": true,
+   "factors": {
+    "hostility": 3.0
+   },
+   "requires": {
+    "hostility": 0.5
+   },
+   "effects": {
+    "identityMood": {
+     "PATRIOTS": 2.0
+    },
+    "outputGap": -0.0005
+   }
+  },
+  {
+   "id": "tech_breakthrough",
+   "name": "기술 혁신",
+   "category": "ECONOMIC",
+   "scope": "BOTH",
+   "base": 0.004,
+   "texts": [
+    "{country}의 연구진이 산업 판도를 바꿀 기술을 개발했다."
+   ],
+   "major": false,
+   "factors": {
+    "educationSpending": 2.0
+   },
+   "effects": {
+    "potentialGrowth": 0.001,
+    "identityMood": {
+     "FREE_MARKET": 1.0
+    }
+   }
+  },
+  {
+   "id": "resource_discovery",
+   "name": "대형 자원 발견",
+   "category": "ECONOMIC",
+   "scope": "BOTH",
+   "base": 0.0015,
+   "texts": [
+    "{country}에서 대형 유전·광물 매장지가 발견됐다."
+   ],
+   "major": true,
+   "effects": {
+    "potentialGrowth": 0.002,
+    "mood": 1.0
+   }
+  },
+  {
+   "id": "insurgency",
+   "name": "무장 반란",
+   "category": "MILITARY",
+   "scope": "WORLD",
+   "base": 0.0006,
+   "texts": [
+    "{country}에서 무장 세력이 봉기해 정부군과 내전에 들어갔다."
+   ],
+   "major": true,
+   "factors": {
+    "unemploymentGap": 30.0,
+    "inflation": 4.0,
+    "approval": -2.0
+   },
+   "requires": {
+    "coupProne": 1.0
+   },
+   "effects": {
+    "outputGap": -0.01
+   }
+  }
+ ]
+}
