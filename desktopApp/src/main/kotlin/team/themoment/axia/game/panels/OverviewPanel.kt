@@ -44,7 +44,9 @@ fun OverviewPanel(
     SectionTitle("지지율이 움직인 이유")
     ApprovalBreakdown(nation)
     Text(
-        text = "기준선 ${nation.baseline.roundToInt()} · 여론조사 자료가 없어 시작 지지율이 50%가 되도록 정한 값",
+        text =
+            "기준선 ${nation.baseline.roundToInt()} · 시작 지지율 ${nation.initialApproval.approval.roundToInt()}%" +
+                (if (nation.initialApproval.estimated) " (여론조사 없음, 추정)" else " (${nation.initialApproval.source})"),
         style = DossierType.number(11.sp),
         color = DossierColors.inkMuted,
     )

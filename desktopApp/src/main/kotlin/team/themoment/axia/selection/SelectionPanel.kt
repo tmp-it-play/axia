@@ -6,9 +6,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import team.themoment.axia.format.formatPopulation
 import team.themoment.axia.game.panels.KeyIndicatorRows
 import team.themoment.axia.simulation.WorldSnapshot
 import team.themoment.axia.simulation.economy.EconomyIndicators
+import team.themoment.axia.simulation.nation.RegionSnapshot
 import team.themoment.axia.simulation.world.CountryKind
 import team.themoment.axia.simulation.world.World
 import team.themoment.axia.theme.DossierColors
@@ -25,6 +27,7 @@ fun SelectionPanel(
     regionId: String,
     economy: EconomyIndicators?,
     snapshot: WorldSnapshot,
+    playerRegion: RegionSnapshot?,
     playerId: String,
     onClose: () -> Unit,
     modifier: Modifier = Modifier,
@@ -38,6 +41,13 @@ fun SelectionPanel(
         }
         territory?.let { Text(text = it.name, style = DossierType.number(13.sp), color = DossierColors.inkMuted) }
         Text(text = region.name, style = DossierType.number(14.sp), color = DossierColors.ink)
+        playerRegion?.let { r ->
+            SectionTitle("지역 현황 (추정)")
+            StatRow("인구", formatPopulation(r.population))
+            StatRow("도시화율", "${(r.urbanShare * 100).roundToInt()}%")
+            StatRow("1인당 소득 (전국 = 100)", "${(r.relativeIncome * 100).roundToInt()}")
+            StatRow("지역 지지율", "${r.approval.roundToInt()}%")
+        }
         val id = country.id
         snapshot.politics[id]?.let { politics ->
             SectionTitle("정치")

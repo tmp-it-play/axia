@@ -58,6 +58,8 @@ fun WorldMap(
     selectedRegionId: String?,
     onRegionClick: (String?) -> Unit,
     modifier: Modifier = Modifier,
+    /** 지역 단위로 다시 칠할 나라와 지역 색. 색이 null이면 나라 색을 그대로 둔다. */
+    regionOverlay: Pair<String, (String) -> Color?>? = null,
 ) {
     val viewport = remember { MapViewport() }
     val currentOnRegionClick by rememberUpdatedState(onRegionClick)
@@ -85,7 +87,7 @@ fun WorldMap(
         drawRect(MapPalette.ocean)
         if (viewport.zoom > 0f) {
             val copies = visibleCopies(viewport)
-            copies.forEach { shift -> drawWorldCopy(model, viewport, shift, fillColor, selectedRegionId) }
+            copies.forEach { shift -> drawWorldCopy(model, viewport, shift, fillColor, selectedRegionId, regionOverlay) }
             drawLabels(model, viewport, copies, labelLayouts)
         }
     }
@@ -105,6 +107,7 @@ private fun DrawScope.drawWorldCopy(
     shift: Float,
     fillColor: (CountryFill) -> Color,
     selectedRegionId: String?,
+    regionOverlay: Pair<String, (String) -> Color?>?,
 ) {
     val zoom = viewport.zoom
     val pixelsPerDp = density
@@ -123,6 +126,11 @@ private fun DrawScope.drawWorldCopy(
         model.countryFills.forEach { fill ->
             if (fill.bounds.overlaps(area)) {
                 drawPath(fill.path, fillColor(fill))
+            }
+        }
+        regionOverlay?.let { (countryId, color) ->
+            model.regionsOf(countryId).forEach { shape ->
+                if (shape.bounds.overlaps(area)) color(shape.id)?.let { drawPath(model.regionHighlight(shape.id), it) }
             }
         }
         if (selectedCountryId != null) {

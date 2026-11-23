@@ -170,6 +170,17 @@ enum class MapMode(
     ),
     ;
 
+    /** 플레이어 국가를 지역 단위로 칠할 수 있는 모드면 지역 색. */
+    fun regionColor(
+        regionId: String,
+        data: MapData,
+    ): Color? {
+        if (this != APPROVAL) return null
+        val region = data.nation.regions.firstOrNull { it.regionId == regionId } ?: return null
+        val scale = requireNotNull(scale)
+        return scale.colors[scale.thresholds.count { region.approval >= it }]
+    }
+
     fun colorOf(
         fill: CountryFill,
         data: MapData,

@@ -88,6 +88,7 @@ fun GameScreen(
                     fillColor = { fill -> mapMode.colorOf(fill, mapData) },
                     selectedRegionId = selectedRegionId,
                     onRegionClick = { selectedRegionId = it },
+                    regionOverlay = nation.countryId to { regionId -> mapMode.regionColor(regionId, mapData) },
                     modifier = Modifier.fillMaxSize(),
                 )
                 Column(Modifier.align(Alignment.TopEnd).padding(12.dp), horizontalAlignment = Alignment.End) {
@@ -115,6 +116,7 @@ fun GameScreen(
                                     countryName = playerName,
                                     indicators = playerIndicators,
                                     history = playerHistory,
+                                    sectors = economy.sectors.getValue(nation.countryId),
                                     monetary = economy.monetary.getValue(nation.countryId),
                                     politics = politics,
                                     onDirectRate = runner::directPolicyRate,
@@ -220,6 +222,7 @@ fun GameScreen(
                         regionId = regionId,
                         economy = economy.countries[world.region(regionId).countryId],
                         snapshot = worldState,
+                        playerRegion = nation.regions.firstOrNull { it.regionId == regionId },
                         playerId = nation.countryId,
                         onClose = { selectedRegionId = null },
                         modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp),

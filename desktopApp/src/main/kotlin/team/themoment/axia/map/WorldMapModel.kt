@@ -153,6 +153,9 @@ class WorldMapModel(
 
     fun countryOf(regionId: String): String = world.region(regionId).countryId
 
+    /** 한 나라의 지역과 그 경계 상자. 지역별 색칠에 쓴다. */
+    fun regionsOf(countryId: String): List<RegionShape> = regionsByCountry[countryId].orEmpty()
+
     /** 지도 좌표의 지역을 찾는다. 바다면 null. */
     fun regionAt(point: Offset): String? {
         val x = MapProjection.wrapX(point.x)

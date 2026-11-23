@@ -64,6 +64,13 @@ fun PoliticsPanel(
     StatRow("재정 심의 기구", profile.reviewBody)
     politics.legislature?.let { ChamberComposition(it) }
     ElectionSection(politics, today, onCallEarlyElection)
+    if (politics.newParties.isNotEmpty()) {
+        SectionTitle("신생 정당 (다음 총선 출마)")
+        politics.newParties.forEach { party ->
+            StatRow(party.name, "지지 ${formatPercent(party.support)} · ${party.identity.label} 성향")
+            Hint("${shortDate(party.founded)} 창당")
+        }
+    }
 
     val pending = politics.pending
     if (pending == null) {
