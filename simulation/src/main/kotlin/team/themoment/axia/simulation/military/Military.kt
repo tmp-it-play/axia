@@ -206,7 +206,13 @@ internal class Military(
         val defender: String,
         var control: Double,
         var trend: Double = 0.0,
-    )
+    ) {
+        /** 시작 시점 통제 비율. 오래된 점령지(예: 서안 C구역)를 이번 전쟁의 패배로 세지 않도록 항복 기준에 쓴다. */
+        val startControl: Double = control
+
+        /** 국토를 이만큼 잃으면 항복한다. 이미 점령당한 몫이 있으면 그보다 더 잃어야 한다. */
+        val capitulation: Double get() = maxOf(CAPITULATION, kotlin.math.abs(startControl) + CAPITULATION_MARGIN).coerceAtMost(MAX_CONTROL)
+    }
 
     private class War(
         val id: Int,
@@ -359,7 +365,7 @@ internal class Military(
     ) {
         wars.filter { it.active }.forEach { war ->
             // 국토 대부분을 잃으면 항복한다.
-            war.fronts.firstOrNull { kotlin.math.abs(it.control) >= CAPITULATION }?.let { front ->
+            war.fronts.firstOrNull { kotlin.math.abs(it.control) >= it.capitulation }?.let { front ->
                 val loser = if (front.control > 0) front.defender else front.attacker
                 ceasefire(war, date, "${name(loser)}의 항복으로 ${war.name}이 끝났다.")
                 return@forEach
@@ -426,8 +432,8 @@ internal class Military(
         return (foreign + rebels).coerceAtMost(1.0)
     }
 
-    /** 시작 대비 전쟁 강도 변화. 경제에는 이것만 전한다. */
-    fun intensityChange(id: String): Double = (intensityAbsolute(id) - (startIntensity[id] ?: 0.0)).coerceAtLeast(0.0)
+    /** 시작 대비 전쟁 강도 변화. 경제에는 이것만 전한다. 시작 때 치르던 전쟁이 끝나면 음수(평화 배당)다. */
+    fun intensityChange(id: String): Double = intensityAbsolute(id) - (startIntensity[id] ?: 0.0)
 
     /** 시작 대비 점령 비율 변화(되찾으면 음수). */
     fun occupiedChange(id: String): Double = occupiedAbsolute(id) - (startOccupied[id] ?: 0.0)
@@ -543,6 +549,92 @@ internal class Military(
         return true
     }
 
+    /**
+     * 영토 분쟁의 긴장도는 주장국 사이의 관계가 정하는 목표로 서서히 움직이고, 주장국끼리 교전 중이면 치솟는다.
+     */
+    fun updateDisputes() {
+        disputes.replaceAll { dispute ->
+            val pairs =
+                dispute.claimants.flatMap { a ->
+                    (dispute.claimants + dispute.controller).distinct().filter { it > a }.map { a to it }
+                }
+            val worst = pairs.minOfOrNull { (a, b) -> relation(a, b) } ?: 0.0
+            val fighting = pairs.any { (a, b) -> atWar(a, b) }
+            val target = (DISPUTE_BASE - worst / 2.0 + if (fighting) DISPUTE_WAR_BONUS else 0.0).coerceIn(0.0, 100.0)
+            dispute.copy(tension = dispute.tension + (target - dispute.tension) * DISPUTE_SMOOTHING)
+        }
+    }
+
+    /**
+     * AI 국가의 개전 결정. 인접한 적대국(관계 -70 미만)을 비민주국가가 압도할 때(동맹 몫을 더한 상대 전력의 2.5배)만,
+     * 월 0.2%(같은 영토 분쟁의 긴장이 70을 넘으면 3배) 확률로 일어난다. 핵보유국이나 핵보유 동맹국이 지키는 나라는 침공하지 않는다.
+     * @return 새로 시작된 (공격국, 수비국)
+     */
+    fun aiWarDecisions(
+        date: LocalDate,
+        democratic: (String) -> Boolean?,
+        allies: (String) -> List<String>,
+    ): List<Pair<String, String>> {
+        val busy = wars.filter { it.active }.flatMap { it.sideA + it.sideB }.toSet()
+        val started = mutableListOf<Pair<String, String>>()
+        ids.forEach { a ->
+            // 체제 자료가 없는 소국과 민주국가는 먼저 침공하지 않는다.
+            if (a == playerId || a in busy || democratic(a) != false) return@forEach
+            geography.of(a).neighbors.sorted().forEach neighbor@{ b ->
+                if (b in busy || relation(a, b) >= AI_WAR_RELATION || started.any { a in it.toList() || b in it.toList() }) return@neighbor
+                if (recentlyAtWar(a, b, date)) return@neighbor
+                val defenders = listOf(b) + allies(b)
+                if (defenders.any { (nuclear[it] ?: 0) > 0 }) return@neighbor
+                val defense = rawPower(b) + allies(b).sumOf { rawPower(it) * ALLY_SHARE }
+                if (rawPower(a) < AI_WAR_POWER_RATIO * defense) return@neighbor
+                val disputed =
+                    disputes.any {
+                        a in it.claimants + it.controller && b in it.claimants + it.controller &&
+                            it.tension > DISPUTE_FLASHPOINT
+                    }
+                val chance = AI_WAR_CHANCE * if (disputed) DISPUTE_WAR_MULTIPLIER else 1.0
+                if (random.nextDouble() < chance) {
+                    declareWar(a, b, date)
+                    started += a to b
+                }
+            }
+        }
+        return started
+    }
+
+    /**
+     * 같은 두 나라 사이에 휴전으로 굳은 전선이 있으면 새 전쟁은 그 휴전선에서 시작한다. 옛 전선의 통제는 새 전선으로 옮겨
+     * 점령지가 두 번 세어지지 않게 한다.
+     */
+    private fun inheritFrozenLine(
+        attacker: String,
+        defender: String,
+    ): Double {
+        var control = 0.0
+        wars.filter { !it.active }.forEach { war ->
+            war.fronts.forEach { front ->
+                when {
+                    front.attacker == attacker && front.defender == defender -> control += front.control
+                    front.attacker == defender && front.defender == attacker -> control -= front.control
+                    else -> return@forEach
+                }
+                front.control = 0.0
+            }
+        }
+        return control.coerceIn(-MAX_CONTROL, MAX_CONTROL)
+    }
+
+    /** 휴전 뒤 [REMATCH_YEARS] 안에는 AI가 같은 상대를 다시 침공하지 않는다. */
+    private fun recentlyAtWar(
+        a: String,
+        b: String,
+        date: LocalDate,
+    ): Boolean =
+        wars.any { war ->
+            val ended = war.ceasefire ?: return@any false
+            war.side(a) != 0 && war.side(b) != 0 && war.side(a) != war.side(b) && ended.plusYears(REMATCH_YEARS) > date
+        }
+
     /** 새 전쟁. 수비국의 동맹국은 관계에 따라 참전한다. */
     fun declareWar(
         attacker: String,
@@ -558,7 +650,7 @@ internal class Military(
                 sideB = mutableSetOf(defender),
                 supportA = mutableSetOf(),
                 supportB = mutableSetOf(),
-                fronts = mutableListOf(Front(attacker, defender, 0.0)),
+                fronts = mutableListOf(Front(attacker, defender, inheritFrozenLine(attacker, defender))),
                 intensity = NEW_WAR_INTENSITY,
             )
         ids.filter { it != defender && it != attacker && allied(it, defender) }.forEach { ally ->
@@ -642,6 +734,7 @@ internal class Military(
         const val CASUALTY_RATE = 0.0015
         const val WEARINESS_PER_WEEK = 0.25
         const val CAPITULATION = 0.75
+        const val CAPITULATION_MARGIN = 0.3
         const val PEACE_WEARINESS = 60.0
         const val PEACE_CHANCE = 0.1
         const val PEACE_ACCEPT_WEARINESS = 45.0
@@ -655,6 +748,15 @@ internal class Military(
         const val NEW_WAR_INTENSITY = 0.7
         const val ALLY_JOIN_RELATION = -30.0
         const val ALLY_JOIN_CHANCE = 0.5
+        const val DISPUTE_BASE = 30.0
+        const val DISPUTE_WAR_BONUS = 25.0
+        const val DISPUTE_SMOOTHING = 0.05
+        const val DISPUTE_FLASHPOINT = 70.0
+        const val DISPUTE_WAR_MULTIPLIER = 3.0
+        const val AI_WAR_RELATION = -70.0
+        const val AI_WAR_POWER_RATIO = 2.5
+        const val AI_WAR_CHANCE = 0.002
+        const val REMATCH_YEARS = 5L
         const val NEW_REBEL_CONTROL = 0.05
         const val NEW_CIVIL_INTENSITY = 0.5
         const val OFFER_WEARINESS = 55.0
