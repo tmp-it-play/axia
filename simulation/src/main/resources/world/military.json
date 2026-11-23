@@ -1,0 +1,326 @@
+{
+ "sourceNote": "핵탄두는 SIPRI 연감 2024의 2024-01 추정 보유량. 전쟁·내전 목록과 통제 비율은 2024-01 보도(ISW, ACLED 등)를 바탕으로 한 대략값이며 강도·세력은 게임 가정이다. 분쟁 긴장도는 게임 가정이다.",
+ "nuclearWarheads": {
+  "RUS": 5580,
+  "USA": 5044,
+  "CHN": 500,
+  "FRA": 290,
+  "GBR": 225,
+  "IND": 172,
+  "PAK": 170,
+  "ISR": 90,
+  "PRK": 50
+ },
+ "wars": [
+  {
+   "name": "러시아-우크라이나 전쟁",
+   "started": "2022-02-24",
+   "sideA": [
+    "RUS"
+   ],
+   "sideB": [
+    "UKR"
+   ],
+   "supportA": [
+    "BLR",
+    "PRK",
+    "IRN"
+   ],
+   "supportB": [
+    "USA",
+    "GBR",
+    "DEU",
+    "POL",
+    "FRA",
+    "CAN",
+    "NLD",
+    "DNK",
+    "SWE",
+    "NOR",
+    "FIN",
+    "EST",
+    "LVA",
+    "LTU",
+    "ITA",
+    "JPN",
+    "AUS"
+   ],
+   "fronts": [
+    {
+     "attacker": "RUS",
+     "defender": "UKR",
+     "control": 0.18
+    }
+   ],
+   "intensity": 0.8,
+   "note": "2024-01 러시아가 크림반도 포함 우크라이나 국토 약 18%를 점령."
+  },
+  {
+   "name": "이스라엘-하마스 전쟁",
+   "started": "2023-10-07",
+   "sideA": [
+    "ISR"
+   ],
+   "sideB": [
+    "PSX"
+   ],
+   "supportA": [
+    "USA"
+   ],
+   "supportB": [
+    "IRN"
+   ],
+   "fronts": [
+    {
+     "attacker": "ISR",
+     "defender": "PSX",
+     "control": 0.6
+    }
+   ],
+   "intensity": 0.7,
+   "note": "팔레스타인 단위에는 서안지구 C구역(이스라엘 관할, 서안의 약 60%)과 가자지구 지상전을 합쳐 점령 비율을 대략 잡았다."
+  }
+ ],
+ "civilWars": [
+  {
+   "country": "SDN",
+   "rebels": "신속지원군(RSF)",
+   "started": "2023-04-15",
+   "control": 0.35,
+   "strength": 0.8,
+   "intensity": 0.8
+  },
+  {
+   "country": "MMR",
+   "rebels": "민족통합정부·소수민족 무장단체 연합",
+   "started": "2021-05-05",
+   "control": 0.4,
+   "strength": 0.6,
+   "intensity": 0.7
+  },
+  {
+   "country": "YEM",
+   "rebels": "후티(안사르알라)",
+   "started": "2014-09-16",
+   "control": 0.3,
+   "strength": 0.7,
+   "intensity": 0.4
+  },
+  {
+   "country": "SYR",
+   "rebels": "반정부 세력·시리아민주군",
+   "started": "2011-03-15",
+   "control": 0.35,
+   "strength": 0.4,
+   "intensity": 0.2
+  },
+  {
+   "country": "SOM",
+   "rebels": "알샤바브",
+   "started": "2006-12-20",
+   "control": 0.2,
+   "strength": 0.4,
+   "intensity": 0.4
+  },
+  {
+   "country": "MLI",
+   "rebels": "이슬람·무슬림 지지단(JNIM)",
+   "started": "2012-01-16",
+   "control": 0.3,
+   "strength": 0.5,
+   "intensity": 0.5
+  },
+  {
+   "country": "BFA",
+   "rebels": "이슬람·무슬림 지지단(JNIM)",
+   "started": "2015-08-23",
+   "control": 0.4,
+   "strength": 0.6,
+   "intensity": 0.6
+  },
+  {
+   "country": "COD",
+   "rebels": "3월23일운동(M23)",
+   "started": "2022-03-28",
+   "control": 0.05,
+   "strength": 0.4,
+   "intensity": 0.5
+  },
+  {
+   "country": "ETH",
+   "rebels": "파노 민병대",
+   "started": "2023-08-01",
+   "control": 0.08,
+   "strength": 0.3,
+   "intensity": 0.4
+  },
+  {
+   "country": "HTI",
+   "rebels": "비브 안산 갱단 연합",
+   "started": "2023-01-01",
+   "control": 0.25,
+   "strength": 0.5,
+   "intensity": 0.4
+  },
+  {
+   "country": "NGA",
+   "rebels": "이슬람국가 서아프리카 지부",
+   "started": "2009-07-26",
+   "control": 0.04,
+   "strength": 0.2,
+   "intensity": 0.3
+  }
+ ],
+ "disputes": [
+  {
+   "name": "대만",
+   "claimants": [
+    "CHN",
+    "TWN"
+   ],
+   "controller": "TWN",
+   "tension": 70
+  },
+  {
+   "name": "크림반도·우크라이나 점령지",
+   "claimants": [
+    "UKR",
+    "RUS"
+   ],
+   "controller": "RUS",
+   "tension": 95
+  },
+  {
+   "name": "카슈미르",
+   "claimants": [
+    "IND",
+    "PAK",
+    "CHN"
+   ],
+   "controller": "IND",
+   "tension": 55
+  },
+  {
+   "name": "서사하라",
+   "claimants": [
+    "MAR"
+   ],
+   "controller": "MAR",
+   "tension": 30,
+   "note": "사라위아랍민주공화국(폴리사리오 전선)은 게임 국가 단위에 없다."
+  },
+  {
+   "name": "코소보",
+   "claimants": [
+    "SRB",
+    "KOS"
+   ],
+   "controller": "KOS",
+   "tension": 45
+  },
+  {
+   "name": "남중국해",
+   "claimants": [
+    "CHN",
+    "VNM",
+    "PHL",
+    "MYS",
+    "BRN",
+    "TWN"
+   ],
+   "controller": "CHN",
+   "tension": 60
+  },
+  {
+   "name": "포클랜드 제도",
+   "claimants": [
+    "ARG",
+    "GBR"
+   ],
+   "controller": "GBR",
+   "tension": 20
+  },
+  {
+   "name": "독도",
+   "claimants": [
+    "KOR",
+    "JPN"
+   ],
+   "controller": "KOR",
+   "tension": 20
+  },
+  {
+   "name": "센카쿠 열도(댜오위다오)",
+   "claimants": [
+    "JPN",
+    "CHN",
+    "TWN"
+   ],
+   "controller": "JPN",
+   "tension": 45
+  },
+  {
+   "name": "쿠릴 열도(북방영토)",
+   "claimants": [
+    "JPN",
+    "RUS"
+   ],
+   "controller": "RUS",
+   "tension": 25
+  },
+  {
+   "name": "골란고원",
+   "claimants": [
+    "SYR",
+    "ISR"
+   ],
+   "controller": "ISR",
+   "tension": 40
+  },
+  {
+   "name": "에세키보",
+   "claimants": [
+    "VEN",
+    "GUY"
+   ],
+   "controller": "GUY",
+   "tension": 55
+  },
+  {
+   "name": "아루나찰프라데시",
+   "claimants": [
+    "IND",
+    "CHN"
+   ],
+   "controller": "IND",
+   "tension": 40
+  },
+  {
+   "name": "북키프로스",
+   "claimants": [
+    "CYP",
+    "CYN"
+   ],
+   "controller": "CYN",
+   "tension": 20
+  },
+  {
+   "name": "아비에이",
+   "claimants": [
+    "SDN",
+    "SDS"
+   ],
+   "controller": "SDS",
+   "tension": 35
+  },
+  {
+   "name": "지브롤터",
+   "claimants": [
+    "ESP",
+    "GBR"
+   ],
+   "controller": "GBR",
+   "tension": 10
+  }
+ ]
+}

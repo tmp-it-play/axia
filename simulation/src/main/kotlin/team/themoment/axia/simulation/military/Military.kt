@@ -1,0 +1,664 @@
+package team.themoment.axia.simulation.military
+
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import team.themoment.axia.simulation.politics.WorldNews
+import team.themoment.axia.simulation.text.josa
+import team.themoment.axia.simulation.world.Geography
+import team.themoment.axia.simulation.world.StructureData
+import java.time.LocalDate
+import kotlin.math.pow
+
+/** 전력 구성. 값은 군사 자본(누적 국방비, 달러) × 장비 수준으로 정한 상대 지수다. */
+enum class Branch(
+    val label: String,
+) {
+    LAND("지상"),
+    NAVAL("해상"),
+    AIR("공중"),
+    CYBER("사이버"),
+}
+
+/** 플레이어가 정하는 동원 태세. 높을수록 준비태세가 오르지만 비용과 노동력 손실이 크다. */
+enum class Mobilization(
+    val label: String,
+    val readiness: Double,
+    /** GDP 대비 연간 추가 지출. */
+    val cost: Double,
+) {
+    PEACETIME("평시", 0.5, 0.0),
+    PARTIAL("부분 동원", 0.75, 0.005),
+    TOTAL("총동원", 0.95, 0.02),
+}
+
+enum class MilitaryAction(
+    val label: String,
+    val cost: Double,
+    val description: String,
+) {
+    DECLARE_WAR("선전포고", 30.0, "인접국이거나 해군력이 있으면 전쟁을 시작한다. 상대 동맹국이 참전하고 국제 관계가 나빠진다."),
+    PROPOSE_PEACE("평화 제안", 5.0, "상대가 지쳤거나 불리하면 현재 전선에서 휴전한다."),
+    MILITARY_AID("군사 지원", 4.0, "1년 동안 GDP의 0.2%를 들여 전쟁 중인 나라의 전력을 보탠다."),
+    JOIN_WAR("참전", 20.0, "동맹국이나 관계가 좋은 나라 편으로 전쟁에 들어간다."),
+}
+
+@Serializable
+internal data class FrontRecord(
+    val attacker: String,
+    val defender: String,
+    val control: Double,
+)
+
+@Serializable
+internal data class WarRecord(
+    val name: String,
+    val started: String,
+    val sideA: List<String>,
+    val sideB: List<String>,
+    val supportA: List<String> = emptyList(),
+    val supportB: List<String> = emptyList(),
+    val fronts: List<FrontRecord>,
+    val intensity: Double,
+    val note: String? = null,
+)
+
+@Serializable
+internal data class CivilWarRecord(
+    val country: String,
+    val rebels: String,
+    val started: String,
+    val control: Double,
+    val strength: Double,
+    val intensity: Double,
+)
+
+@Serializable
+data class Dispute(
+    val name: String,
+    val claimants: List<String>,
+    val controller: String,
+    val tension: Double,
+    val note: String? = null,
+)
+
+@Serializable
+internal data class MilitaryFile(
+    val sourceNote: String,
+    val nuclearWarheads: Map<String, Int>,
+    val wars: List<WarRecord>,
+    val civilWars: List<CivilWarRecord>,
+    val disputes: List<Dispute>,
+) {
+    companion object {
+        val default: MilitaryFile by lazy {
+            val text =
+                requireNotNull(MilitaryFile::class.java.getResourceAsStream("/world/military.json")) { "Missing military.json" }
+                    .bufferedReader(Charsets.UTF_8)
+                    .use { it.readText() }
+            Json.decodeFromString<MilitaryFile>(text)
+        }
+    }
+}
+
+data class ForceSnapshot(
+    val countryId: String,
+    /** 군사력 지수. 세계 최강 = 100 기준 상대값. */
+    val power: Double,
+    val branches: Map<Branch, Double>,
+    val personnel: Double,
+    val readiness: Double,
+    val nuclearWarheads: Int,
+    /** 국방비(연간 달러). */
+    val spending: Double,
+)
+
+data class FrontSnapshot(
+    val attacker: String,
+    val defender: String,
+    /** 양수면 공격국이 수비국 국토의 그 비율을, 음수면 수비국이 공격국 국토를 점령. */
+    val control: Double,
+    /** 최근 한 주의 변화. */
+    val trend: Double,
+)
+
+data class WarSnapshot(
+    val id: Int,
+    val name: String,
+    val started: LocalDate,
+    val sideA: List<String>,
+    val sideB: List<String>,
+    val supportA: List<String>,
+    val supportB: List<String>,
+    val fronts: List<FrontSnapshot>,
+    val intensity: Double,
+    val weariness: Map<String, Double>,
+    val ceasefire: LocalDate?,
+)
+
+data class CivilWarSnapshot(
+    val country: String,
+    val rebels: String,
+    val started: LocalDate,
+    val rebelControl: Double,
+    val intensity: Double,
+    val ended: LocalDate?,
+)
+
+data class MilitarySnapshot(
+    val forces: Map<String, ForceSnapshot>,
+    val wars: List<WarSnapshot>,
+    val civilWars: List<CivilWarSnapshot>,
+    val disputes: List<Dispute>,
+    val mobilization: Mobilization,
+    /** 플레이어가 지원 중인 나라와 종료일. */
+    val aid: Map<String, LocalDate>,
+)
+
+/** 나라별 국방 재료. 매월 경제에서 받아 온다. */
+internal data class DefenseInputs(
+    /** 연간 국방비(달러). */
+    val spending: Double,
+    val gdpPerCapita: Double,
+    val approval: Double,
+)
+
+/**
+ * 추상형 군사: 나라별 전력, 준비태세, 전쟁과 전선, 내전, 영토 분쟁.
+ *
+ * - 전력: 국방비가 쌓인 군사 자본(15년 감가) × 장비 수준(1인당 소득) × 병력. 해안이 없는 나라는 해군이 거의 없다.
+ * - 전선: 매주 양측 전력비(수비 1.3배 가점), 준비태세, 사기(피로도)로 통제 비율이 움직인다.
+ *   지원국은 전력의 일부를 보탠다. 사상자는 군사 자본을 깎고 피로도를 쌓는다.
+ * - 피로도가 높고 불리한 쪽은 휴전을 받아들이고, 국토 대부분을 잃으면 항복한다. 휴전선이 그대로 굳는다.
+ * - 경제에는 시작 대비 점령 변화와 전쟁 강도만 전한다(2023년 데이터에 이미 진행 중이던 전쟁 효과가 들어 있다).
+ */
+internal class Military(
+    states: List<String>,
+    private val playerId: String,
+    private val name: (String) -> String,
+    private val random: kotlin.random.Random,
+    private val allied: (String, String) -> Boolean,
+    private val relation: (String, String) -> Double,
+    data: MilitaryFile = MilitaryFile.default,
+) {
+    private val ids = states.sorted()
+    private val structure = StructureData.default
+    private val geography = Geography.default
+    private val capital = HashMap<String, Double>()
+    private val personnel = HashMap<String, Double>()
+    private val quality = HashMap<String, Double>()
+    private val spending = HashMap<String, Double>()
+    private val readiness = HashMap<String, Double>()
+    private val nuclear = data.nuclearWarheads
+    private var maxPower = 1.0
+    var mobilization = Mobilization.PEACETIME
+        private set
+    private val aid = HashMap<String, LocalDate>()
+    private val wars = mutableListOf<War>()
+    private val civilWars = mutableListOf<CivilWar>()
+    private val disputes = data.disputes.toMutableList()
+    private val startOccupied = HashMap<String, Double>()
+    private val startIntensity = HashMap<String, Double>()
+    private val news = mutableListOf<WorldNews>()
+    private var nextWarId = 1
+
+    private class Front(
+        val attacker: String,
+        val defender: String,
+        var control: Double,
+        var trend: Double = 0.0,
+    )
+
+    private class War(
+        val id: Int,
+        val name: String,
+        val started: LocalDate,
+        val sideA: MutableSet<String>,
+        val sideB: MutableSet<String>,
+        val supportA: MutableSet<String>,
+        val supportB: MutableSet<String>,
+        val fronts: MutableList<Front>,
+        var intensity: Double,
+        val weariness: HashMap<String, Double> = HashMap(),
+        var ceasefire: LocalDate? = null,
+    ) {
+        val active: Boolean get() = ceasefire == null
+
+        fun side(country: String): Int =
+            when (country) {
+                in sideA -> 1
+                in sideB -> -1
+                else -> 0
+            }
+    }
+
+    private class CivilWar(
+        val country: String,
+        val rebels: String,
+        val started: LocalDate,
+        var control: Double,
+        var strength: Double,
+        var intensity: Double,
+        var ended: LocalDate? = null,
+    )
+
+    init {
+        val all = ids.toSet()
+        data.wars.forEach { record ->
+            (record.sideA + record.sideB + record.supportA + record.supportB).forEach {
+                require(
+                    it in all,
+                ) { "Unknown country $it in ${record.name}" }
+            }
+            wars +=
+                War(
+                    id = nextWarId++,
+                    name = record.name,
+                    started = LocalDate.parse(record.started),
+                    sideA = record.sideA.toMutableSet(),
+                    sideB = record.sideB.toMutableSet(),
+                    supportA = record.supportA.toMutableSet(),
+                    supportB = record.supportB.toMutableSet(),
+                    fronts = record.fronts.map { Front(it.attacker, it.defender, it.control) }.toMutableList(),
+                    intensity = record.intensity,
+                )
+        }
+        data.civilWars.forEach { record ->
+            require(record.country in all)
+            civilWars +=
+                CivilWar(record.country, record.rebels, LocalDate.parse(record.started), record.control, record.strength, record.intensity)
+        }
+        ids.forEach {
+            startOccupied[it] = occupiedAbsolute(it)
+            startIntensity[it] = intensityAbsolute(it)
+        }
+    }
+
+    /** 매월 국방비와 장비 수준으로 군사 자본을 갱신한다. 첫 호출에서 초기 자본을 정한다. */
+    fun advanceMonth(
+        date: LocalDate,
+        inputs: Map<String, DefenseInputs>,
+    ) {
+        ids.forEach { id ->
+            val input = inputs.getValue(id)
+            spending[id] = input.spending
+            quality[id] = (input.gdpPerCapita / QUALITY_REFERENCE).pow(QUALITY_EXPONENT).coerceIn(MIN_QUALITY, MAX_QUALITY)
+            val stock = capital[id]
+            capital[id] =
+                if (stock == null) {
+                    input.spending * INITIAL_CAPITAL_YEARS
+                } else {
+                    stock + input.spending / 12.0 - stock / DEPRECIATION_MONTHS
+                }
+            if (id !in personnel) {
+                val measured = structure.of(id).armedForces
+                personnel[id] = if (measured > 0.0) measured else input.spending / (input.gdpPerCapita.coerceAtLeast(500.0) * 4.0)
+            }
+            val atWar = wars.any { it.active && it.side(id) != 0 }
+            val target =
+                when {
+                    id == playerId -> mobilization.readiness
+                    atWar -> WAR_READINESS
+                    else -> PEACE_READINESS
+                }
+            readiness[id] = (readiness[id] ?: target) + (target - (readiness[id] ?: target)) * READINESS_SMOOTHING
+        }
+        maxPower = ids.maxOf(::rawPower).coerceAtLeast(1e-9)
+        aid.entries.removeIf { date >= it.value }
+        reviewPeace(date, inputs)
+        advanceCivilWars(date)
+    }
+
+    private fun rawPower(id: String): Double {
+        val k = (capital[id] ?: 0.0) * (quality[id] ?: 1.0)
+        return k.pow(CAPITAL_WEIGHT) * (personnel[id] ?: 0.0).pow(1.0 - CAPITAL_WEIGHT)
+    }
+
+    fun power(id: String): Double = rawPower(id) / maxPower * 100.0
+
+    /** 전선에 투입되는 실전력. 여러 전선에 나눠 싸우면 그만큼 약하다. */
+    private fun frontPower(
+        id: String,
+        war: War,
+    ): Double {
+        val fronts = wars.filter { it.active }.sumOf { w -> w.fronts.count { it.attacker == id || it.defender == id } }.coerceAtLeast(1)
+        val morale = 1.0 - (war.weariness[id] ?: 0.0) / 200.0
+        return rawPower(id) * (readiness[id] ?: PEACE_READINESS) * morale / fronts
+    }
+
+    /** 매주 전선을 움직인다. */
+    fun advanceWeek(date: LocalDate) {
+        wars.filter { it.active }.forEach { war ->
+            war.fronts.forEach { front ->
+                val attackerSide = war.side(front.attacker)
+                val supportFor = { side: Int ->
+                    val supporters = if (side == 1) war.supportA else war.supportB
+                    val allies = (if (side == 1) war.sideA else war.sideB) - setOf(front.attacker, front.defender)
+                    supporters.sumOf { rawPower(it) * SUPPORT_SHARE * (if (it == playerId || it in aid) 1.5 else 1.0) } +
+                        allies.sumOf { frontPower(it, war) * ALLY_SHARE }
+                }
+                val attack = frontPower(front.attacker, war) + supportFor(attackerSide)
+                val defense = (frontPower(front.defender, war) + supportFor(-attackerSide)) * DEFENSE_BONUS
+                val ratio = attack / (attack + defense).coerceAtLeast(1e-9)
+                val move = FRONT_SPEED * war.intensity * (ratio - 0.5) + random.nextDouble(-1.0, 1.0) * FRONT_NOISE * war.intensity
+                // 통제 비율은 그 나라 국토 대비다. 원래 공격국 영토로 밀고 들어갈 때는 면적 차이만큼 비율이 덜 움직인다.
+                val areaRatio = geography.of(front.defender).areaKm2 / geography.of(front.attacker).areaKm2
+                val scaled = if (front.control + move < 0.0) move * areaRatio.coerceAtMost(1.0) else move
+                front.trend = scaled
+                front.control = (front.control + scaled).coerceIn(-MAX_CONTROL, MAX_CONTROL)
+                listOf(front.attacker, front.defender).forEach { id ->
+                    capital[id] = (capital[id] ?: 0.0) * (1.0 - CASUALTY_RATE * war.intensity)
+                    war.weariness[id] = ((war.weariness[id] ?: 0.0) + WEARINESS_PER_WEEK * war.intensity).coerceAtMost(100.0)
+                }
+            }
+        }
+    }
+
+    private fun reviewPeace(
+        date: LocalDate,
+        inputs: Map<String, DefenseInputs>,
+    ) {
+        wars.filter { it.active }.forEach { war ->
+            // 국토 대부분을 잃으면 항복한다.
+            war.fronts.firstOrNull { kotlin.math.abs(it.control) >= CAPITULATION }?.let { front ->
+                val loser = if (front.control > 0) front.defender else front.attacker
+                ceasefire(war, date, "${name(loser)}의 항복으로 ${war.name}이 끝났다.")
+                return@forEach
+            }
+            if (war.sideA.contains(playerId) || war.sideB.contains(playerId)) return@forEach
+            val tiredA = war.sideA.maxOf { war.weariness[it] ?: 0.0 }
+            val tiredB = war.sideB.maxOf { war.weariness[it] ?: 0.0 }
+            val unpopular = (war.sideA + war.sideB).any { (inputs[it]?.approval ?: 50.0) < 25.0 }
+            if (((tiredA > PEACE_WEARINESS && tiredB > PEACE_WEARINESS) || unpopular) && random.nextDouble() < PEACE_CHANCE) {
+                ceasefire(war, date, "${war.name}의 교전 당사국들이 휴전에 합의했다.")
+            }
+        }
+    }
+
+    private fun ceasefire(
+        war: War,
+        date: LocalDate,
+        text: String,
+    ) {
+        war.ceasefire = date
+        news += WorldNews(date, war.sideA.first(), war.name, text, major = true)
+    }
+
+    private fun advanceCivilWars(date: LocalDate) {
+        civilWars.filter { it.ended == null }.forEach { war ->
+            val state = (readiness[war.country] ?: PEACE_READINESS) * STATE_ADVANTAGE
+            val move = CIVIL_SPEED * war.intensity * (war.strength - state) + random.nextDouble(-1.0, 1.0) * CIVIL_NOISE
+            war.control = (war.control + move).coerceIn(0.0, 1.0)
+            war.strength = (war.strength + random.nextDouble(-0.02, 0.02)).coerceIn(0.05, 1.0)
+            when {
+                war.control < CIVIL_END -> {
+                    war.ended = date
+                    news += WorldNews(date, war.country, "내전", "정부군이 ${war.rebels} 세력을 사실상 진압했다.", major = true)
+                }
+
+                war.control > CIVIL_VICTORY -> {
+                    war.ended = date
+                    news += WorldNews(date, war.country, "내전", "${war.rebels} 세력이 수도를 장악하고 정권을 무너뜨렸다.", major = true)
+                }
+            }
+        }
+    }
+
+    /** 나라 안팎의 전쟁 강도(0~1). 내전 포함, 가장 큰 값. */
+    private fun intensityAbsolute(id: String): Double =
+        maxOf(
+            wars.filter { it.active && it.side(id) != 0 }.maxOfOrNull { it.intensity } ?: 0.0,
+            civilWars.filter { it.ended == null && it.country == id }.maxOfOrNull { it.intensity * 0.6 } ?: 0.0,
+        )
+
+    /** 적에게 점령된 국토 비율과 내전 반군 통제 비율의 합. */
+    private fun occupiedAbsolute(id: String): Double {
+        val foreign =
+            wars.sumOf { war ->
+                war.fronts.sumOf { front ->
+                    when (id) {
+                        front.defender -> front.control.coerceAtLeast(0.0)
+                        front.attacker -> (-front.control).coerceAtLeast(0.0)
+                        else -> 0.0
+                    }
+                }
+            }
+        val rebels = civilWars.filter { it.ended == null && it.country == id }.sumOf { it.control }
+        return (foreign + rebels).coerceAtMost(1.0)
+    }
+
+    /** 시작 대비 전쟁 강도 변화. 경제에는 이것만 전한다. */
+    fun intensityChange(id: String): Double = (intensityAbsolute(id) - (startIntensity[id] ?: 0.0)).coerceAtLeast(0.0)
+
+    /** 시작 대비 점령 비율 변화(되찾으면 음수). */
+    fun occupiedChange(id: String): Double = occupiedAbsolute(id) - (startOccupied[id] ?: 0.0)
+
+    /** 플레이어가 치르고 있는 전쟁의 최대 피로도. */
+    fun playerWeariness(): Double = wars.filter { it.active && it.side(playerId) != 0 }.maxOfOrNull { it.weariness[playerId] ?: 0.0 } ?: 0.0
+
+    fun atWar(
+        a: String,
+        b: String,
+    ): Boolean = wars.any { it.active && it.side(a) != 0 && it.side(b) != 0 && it.side(a) != it.side(b) }
+
+    /** 교전 쌍(외교 관계 계산용). */
+    fun hostilePairs(): List<Pair<String, String>> =
+        wars.filter { it.active }.flatMap { war -> war.sideA.flatMap { a -> war.sideB.map { b -> a to b } } }
+
+    private val offerCooldown = HashMap<Int, LocalDate>()
+
+    /** 플레이어와 싸우는 상대가 지쳤으면 휴전을 제안한다. (전쟁 번호, 제안국) 목록. */
+    fun peaceOffers(date: LocalDate): List<Pair<Int, String>> =
+        wars.filter { it.active && it.side(playerId) != 0 }.mapNotNull { war ->
+            val enemies = if (war.side(playerId) == 1) war.sideB else war.sideA
+            val enemy = enemies.maxBy { war.weariness[it] ?: 0.0 }
+            val ready = offerCooldown[war.id]?.let { date >= it } ?: true
+            if (ready && (war.weariness[enemy] ?: 0.0) > OFFER_WEARINESS && random.nextDouble() < OFFER_CHANCE) {
+                offerCooldown[war.id] = date.plusMonths(OFFER_COOLDOWN_MONTHS)
+                war.id to enemy
+            } else {
+                null
+            }
+        }
+
+    fun acceptPeace(
+        warId: Int,
+        date: LocalDate,
+    ) {
+        val war = wars.firstOrNull { it.id == warId && it.active } ?: return
+        ceasefire(war, date, "${war.name}에서 휴전이 성립했다.")
+    }
+
+    fun warName(warId: Int): String? = wars.firstOrNull { it.id == warId }?.name
+
+    /** 사건으로 새 내전이 일어난다. 이미 내전 중이면 무시한다. */
+    fun startCivilWar(
+        country: String,
+        rebels: String,
+        date: LocalDate,
+    ): Boolean {
+        if (civilWars.any { it.country == country && it.ended == null }) return false
+        civilWars += CivilWar(country, rebels, date, NEW_REBEL_CONTROL, random.nextDouble(0.2, 0.5), NEW_CIVIL_INTENSITY)
+        return true
+    }
+
+    fun setMobilization(level: Mobilization) {
+        mobilization = level
+    }
+
+    val aidSpending: Double get() = aid.size * AID_SHARE
+
+    fun available(target: String): Set<MilitaryAction> {
+        if (target == playerId) return emptySet()
+        val enemies = atWar(playerId, target)
+        val targetAtWar = wars.any { it.active && it.side(target) != 0 }
+        val reachable = geography.neighbors(playerId, target) || (geography.of(playerId).coastal && geography.of(target).coastal)
+        return buildSet {
+            if (!enemies && reachable && !allied(playerId, target)) add(MilitaryAction.DECLARE_WAR)
+            if (enemies) add(MilitaryAction.PROPOSE_PEACE)
+            if (targetAtWar && !enemies && target !in aid) add(MilitaryAction.MILITARY_AID)
+            if (targetAtWar && !enemies && wars.none { it.active && it.side(playerId) != 0 && it.side(target) != 0 } &&
+                (allied(playerId, target) || relation(playerId, target) >= JOIN_RELATION)
+            ) {
+                add(MilitaryAction.JOIN_WAR)
+            }
+        }
+    }
+
+    fun perform(
+        target: String,
+        action: MilitaryAction,
+        date: LocalDate,
+    ): Boolean {
+        if (action !in available(target)) return false
+        when (action) {
+            MilitaryAction.DECLARE_WAR -> {
+                declareWar(playerId, target, date)
+            }
+
+            MilitaryAction.PROPOSE_PEACE -> {
+                val war = wars.first { it.active && it.side(playerId) != 0 && it.side(target) != 0 }
+                val theirs = war.weariness[target] ?: 0.0
+                val losing =
+                    war.fronts.any { (it.defender == target && it.control > 0.1) || (it.attacker == target && it.control < -0.1) }
+                if (theirs < PEACE_ACCEPT_WEARINESS && !losing) return false
+                ceasefire(war, date, "${war.name}에서 휴전이 성립했다.")
+            }
+
+            MilitaryAction.MILITARY_AID -> {
+                aid[target] = date.plusYears(1)
+                wars.filter { it.active && it.side(target) != 0 }.forEach { war ->
+                    (if (war.side(target) == 1) war.supportA else war.supportB) += playerId
+                }
+            }
+
+            MilitaryAction.JOIN_WAR -> {
+                val war = wars.first { it.active && it.side(target) != 0 }
+                val side = war.side(target)
+                (if (side == 1) war.sideA else war.sideB) += playerId
+                val enemy = (if (side == 1) war.sideB else war.sideA).first()
+                war.fronts += Front(playerId, enemy, 0.0)
+                news += WorldNews(date, playerId, war.name, "우리나라가 ${war.name}에 참전했다.", major = true)
+            }
+        }
+        return true
+    }
+
+    /** 새 전쟁. 수비국의 동맹국은 관계에 따라 참전한다. */
+    fun declareWar(
+        attacker: String,
+        defender: String,
+        date: LocalDate,
+    ) {
+        val war =
+            War(
+                id = nextWarId++,
+                name = "${name(attacker)}-${name(defender)} 전쟁",
+                started = date,
+                sideA = mutableSetOf(attacker),
+                sideB = mutableSetOf(defender),
+                supportA = mutableSetOf(),
+                supportB = mutableSetOf(),
+                fronts = mutableListOf(Front(attacker, defender, 0.0)),
+                intensity = NEW_WAR_INTENSITY,
+            )
+        ids.filter { it != defender && it != attacker && allied(it, defender) }.forEach { ally ->
+            if (relation(ally, attacker) < ALLY_JOIN_RELATION || random.nextDouble() < ALLY_JOIN_CHANCE) {
+                war.sideB += ally
+                war.fronts += Front(attacker, ally, 0.0)
+            } else {
+                war.supportB += ally
+            }
+        }
+        wars += war
+        news +=
+            WorldNews(date, attacker, "전쟁", "${name(attacker).josa("이", "가")} ${name(defender)}에 선전포고해 ${war.name}이 시작됐다.", major = true)
+    }
+
+    fun drainNews(): List<WorldNews> = news.toList().also { news.clear() }
+
+    fun snapshot(): MilitarySnapshot =
+        MilitarySnapshot(
+            forces =
+                ids.associateWith { id ->
+                    val total = rawPower(id) / maxPower * 100.0
+                    val coastal = geography.of(id).coastal
+                    val shares =
+                        mapOf(
+                            Branch.LAND to 0.45,
+                            Branch.NAVAL to if (coastal) 0.25 else 0.02,
+                            Branch.AIR to 0.25,
+                            Branch.CYBER to 0.05 * (quality[id] ?: 1.0),
+                        )
+                    val sum = shares.values.sum()
+                    ForceSnapshot(
+                        countryId = id,
+                        power = total,
+                        branches = shares.mapValues { it.value / sum * total },
+                        personnel = personnel[id] ?: 0.0,
+                        readiness = readiness[id] ?: PEACE_READINESS,
+                        nuclearWarheads = nuclear[id] ?: 0,
+                        spending = spending[id] ?: 0.0,
+                    )
+                },
+            wars =
+                wars.map { war ->
+                    WarSnapshot(
+                        id = war.id,
+                        name = war.name,
+                        started = war.started,
+                        sideA = war.sideA.toList(),
+                        sideB = war.sideB.toList(),
+                        supportA = war.supportA.toList(),
+                        supportB = war.supportB.toList(),
+                        fronts = war.fronts.map { FrontSnapshot(it.attacker, it.defender, it.control, it.trend) },
+                        intensity = war.intensity,
+                        weariness = war.weariness.toMap(),
+                        ceasefire = war.ceasefire,
+                    )
+                },
+            civilWars = civilWars.map { CivilWarSnapshot(it.country, it.rebels, it.started, it.control, it.intensity, it.ended) },
+            disputes = disputes.toList(),
+            mobilization = mobilization,
+            aid = aid.toMap(),
+        )
+
+    private companion object {
+        const val QUALITY_REFERENCE = 20_000.0
+        const val QUALITY_EXPONENT = 0.25
+        const val MIN_QUALITY = 0.3
+        const val MAX_QUALITY = 1.6
+        const val INITIAL_CAPITAL_YEARS = 8.0
+        const val DEPRECIATION_MONTHS = 180.0
+        const val CAPITAL_WEIGHT = 0.7
+        const val PEACE_READINESS = 0.5
+        const val WAR_READINESS = 0.9
+        const val READINESS_SMOOTHING = 0.25
+        const val SUPPORT_SHARE = 0.03
+        const val ALLY_SHARE = 0.5
+        const val DEFENSE_BONUS = 1.3
+        const val FRONT_SPEED = 0.01
+        const val FRONT_NOISE = 0.002
+        const val MAX_CONTROL = 0.95
+        const val CASUALTY_RATE = 0.0015
+        const val WEARINESS_PER_WEEK = 0.25
+        const val CAPITULATION = 0.75
+        const val PEACE_WEARINESS = 60.0
+        const val PEACE_CHANCE = 0.1
+        const val PEACE_ACCEPT_WEARINESS = 45.0
+        const val STATE_ADVANTAGE = 1.1
+        const val CIVIL_SPEED = 0.01
+        const val CIVIL_NOISE = 0.004
+        const val CIVIL_END = 0.02
+        const val CIVIL_VICTORY = 0.85
+        const val AID_SHARE = 0.002
+        const val JOIN_RELATION = 50.0
+        const val NEW_WAR_INTENSITY = 0.7
+        const val ALLY_JOIN_RELATION = -30.0
+        const val ALLY_JOIN_CHANCE = 0.5
+        const val NEW_REBEL_CONTROL = 0.05
+        const val NEW_CIVIL_INTENSITY = 0.5
+        const val OFFER_WEARINESS = 55.0
+        const val OFFER_CHANCE = 0.15
+        const val OFFER_COOLDOWN_MONTHS = 6L
+    }
+}
