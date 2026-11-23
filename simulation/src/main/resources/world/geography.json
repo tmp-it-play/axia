@@ -1,0 +1,2399 @@
+{
+ "sourceNote": "tools/geodata/build_geography.py가 world-map.bin(Natural Earth 10m 간소화)에서 계산했다. 면적은 구면 근사다.",
+ "countries": [
+  {
+   "id": "AFG",
+   "latitude": 33.788,
+   "longitude": 65.969,
+   "areaKm2": 642626,
+   "coastal": false,
+   "neighbors": [
+    "CHN",
+    "IRN",
+    "PAK",
+    "TJK",
+    "TKM",
+    "UZB"
+   ]
+  },
+  {
+   "id": "AGO",
+   "latitude": -12.256,
+   "longitude": 17.535,
+   "areaKm2": 1249902,
+   "coastal": true,
+   "neighbors": [
+    "COD",
+    "COG",
+    "NAM",
+    "ZMB"
+   ]
+  },
+  {
+   "id": "ALB",
+   "latitude": 41.134,
+   "longitude": 20.052,
+   "areaKm2": 28429,
+   "coastal": true,
+   "neighbors": [
+    "GRC",
+    "KOS",
+    "MKD",
+    "MNE"
+   ]
+  },
+  {
+   "id": "AND",
+   "latitude": 42.541,
+   "longitude": 1.562,
+   "areaKm2": 444,
+   "coastal": false,
+   "neighbors": [
+    "ESP",
+    "FRA"
+   ]
+  },
+  {
+   "id": "ARE",
+   "latitude": 23.906,
+   "longitude": 54.302,
+   "areaKm2": 71409,
+   "coastal": true,
+   "neighbors": [
+    "OMN",
+    "SAU"
+   ]
+  },
+  {
+   "id": "ARG",
+   "latitude": -34.648,
+   "longitude": -64.959,
+   "areaKm2": 2782960,
+   "coastal": true,
+   "neighbors": [
+    "BOL",
+    "BRA",
+    "CHL",
+    "PRY",
+    "URY"
+   ]
+  },
+  {
+   "id": "ARM",
+   "latitude": 40.285,
+   "longitude": 44.939,
+   "areaKm2": 29619,
+   "coastal": false,
+   "neighbors": [
+    "AZE",
+    "GEO",
+    "IRN",
+    "TUR"
+   ]
+  },
+  {
+   "id": "ATG",
+   "latitude": 17.27,
+   "longitude": -61.794,
+   "areaKm2": 424,
+   "coastal": true,
+   "neighbors": []
+  },
+  {
+   "id": "AUS",
+   "latitude": -25.564,
+   "longitude": 140.372,
+   "areaKm2": 7732080,
+   "coastal": true,
+   "neighbors": []
+  },
+  {
+   "id": "AUT",
+   "latitude": 47.586,
+   "longitude": 14.141,
+   "areaKm2": 84635,
+   "coastal": false,
+   "neighbors": [
+    "CHE",
+    "CZE",
+    "DEU",
+    "HUN",
+    "ITA",
+    "LIE",
+    "SVK",
+    "SVN"
+   ]
+  },
+  {
+   "id": "AZE",
+   "latitude": 40.283,
+   "longitude": 47.549,
+   "areaKm2": 86665,
+   "coastal": true,
+   "neighbors": [
+    "ARM",
+    "GEO",
+    "IRN",
+    "RUS",
+    "TUR"
+   ]
+  },
+  {
+   "id": "BDI",
+   "latitude": -3.356,
+   "longitude": 29.878,
+   "areaKm2": 27290,
+   "coastal": false,
+   "neighbors": [
+    "COD",
+    "RWA",
+    "TZA"
+   ]
+  },
+  {
+   "id": "BEL",
+   "latitude": 50.636,
+   "longitude": 4.643,
+   "areaKm2": 30851,
+   "coastal": true,
+   "neighbors": [
+    "DEU",
+    "FRA",
+    "LUX",
+    "NLD"
+   ]
+  },
+  {
+   "id": "BEN",
+   "latitude": 9.635,
+   "longitude": 2.328,
+   "areaKm2": 116483,
+   "coastal": true,
+   "neighbors": [
+    "BFA",
+    "NER",
+    "NGA",
+    "TGO"
+   ]
+  },
+  {
+   "id": "BFA",
+   "latitude": 12.263,
+   "longitude": -1.757,
+   "areaKm2": 274177,
+   "coastal": false,
+   "neighbors": [
+    "BEN",
+    "CIV",
+    "GHA",
+    "MLI",
+    "NER",
+    "TGO"
+   ]
+  },
+  {
+   "id": "BGD",
+   "latitude": 23.84,
+   "longitude": 90.243,
+   "areaKm2": 136933,
+   "coastal": true,
+   "neighbors": [
+    "IND",
+    "MMR"
+   ]
+  },
+  {
+   "id": "BGR",
+   "latitude": 42.762,
+   "longitude": 25.219,
+   "areaKm2": 112853,
+   "coastal": true,
+   "neighbors": [
+    "GRC",
+    "MKD",
+    "ROU",
+    "SRB",
+    "TUR"
+   ]
+  },
+  {
+   "id": "BHR",
+   "latitude": 26.033,
+   "longitude": 50.563,
+   "areaKm2": 632,
+   "coastal": true,
+   "neighbors": []
+  },
+  {
+   "id": "BHS",
+   "latitude": 24.261,
+   "longitude": -76.588,
+   "areaKm2": 12622,
+   "coastal": true,
+   "neighbors": []
+  },
+  {
+   "id": "BIH",
+   "latitude": 44.166,
+   "longitude": 17.778,
+   "areaKm2": 51813,
+   "coastal": true,
+   "neighbors": [
+    "HRV",
+    "MNE",
+    "SRB"
+   ]
+  },
+  {
+   "id": "BLR",
+   "latitude": 53.508,
+   "longitude": 28.026,
+   "areaKm2": 207742,
+   "coastal": false,
+   "neighbors": [
+    "LTU",
+    "LVA",
+    "POL",
+    "RUS",
+    "UKR"
+   ]
+  },
+  {
+   "id": "BLZ",
+   "latitude": 17.201,
+   "longitude": -88.697,
+   "areaKm2": 22313,
+   "coastal": true,
+   "neighbors": [
+    "GTM",
+    "MEX"
+   ]
+  },
+  {
+   "id": "BOL",
+   "latitude": -16.671,
+   "longitude": -64.689,
+   "areaKm2": 1090610,
+   "coastal": false,
+   "neighbors": [
+    "ARG",
+    "BRA",
+    "CHL",
+    "PER",
+    "PRY"
+   ]
+  },
+  {
+   "id": "BRA",
+   "latitude": -10.539,
+   "longitude": -53.157,
+   "areaKm2": 8510029,
+   "coastal": true,
+   "neighbors": [
+    "ARG",
+    "BOL",
+    "COL",
+    "FRA",
+    "GUY",
+    "PER",
+    "PRY",
+    "SUR",
+    "URY",
+    "VEN"
+   ]
+  },
+  {
+   "id": "BRB",
+   "latitude": 13.177,
+   "longitude": -59.563,
+   "areaKm2": 423,
+   "coastal": true,
+   "neighbors": []
+  },
+  {
+   "id": "BRN",
+   "latitude": 4.514,
+   "longitude": 114.711,
+   "areaKm2": 5494,
+   "coastal": true,
+   "neighbors": [
+    "MYS"
+   ]
+  },
+  {
+   "id": "BTN",
+   "latitude": 27.421,
+   "longitude": 90.404,
+   "areaKm2": 40399,
+   "coastal": false,
+   "neighbors": [
+    "CHN",
+    "IND"
+   ]
+  },
+  {
+   "id": "BWA",
+   "latitude": -22.157,
+   "longitude": 23.808,
+   "areaKm2": 580962,
+   "coastal": false,
+   "neighbors": [
+    "NAM",
+    "ZAF",
+    "ZMB",
+    "ZWE"
+   ]
+  },
+  {
+   "id": "CAF",
+   "latitude": 6.561,
+   "longitude": 20.461,
+   "areaKm2": 620373,
+   "coastal": false,
+   "neighbors": [
+    "CMR",
+    "COD",
+    "COG",
+    "SDN",
+    "SDS",
+    "TCD"
+   ]
+  },
+  {
+   "id": "CAN",
+   "latitude": 58.805,
+   "longitude": -97.895,
+   "areaKm2": 9900311,
+   "coastal": true,
+   "neighbors": [
+    "USA"
+   ]
+  },
+  {
+   "id": "CHE",
+   "latitude": 46.806,
+   "longitude": 8.23,
+   "areaKm2": 42080,
+   "coastal": false,
+   "neighbors": [
+    "AUT",
+    "DEU",
+    "FRA",
+    "ITA",
+    "LIE"
+   ]
+  },
+  {
+   "id": "CHL",
+   "latitude": -35.984,
+   "longitude": -71.184,
+   "areaKm2": 731487,
+   "coastal": true,
+   "neighbors": [
+    "ARG",
+    "BOL",
+    "PER"
+   ]
+  },
+  {
+   "id": "CHN",
+   "latitude": 34.911,
+   "longitude": 107.497,
+   "areaKm2": 9381152,
+   "coastal": true,
+   "neighbors": [
+    "AFG",
+    "BTN",
+    "IND",
+    "KAZ",
+    "KGZ",
+    "LAO",
+    "MMR",
+    "MNG",
+    "NPL",
+    "PAK",
+    "PRK",
+    "RUS",
+    "TJK",
+    "VNM"
+   ]
+  },
+  {
+   "id": "CIV",
+   "latitude": 7.622,
+   "longitude": -5.568,
+   "areaKm2": 322337,
+   "coastal": true,
+   "neighbors": [
+    "BFA",
+    "GHA",
+    "GIN",
+    "LBR",
+    "MLI"
+   ]
+  },
+  {
+   "id": "CMR",
+   "latitude": 5.684,
+   "longitude": 12.736,
+   "areaKm2": 465905,
+   "coastal": true,
+   "neighbors": [
+    "CAF",
+    "COG",
+    "GAB",
+    "GNQ",
+    "NGA",
+    "TCD"
+   ]
+  },
+  {
+   "id": "COD",
+   "latitude": -2.863,
+   "longitude": 23.641,
+   "areaKm2": 2336051,
+   "coastal": true,
+   "neighbors": [
+    "AGO",
+    "BDI",
+    "CAF",
+    "COG",
+    "RWA",
+    "SDS",
+    "TZA",
+    "UGA",
+    "ZMB"
+   ]
+  },
+  {
+   "id": "COG",
+   "latitude": -0.838,
+   "longitude": 15.218,
+   "areaKm2": 346469,
+   "coastal": true,
+   "neighbors": [
+    "AGO",
+    "CAF",
+    "CMR",
+    "COD",
+    "GAB"
+   ]
+  },
+  {
+   "id": "COL",
+   "latitude": 3.898,
+   "longitude": -73.082,
+   "areaKm2": 1140031,
+   "coastal": true,
+   "neighbors": [
+    "BRA",
+    "ECU",
+    "PAN",
+    "PER",
+    "VEN"
+   ]
+  },
+  {
+   "id": "COM",
+   "latitude": -11.869,
+   "longitude": 43.656,
+   "areaKm2": 1526,
+   "coastal": true,
+   "neighbors": []
+  },
+  {
+   "id": "CPV",
+   "latitude": 15.959,
+   "longitude": -23.971,
+   "areaKm2": 3739,
+   "coastal": true,
+   "neighbors": []
+  },
+  {
+   "id": "CRI",
+   "latitude": 9.973,
+   "longitude": -84.195,
+   "areaKm2": 51700,
+   "coastal": true,
+   "neighbors": [
+    "NIC",
+    "PAN"
+   ]
+  },
+  {
+   "id": "CUB",
+   "latitude": 21.617,
+   "longitude": -79.01,
+   "areaKm2": 109795,
+   "coastal": true,
+   "neighbors": []
+  },
+  {
+   "id": "CYN",
+   "latitude": 35.281,
+   "longitude": 33.59,
+   "areaKm2": 3488,
+   "coastal": true,
+   "neighbors": [
+    "CYP"
+   ]
+  },
+  {
+   "id": "CYP",
+   "latitude": 34.927,
+   "longitude": 33.017,
+   "areaKm2": 5785,
+   "coastal": true,
+   "neighbors": [
+    "CYN"
+   ]
+  },
+  {
+   "id": "CZE",
+   "latitude": 49.733,
+   "longitude": 15.304,
+   "areaKm2": 79517,
+   "coastal": false,
+   "neighbors": [
+    "AUT",
+    "DEU",
+    "POL",
+    "SVK"
+   ]
+  },
+  {
+   "id": "DEU",
+   "latitude": 51.048,
+   "longitude": 10.385,
+   "areaKm2": 358469,
+   "coastal": true,
+   "neighbors": [
+    "AUT",
+    "BEL",
+    "CHE",
+    "CZE",
+    "DNK",
+    "FRA",
+    "LUX",
+    "NLD",
+    "POL"
+   ]
+  },
+  {
+   "id": "DJI",
+   "latitude": 11.751,
+   "longitude": 42.566,
+   "areaKm2": 22000,
+   "coastal": true,
+   "neighbors": [
+    "ERI",
+    "ETH",
+    "SOL"
+   ]
+  },
+  {
+   "id": "DMA",
+   "latitude": 15.438,
+   "longitude": -61.357,
+   "areaKm2": 739,
+   "coastal": true,
+   "neighbors": []
+  },
+  {
+   "id": "DNK",
+   "latitude": 55.956,
+   "longitude": 10.053,
+   "areaKm2": 42486,
+   "coastal": true,
+   "neighbors": [
+    "DEU"
+   ]
+  },
+  {
+   "id": "DOM",
+   "latitude": 18.894,
+   "longitude": -70.497,
+   "areaKm2": 48913,
+   "coastal": true,
+   "neighbors": [
+    "HTI"
+   ]
+  },
+  {
+   "id": "DZA",
+   "latitude": 28.006,
+   "longitude": 2.654,
+   "areaKm2": 2313787,
+   "coastal": true,
+   "neighbors": [
+    "LBY",
+    "MAR",
+    "MLI",
+    "MRT",
+    "NER",
+    "TUN"
+   ]
+  },
+  {
+   "id": "ECU",
+   "latitude": -1.425,
+   "longitude": -78.765,
+   "areaKm2": 255967,
+   "coastal": true,
+   "neighbors": [
+    "COL",
+    "PER"
+   ]
+  },
+  {
+   "id": "EGY",
+   "latitude": 26.449,
+   "longitude": 29.867,
+   "areaKm2": 1004129,
+   "coastal": true,
+   "neighbors": [
+    "ISR",
+    "LBY",
+    "PSX",
+    "SDN"
+   ]
+  },
+  {
+   "id": "ERI",
+   "latitude": 15.352,
+   "longitude": 38.858,
+   "areaKm2": 123025,
+   "coastal": true,
+   "neighbors": [
+    "DJI",
+    "ETH",
+    "SDN"
+   ]
+  },
+  {
+   "id": "ESP",
+   "latitude": 40.329,
+   "longitude": -3.499,
+   "areaKm2": 506733,
+   "coastal": true,
+   "neighbors": [
+    "AND",
+    "FRA",
+    "MAR",
+    "PRT"
+   ]
+  },
+  {
+   "id": "EST",
+   "latitude": 58.663,
+   "longitude": 25.538,
+   "areaKm2": 45430,
+   "coastal": true,
+   "neighbors": [
+    "LVA",
+    "RUS"
+   ]
+  },
+  {
+   "id": "ETH",
+   "latitude": 8.609,
+   "longitude": 39.603,
+   "areaKm2": 1134634,
+   "coastal": false,
+   "neighbors": [
+    "DJI",
+    "ERI",
+    "KEN",
+    "SDN",
+    "SDS",
+    "SOL",
+    "SOM"
+   ]
+  },
+  {
+   "id": "FIN",
+   "latitude": 64.256,
+   "longitude": 26.239,
+   "areaKm2": 330754,
+   "coastal": true,
+   "neighbors": [
+    "NOR",
+    "RUS",
+    "SWE"
+   ]
+  },
+  {
+   "id": "FJI",
+   "latitude": -17.446,
+   "longitude": 166.049,
+   "areaKm2": 18541,
+   "coastal": true,
+   "neighbors": []
+  },
+  {
+   "id": "FRA",
+   "latitude": 46.471,
+   "longitude": 2.558,
+   "areaKm2": 635831,
+   "coastal": true,
+   "neighbors": [
+    "AND",
+    "BEL",
+    "BRA",
+    "CHE",
+    "DEU",
+    "ESP",
+    "ITA",
+    "LUX",
+    "MCO",
+    "SUR"
+   ]
+  },
+  {
+   "id": "FSM",
+   "latitude": 6.982,
+   "longitude": 155.891,
+   "areaKm2": 593,
+   "coastal": true,
+   "neighbors": []
+  },
+  {
+   "id": "GAB",
+   "latitude": -0.593,
+   "longitude": 11.79,
+   "areaKm2": 261208,
+   "coastal": true,
+   "neighbors": [
+    "CMR",
+    "COG",
+    "GNQ"
+   ]
+  },
+  {
+   "id": "GBR",
+   "latitude": 54.009,
+   "longitude": -2.824,
+   "areaKm2": 241711,
+   "coastal": true,
+   "neighbors": [
+    "IRL"
+   ]
+  },
+  {
+   "id": "GEO",
+   "latitude": 42.162,
+   "longitude": 43.514,
+   "areaKm2": 69417,
+   "coastal": true,
+   "neighbors": [
+    "ARM",
+    "AZE",
+    "RUS",
+    "TUR"
+   ]
+  },
+  {
+   "id": "GHA",
+   "latitude": 7.944,
+   "longitude": -1.215,
+   "areaKm2": 239646,
+   "coastal": true,
+   "neighbors": [
+    "BFA",
+    "CIV",
+    "TGO"
+   ]
+  },
+  {
+   "id": "GIN",
+   "latitude": 10.43,
+   "longitude": -10.94,
+   "areaKm2": 245234,
+   "coastal": true,
+   "neighbors": [
+    "CIV",
+    "GNB",
+    "LBR",
+    "MLI",
+    "SEN",
+    "SLE"
+   ]
+  },
+  {
+   "id": "GMB",
+   "latitude": 13.446,
+   "longitude": -15.405,
+   "areaKm2": 10471,
+   "coastal": true,
+   "neighbors": [
+    "SEN"
+   ]
+  },
+  {
+   "id": "GNB",
+   "latitude": 12.034,
+   "longitude": -14.973,
+   "areaKm2": 32669,
+   "coastal": true,
+   "neighbors": [
+    "GIN",
+    "SEN"
+   ]
+  },
+  {
+   "id": "GNQ",
+   "latitude": 1.706,
+   "longitude": 10.333,
+   "areaKm2": 26900,
+   "coastal": true,
+   "neighbors": [
+    "CMR",
+    "GAB"
+   ]
+  },
+  {
+   "id": "GRC",
+   "latitude": 39.019,
+   "longitude": 22.97,
+   "areaKm2": 130836,
+   "coastal": true,
+   "neighbors": [
+    "ALB",
+    "BGR",
+    "MKD",
+    "TUR"
+   ]
+  },
+  {
+   "id": "GRD",
+   "latitude": 12.16,
+   "longitude": -61.656,
+   "areaKm2": 358,
+   "coastal": true,
+   "neighbors": []
+  },
+  {
+   "id": "GTM",
+   "latitude": 15.691,
+   "longitude": -90.362,
+   "areaKm2": 109094,
+   "coastal": true,
+   "neighbors": [
+    "BLZ",
+    "HND",
+    "MEX",
+    "SLV"
+   ]
+  },
+  {
+   "id": "GUY",
+   "latitude": 4.785,
+   "longitude": -58.979,
+   "areaKm2": 211521,
+   "coastal": true,
+   "neighbors": [
+    "BRA",
+    "SUR",
+    "VEN"
+   ]
+  },
+  {
+   "id": "HND",
+   "latitude": 14.819,
+   "longitude": -86.624,
+   "areaKm2": 112932,
+   "coastal": true,
+   "neighbors": [
+    "GTM",
+    "NIC",
+    "SLV"
+   ]
+  },
+  {
+   "id": "HRV",
+   "latitude": 45.061,
+   "longitude": 16.391,
+   "areaKm2": 54740,
+   "coastal": true,
+   "neighbors": [
+    "BIH",
+    "HUN",
+    "MNE",
+    "SRB",
+    "SVN"
+   ]
+  },
+  {
+   "id": "HTI",
+   "latitude": 18.936,
+   "longitude": -72.7,
+   "areaKm2": 26791,
+   "coastal": true,
+   "neighbors": [
+    "DOM"
+   ]
+  },
+  {
+   "id": "HUN",
+   "latitude": 47.156,
+   "longitude": 19.396,
+   "areaKm2": 98605,
+   "coastal": false,
+   "neighbors": [
+    "AUT",
+    "HRV",
+    "ROU",
+    "SRB",
+    "SVK",
+    "SVN",
+    "UKR"
+   ]
+  },
+  {
+   "id": "IDN",
+   "latitude": -2.215,
+   "longitude": 117.247,
+   "areaKm2": 1884108,
+   "coastal": true,
+   "neighbors": [
+    "MYS",
+    "PNG",
+    "TLS"
+   ]
+  },
+  {
+   "id": "IND",
+   "latitude": 22.679,
+   "longitude": 79.593,
+   "areaKm2": 3159194,
+   "coastal": true,
+   "neighbors": [
+    "BGD",
+    "BTN",
+    "CHN",
+    "MMR",
+    "NPL",
+    "PAK"
+   ]
+  },
+  {
+   "id": "IRL",
+   "latitude": 53.16,
+   "longitude": -8.148,
+   "areaKm2": 69290,
+   "coastal": true,
+   "neighbors": [
+    "GBR"
+   ]
+  },
+  {
+   "id": "IRN",
+   "latitude": 32.453,
+   "longitude": 54.358,
+   "areaKm2": 1623525,
+   "coastal": true,
+   "neighbors": [
+    "AFG",
+    "ARM",
+    "AZE",
+    "IRQ",
+    "PAK",
+    "TKM",
+    "TUR"
+   ]
+  },
+  {
+   "id": "IRQ",
+   "latitude": 32.999,
+   "longitude": 43.758,
+   "areaKm2": 437463,
+   "coastal": true,
+   "neighbors": [
+    "IRN",
+    "JOR",
+    "KWT",
+    "SAU",
+    "SYR",
+    "TUR"
+   ]
+  },
+  {
+   "id": "ISL",
+   "latitude": 64.983,
+   "longitude": -18.579,
+   "areaKm2": 101173,
+   "coastal": true,
+   "neighbors": []
+  },
+  {
+   "id": "ISR",
+   "latitude": 31.432,
+   "longitude": 34.994,
+   "areaKm2": 22051,
+   "coastal": true,
+   "neighbors": [
+    "EGY",
+    "JOR",
+    "LBN",
+    "PSX",
+    "SYR"
+   ]
+  },
+  {
+   "id": "ITA",
+   "latitude": 42.667,
+   "longitude": 12.141,
+   "areaKm2": 301530,
+   "coastal": true,
+   "neighbors": [
+    "AUT",
+    "CHE",
+    "FRA",
+    "SMR",
+    "SVN",
+    "VAT"
+   ]
+  },
+  {
+   "id": "JAM",
+   "latitude": 18.154,
+   "longitude": -77.314,
+   "areaKm2": 11054,
+   "coastal": true,
+   "neighbors": []
+  },
+  {
+   "id": "JOR",
+   "latitude": 31.237,
+   "longitude": 36.766,
+   "areaKm2": 88810,
+   "coastal": true,
+   "neighbors": [
+    "IRQ",
+    "ISR",
+    "PSX",
+    "SAU",
+    "SYR"
+   ]
+  },
+  {
+   "id": "JPN",
+   "latitude": 37.363,
+   "longitude": 137.806,
+   "areaKm2": 373336,
+   "coastal": true,
+   "neighbors": []
+  },
+  {
+   "id": "KAZ",
+   "latitude": 47.993,
+   "longitude": 67.25,
+   "areaKm2": 2721264,
+   "coastal": true,
+   "neighbors": [
+    "CHN",
+    "KGZ",
+    "RUS",
+    "TKM",
+    "UZB"
+   ]
+  },
+  {
+   "id": "KEN",
+   "latitude": 0.55,
+   "longitude": 37.824,
+   "areaKm2": 588344,
+   "coastal": true,
+   "neighbors": [
+    "ETH",
+    "SDS",
+    "SOM",
+    "TZA",
+    "UGA"
+   ]
+  },
+  {
+   "id": "KGZ",
+   "latitude": 41.442,
+   "longitude": 74.505,
+   "areaKm2": 200195,
+   "coastal": false,
+   "neighbors": [
+    "CHN",
+    "KAZ",
+    "TJK",
+    "UZB"
+   ]
+  },
+  {
+   "id": "KHM",
+   "latitude": 12.712,
+   "longitude": 104.903,
+   "areaKm2": 182328,
+   "coastal": true,
+   "neighbors": [
+    "LAO",
+    "THA",
+    "VNM"
+   ]
+  },
+  {
+   "id": "KIR",
+   "latitude": 1.062,
+   "longitude": -157.201,
+   "areaKm2": 759,
+   "coastal": true,
+   "neighbors": []
+  },
+  {
+   "id": "KNA",
+   "latitude": 17.276,
+   "longitude": -62.706,
+   "areaKm2": 250,
+   "coastal": true,
+   "neighbors": []
+  },
+  {
+   "id": "KOR",
+   "latitude": 36.373,
+   "longitude": 127.822,
+   "areaKm2": 100533,
+   "coastal": true,
+   "neighbors": [
+    "PRK"
+   ]
+  },
+  {
+   "id": "KOS",
+   "latitude": 42.568,
+   "longitude": 20.871,
+   "areaKm2": 10890,
+   "coastal": false,
+   "neighbors": [
+    "ALB",
+    "MKD",
+    "MNE",
+    "SRB"
+   ]
+  },
+  {
+   "id": "KWT",
+   "latitude": 29.333,
+   "longitude": 47.594,
+   "areaKm2": 17548,
+   "coastal": true,
+   "neighbors": [
+    "IRQ",
+    "SAU"
+   ]
+  },
+  {
+   "id": "LAO",
+   "latitude": 18.484,
+   "longitude": 103.754,
+   "areaKm2": 228874,
+   "coastal": false,
+   "neighbors": [
+    "CHN",
+    "KHM",
+    "MMR",
+    "THA",
+    "VNM"
+   ]
+  },
+  {
+   "id": "LBN",
+   "latitude": 33.924,
+   "longitude": 35.881,
+   "areaKm2": 10125,
+   "coastal": true,
+   "neighbors": [
+    "ISR",
+    "SYR"
+   ]
+  },
+  {
+   "id": "LBR",
+   "latitude": 6.45,
+   "longitude": -9.319,
+   "areaKm2": 95775,
+   "coastal": true,
+   "neighbors": [
+    "CIV",
+    "GIN",
+    "SLE"
+   ]
+  },
+  {
+   "id": "LBY",
+   "latitude": 26.961,
+   "longitude": 18.035,
+   "areaKm2": 1627522,
+   "coastal": true,
+   "neighbors": [
+    "DZA",
+    "EGY",
+    "NER",
+    "SDN",
+    "TCD",
+    "TUN"
+   ]
+  },
+  {
+   "id": "LCA",
+   "latitude": 13.901,
+   "longitude": -60.97,
+   "areaKm2": 603,
+   "coastal": true,
+   "neighbors": []
+  },
+  {
+   "id": "LIE",
+   "latitude": 47.138,
+   "longitude": 9.541,
+   "areaKm2": 136,
+   "coastal": false,
+   "neighbors": [
+    "AUT",
+    "CHE"
+   ]
+  },
+  {
+   "id": "LKA",
+   "latitude": 7.614,
+   "longitude": 80.699,
+   "areaKm2": 66459,
+   "coastal": true,
+   "neighbors": []
+  },
+  {
+   "id": "LSO",
+   "latitude": -29.576,
+   "longitude": 28.229,
+   "areaKm2": 30293,
+   "coastal": false,
+   "neighbors": [
+    "ZAF"
+   ]
+  },
+  {
+   "id": "LTU",
+   "latitude": 55.319,
+   "longitude": 23.891,
+   "areaKm2": 64662,
+   "coastal": true,
+   "neighbors": [
+    "BLR",
+    "LVA",
+    "POL",
+    "RUS"
+   ]
+  },
+  {
+   "id": "LUX",
+   "latitude": 49.768,
+   "longitude": 6.074,
+   "areaKm2": 2660,
+   "coastal": false,
+   "neighbors": [
+    "BEL",
+    "DEU",
+    "FRA"
+   ]
+  },
+  {
+   "id": "LVA",
+   "latitude": 56.841,
+   "longitude": 24.916,
+   "areaKm2": 64518,
+   "coastal": true,
+   "neighbors": [
+    "BLR",
+    "EST",
+    "LTU",
+    "RUS"
+   ]
+  },
+  {
+   "id": "MAR",
+   "latitude": 29.714,
+   "longitude": -8.529,
+   "areaKm2": 592987,
+   "coastal": true,
+   "neighbors": [
+    "DZA",
+    "ESP"
+   ]
+  },
+  {
+   "id": "MCO",
+   "latitude": 43.738,
+   "longitude": 7.403,
+   "areaKm2": 14,
+   "coastal": true,
+   "neighbors": [
+    "FRA"
+   ]
+  },
+  {
+   "id": "MDA",
+   "latitude": 47.186,
+   "longitude": 28.469,
+   "areaKm2": 33186,
+   "coastal": false,
+   "neighbors": [
+    "ROU",
+    "UKR"
+   ]
+  },
+  {
+   "id": "MDG",
+   "latitude": -19.314,
+   "longitude": 46.726,
+   "areaKm2": 594849,
+   "coastal": true,
+   "neighbors": []
+  },
+  {
+   "id": "MDV",
+   "latitude": 3.625,
+   "longitude": 73.258,
+   "areaKm2": 83,
+   "coastal": true,
+   "neighbors": []
+  },
+  {
+   "id": "MEX",
+   "latitude": 23.799,
+   "longitude": -102.364,
+   "areaKm2": 1963702,
+   "coastal": true,
+   "neighbors": [
+    "BLZ",
+    "GTM",
+    "USA"
+   ]
+  },
+  {
+   "id": "MHL",
+   "latitude": 6.826,
+   "longitude": 170.098,
+   "areaKm2": 215,
+   "coastal": true,
+   "neighbors": []
+  },
+  {
+   "id": "MKD",
+   "latitude": 41.594,
+   "longitude": 21.685,
+   "areaKm2": 25336,
+   "coastal": false,
+   "neighbors": [
+    "ALB",
+    "BGR",
+    "GRC",
+    "KOS",
+    "SRB"
+   ]
+  },
+  {
+   "id": "MLI",
+   "latitude": 17.298,
+   "longitude": -3.567,
+   "areaKm2": 1258392,
+   "coastal": false,
+   "neighbors": [
+    "BFA",
+    "CIV",
+    "DZA",
+    "GIN",
+    "MRT",
+    "NER",
+    "SEN"
+   ]
+  },
+  {
+   "id": "MLT",
+   "latitude": 35.92,
+   "longitude": 14.405,
+   "areaKm2": 323,
+   "coastal": true,
+   "neighbors": []
+  },
+  {
+   "id": "MMR",
+   "latitude": 21.099,
+   "longitude": 96.493,
+   "areaKm2": 663471,
+   "coastal": true,
+   "neighbors": [
+    "BGD",
+    "CHN",
+    "IND",
+    "LAO",
+    "THA"
+   ]
+  },
+  {
+   "id": "MNE",
+   "latitude": 42.786,
+   "longitude": 19.238,
+   "areaKm2": 13640,
+   "coastal": true,
+   "neighbors": [
+    "ALB",
+    "BIH",
+    "HRV",
+    "KOS",
+    "SRB"
+   ]
+  },
+  {
+   "id": "MNG",
+   "latitude": 46.767,
+   "longitude": 103.123,
+   "areaKm2": 1576031,
+   "coastal": false,
+   "neighbors": [
+    "CHN",
+    "RUS"
+   ]
+  },
+  {
+   "id": "MOZ",
+   "latitude": -17.179,
+   "longitude": 35.574,
+   "areaKm2": 791095,
+   "coastal": true,
+   "neighbors": [
+    "MWI",
+    "SWZ",
+    "TZA",
+    "ZAF",
+    "ZMB",
+    "ZWE"
+   ]
+  },
+  {
+   "id": "MRT",
+   "latitude": 20.208,
+   "longitude": -10.351,
+   "areaKm2": 1039570,
+   "coastal": true,
+   "neighbors": [
+    "DZA",
+    "MLI",
+    "SEN"
+   ]
+  },
+  {
+   "id": "MUS",
+   "latitude": -20.258,
+   "longitude": 57.786,
+   "areaKm2": 1956,
+   "coastal": true,
+   "neighbors": []
+  },
+  {
+   "id": "MWI",
+   "latitude": -13.197,
+   "longitude": 34.287,
+   "areaKm2": 119640,
+   "coastal": false,
+   "neighbors": [
+    "MOZ",
+    "TZA",
+    "ZMB"
+   ]
+  },
+  {
+   "id": "MYS",
+   "latitude": 3.791,
+   "longitude": 109.68,
+   "areaKm2": 329550,
+   "coastal": true,
+   "neighbors": [
+    "BRN",
+    "IDN",
+    "THA"
+   ]
+  },
+  {
+   "id": "NAM",
+   "latitude": -22.058,
+   "longitude": 17.204,
+   "areaKm2": 824849,
+   "coastal": true,
+   "neighbors": [
+    "AGO",
+    "BWA",
+    "ZAF",
+    "ZMB",
+    "ZWE"
+   ]
+  },
+  {
+   "id": "NER",
+   "latitude": 17.386,
+   "longitude": 9.36,
+   "areaKm2": 1186705,
+   "coastal": false,
+   "neighbors": [
+    "BEN",
+    "BFA",
+    "DZA",
+    "LBY",
+    "MLI",
+    "NGA",
+    "TCD"
+   ]
+  },
+  {
+   "id": "NGA",
+   "latitude": 9.58,
+   "longitude": 8.086,
+   "areaKm2": 910779,
+   "coastal": true,
+   "neighbors": [
+    "BEN",
+    "CMR",
+    "NER",
+    "TCD"
+   ]
+  },
+  {
+   "id": "NIC",
+   "latitude": 12.843,
+   "longitude": -85.034,
+   "areaKm2": 128902,
+   "coastal": true,
+   "neighbors": [
+    "CRI",
+    "HND"
+   ]
+  },
+  {
+   "id": "NLD",
+   "latitude": 52.261,
+   "longitude": 5.584,
+   "areaKm2": 37218,
+   "coastal": true,
+   "neighbors": [
+    "BEL",
+    "DEU"
+   ]
+  },
+  {
+   "id": "NOR",
+   "latitude": 66.296,
+   "longitude": 14.027,
+   "areaKm2": 376178,
+   "coastal": true,
+   "neighbors": [
+    "FIN",
+    "RUS",
+    "SWE"
+   ]
+  },
+  {
+   "id": "NPL",
+   "latitude": 28.243,
+   "longitude": 83.925,
+   "areaKm2": 147194,
+   "coastal": false,
+   "neighbors": [
+    "CHN",
+    "IND"
+   ]
+  },
+  {
+   "id": "NRU",
+   "latitude": -0.521,
+   "longitude": 166.933,
+   "areaKm2": 29,
+   "coastal": true,
+   "neighbors": []
+  },
+  {
+   "id": "NZL",
+   "latitude": -41.681,
+   "longitude": 171.475,
+   "areaKm2": 267734,
+   "coastal": true,
+   "neighbors": []
+  },
+  {
+   "id": "OMN",
+   "latitude": 20.575,
+   "longitude": 56.077,
+   "areaKm2": 312296,
+   "coastal": true,
+   "neighbors": [
+    "ARE",
+    "SAU",
+    "YEM"
+   ]
+  },
+  {
+   "id": "PAK",
+   "latitude": 29.854,
+   "longitude": 69.262,
+   "areaKm2": 874528,
+   "coastal": true,
+   "neighbors": [
+    "AFG",
+    "CHN",
+    "IND",
+    "IRN"
+   ]
+  },
+  {
+   "id": "PAN",
+   "latitude": 8.492,
+   "longitude": -80.054,
+   "areaKm2": 77316,
+   "coastal": true,
+   "neighbors": [
+    "COL",
+    "CRI"
+   ]
+  },
+  {
+   "id": "PER",
+   "latitude": -9.103,
+   "longitude": -74.397,
+   "areaKm2": 1295795,
+   "coastal": true,
+   "neighbors": [
+    "BOL",
+    "BRA",
+    "CHL",
+    "COL",
+    "ECU"
+   ]
+  },
+  {
+   "id": "PHL",
+   "latitude": 11.726,
+   "longitude": 122.893,
+   "areaKm2": 293317,
+   "coastal": true,
+   "neighbors": []
+  },
+  {
+   "id": "PLW",
+   "latitude": 7.258,
+   "longitude": 134.393,
+   "areaKm2": 429,
+   "coastal": true,
+   "neighbors": []
+  },
+  {
+   "id": "PNG",
+   "latitude": -6.467,
+   "longitude": 145.224,
+   "areaKm2": 466418,
+   "coastal": true,
+   "neighbors": [
+    "IDN"
+   ]
+  },
+  {
+   "id": "POL",
+   "latitude": 52.084,
+   "longitude": 19.412,
+   "areaKm2": 312071,
+   "coastal": true,
+   "neighbors": [
+    "BLR",
+    "CZE",
+    "DEU",
+    "LTU",
+    "RUS",
+    "SVK",
+    "UKR"
+   ]
+  },
+  {
+   "id": "PRK",
+   "latitude": 40.136,
+   "longitude": 127.173,
+   "areaKm2": 122168,
+   "coastal": true,
+   "neighbors": [
+    "CHN",
+    "KOR",
+    "RUS"
+   ]
+  },
+  {
+   "id": "PRT",
+   "latitude": 39.555,
+   "longitude": -8.551,
+   "areaKm2": 91298,
+   "coastal": true,
+   "neighbors": [
+    "ESP"
+   ]
+  },
+  {
+   "id": "PRY",
+   "latitude": -23.199,
+   "longitude": -58.421,
+   "areaKm2": 401621,
+   "coastal": false,
+   "neighbors": [
+    "ARG",
+    "BOL",
+    "BRA"
+   ]
+  },
+  {
+   "id": "PSX",
+   "latitude": 31.914,
+   "longitude": 35.199,
+   "areaKm2": 6216,
+   "coastal": true,
+   "neighbors": [
+    "EGY",
+    "ISR",
+    "JOR"
+   ]
+  },
+  {
+   "id": "QAT",
+   "latitude": 25.31,
+   "longitude": 51.186,
+   "areaKm2": 11131,
+   "coastal": true,
+   "neighbors": [
+    "SAU"
+   ]
+  },
+  {
+   "id": "ROU",
+   "latitude": 45.831,
+   "longitude": 24.981,
+   "areaKm2": 236211,
+   "coastal": true,
+   "neighbors": [
+    "BGR",
+    "HUN",
+    "MDA",
+    "SRB",
+    "UKR"
+   ]
+  },
+  {
+   "id": "RUS",
+   "latitude": 60.669,
+   "longitude": 95.407,
+   "areaKm2": 16930807,
+   "coastal": true,
+   "neighbors": [
+    "AZE",
+    "BLR",
+    "CHN",
+    "EST",
+    "FIN",
+    "GEO",
+    "KAZ",
+    "LTU",
+    "LVA",
+    "MNG",
+    "NOR",
+    "POL",
+    "PRK",
+    "UKR"
+   ]
+  },
+  {
+   "id": "RWA",
+   "latitude": -1.991,
+   "longitude": 29.917,
+   "areaKm2": 25438,
+   "coastal": false,
+   "neighbors": [
+    "BDI",
+    "COD",
+    "TZA",
+    "UGA"
+   ]
+  },
+  {
+   "id": "SAU",
+   "latitude": 24.045,
+   "longitude": 44.594,
+   "areaKm2": 1927560,
+   "coastal": true,
+   "neighbors": [
+    "ARE",
+    "IRQ",
+    "JOR",
+    "KWT",
+    "OMN",
+    "QAT",
+    "YEM"
+   ]
+  },
+  {
+   "id": "SDN",
+   "latitude": 15.94,
+   "longitude": 29.921,
+   "areaKm2": 1864189,
+   "coastal": true,
+   "neighbors": [
+    "CAF",
+    "EGY",
+    "ERI",
+    "ETH",
+    "LBY",
+    "SDS",
+    "TCD"
+   ]
+  },
+  {
+   "id": "SDS",
+   "latitude": 7.279,
+   "longitude": 30.305,
+   "areaKm2": 630404,
+   "coastal": false,
+   "neighbors": [
+    "CAF",
+    "COD",
+    "ETH",
+    "KEN",
+    "SDN",
+    "UGA"
+   ]
+  },
+  {
+   "id": "SEN",
+   "latitude": 14.364,
+   "longitude": -14.47,
+   "areaKm2": 196880,
+   "coastal": true,
+   "neighbors": [
+    "GIN",
+    "GMB",
+    "GNB",
+    "MLI",
+    "MRT"
+   ]
+  },
+  {
+   "id": "SGP",
+   "latitude": 1.359,
+   "longitude": 103.81,
+   "areaKm2": 477,
+   "coastal": true,
+   "neighbors": []
+  },
+  {
+   "id": "SLB",
+   "latitude": -8.897,
+   "longitude": 159.633,
+   "areaKm2": 26488,
+   "coastal": true,
+   "neighbors": []
+  },
+  {
+   "id": "SLE",
+   "latitude": 8.563,
+   "longitude": -11.795,
+   "areaKm2": 71641,
+   "coastal": true,
+   "neighbors": [
+    "GIN",
+    "LBR"
+   ]
+  },
+  {
+   "id": "SLV",
+   "latitude": 13.736,
+   "longitude": -88.87,
+   "areaKm2": 20569,
+   "coastal": true,
+   "neighbors": [
+    "GTM",
+    "HND"
+   ]
+  },
+  {
+   "id": "SMR",
+   "latitude": 43.936,
+   "longitude": 12.442,
+   "areaKm2": 59,
+   "coastal": false,
+   "neighbors": [
+    "ITA"
+   ]
+  },
+  {
+   "id": "SOL",
+   "latitude": 9.731,
+   "longitude": 46.253,
+   "areaKm2": 168308,
+   "coastal": true,
+   "neighbors": [
+    "DJI",
+    "ETH",
+    "SOM"
+   ]
+  },
+  {
+   "id": "SOM",
+   "latitude": 4.738,
+   "longitude": 45.694,
+   "areaKm2": 474181,
+   "coastal": true,
+   "neighbors": [
+    "ETH",
+    "KEN",
+    "SOL"
+   ]
+  },
+  {
+   "id": "SRB",
+   "latitude": 44.208,
+   "longitude": 20.8,
+   "areaKm2": 77464,
+   "coastal": false,
+   "neighbors": [
+    "BGR",
+    "BIH",
+    "HRV",
+    "HUN",
+    "KOS",
+    "MKD",
+    "MNE",
+    "ROU"
+   ]
+  },
+  {
+   "id": "STP",
+   "latitude": 0.426,
+   "longitude": 6.714,
+   "areaKm2": 979,
+   "coastal": true,
+   "neighbors": []
+  },
+  {
+   "id": "SUR",
+   "latitude": 4.126,
+   "longitude": -55.912,
+   "areaKm2": 145742,
+   "coastal": true,
+   "neighbors": [
+    "BRA",
+    "FRA",
+    "GUY"
+   ]
+  },
+  {
+   "id": "SVK",
+   "latitude": 48.705,
+   "longitude": 19.476,
+   "areaKm2": 48276,
+   "coastal": false,
+   "neighbors": [
+    "AUT",
+    "CZE",
+    "HUN",
+    "POL",
+    "UKR"
+   ]
+  },
+  {
+   "id": "SVN",
+   "latitude": 46.114,
+   "longitude": 14.804,
+   "areaKm2": 20278,
+   "coastal": true,
+   "neighbors": [
+    "AUT",
+    "HRV",
+    "HUN",
+    "ITA"
+   ]
+  },
+  {
+   "id": "SWE",
+   "latitude": 62.37,
+   "longitude": 16.508,
+   "areaKm2": 443163,
+   "coastal": true,
+   "neighbors": [
+    "FIN",
+    "NOR"
+   ]
+  },
+  {
+   "id": "SWZ",
+   "latitude": -26.561,
+   "longitude": 31.48,
+   "areaKm2": 17207,
+   "coastal": false,
+   "neighbors": [
+    "MOZ",
+    "ZAF"
+   ]
+  },
+  {
+   "id": "SYC",
+   "latitude": -6.208,
+   "longitude": 52.593,
+   "areaKm2": 356,
+   "coastal": true,
+   "neighbors": []
+  },
+  {
+   "id": "SYR",
+   "latitude": 35.007,
+   "longitude": 38.492,
+   "areaKm2": 186211,
+   "coastal": true,
+   "neighbors": [
+    "IRQ",
+    "ISR",
+    "JOR",
+    "LBN",
+    "TUR"
+   ]
+  },
+  {
+   "id": "TCD",
+   "latitude": 15.268,
+   "longitude": 18.642,
+   "areaKm2": 1271461,
+   "coastal": false,
+   "neighbors": [
+    "CAF",
+    "CMR",
+    "LBY",
+    "NER",
+    "NGA",
+    "SDN"
+   ]
+  },
+  {
+   "id": "TGO",
+   "latitude": 8.521,
+   "longitude": 0.963,
+   "areaKm2": 56907,
+   "coastal": true,
+   "neighbors": [
+    "BEN",
+    "BFA",
+    "GHA"
+   ]
+  },
+  {
+   "id": "THA",
+   "latitude": 15.071,
+   "longitude": 101.002,
+   "areaKm2": 516130,
+   "coastal": true,
+   "neighbors": [
+    "KHM",
+    "LAO",
+    "MMR",
+    "MYS"
+   ]
+  },
+  {
+   "id": "TJK",
+   "latitude": 38.521,
+   "longitude": 71.021,
+   "areaKm2": 142310,
+   "coastal": false,
+   "neighbors": [
+    "AFG",
+    "CHN",
+    "KGZ",
+    "UZB"
+   ]
+  },
+  {
+   "id": "TKM",
+   "latitude": 39.093,
+   "longitude": 59.408,
+   "areaKm2": 470124,
+   "coastal": true,
+   "neighbors": [
+    "AFG",
+    "IRN",
+    "KAZ",
+    "UZB"
+   ]
+  },
+  {
+   "id": "TLS",
+   "latitude": -8.823,
+   "longitude": 125.859,
+   "areaKm2": 15101,
+   "coastal": true,
+   "neighbors": [
+    "IDN"
+   ]
+  },
+  {
+   "id": "TON",
+   "latitude": -20.068,
+   "longitude": -174.834,
+   "areaKm2": 548,
+   "coastal": true,
+   "neighbors": []
+  },
+  {
+   "id": "TTO",
+   "latitude": 10.462,
+   "longitude": -61.251,
+   "areaKm2": 5024,
+   "coastal": true,
+   "neighbors": []
+  },
+  {
+   "id": "TUN",
+   "latitude": 34.095,
+   "longitude": 9.562,
+   "areaKm2": 157140,
+   "coastal": true,
+   "neighbors": [
+    "DZA",
+    "LBY"
+   ]
+  },
+  {
+   "id": "TUR",
+   "latitude": 39.033,
+   "longitude": 35.168,
+   "areaKm2": 779794,
+   "coastal": true,
+   "neighbors": [
+    "ARM",
+    "AZE",
+    "BGR",
+    "GEO",
+    "GRC",
+    "IRN",
+    "IRQ",
+    "SYR"
+   ]
+  },
+  {
+   "id": "TUV",
+   "latitude": -7.716,
+   "longitude": 178.478,
+   "areaKm2": 19,
+   "coastal": true,
+   "neighbors": []
+  },
+  {
+   "id": "TWN",
+   "latitude": 23.761,
+   "longitude": 120.954,
+   "areaKm2": 36880,
+   "coastal": true,
+   "neighbors": []
+  },
+  {
+   "id": "TZA",
+   "latitude": -6.261,
+   "longitude": 34.805,
+   "areaKm2": 945276,
+   "coastal": true,
+   "neighbors": [
+    "BDI",
+    "COD",
+    "KEN",
+    "MOZ",
+    "MWI",
+    "RWA",
+    "UGA",
+    "ZMB"
+   ]
+  },
+  {
+   "id": "UGA",
+   "latitude": 1.274,
+   "longitude": 32.367,
+   "areaKm2": 242889,
+   "coastal": false,
+   "neighbors": [
+    "COD",
+    "KEN",
+    "RWA",
+    "SDS",
+    "TZA"
+   ]
+  },
+  {
+   "id": "UKR",
+   "latitude": 49.128,
+   "longitude": 31.283,
+   "areaKm2": 573241,
+   "coastal": true,
+   "neighbors": [
+    "BLR",
+    "HUN",
+    "MDA",
+    "POL",
+    "ROU",
+    "RUS",
+    "SVK"
+   ]
+  },
+  {
+   "id": "URY",
+   "latitude": -32.785,
+   "longitude": -56.019,
+   "areaKm2": 177771,
+   "coastal": true,
+   "neighbors": [
+    "ARG",
+    "BRA"
+   ]
+  },
+  {
+   "id": "USA",
+   "latitude": 43.12,
+   "longitude": -107.412,
+   "areaKm2": 9449739,
+   "coastal": true,
+   "neighbors": [
+    "CAN",
+    "MEX"
+   ]
+  },
+  {
+   "id": "UZB",
+   "latitude": 41.714,
+   "longitude": 63.223,
+   "areaKm2": 447781,
+   "coastal": false,
+   "neighbors": [
+    "AFG",
+    "KAZ",
+    "KGZ",
+    "TJK",
+    "TKM"
+   ]
+  },
+  {
+   "id": "VAT",
+   "latitude": 41.903,
+   "longitude": 12.453,
+   "areaKm2": 0,
+   "coastal": false,
+   "neighbors": [
+    "ITA"
+   ]
+  },
+  {
+   "id": "VCT",
+   "latitude": 13.223,
+   "longitude": -61.205,
+   "areaKm2": 332,
+   "coastal": true,
+   "neighbors": []
+  },
+  {
+   "id": "VEN",
+   "latitude": 7.118,
+   "longitude": -66.167,
+   "areaKm2": 917065,
+   "coastal": true,
+   "neighbors": [
+    "BRA",
+    "COL",
+    "GUY"
+   ]
+  },
+  {
+   "id": "VNM",
+   "latitude": 16.531,
+   "longitude": 106.326,
+   "areaKm2": 330216,
+   "coastal": true,
+   "neighbors": [
+    "CHN",
+    "KHM",
+    "LAO"
+   ]
+  },
+  {
+   "id": "VUT",
+   "latitude": -16.172,
+   "longitude": 167.677,
+   "areaKm2": 11957,
+   "coastal": true,
+   "neighbors": []
+  },
+  {
+   "id": "WSM",
+   "latitude": -13.756,
+   "longitude": -172.158,
+   "areaKm2": 2789,
+   "coastal": true,
+   "neighbors": []
+  },
+  {
+   "id": "YEM",
+   "latitude": 15.894,
+   "longitude": 47.577,
+   "areaKm2": 455286,
+   "coastal": true,
+   "neighbors": [
+    "OMN",
+    "SAU"
+   ]
+  },
+  {
+   "id": "ZAF",
+   "latitude": -28.926,
+   "longitude": 25.131,
+   "areaKm2": 1222018,
+   "coastal": true,
+   "neighbors": [
+    "BWA",
+    "LSO",
+    "MOZ",
+    "NAM",
+    "SWZ",
+    "ZWE"
+   ]
+  },
+  {
+   "id": "ZMB",
+   "latitude": -13.442,
+   "longitude": 27.794,
+   "areaKm2": 755175,
+   "coastal": false,
+   "neighbors": [
+    "AGO",
+    "BWA",
+    "COD",
+    "MOZ",
+    "MWI",
+    "NAM",
+    "TZA",
+    "ZWE"
+   ]
+  },
+  {
+   "id": "ZWE",
+   "latitude": -18.991,
+   "longitude": 29.852,
+   "areaKm2": 390416,
+   "coastal": false,
+   "neighbors": [
+    "BWA",
+    "MOZ",
+    "NAM",
+    "ZAF",
+    "ZMB"
+   ]
+  }
+ ]
+}
