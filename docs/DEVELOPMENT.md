@@ -14,8 +14,12 @@
 - ⑥ 국가부도·채무 재조정을 구현했다. 재정 탭에서 차환 압박과 교환채를 확인하고 지급 유예 전보에서 협상안을 선택한다.
 - ⑦ 영국·캐나다·호주 주택 정책을 구현했다. 정책 탭에서 발의하고 정치·개요에서 착공과 준공, 사회에서 집값, 재정에서 지원 지출을 확인한다.
 - ⑧ 곡물·원유 시장을 구현했다. 경제 탭과 지도 국가 선택 카드에서 국가별 생산·소비·재고, 상대별 월 선적을 본다.
+- ⑨ 브라질 Conab 가격차 보조를 구현했다. 정책 탭에서 추가 경매 범위를 발의하고, 경제·재정 탭에서 월별 지급 물량과 집행액을 확인한다.
+- ⑩ 10개 주요 생산국의 곡물 수확 달력을 적용했다. 경제 탭과 국가 카드가 직전 달의 수확·재고·선적을 표시한다.
+- ⑪ 플레이어 국가의 고령화에 따라 은퇴층 인원과 인구 비중, 여론·법안·조직·지역의 대표 인구를 매월 갱신한다.
+- 자료별 결측과 보완 근거는 [데이터 결측과 구현 범위](DATA_GAPS.md)에서 확인한다.
 - 다음 후보는 다음과 같다. 무엇을 먼저 할지는 사용자가 정한다.
-  - 남은 16개국 국가 모듈
+  - 남은 15개국 국가 모듈
   - DESIGN.md 18장의 알려진 한계
 
 ## 2. 빌드와 실행
@@ -93,6 +97,9 @@
 | `structure.json` | 교역 개방도, 자원 지대, 병력, 인구 동태, 부가가치 구성 | `tools/econdata/build_structure.py` (World Bank) |
 | `geography.json` | 중심점, 면적, 해안, 육상 인접국 | `tools/geodata/build_geography.py` (지도 형상) |
 | `regions.json` | 플레이 가능국 행정구역별 면적·도시 인구 | `tools/geodata/build_regions.py` (Natural Earth 거주지) |
+| `commodities.json` | 2023년 곡물·원유 생산량과 석유 수요 가중치 | `tools/econdata/build_commodities.py` (WDI·EIA, 대만·코소보 보완) |
+| `grain_harvest.json` | 국가별 12개월 곡물 수확 비중 | 국가별 출처·연간 합 100 확인 |
+| `housing_programs.json` | 영국·캐나다·호주 주택 제도와 효과 계수 | 제도 근거는 국가별 `sourceNote` |
 | `trade.json` | 국가별 수출 상대 비중 | `tools/tradedata/build_trade.py` (UN Comtrade 공개 API, 매우 느림, 캐시 사용 권장) |
 | `regimes.json` | 모든 나라의 V-Dem 체제 분류 | `tools/politicsdata/build_regimes.py` (OWID) |
 | `playable.json`, `politics.json`, `parliaments.json`, `elections.json`, `constitutions.json`, `leaders.json`, `approval.json`, `central_banks.json`, `society_identities.json`, `organizations.json`, `diplomacy.json`, `military.json`, `events.json`, `names.json` | 손으로 조사·작성한 자료 | 직접 편집. 근거는 `sourceNote`/`source`에 |
@@ -123,6 +130,7 @@
   - 지역 GDP 비중과 경제활동인구 비중은 각각 합이 1이다. 지역 실업률은 경제활동인구로, 지역 산업 비중은 각각 GDP와 취업자로 가중하면 전국 값과 일치해야 한다.
   - 주택 공급 법안은 착공 뒤 해당 국가의 공기만큼 지나서 준공에 반영되어야 한다. 지원 지출은 법안·월 예산에서 대조한다.
   - 상품별·국가별로 기초 재고 + 생산 + 수입 = 기말 재고 + 실제 소비 + 수출이다. 유입·유출 선적 합과 상대 장부를 대조하고, 첫달 제재와 제재 해제 이후 물량·가격 반응을 확인한다.
+  - 브라질 가격차 보조는 지급 물량 × 톤당 가격차가 농가와 정부 양쪽에 같은 달 한 번만 계상되어야 한다. 평년 수확 합계, 비수기 이월과 전년비 가격, 은퇴층 인원과 65세 이상 인구의 일치도 확인한다.
   - 부도·협상 시작 때 원금이 감면되지 않아야 한다. 결산 후 부채는 직전 잔액 + 기초지출 + 이자 − 세입 − 합의 감면액이다. 연장안 합의·반려, 14일 무응답, 교환채 만기까지 확인한다.
 
 ## 7. 자주 하는 확장
