@@ -264,7 +264,7 @@ class Simulation(
             val text =
                 when (notice) {
                     CurrencyNotice.PEG_ENDED -> "외환보유액이 줄어 중앙은행이 고정환율 방어를 중단했다."
-                    CurrencyNotice.IMF_AVAILABLE -> "외환보유액이 수입 대금 1.5개월분 아래로 떨어졌다. 경제 화면에서 IMF 긴급 대출을 신청할 수 있다."
+                    CurrencyNotice.IMF_AVAILABLE -> "준비자산이 수입 대금 1.5개월분 미만이고 외화 순유출 또는 미결제 대금이 있다. 경제 화면에서 IMF 긴급 대출을 신청할 수 있다."
                     CurrencyNotice.IMF_DISBURSED -> "국제통화기금에서 긴급 외화 대출을 받았다."
                 }
             if (id == playerCountryId) {

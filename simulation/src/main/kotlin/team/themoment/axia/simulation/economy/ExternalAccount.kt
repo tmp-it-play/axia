@@ -151,7 +151,9 @@ internal class ExternalAccount(
         reserves -= clearArrears
         val coverage = cover
         this.member = member
-        need = if (coverage != null && coverage < 1.5) minOf(gdp * 0.05, 3 * imports - reserves) else 0.0
+        // 낮은 국가별 보유액만으로 통화동맹 회원국 등에 대출을 실행하지 않는다. 순외화 유출이나 지급 연체가 있어야 한다.
+        val fundingShortfall = balance < 0.0 || arrears > 0.0
+        need = if (coverage != null && coverage < 1.5 && fundingShortfall) minOf(gdp * 0.05, 3 * imports - reserves) else 0.0
         if (defendsPeg && coverage != null && coverage < 0.5 && balance < 0.0) pegFailed = true
         return ((balance - intervention) / gdp).coerceIn(-0.035, 0.035)
     }
