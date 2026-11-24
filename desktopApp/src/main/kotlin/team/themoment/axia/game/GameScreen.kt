@@ -253,6 +253,8 @@ fun GameScreen(
                             controllerId = worldState.military.regionOwners[regionId],
                             onRegionalProgram = runner::setRegionalProgram,
                             onRenameParty = runner::renameParty,
+                            politicalCapital = nation.society.politicalCapital,
+                            onDiplomaticAction = runner::diplomaticAction,
                             snapshot = worldState,
                             playerRegion =
                                 mapData.regions[regionId]?.takeIf {

@@ -86,6 +86,7 @@ enum class DiplomaticAction(
 data class BilateralSnapshot(
     val countryId: String,
     val relation: Double,
+    val notable: Boolean,
     val allied: Boolean,
     val alliance: String?,
     val tradeAgreement: Boolean,
@@ -113,7 +114,7 @@ data class DiplomacySnapshot(
     val playerId: String,
     val organizations: List<InternationalOrganization>,
     val membershipDecisions: List<MembershipDecision>,
-    /** 플레이 가능 국가와 플레이어와 관계가 크게 좋거나 나쁜 나라. */
+    /** 플레이어를 제외한 모든 외교 상대. 주요 상대는 [BilateralSnapshot.notable]로 구분한다. */
     val partners: List<BilateralSnapshot>,
     val relations: Map<String, Double>,
 )
@@ -582,21 +583,18 @@ internal class Diplomacy(
         focus: Collection<String>,
     ): DiplomacySnapshot {
         val relations = ids.filter { it != playerId }.associateWith { relation(playerId, it) }
-        val notable =
-            relations
-                .filter { (id, value) ->
-                    id in focus || id in aidMonthsLeft || kotlin.math.abs(value) >= NOTABLE_RELATION || allied(playerId, id)
-                }.keys
         return DiplomacySnapshot(
             playerId = playerId,
             organizations = organizationsOf(playerId),
             membershipDecisions = organizations.values.map(::membershipDecision),
             partners =
-                notable.sortedByDescending { relations.getValue(it) }.map { id ->
+                relations.entries.sortedByDescending { it.value }.map { (id, value) ->
+                    val allied = allied(playerId, id)
                     BilateralSnapshot(
                         countryId = id,
-                        relation = relations.getValue(id),
-                        allied = allied(playerId, id),
+                        relation = value,
+                        notable = id in focus || id in aidMonthsLeft || kotlin.math.abs(value) >= NOTABLE_RELATION || allied,
+                        allied = allied,
                         alliance = alliances[pair(playerId, id)] ?: organizationAlliances[pair(playerId, id)],
                         transit = hasTransitAccess(playerId, id),
                         tradeAgreement = tradeAgreement(playerId, id),

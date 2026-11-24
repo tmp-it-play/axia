@@ -9,14 +9,18 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import team.themoment.axia.format.formatPercent
@@ -81,18 +85,50 @@ fun DiplomacyPanel(
         }
     }
     SectionTitle("양자 관계 (눌러서 행위 보기)")
-    Hint("플레이 가능 국가와 동맹국, 경제 원조 수원국, 관계가 아주 좋거나 나쁜 나라를 보여 줍니다.")
+    var showAll by remember(diplomacy.playerId) { mutableStateOf(false) }
+    var search by remember(diplomacy.playerId) { mutableStateOf("") }
+    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+        PaperTag("주요 상대", selected = !showAll, onClick = { showAll = false })
+        PaperTag("전체 국가", selected = showAll, onClick = { showAll = true })
+    }
+    val visible =
+        if (showAll) {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                Hint("국가명·코드 검색")
+                BasicTextField(
+                    value = search,
+                    onValueChange = { search = it },
+                    singleLine = true,
+                    textStyle = DossierType.number(13.sp).copy(color = DossierColors.ink),
+                    modifier =
+                        Modifier
+                            .weight(1f)
+                            .semantics { contentDescription = "국가명·코드 검색" }
+                            .border(1.dp, DossierColors.inkMuted)
+                            .padding(horizontal = 6.dp, vertical = 4.dp),
+                )
+            }
+            val query = search.trim()
+            diplomacy.partners
+                .filter { it.countryId.contains(query, ignoreCase = true) || countryName(it.countryId).contains(query, ignoreCase = true) }
+                .sortedBy { countryName(it.countryId) }
+        } else {
+            diplomacy.partners.filter { it.notable }
+        }
+    if (visible.isEmpty()) Hint("검색 결과가 없습니다.")
     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-        diplomacy.partners.forEach { partner -> PartnerCard(partner, politicalCapital, countryName, onAction) }
+        visible.forEach { partner ->
+            key(partner.countryId) { PartnerCard(partner, politicalCapital, countryName(partner.countryId), onAction) }
+        }
     }
 }
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun PartnerCard(
+internal fun PartnerCard(
     partner: BilateralSnapshot,
     politicalCapital: Double,
-    countryName: (String) -> String,
+    title: String,
     onAction: (String, DiplomaticAction) -> Unit,
 ) {
     var open by remember(partner.countryId) { mutableStateOf(false) }
@@ -106,7 +142,7 @@ private fun PartnerCard(
     ) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             Text(
-                countryName(partner.countryId),
+                title,
                 style = DossierType.title(14.sp),
                 color = DossierColors.ink,
                 modifier = Modifier.weight(1f),

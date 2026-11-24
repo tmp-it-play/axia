@@ -11,8 +11,10 @@ import team.themoment.axia.format.formatPopulation
 import team.themoment.axia.game.panels.CommoditySection
 import team.themoment.axia.game.panels.KeyIndicatorRows
 import team.themoment.axia.game.panels.OpeningPolicyRate
+import team.themoment.axia.game.panels.PartnerCard
 import team.themoment.axia.game.panels.RenameControl
 import team.themoment.axia.simulation.WorldSnapshot
+import team.themoment.axia.simulation.diplomacy.DiplomaticAction
 import team.themoment.axia.simulation.economy.EconomySnapshot
 import team.themoment.axia.simulation.nation.RegionSnapshot
 import team.themoment.axia.simulation.nation.RegionalProgram
@@ -39,6 +41,8 @@ fun SelectionPanel(
     modifier: Modifier = Modifier,
     onRegionalProgram: (String, RegionalProgram) -> Unit,
     onRenameParty: (String, Int, String) -> Unit,
+    politicalCapital: Double,
+    onDiplomaticAction: (String, DiplomaticAction) -> Unit,
     controllerId: String? = null,
 ) {
     val region = world.region(regionId)
@@ -164,7 +168,9 @@ fun SelectionPanel(
         }
         if (country.kind == CountryKind.STATE && id != playerId) {
             SectionTitle("우리나라와의 관계")
-            snapshot.diplomacy.relations[id]?.let { StatRow("관계", "${it.roundToInt()}") }
+            snapshot.diplomacy.partners.firstOrNull { it.countryId == id }?.let {
+                PartnerCard(it, politicalCapital, "외교 행동", onDiplomaticAction)
+            }
             snapshot.military.forces[id]?.let { forces ->
                 StatRow("군사력 (최강국 = 100)", "%.1f".format(forces.power) + if (forces.nuclearWarheads > 0) " · 핵보유" else "")
             }
