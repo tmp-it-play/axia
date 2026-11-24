@@ -1,0 +1,3629 @@
+{
+ "sourceNote": "미국 주별 선거인단은 2020 인구조사 배분, 대통령 지역 기반은 2020 유효표, 하원은 FEC 2022 총선과 당시 선거구다. 민주당은 전당대회 최초 기본 배정, 공화당은 2023-11-20 소집 공고 배정, 경선일은 FEC 2024 일정이다. 인도네시아 등록 유권자는 2023 KPU 제1760호다.",
+ "sources": [
+  "https://www.archives.gov/electoral-college/allocation",
+  "https://www.fec.gov/resources/cms-content/documents/federalelections2020.pdf",
+  "https://www.archives.gov/files/electoral-college/2020/ascertainment-nebraska.pdf",
+  "https://www.maine.gov/sos/elections-voting/election-results-data/election-results-2020",
+  "https://www.fec.gov/documents/5676/federalelections2022.xlsx",
+  "https://www.fec.gov/resources/cms-content/documents/2024pdates.pdf",
+  "https://deldems.org/sites/default/files/2023-03/2024-Call-for-Convention.pdf",
+  "https://prod-static.gop.com/media/documents/2024_Call_of_the_Convention_as_adopted_11.20.23_1700517775.pdf",
+  "https://jdih.kpu.go.id/data/data_kepkpu/2023kpt1760.pdf",
+  "https://jdih.kpu.go.id/data/data_kepkpu/2023kpt1632.pdf",
+  "https://infopemilu.kpu.go.id/Pemilu/Pwp/Pendaftaran_pwp",
+  "https://www.archives.gov/electoral-college/key-dates",
+  "https://florida.gop/delegates/",
+  "https://cagop.org/cagop-statement-on-the-passage-of-a-presidential-delegates-rules-change/",
+  "https://www.govinfo.gov/content/pkg/CCAL-118scal-2023-12-20/pdf/CCAL-118scal-2023-12-20-pt1.pdf",
+  "https://www.azleg.gov/ars/16/00243.htm",
+  "https://sc.gop/assets/uploads/2022/09/SCGOP-Rules-Updated-2022-Convention.pdf",
+  "https://wisgop.org/constitution/",
+  "https://www.govinfo.gov/content/pkg/CREC-2024-12-09/pdf/CREC-2024-12-09-senate.pdf",
+  "https://www.schiff.senate.gov/news/press-releases/statement-schiff-sworn-in-to-serve-six-year-term-as-californias-u-s-senator/",
+  "https://constitution.congress.gov/constitution/amendment-12/",
+  "https://constitution.congress.gov/constitution/amendment-20/",
+  "https://www.mkri.id/public/content/infoumum/regulation/pdf/uud45%20eng.pdf"
+ ],
+ "states": [
+  {
+   "code": "AK",
+   "name": "알래스카",
+   "region": "USA-3563",
+   "electors": 3,
+   "demVotes": 153778,
+   "repVotes": 189951,
+   "total": 359530,
+   "houseDistricts": [
+    {
+     "winner": "D",
+     "demVotes": 128553,
+     "repVotes": 129379
+    }
+   ],
+   "senateClasses": {
+    "2": "R",
+    "3": "R"
+   }
+  },
+  {
+   "code": "AL",
+   "name": "앨라배마",
+   "region": "USA-3541",
+   "electors": 9,
+   "demVotes": 849624,
+   "repVotes": 1441170,
+   "total": 2323282,
+   "houseDistricts": [
+    {
+     "winner": "R",
+     "demVotes": 0,
+     "repVotes": 140592
+    },
+    {
+     "winner": "R",
+     "demVotes": 58014,
+     "repVotes": 137460
+    },
+    {
+     "winner": "R",
+     "demVotes": 47859,
+     "repVotes": 135602
+    },
+    {
+     "winner": "R",
+     "demVotes": 26694,
+     "repVotes": 164655
+    },
+    {
+     "winner": "R",
+     "demVotes": 62740,
+     "repVotes": 142435
+    },
+    {
+     "winner": "R",
+     "demVotes": 0,
+     "repVotes": 154233
+    },
+    {
+     "winner": "D",
+     "demVotes": 123233,
+     "repVotes": 67416
+    }
+   ],
+   "senateClasses": {
+    "2": "R",
+    "3": "R"
+   }
+  },
+  {
+   "code": "AR",
+   "name": "아칸소",
+   "region": "USA-3528",
+   "electors": 6,
+   "demVotes": 423932,
+   "repVotes": 760647,
+   "total": 1219069,
+   "houseDistricts": [
+    {
+     "winner": "R",
+     "demVotes": 54598,
+     "repVotes": 153774
+    },
+    {
+     "winner": "R",
+     "demVotes": 86887,
+     "repVotes": 147975
+    },
+    {
+     "winner": "R",
+     "demVotes": 73541,
+     "repVotes": 142401
+    },
+    {
+     "winner": "R",
+     "demVotes": 56745,
+     "repVotes": 153850
+    }
+   ],
+   "senateClasses": {
+    "2": "R",
+    "3": "R"
+   }
+  },
+  {
+   "code": "AZ",
+   "name": "애리조나",
+   "region": "USA-3520",
+   "electors": 11,
+   "demVotes": 1672143,
+   "repVotes": 1661686,
+   "total": 3387326,
+   "houseDistricts": [
+    {
+     "winner": "R",
+     "demVotes": 179141,
+     "repVotes": 182336
+    },
+    {
+     "winner": "R",
+     "demVotes": 149151,
+     "repVotes": 174169
+    },
+    {
+     "winner": "D",
+     "demVotes": 108599,
+     "repVotes": 32475
+    },
+    {
+     "winner": "D",
+     "demVotes": 148941,
+     "repVotes": 116521
+    },
+    {
+     "winner": "R",
+     "demVotes": 120243,
+     "repVotes": 182464
+    },
+    {
+     "winner": "R",
+     "demVotes": 171969,
+     "repVotes": 177201
+    },
+    {
+     "winner": "D",
+     "demVotes": 126418,
+     "repVotes": 69444
+    },
+    {
+     "winner": "R",
+     "demVotes": 0,
+     "repVotes": 197555
+    },
+    {
+     "winner": "R",
+     "demVotes": 0,
+     "repVotes": 192796
+    }
+   ],
+   "senateClasses": {
+    "1": "I",
+    "3": "D"
+   }
+  },
+  {
+   "code": "CA",
+   "name": "캘리포니아",
+   "region": "USA-3521",
+   "electors": 54,
+   "demVotes": 11110639,
+   "repVotes": 6006518,
+   "total": 17501380,
+   "houseDistricts": [
+    {
+     "winner": "R",
+     "demVotes": 93386,
+     "repVotes": 152839
+    },
+    {
+     "winner": "D",
+     "demVotes": 308749,
+     "repVotes": 0
+    },
+    {
+     "winner": "R",
+     "demVotes": 156761,
+     "repVotes": 181438
+    },
+    {
+     "winner": "D",
+     "demVotes": 176900,
+     "repVotes": 84007
+    },
+    {
+     "winner": "R",
+     "demVotes": 109506,
+     "repVotes": 173524
+    },
+    {
+     "winner": "D",
+     "demVotes": 121058,
+     "repVotes": 95325
+    },
+    {
+     "winner": "D",
+     "demVotes": 150618,
+     "repVotes": 70033
+    },
+    {
+     "winner": "D",
+     "demVotes": 145501,
+     "repVotes": 46634
+    },
+    {
+     "winner": "D",
+     "demVotes": 95598,
+     "repVotes": 78802
+    },
+    {
+     "winner": "D",
+     "demVotes": 198415,
+     "repVotes": 0
+    },
+    {
+     "winner": "D",
+     "demVotes": 220848,
+     "repVotes": 42217
+    },
+    {
+     "winner": "D",
+     "demVotes": 217110,
+     "repVotes": 22859
+    },
+    {
+     "winner": "R",
+     "demVotes": 66496,
+     "repVotes": 67060
+    },
+    {
+     "winner": "D",
+     "demVotes": 137612,
+     "repVotes": 60852
+    },
+    {
+     "winner": "D",
+     "demVotes": 194874,
+     "repVotes": 0
+    },
+    {
+     "winner": "D",
+     "demVotes": 241007,
+     "repVotes": 0
+    },
+    {
+     "winner": "D",
+     "demVotes": 127853,
+     "repVotes": 52400
+    },
+    {
+     "winner": "D",
+     "demVotes": 99776,
+     "repVotes": 51737
+    },
+    {
+     "winner": "D",
+     "demVotes": 194494,
+     "repVotes": 88816
+    },
+    {
+     "winner": "R",
+     "demVotes": 74934,
+     "repVotes": 153847
+    },
+    {
+     "winner": "D",
+     "demVotes": 68074,
+     "repVotes": 57573
+    },
+    {
+     "winner": "R",
+     "demVotes": 49862,
+     "repVotes": 52994
+    },
+    {
+     "winner": "R",
+     "demVotes": 65908,
+     "repVotes": 103197
+    },
+    {
+     "winner": "D",
+     "demVotes": 159019,
+     "repVotes": 103533
+    },
+    {
+     "winner": "D",
+     "demVotes": 87641,
+     "repVotes": 65101
+    },
+    {
+     "winner": "D",
+     "demVotes": 134575,
+     "repVotes": 112214
+    },
+    {
+     "winner": "R",
+     "demVotes": 91892,
+     "repVotes": 104624
+    },
+    {
+     "winner": "D",
+     "demVotes": 150062,
+     "repVotes": 76495
+    },
+    {
+     "winner": "D",
+     "demVotes": 119435,
+     "repVotes": 0
+    },
+    {
+     "winner": "D",
+     "demVotes": 211068,
+     "repVotes": 0
+    },
+    {
+     "winner": "D",
+     "demVotes": 91472,
+     "repVotes": 62153
+    },
+    {
+     "winner": "D",
+     "demVotes": 167411,
+     "repVotes": 74618
+    },
+    {
+     "winner": "D",
+     "demVotes": 76588,
+     "repVotes": 56119
+    },
+    {
+     "winner": "D",
+     "demVotes": 121467,
+     "repVotes": 0
+    },
+    {
+     "winner": "D",
+     "demVotes": 75121,
+     "repVotes": 55832
+    },
+    {
+     "winner": "D",
+     "demVotes": 194299,
+     "repVotes": 84264
+    },
+    {
+     "winner": "D",
+     "demVotes": 131880,
+     "repVotes": 0
+    },
+    {
+     "winner": "D",
+     "demVotes": 101260,
+     "repVotes": 0
+    },
+    {
+     "winner": "D",
+     "demVotes": 75896,
+     "repVotes": 55701
+    },
+    {
+     "winner": "R",
+     "demVotes": 122722,
+     "repVotes": 161589
+    },
+    {
+     "winner": "R",
+     "demVotes": 112769,
+     "repVotes": 123869
+    },
+    {
+     "winner": "D",
+     "demVotes": 99217,
+     "repVotes": 45903
+    },
+    {
+     "winner": "D",
+     "demVotes": 95462,
+     "repVotes": 27985
+    },
+    {
+     "winner": "D",
+     "demVotes": 100160,
+     "repVotes": 38554
+    },
+    {
+     "winner": "R",
+     "demVotes": 103466,
+     "repVotes": 113960
+    },
+    {
+     "winner": "D",
+     "demVotes": 78041,
+     "repVotes": 48257
+    },
+    {
+     "winner": "D",
+     "demVotes": 137374,
+     "repVotes": 128261
+    },
+    {
+     "winner": "R",
+     "demVotes": 101900,
+     "repVotes": 155171
+    },
+    {
+     "winner": "D",
+     "demVotes": 153541,
+     "repVotes": 138194
+    },
+    {
+     "winner": "D",
+     "demVotes": 168816,
+     "repVotes": 99819
+    },
+    {
+     "winner": "D",
+     "demVotes": 144186,
+     "repVotes": 88886
+    },
+    {
+     "winner": "D",
+     "demVotes": 100686,
+     "repVotes": 50330
+    }
+   ],
+   "senateClasses": {
+    "1": "D",
+    "3": "D"
+   }
+  },
+  {
+   "code": "CO",
+   "name": "콜로라도",
+   "region": "USA-3522",
+   "electors": 10,
+   "demVotes": 1804352,
+   "repVotes": 1364607,
+   "total": 3256980,
+   "houseDistricts": [
+    {
+     "winner": "D",
+     "demVotes": 226929,
+     "repVotes": 49530
+    },
+    {
+     "winner": "D",
+     "demVotes": 244107,
+     "repVotes": 97700
+    },
+    {
+     "winner": "R",
+     "demVotes": 163293,
+     "repVotes": 163839
+    },
+    {
+     "winner": "R",
+     "demVotes": 129619,
+     "repVotes": 216024
+    },
+    {
+     "winner": "R",
+     "demVotes": 111978,
+     "repVotes": 155528
+    },
+    {
+     "winner": "D",
+     "demVotes": 170140,
+     "repVotes": 105084
+    },
+    {
+     "winner": "D",
+     "demVotes": 204984,
+     "repVotes": 150510
+    },
+    {
+     "winner": "D",
+     "demVotes": 114377,
+     "repVotes": 112745
+    }
+   ],
+   "senateClasses": {
+    "2": "D",
+    "3": "D"
+   }
+  },
+  {
+   "code": "CT",
+   "name": "코네티컷",
+   "region": "USA-3537",
+   "electors": 7,
+   "demVotes": 1080831,
+   "repVotes": 714717,
+   "total": 1823857,
+   "houseDistricts": [
+    {
+     "winner": "D",
+     "demVotes": 149556,
+     "repVotes": 91506
+    },
+    {
+     "winner": "D",
+     "demVotes": 165946,
+     "repVotes": 114506
+    },
+    {
+     "winner": "D",
+     "demVotes": 137924,
+     "repVotes": 98704
+    },
+    {
+     "winner": "D",
+     "demVotes": 140262,
+     "repVotes": 95822
+    },
+    {
+     "winner": "D",
+     "demVotes": 127838,
+     "repVotes": 125834
+    }
+   ],
+   "senateClasses": {
+    "1": "D",
+    "3": "D"
+   }
+  },
+  {
+   "code": "DC",
+   "name": "워싱턴 D.C.",
+   "region": "USA-3556",
+   "electors": 3,
+   "demVotes": 317323,
+   "repVotes": 18586,
+   "total": 344356
+  },
+  {
+   "code": "DE",
+   "name": "델라웨어",
+   "region": "USA-3555",
+   "electors": 3,
+   "demVotes": 296268,
+   "repVotes": 200603,
+   "total": 504346,
+   "houseDistricts": [
+    {
+     "winner": "D",
+     "demVotes": 178416,
+     "repVotes": 138201
+    }
+   ],
+   "senateClasses": {
+    "1": "D",
+    "2": "D"
+   }
+  },
+  {
+   "code": "FL",
+   "name": "플로리다",
+   "region": "USA-3542",
+   "electors": 30,
+   "demVotes": 5297045,
+   "repVotes": 5668731,
+   "total": 11067456,
+   "houseDistricts": [
+    {
+     "winner": "R",
+     "demVotes": 93467,
+     "repVotes": 197349
+    },
+    {
+     "winner": "R",
+     "demVotes": 121153,
+     "repVotes": 180236
+    },
+    {
+     "winner": "R",
+     "demVotes": 103382,
+     "repVotes": 178101
+    },
+    {
+     "winner": "R",
+     "demVotes": 108402,
+     "repVotes": 165696
+    },
+    {
+     "winner": "R",
+     "demVotes": 0,
+     "repVotes": 0
+    },
+    {
+     "winner": "R",
+     "demVotes": 0,
+     "repVotes": 226548
+    },
+    {
+     "winner": "R",
+     "demVotes": 126079,
+     "repVotes": 177966
+    },
+    {
+     "winner": "R",
+     "demVotes": 120080,
+     "repVotes": 222128
+    },
+    {
+     "winner": "D",
+     "demVotes": 108541,
+     "repVotes": 93827
+    },
+    {
+     "winner": "D",
+     "demVotes": 117955,
+     "repVotes": 78844
+    },
+    {
+     "winner": "R",
+     "demVotes": 115647,
+     "repVotes": 205995
+    },
+    {
+     "winner": "R",
+     "demVotes": 95390,
+     "repVotes": 226601
+    },
+    {
+     "winner": "R",
+     "demVotes": 153876,
+     "repVotes": 181487
+    },
+    {
+     "winner": "D",
+     "demVotes": 149737,
+     "repVotes": 113427
+    },
+    {
+     "winner": "R",
+     "demVotes": 102835,
+     "repVotes": 145219
+    },
+    {
+     "winner": "R",
+     "demVotes": 115575,
+     "repVotes": 189762
+    },
+    {
+     "winner": "R",
+     "demVotes": 123798,
+     "repVotes": 222483
+    },
+    {
+     "winner": "R",
+     "demVotes": 0,
+     "repVotes": 167429
+    },
+    {
+     "winner": "R",
+     "demVotes": 100226,
+     "repVotes": 213035
+    },
+    {
+     "winner": "D",
+     "demVotes": 136215,
+     "repVotes": 52151
+    },
+    {
+     "winner": "R",
+     "demVotes": 119891,
+     "repVotes": 208614
+    },
+    {
+     "winner": "D",
+     "demVotes": 150010,
+     "repVotes": 122194
+    },
+    {
+     "winner": "D",
+     "demVotes": 143951,
+     "repVotes": 130681
+    },
+    {
+     "winner": "D",
+     "demVotes": 133442,
+     "repVotes": 52449
+    },
+    {
+     "winner": "D",
+     "demVotes": 129113,
+     "repVotes": 105239
+    },
+    {
+     "winner": "R",
+     "demVotes": 58868,
+     "repVotes": 143240
+    },
+    {
+     "winner": "R",
+     "demVotes": 101404,
+     "repVotes": 136038
+    },
+    {
+     "winner": "R",
+     "demVotes": 76665,
+     "repVotes": 134457
+    }
+   ],
+   "senateClasses": {
+    "1": "R",
+    "3": "R"
+   }
+  },
+  {
+   "code": "GA",
+   "name": "조지아",
+   "region": "USA-3543",
+   "electors": 16,
+   "demVotes": 2473633,
+   "repVotes": 2461854,
+   "total": 4999960,
+   "houseDistricts": [
+    {
+     "winner": "R",
+     "demVotes": 107837,
+     "repVotes": 156128
+    },
+    {
+     "winner": "D",
+     "demVotes": 132675,
+     "repVotes": 108665
+    },
+    {
+     "winner": "R",
+     "demVotes": 97057,
+     "repVotes": 213524
+    },
+    {
+     "winner": "D",
+     "demVotes": 216332,
+     "repVotes": 59302
+    },
+    {
+     "winner": "D",
+     "demVotes": 243687,
+     "repVotes": 51769
+    },
+    {
+     "winner": "R",
+     "demVotes": 125612,
+     "repVotes": 206886
+    },
+    {
+     "winner": "D",
+     "demVotes": 143063,
+     "repVotes": 91262
+    },
+    {
+     "winner": "R",
+     "demVotes": 81886,
+     "repVotes": 178700
+    },
+    {
+     "winner": "R",
+     "demVotes": 81318,
+     "repVotes": 212820
+    },
+    {
+     "winner": "R",
+     "demVotes": 109107,
+     "repVotes": 198523
+    },
+    {
+     "winner": "R",
+     "demVotes": 113571,
+     "repVotes": 190086
+    },
+    {
+     "winner": "R",
+     "demVotes": 107148,
+     "repVotes": 158047
+    },
+    {
+     "winner": "D",
+     "demVotes": 216388,
+     "repVotes": 48228
+    },
+    {
+     "winner": "R",
+     "demVotes": 88189,
+     "repVotes": 170162
+    }
+   ],
+   "senateClasses": {
+    "2": "D",
+    "3": "D"
+   }
+  },
+  {
+   "code": "HI",
+   "name": "하와이",
+   "region": "USA-3517",
+   "electors": 4,
+   "demVotes": 366130,
+   "repVotes": 196864,
+   "total": 574469,
+   "houseDistricts": [
+    {
+     "winner": "D",
+     "demVotes": 143546,
+     "repVotes": 51217
+    },
+    {
+     "winner": "D",
+     "demVotes": 128407,
+     "repVotes": 72874
+    }
+   ],
+   "senateClasses": {
+    "1": "D",
+    "3": "D"
+   }
+  },
+  {
+   "code": "IA",
+   "name": "아이오와",
+   "region": "USA-3529",
+   "electors": 6,
+   "demVotes": 759061,
+   "repVotes": 897672,
+   "total": 1690871,
+   "houseDistricts": [
+    {
+     "winner": "R",
+     "demVotes": 142173,
+     "repVotes": 162947
+    },
+    {
+     "winner": "R",
+     "demVotes": 145940,
+     "repVotes": 172181
+    },
+    {
+     "winner": "R",
+     "demVotes": 154117,
+     "repVotes": 156262
+    },
+    {
+     "winner": "R",
+     "demVotes": 84230,
+     "repVotes": 186467
+    }
+   ],
+   "senateClasses": {
+    "2": "R",
+    "3": "R"
+   }
+  },
+  {
+   "code": "ID",
+   "name": "아이다호",
+   "region": "USA-3518",
+   "electors": 4,
+   "demVotes": 287021,
+   "repVotes": 554119,
+   "total": 867934,
+   "houseDistricts": [
+    {
+     "winner": "R",
+     "demVotes": 82261,
+     "repVotes": 222901
+    },
+    {
+     "winner": "R",
+     "demVotes": 98736,
+     "repVotes": 172450
+    }
+   ],
+   "senateClasses": {
+    "2": "R",
+    "3": "R"
+   }
+  },
+  {
+   "code": "IL",
+   "name": "일리노이",
+   "region": "USA-3546",
+   "electors": 19,
+   "demVotes": 3471915,
+   "repVotes": 2446891,
+   "total": 6033744,
+   "houseDistricts": [
+    {
+     "winner": "D",
+     "demVotes": 159142,
+     "repVotes": 78258
+    },
+    {
+     "winner": "D",
+     "demVotes": 140414,
+     "repVotes": 68761
+    },
+    {
+     "winner": "D",
+     "demVotes": 121764,
+     "repVotes": 55995
+    },
+    {
+     "winner": "D",
+     "demVotes": 91036,
+     "repVotes": 37352
+    },
+    {
+     "winner": "D",
+     "demVotes": 190999,
+     "repVotes": 79112
+    },
+    {
+     "winner": "D",
+     "demVotes": 150496,
+     "repVotes": 126351
+    },
+    {
+     "winner": "D",
+     "demVotes": 167650,
+     "repVotes": 0
+    },
+    {
+     "winner": "D",
+     "demVotes": 117880,
+     "repVotes": 89335
+    },
+    {
+     "winner": "D",
+     "demVotes": 179615,
+     "repVotes": 0
+    },
+    {
+     "winner": "D",
+     "demVotes": 152566,
+     "repVotes": 89599
+    },
+    {
+     "winner": "D",
+     "demVotes": 149172,
+     "repVotes": 115069
+    },
+    {
+     "winner": "R",
+     "demVotes": 72791,
+     "repVotes": 218379
+    },
+    {
+     "winner": "D",
+     "demVotes": 141788,
+     "repVotes": 108646
+    },
+    {
+     "winner": "D",
+     "demVotes": 128141,
+     "repVotes": 108451
+    },
+    {
+     "winner": "R",
+     "demVotes": 86396,
+     "repVotes": 213007
+    },
+    {
+     "winner": "R",
+     "demVotes": 100325,
+     "repVotes": 197621
+    },
+    {
+     "winner": "D",
+     "demVotes": 121186,
+     "repVotes": 111931
+    }
+   ],
+   "senateClasses": {
+    "2": "D",
+    "3": "D"
+   }
+  },
+  {
+   "code": "IN",
+   "name": "인디애나",
+   "region": "USA-3547",
+   "electors": 11,
+   "demVotes": 1242498,
+   "repVotes": 1729857,
+   "total": 3033210,
+   "houseDistricts": [
+    {
+     "winner": "D",
+     "demVotes": 112656,
+     "repVotes": 100542
+    },
+    {
+     "winner": "R",
+     "demVotes": 62792,
+     "repVotes": 118997
+    },
+    {
+     "winner": "R",
+     "demVotes": 60577,
+     "repVotes": 131579
+    },
+    {
+     "winner": "R",
+     "demVotes": 62834,
+     "repVotes": 134864
+    },
+    {
+     "winner": "R",
+     "demVotes": 93434,
+     "repVotes": 146575
+    },
+    {
+     "winner": "R",
+     "demVotes": 62838,
+     "repVotes": 130686
+    },
+    {
+     "winner": "D",
+     "demVotes": 117309,
+     "repVotes": 53631
+    },
+    {
+     "winner": "R",
+     "demVotes": 68109,
+     "repVotes": 141995
+    },
+    {
+     "winner": "R",
+     "demVotes": 75700,
+     "repVotes": 143166
+    }
+   ],
+   "senateClasses": {
+    "1": "R",
+    "3": "R"
+   }
+  },
+  {
+   "code": "KS",
+   "name": "캔자스",
+   "region": "USA-3530",
+   "electors": 6,
+   "demVotes": 570323,
+   "repVotes": 771406,
+   "total": 1373986,
+   "houseDistricts": [
+    {
+     "winner": "R",
+     "demVotes": 77092,
+     "repVotes": 161333
+    },
+    {
+     "winner": "R",
+     "demVotes": 98852,
+     "repVotes": 134506
+    },
+    {
+     "winner": "D",
+     "demVotes": 165527,
+     "repVotes": 128839
+    },
+    {
+     "winner": "R",
+     "demVotes": 83851,
+     "repVotes": 144889
+    }
+   ],
+   "senateClasses": {
+    "2": "R",
+    "3": "R"
+   }
+  },
+  {
+   "code": "KY",
+   "name": "켄터키",
+   "region": "USA-3548",
+   "electors": 8,
+   "demVotes": 772474,
+   "repVotes": 1326646,
+   "total": 2136768,
+   "houseDistricts": [
+    {
+     "winner": "R",
+     "demVotes": 61701,
+     "repVotes": 184157
+    },
+    {
+     "winner": "R",
+     "demVotes": 66769,
+     "repVotes": 170487
+    },
+    {
+     "winner": "D",
+     "demVotes": 160920,
+     "repVotes": 98637
+    },
+    {
+     "winner": "R",
+     "demVotes": 79977,
+     "repVotes": 167541
+    },
+    {
+     "winner": "R",
+     "demVotes": 38549,
+     "repVotes": 177712
+    },
+    {
+     "winner": "R",
+     "demVotes": 83005,
+     "repVotes": 154762
+    }
+   ],
+   "senateClasses": {
+    "2": "R",
+    "3": "R"
+   }
+  },
+  {
+   "code": "LA",
+   "name": "루이지애나",
+   "region": "USA-3535",
+   "electors": 8,
+   "demVotes": 856034,
+   "repVotes": 1255776,
+   "total": 2148062,
+   "houseDistricts": [
+    {
+     "winner": "R",
+     "demVotes": 61467,
+     "repVotes": 177670
+    },
+    {
+     "winner": "D",
+     "demVotes": 158120,
+     "repVotes": 46927
+    },
+    {
+     "winner": "R",
+     "demVotes": 44813,
+     "repVotes": 174864
+    },
+    {
+     "winner": "R",
+     "demVotes": 0,
+     "repVotes": 0
+    },
+    {
+     "winner": "R",
+     "demVotes": 54532,
+     "repVotes": 169021
+    },
+    {
+     "winner": "R",
+     "demVotes": 0,
+     "repVotes": 205219
+    }
+   ],
+   "senateClasses": {
+    "2": "R",
+    "3": "R"
+   }
+  },
+  {
+   "code": "MA",
+   "name": "매사추세츠",
+   "region": "USA-3513",
+   "electors": 11,
+   "demVotes": 2382202,
+   "repVotes": 1167202,
+   "total": 3631402,
+   "houseDistricts": [
+    {
+     "winner": "D",
+     "demVotes": 157635,
+     "repVotes": 98386
+    },
+    {
+     "winner": "D",
+     "demVotes": 180639,
+     "repVotes": 91956
+    },
+    {
+     "winner": "D",
+     "demVotes": 154496,
+     "repVotes": 88585
+    },
+    {
+     "winner": "D",
+     "demVotes": 201882,
+     "repVotes": 0
+    },
+    {
+     "winner": "D",
+     "demVotes": 203994,
+     "repVotes": 71491
+    },
+    {
+     "winner": "D",
+     "demVotes": 198119,
+     "repVotes": 110770
+    },
+    {
+     "winner": "D",
+     "demVotes": 151825,
+     "repVotes": 27129
+    },
+    {
+     "winner": "D",
+     "demVotes": 189987,
+     "repVotes": 82126
+    },
+    {
+     "winner": "D",
+     "demVotes": 197823,
+     "repVotes": 136347
+    }
+   ],
+   "senateClasses": {
+    "1": "D",
+    "2": "D"
+   }
+  },
+  {
+   "code": "MD",
+   "name": "메릴랜드",
+   "region": "USA-3557",
+   "electors": 10,
+   "demVotes": 1985023,
+   "repVotes": 976414,
+   "total": 3037030,
+   "houseDistricts": [
+    {
+     "winner": "R",
+     "demVotes": 126511,
+     "repVotes": 159673
+    },
+    {
+     "winner": "D",
+     "demVotes": 158998,
+     "repVotes": 109075
+    },
+    {
+     "winner": "D",
+     "demVotes": 175514,
+     "repVotes": 115801
+    },
+    {
+     "winner": "D",
+     "demVotes": 144168,
+     "repVotes": 15441
+    },
+    {
+     "winner": "D",
+     "demVotes": 182478,
+     "repVotes": 94000
+    },
+    {
+     "winner": "D",
+     "demVotes": 140295,
+     "repVotes": 115771
+    },
+    {
+     "winner": "D",
+     "demVotes": 151640,
+     "repVotes": 32737
+    },
+    {
+     "winner": "D",
+     "demVotes": 211842,
+     "repVotes": 47965
+    }
+   ],
+   "senateClasses": {
+    "1": "D",
+    "3": "D"
+   }
+  },
+  {
+   "code": "ME",
+   "name": "메인",
+   "region": "USA-3561",
+   "electors": 4,
+   "demVotes": 435072,
+   "repVotes": 360737,
+   "total": 819461,
+   "presidentialDistricts": [
+    [
+     266376,
+     164045
+    ],
+    [
+     168696,
+     196692
+    ]
+   ],
+   "houseDistricts": [
+    {
+     "winner": "D",
+     "demVotes": 219753,
+     "repVotes": 129263
+    },
+    {
+     "winner": "D",
+     "demVotes": 153074,
+     "repVotes": 141260
+    }
+   ],
+   "senateClasses": {
+    "1": "I",
+    "2": "R"
+   }
+  },
+  {
+   "code": "MI",
+   "name": "미시간",
+   "region": "USA-3562",
+   "electors": 15,
+   "demVotes": 2804040,
+   "repVotes": 2649852,
+   "total": 5539302,
+   "houseDistricts": [
+    {
+     "winner": "R",
+     "demVotes": 145403,
+     "repVotes": 233094
+    },
+    {
+     "winner": "R",
+     "demVotes": 116452,
+     "repVotes": 216222
+    },
+    {
+     "winner": "D",
+     "demVotes": 185989,
+     "repVotes": 142229
+    },
+    {
+     "winner": "R",
+     "demVotes": 0,
+     "repVotes": 183936
+    },
+    {
+     "winner": "R",
+     "demVotes": 110946,
+     "repVotes": 198020
+    },
+    {
+     "winner": "D",
+     "demVotes": 241759,
+     "repVotes": 125167
+    },
+    {
+     "winner": "D",
+     "demVotes": 192809,
+     "repVotes": 172624
+    },
+    {
+     "winner": "D",
+     "demVotes": 178322,
+     "repVotes": 143850
+    },
+    {
+     "winner": "R",
+     "demVotes": 123702,
+     "repVotes": 238300
+    },
+    {
+     "winner": "R",
+     "demVotes": 157602,
+     "repVotes": 159202
+    },
+    {
+     "winner": "D",
+     "demVotes": 224537,
+     "repVotes": 141642
+    },
+    {
+     "winner": "D",
+     "demVotes": 196643,
+     "repVotes": 72888
+    },
+    {
+     "winner": "D",
+     "demVotes": 166650,
+     "repVotes": 56187
+    }
+   ],
+   "senateClasses": {
+    "1": "D",
+    "2": "D"
+   }
+  },
+  {
+   "code": "MN",
+   "name": "미네소타",
+   "region": "USA-3514",
+   "electors": 10,
+   "demVotes": 1717077,
+   "repVotes": 1484065,
+   "total": 3277171,
+   "houseDistricts": [
+    {
+     "winner": "R",
+     "demVotes": 125457,
+     "repVotes": 159621
+    },
+    {
+     "winner": "D",
+     "demVotes": 165583,
+     "repVotes": 148576
+    },
+    {
+     "winner": "D",
+     "demVotes": 198883,
+     "repVotes": 134797
+    },
+    {
+     "winner": "D",
+     "demVotes": 200055,
+     "repVotes": 95493
+    },
+    {
+     "winner": "D",
+     "demVotes": 214224,
+     "repVotes": 70702
+    },
+    {
+     "winner": "R",
+     "demVotes": 120852,
+     "repVotes": 198145
+    },
+    {
+     "winner": "R",
+     "demVotes": 84455,
+     "repVotes": 204766
+    },
+    {
+     "winner": "R",
+     "demVotes": 141009,
+     "repVotes": 188755
+    }
+   ],
+   "senateClasses": {
+    "1": "D",
+    "2": "D"
+   }
+  },
+  {
+   "code": "MO",
+   "name": "미주리",
+   "region": "USA-3531",
+   "electors": 10,
+   "demVotes": 1253014,
+   "repVotes": 1718736,
+   "total": 3025962,
+   "houseDistricts": [
+    {
+     "winner": "D",
+     "demVotes": 160999,
+     "repVotes": 53767
+    },
+    {
+     "winner": "R",
+     "demVotes": 135895,
+     "repVotes": 173277
+    },
+    {
+     "winner": "R",
+     "demVotes": 96851,
+     "repVotes": 180746
+    },
+    {
+     "winner": "R",
+     "demVotes": 67069,
+     "repVotes": 181890
+    },
+    {
+     "winner": "D",
+     "demVotes": 140688,
+     "repVotes": 84008
+    },
+    {
+     "winner": "R",
+     "demVotes": 72253,
+     "repVotes": 184865
+    },
+    {
+     "winner": "R",
+     "demVotes": 67485,
+     "repVotes": 178592
+    },
+    {
+     "winner": "R",
+     "demVotes": 0,
+     "repVotes": 186472
+    }
+   ],
+   "senateClasses": {
+    "1": "R",
+    "3": "R"
+   }
+  },
+  {
+   "code": "MS",
+   "name": "미시시피",
+   "region": "USA-3544",
+   "electors": 6,
+   "demVotes": 539398,
+   "repVotes": 756764,
+   "total": 1313759,
+   "houseDistricts": [
+    {
+     "winner": "R",
+     "demVotes": 45238,
+     "repVotes": 122151
+    },
+    {
+     "winner": "D",
+     "demVotes": 108285,
+     "repVotes": 71884
+    },
+    {
+     "winner": "R",
+     "demVotes": 54803,
+     "repVotes": 132481
+    },
+    {
+     "winner": "R",
+     "demVotes": 42876,
+     "repVotes": 127813
+    }
+   ],
+   "senateClasses": {
+    "1": "R",
+    "2": "R"
+   }
+  },
+  {
+   "code": "MT",
+   "name": "몬태나",
+   "region": "USA-3515",
+   "electors": 4,
+   "demVotes": 244786,
+   "repVotes": 343602,
+   "total": 603674,
+   "houseDistricts": [
+    {
+     "winner": "R",
+     "demVotes": 115265,
+     "repVotes": 123102
+    },
+    {
+     "winner": "R",
+     "demVotes": 43480,
+     "repVotes": 121979
+    }
+   ],
+   "senateClasses": {
+    "1": "D",
+    "2": "R"
+   }
+  },
+  {
+   "code": "NC",
+   "name": "노스캐롤라이나",
+   "region": "USA-3549",
+   "electors": 16,
+   "demVotes": 2684292,
+   "repVotes": 2758775,
+   "total": 5524804,
+   "houseDistricts": [
+    {
+     "winner": "D",
+     "demVotes": 134996,
+     "repVotes": 122780
+    },
+    {
+     "winner": "D",
+     "demVotes": 190714,
+     "repVotes": 104155
+    },
+    {
+     "winner": "R",
+     "demVotes": 82378,
+     "repVotes": 166520
+    },
+    {
+     "winner": "D",
+     "demVotes": 194983,
+     "repVotes": 96442
+    },
+    {
+     "winner": "R",
+     "demVotes": 102269,
+     "repVotes": 175279
+    },
+    {
+     "winner": "D",
+     "demVotes": 139553,
+     "repVotes": 116635
+    },
+    {
+     "winner": "R",
+     "demVotes": 120222,
+     "repVotes": 164047
+    },
+    {
+     "winner": "R",
+     "demVotes": 79192,
+     "repVotes": 183998
+    },
+    {
+     "winner": "R",
+     "demVotes": 101202,
+     "repVotes": 131453
+    },
+    {
+     "winner": "R",
+     "demVotes": 73174,
+     "repVotes": 194681
+    },
+    {
+     "winner": "R",
+     "demVotes": 144165,
+     "repVotes": 174232
+    },
+    {
+     "winner": "D",
+     "demVotes": 140494,
+     "repVotes": 83414
+    },
+    {
+     "winner": "D",
+     "demVotes": 143090,
+     "repVotes": 134256
+    },
+    {
+     "winner": "D",
+     "demVotes": 148738,
+     "repVotes": 109014
+    }
+   ],
+   "senateClasses": {
+    "2": "R",
+    "3": "R"
+   }
+  },
+  {
+   "code": "ND",
+   "name": "노스다코타",
+   "region": "USA-3516",
+   "electors": 3,
+   "demVotes": 115042,
+   "repVotes": 235751,
+   "total": 362024,
+   "houseDistricts": [
+    {
+     "winner": "R",
+     "demVotes": 0,
+     "repVotes": 148399
+    }
+   ],
+   "senateClasses": {
+    "1": "R",
+    "3": "R"
+   }
+  },
+  {
+   "code": "NE",
+   "name": "네브래스카",
+   "region": "USA-3532",
+   "electors": 5,
+   "demVotes": 374583,
+   "repVotes": 556846,
+   "total": 956383,
+   "presidentialDistricts": [
+    [
+     132261,
+     180290
+    ],
+    [
+     176468,
+     154377
+    ],
+    [
+     65854,
+     222179
+    ]
+   ],
+   "houseDistricts": [
+    {
+     "winner": "R",
+     "demVotes": 93929,
+     "repVotes": 129236
+    },
+    {
+     "winner": "R",
+     "demVotes": 106807,
+     "repVotes": 112663
+    },
+    {
+     "winner": "R",
+     "demVotes": 34836,
+     "repVotes": 172700
+    }
+   ],
+   "senateClasses": {
+    "1": "R",
+    "2": "R"
+   }
+  },
+  {
+   "code": "NH",
+   "name": "뉴햄프셔",
+   "region": "USA-3538",
+   "electors": 4,
+   "demVotes": 424937,
+   "repVotes": 365660,
+   "total": 806205,
+   "houseDistricts": [
+    {
+     "winner": "D",
+     "demVotes": 167391,
+     "repVotes": 142229
+    },
+    {
+     "winner": "D",
+     "demVotes": 171636,
+     "repVotes": 135579
+    }
+   ],
+   "senateClasses": {
+    "2": "D",
+    "3": "D"
+   }
+  },
+  {
+   "code": "NJ",
+   "name": "뉴저지",
+   "region": "USA-3558",
+   "electors": 14,
+   "demVotes": 2608400,
+   "repVotes": 1883313,
+   "total": 4549457,
+   "houseDistricts": [
+    {
+     "winner": "D",
+     "demVotes": 139559,
+     "repVotes": 78794
+    },
+    {
+     "winner": "R",
+     "demVotes": 94522,
+     "repVotes": 139217
+    },
+    {
+     "winner": "D",
+     "demVotes": 150498,
+     "repVotes": 118415
+    },
+    {
+     "winner": "R",
+     "demVotes": 81233,
+     "repVotes": 173288
+    },
+    {
+     "winner": "D",
+     "demVotes": 145559,
+     "repVotes": 117873
+    },
+    {
+     "winner": "D",
+     "demVotes": 106238,
+     "repVotes": 75839
+    },
+    {
+     "winner": "R",
+     "demVotes": 150701,
+     "repVotes": 159392
+    },
+    {
+     "winner": "D",
+     "demVotes": 78382,
+     "repVotes": 24957
+    },
+    {
+     "winner": "D",
+     "demVotes": 82457,
+     "repVotes": 65365
+    },
+    {
+     "winner": "D",
+     "demVotes": 100710,
+     "repVotes": 25993
+    },
+    {
+     "winner": "D",
+     "demVotes": 161436,
+     "repVotes": 109952
+    },
+    {
+     "winner": "D",
+     "demVotes": 125127,
+     "repVotes": 71175
+    }
+   ],
+   "senateClasses": {
+    "1": "D",
+    "2": "D"
+   }
+  },
+  {
+   "code": "NM",
+   "name": "뉴멕시코",
+   "region": "USA-3524",
+   "electors": 5,
+   "demVotes": 501614,
+   "repVotes": 401894,
+   "total": 923965,
+   "houseDistricts": [
+    {
+     "winner": "D",
+     "demVotes": 156462,
+     "repVotes": 124151
+    },
+    {
+     "winner": "D",
+     "demVotes": 96986,
+     "repVotes": 95636
+    },
+    {
+     "winner": "D",
+     "demVotes": 134217,
+     "repVotes": 96565
+    }
+   ],
+   "senateClasses": {
+    "1": "D",
+    "2": "D"
+   }
+  },
+  {
+   "code": "NV",
+   "name": "네바다",
+   "region": "USA-3523",
+   "electors": 6,
+   "demVotes": 703486,
+   "repVotes": 669890,
+   "total": 1405376,
+   "houseDistricts": [
+    {
+     "winner": "D",
+     "demVotes": 115700,
+     "repVotes": 103115
+    },
+    {
+     "winner": "R",
+     "demVotes": 117371,
+     "repVotes": 185467
+    },
+    {
+     "winner": "D",
+     "demVotes": 131086,
+     "repVotes": 121083
+    },
+    {
+     "winner": "D",
+     "demVotes": 116617,
+     "repVotes": 105870
+    }
+   ],
+   "senateClasses": {
+    "1": "D",
+    "3": "D"
+   }
+  },
+  {
+   "code": "NY",
+   "name": "뉴욕",
+   "region": "USA-3559",
+   "electors": 28,
+   "demVotes": 5244886,
+   "repVotes": 3251997,
+   "total": 8616861,
+   "houseDistricts": [
+    {
+     "winner": "R",
+     "demVotes": 141907,
+     "repVotes": 177040
+    },
+    {
+     "winner": "R",
+     "demVotes": 97774,
+     "repVotes": 151178
+    },
+    {
+     "winner": "R",
+     "demVotes": 125404,
+     "repVotes": 145824
+    },
+    {
+     "winner": "R",
+     "demVotes": 130871,
+     "repVotes": 140622
+    },
+    {
+     "winner": "D",
+     "demVotes": 104396,
+     "repVotes": 34407
+    },
+    {
+     "winner": "D",
+     "demVotes": 85049,
+     "repVotes": 47935
+    },
+    {
+     "winner": "D",
+     "demVotes": 119473,
+     "repVotes": 28597
+    },
+    {
+     "winner": "D",
+     "demVotes": 99079,
+     "repVotes": 39060
+    },
+    {
+     "winner": "D",
+     "demVotes": 116970,
+     "repVotes": 0
+    },
+    {
+     "winner": "D",
+     "demVotes": 160582,
+     "repVotes": 29058
+    },
+    {
+     "winner": "R",
+     "demVotes": 71801,
+     "repVotes": 115992
+    },
+    {
+     "winner": "D",
+     "demVotes": 200890,
+     "repVotes": 44173
+    },
+    {
+     "winner": "D",
+     "demVotes": 116589,
+     "repVotes": 0
+    },
+    {
+     "winner": "D",
+     "demVotes": 82453,
+     "repVotes": 31935
+    },
+    {
+     "winner": "D",
+     "demVotes": 76406,
+     "repVotes": 15882
+    },
+    {
+     "winner": "D",
+     "demVotes": 133567,
+     "repVotes": 74156
+    },
+    {
+     "winner": "R",
+     "demVotes": 141730,
+     "repVotes": 143550
+    },
+    {
+     "winner": "D",
+     "demVotes": 135245,
+     "repVotes": 131653
+    },
+    {
+     "winner": "R",
+     "demVotes": 141509,
+     "repVotes": 146004
+    },
+    {
+     "winner": "D",
+     "demVotes": 160420,
+     "repVotes": 130869
+    },
+    {
+     "winner": "R",
+     "demVotes": 116421,
+     "repVotes": 168579
+    },
+    {
+     "winner": "R",
+     "demVotes": 132913,
+     "repVotes": 135544
+    },
+    {
+     "winner": "R",
+     "demVotes": 104114,
+     "repVotes": 192694
+    },
+    {
+     "winner": "R",
+     "demVotes": 95028,
+     "repVotes": 182054
+    },
+    {
+     "winner": "D",
+     "demVotes": 152022,
+     "repVotes": 130190
+    },
+    {
+     "winner": "D",
+     "demVotes": 156883,
+     "repVotes": 88339
+    }
+   ],
+   "senateClasses": {
+    "1": "D",
+    "3": "D"
+   }
+  },
+  {
+   "code": "OH",
+   "name": "오하이오",
+   "region": "USA-3550",
+   "electors": 17,
+   "demVotes": 2679165,
+   "repVotes": 3154834,
+   "total": 5922202,
+   "houseDistricts": [
+    {
+     "winner": "D",
+     "demVotes": 156416,
+     "repVotes": 140058
+    },
+    {
+     "winner": "R",
+     "demVotes": 65745,
+     "repVotes": 192117
+    },
+    {
+     "winner": "D",
+     "demVotes": 182324,
+     "repVotes": 76455
+    },
+    {
+     "winner": "R",
+     "demVotes": 89383,
+     "repVotes": 200773
+    },
+    {
+     "winner": "R",
+     "demVotes": 92634,
+     "repVotes": 187303
+    },
+    {
+     "winner": "R",
+     "demVotes": 90500,
+     "repVotes": 189883
+    },
+    {
+     "winner": "R",
+     "demVotes": 135485,
+     "repVotes": 168002
+    },
+    {
+     "winner": "R",
+     "demVotes": 98629,
+     "repVotes": 180287
+    },
+    {
+     "winner": "D",
+     "demVotes": 150655,
+     "repVotes": 115362
+    },
+    {
+     "winner": "R",
+     "demVotes": 104634,
+     "repVotes": 168327
+    },
+    {
+     "winner": "D",
+     "demVotes": 167722,
+     "repVotes": 47988
+    },
+    {
+     "winner": "R",
+     "demVotes": 84893,
+     "repVotes": 191344
+    },
+    {
+     "winner": "D",
+     "demVotes": 149816,
+     "repVotes": 134593
+    },
+    {
+     "winner": "R",
+     "demVotes": 113639,
+     "repVotes": 183389
+    },
+    {
+     "winner": "R",
+     "demVotes": 108139,
+     "repVotes": 143112
+    }
+   ],
+   "senateClasses": {
+    "1": "D",
+    "3": "R"
+   }
+  },
+  {
+   "code": "OK",
+   "name": "오클라호마",
+   "region": "USA-3533",
+   "electors": 7,
+   "demVotes": 503890,
+   "repVotes": 1020280,
+   "total": 1560699,
+   "houseDistricts": [
+    {
+     "winner": "R",
+     "demVotes": 80974,
+     "repVotes": 142800
+    },
+    {
+     "winner": "R",
+     "demVotes": 54194,
+     "repVotes": 167843
+    },
+    {
+     "winner": "R",
+     "demVotes": 50354,
+     "repVotes": 147418
+    },
+    {
+     "winner": "R",
+     "demVotes": 74667,
+     "repVotes": 149879
+    },
+    {
+     "winner": "R",
+     "demVotes": 96799,
+     "repVotes": 152699
+    }
+   ],
+   "senateClasses": {
+    "2": "R",
+    "3": "R"
+   }
+  },
+  {
+   "code": "OR",
+   "name": "오리건",
+   "region": "USA-3525",
+   "electors": 8,
+   "demVotes": 1340383,
+   "repVotes": 958448,
+   "total": 2374321,
+   "houseDistricts": [
+    {
+     "winner": "D",
+     "demVotes": 210682,
+     "repVotes": 99042
+    },
+    {
+     "winner": "R",
+     "demVotes": 99882,
+     "repVotes": 208369
+    },
+    {
+     "winner": "D",
+     "demVotes": 212119,
+     "repVotes": 79766
+    },
+    {
+     "winner": "D",
+     "demVotes": 171372,
+     "repVotes": 146055
+    },
+    {
+     "winner": "R",
+     "demVotes": 171514,
+     "repVotes": 178813
+    },
+    {
+     "winner": "D",
+     "demVotes": 147156,
+     "repVotes": 139946
+    }
+   ],
+   "senateClasses": {
+    "2": "D",
+    "3": "D"
+   }
+  },
+  {
+   "code": "PA",
+   "name": "펜실베이니아",
+   "region": "USA-3560",
+   "electors": 19,
+   "demVotes": 3458229,
+   "repVotes": 3377674,
+   "total": 6936976,
+   "houseDistricts": [
+    {
+     "winner": "R",
+     "demVotes": 165809,
+     "repVotes": 201571
+    },
+    {
+     "winner": "D",
+     "demVotes": 141229,
+     "repVotes": 45454
+    },
+    {
+     "winner": "D",
+     "demVotes": 251115,
+     "repVotes": 0
+    },
+    {
+     "winner": "D",
+     "demVotes": 224799,
+     "repVotes": 141986
+    },
+    {
+     "winner": "D",
+     "demVotes": 205128,
+     "repVotes": 110058
+    },
+    {
+     "winner": "D",
+     "demVotes": 190386,
+     "repVotes": 136097
+    },
+    {
+     "winner": "D",
+     "demVotes": 151364,
+     "repVotes": 145527
+    },
+    {
+     "winner": "D",
+     "demVotes": 146956,
+     "repVotes": 139930
+    },
+    {
+     "winner": "R",
+     "demVotes": 92622,
+     "repVotes": 209185
+    },
+    {
+     "winner": "R",
+     "demVotes": 145215,
+     "repVotes": 169331
+    },
+    {
+     "winner": "R",
+     "demVotes": 121835,
+     "repVotes": 194991
+    },
+    {
+     "winner": "D",
+     "demVotes": 184674,
+     "repVotes": 143946
+    },
+    {
+     "winner": "R",
+     "demVotes": 0,
+     "repVotes": 260345
+    },
+    {
+     "winner": "R",
+     "demVotes": 0,
+     "repVotes": 230865
+    },
+    {
+     "winner": "R",
+     "demVotes": 0,
+     "repVotes": 213417
+    },
+    {
+     "winner": "R",
+     "demVotes": 130443,
+     "repVotes": 190546
+    },
+    {
+     "winner": "D",
+     "demVotes": 193615,
+     "repVotes": 169013
+    }
+   ],
+   "senateClasses": {
+    "1": "D",
+    "3": "D"
+   }
+  },
+  {
+   "code": "RI",
+   "name": "로드아일랜드",
+   "region": "USA-3539",
+   "electors": 4,
+   "demVotes": 307486,
+   "repVotes": 199922,
+   "total": 517757,
+   "houseDistricts": [
+    {
+     "winner": "D",
+     "demVotes": 100318,
+     "repVotes": 56055
+    },
+    {
+     "winner": "D",
+     "demVotes": 101432,
+     "repVotes": 93969
+    }
+   ],
+   "senateClasses": {
+    "1": "D",
+    "2": "D"
+   }
+  },
+  {
+   "code": "SC",
+   "name": "사우스캐롤라이나",
+   "region": "USA-3545",
+   "electors": 9,
+   "demVotes": 1091541,
+   "repVotes": 1385103,
+   "total": 2513329,
+   "houseDistricts": [
+    {
+     "winner": "R",
+     "demVotes": 115796,
+     "repVotes": 153757
+    },
+    {
+     "winner": "R",
+     "demVotes": 98081,
+     "repVotes": 147699
+    },
+    {
+     "winner": "R",
+     "demVotes": 0,
+     "repVotes": 189971
+    },
+    {
+     "winner": "R",
+     "demVotes": 0,
+     "repVotes": 165607
+    },
+    {
+     "winner": "R",
+     "demVotes": 83299,
+     "repVotes": 154725
+    },
+    {
+     "winner": "D",
+     "demVotes": 130923,
+     "repVotes": 79879
+    },
+    {
+     "winner": "R",
+     "demVotes": 89030,
+     "repVotes": 164440
+    }
+   ],
+   "senateClasses": {
+    "2": "R",
+    "3": "R"
+   }
+  },
+  {
+   "code": "SD",
+   "name": "사우스다코타",
+   "region": "USA-3534",
+   "electors": 3,
+   "demVotes": 150471,
+   "repVotes": 261043,
+   "total": 422609,
+   "houseDistricts": [
+    {
+     "winner": "R",
+     "demVotes": 0,
+     "repVotes": 253821
+    }
+   ],
+   "senateClasses": {
+    "2": "R",
+    "3": "R"
+   }
+  },
+  {
+   "code": "TN",
+   "name": "테네시",
+   "region": "USA-3551",
+   "electors": 11,
+   "demVotes": 1143711,
+   "repVotes": 1852475,
+   "total": 3053851,
+   "houseDistricts": [
+    {
+     "winner": "R",
+     "demVotes": 37049,
+     "repVotes": 147241
+    },
+    {
+     "winner": "R",
+     "demVotes": 66673,
+     "repVotes": 141089
+    },
+    {
+     "winner": "R",
+     "demVotes": 60334,
+     "repVotes": 136639
+    },
+    {
+     "winner": "R",
+     "demVotes": 44648,
+     "repVotes": 122401
+    },
+    {
+     "winner": "R",
+     "demVotes": 93648,
+     "repVotes": 123558
+    },
+    {
+     "winner": "R",
+     "demVotes": 65675,
+     "repVotes": 129388
+    },
+    {
+     "winner": "R",
+     "demVotes": 68973,
+     "repVotes": 108421
+    },
+    {
+     "winner": "R",
+     "demVotes": 51102,
+     "repVotes": 155602
+    },
+    {
+     "winner": "D",
+     "demVotes": 93800,
+     "repVotes": 35123
+    }
+   ],
+   "senateClasses": {
+    "1": "R",
+    "2": "R"
+   }
+  },
+  {
+   "code": "TX",
+   "name": "텍사스",
+   "region": "USA-3536",
+   "electors": 40,
+   "demVotes": 5259126,
+   "repVotes": 5890347,
+   "total": 11315056,
+   "houseDistricts": [
+    {
+     "winner": "R",
+     "demVotes": 51438,
+     "repVotes": 183224
+    },
+    {
+     "winner": "R",
+     "demVotes": 78496,
+     "repVotes": 151791
+    },
+    {
+     "winner": "R",
+     "demVotes": 100121,
+     "repVotes": 164240
+    },
+    {
+     "winner": "R",
+     "demVotes": 79179,
+     "repVotes": 170781
+    },
+    {
+     "winner": "R",
+     "demVotes": 71930,
+     "repVotes": 135595
+    },
+    {
+     "winner": "R",
+     "demVotes": 0,
+     "repVotes": 149321
+    },
+    {
+     "winner": "D",
+     "demVotes": 115994,
+     "repVotes": 65835
+    },
+    {
+     "winner": "R",
+     "demVotes": 68715,
+     "repVotes": 153127
+    },
+    {
+     "winner": "D",
+     "demVotes": 125446,
+     "repVotes": 38161
+    },
+    {
+     "winner": "R",
+     "demVotes": 86404,
+     "repVotes": 159469
+    },
+    {
+     "winner": "R",
+     "demVotes": 0,
+     "repVotes": 151066
+    },
+    {
+     "winner": "R",
+     "demVotes": 85026,
+     "repVotes": 152953
+    },
+    {
+     "winner": "R",
+     "demVotes": 52910,
+     "repVotes": 161767
+    },
+    {
+     "winner": "R",
+     "demVotes": 63606,
+     "repVotes": 149543
+    },
+    {
+     "winner": "R",
+     "demVotes": 68097,
+     "repVotes": 80978
+    },
+    {
+     "winner": "D",
+     "demVotes": 95510,
+     "repVotes": 54986
+    },
+    {
+     "winner": "R",
+     "demVotes": 72801,
+     "repVotes": 144408
+    },
+    {
+     "winner": "D",
+     "demVotes": 110511,
+     "repVotes": 40941
+    },
+    {
+     "winner": "R",
+     "demVotes": 0,
+     "repVotes": 152321
+    },
+    {
+     "winner": "D",
+     "demVotes": 115352,
+     "repVotes": 53226
+    },
+    {
+     "winner": "R",
+     "demVotes": 122655,
+     "repVotes": 207426
+    },
+    {
+     "winner": "R",
+     "demVotes": 85653,
+     "repVotes": 150014
+    },
+    {
+     "winner": "R",
+     "demVotes": 80947,
+     "repVotes": 116649
+    },
+    {
+     "winner": "R",
+     "demVotes": 119878,
+     "repVotes": 177947
+    },
+    {
+     "winner": "R",
+     "demVotes": 0,
+     "repVotes": 185270
+    },
+    {
+     "winner": "R",
+     "demVotes": 0,
+     "repVotes": 183639
+    },
+    {
+     "winner": "R",
+     "demVotes": 73611,
+     "repVotes": 133416
+    },
+    {
+     "winner": "D",
+     "demVotes": 93803,
+     "repVotes": 71778
+    },
+    {
+     "winner": "D",
+     "demVotes": 71837,
+     "repVotes": 28765
+    },
+    {
+     "winner": "D",
+     "demVotes": 134876,
+     "repVotes": 39209
+    },
+    {
+     "winner": "R",
+     "demVotes": 0,
+     "repVotes": 183185
+    },
+    {
+     "winner": "D",
+     "demVotes": 116005,
+     "repVotes": 61494
+    },
+    {
+     "winner": "D",
+     "demVotes": 82081,
+     "repVotes": 29203
+    },
+    {
+     "winner": "D",
+     "demVotes": 70896,
+     "repVotes": 59464
+    },
+    {
+     "winner": "D",
+     "demVotes": 129599,
+     "repVotes": 48969
+    },
+    {
+     "winner": "R",
+     "demVotes": 64016,
+     "repVotes": 145599
+    },
+    {
+     "winner": "D",
+     "demVotes": 219358,
+     "repVotes": 59923
+    },
+    {
+     "winner": "R",
+     "demVotes": 92302,
+     "repVotes": 163597
+    }
+   ],
+   "senateClasses": {
+    "1": "R",
+    "2": "R"
+   }
+  },
+  {
+   "code": "UT",
+   "name": "유타",
+   "region": "USA-3526",
+   "electors": 6,
+   "demVotes": 560282,
+   "repVotes": 865140,
+   "total": 1488289,
+   "houseDistricts": [
+    {
+     "winner": "R",
+     "demVotes": 87986,
+     "repVotes": 178434
+    },
+    {
+     "winner": "R",
+     "demVotes": 88224,
+     "repVotes": 154883
+    },
+    {
+     "winner": "R",
+     "demVotes": 83687,
+     "repVotes": 182497
+    },
+    {
+     "winner": "R",
+     "demVotes": 82181,
+     "repVotes": 155110
+    }
+   ],
+   "senateClasses": {
+    "1": "R",
+    "3": "R"
+   }
+  },
+  {
+   "code": "VA",
+   "name": "버지니아",
+   "region": "USA-3552",
+   "electors": 13,
+   "demVotes": 2413568,
+   "repVotes": 1962430,
+   "total": 4460524,
+   "houseDistricts": [
+    {
+     "winner": "R",
+     "demVotes": 147229,
+     "repVotes": 191828
+    },
+    {
+     "winner": "R",
+     "demVotes": 143219,
+     "repVotes": 153328
+    },
+    {
+     "winner": "D",
+     "demVotes": 139659,
+     "repVotes": 67668
+    },
+    {
+     "winner": "D",
+     "demVotes": 159044,
+     "repVotes": 85503
+    },
+    {
+     "winner": "R",
+     "demVotes": 129996,
+     "repVotes": 177191
+    },
+    {
+     "winner": "R",
+     "demVotes": 95410,
+     "repVotes": 173352
+    },
+    {
+     "winner": "D",
+     "demVotes": 143357,
+     "repVotes": 130586
+    },
+    {
+     "winner": "D",
+     "demVotes": 197760,
+     "repVotes": 66589
+    },
+    {
+     "winner": "R",
+     "demVotes": 66027,
+     "repVotes": 182207
+    },
+    {
+     "winner": "D",
+     "demVotes": 157405,
+     "repVotes": 138163
+    },
+    {
+     "winner": "D",
+     "demVotes": 193190,
+     "repVotes": 95634
+    }
+   ],
+   "senateClasses": {
+    "1": "D",
+    "2": "D"
+   }
+  },
+  {
+   "code": "VT",
+   "name": "버몬트",
+   "region": "USA-3540",
+   "electors": 3,
+   "demVotes": 242820,
+   "repVotes": 112704,
+   "total": 367428,
+   "houseDistricts": [
+    {
+     "winner": "D",
+     "demVotes": 176494,
+     "repVotes": 78397
+    }
+   ],
+   "senateClasses": {
+    "1": "I",
+    "3": "D"
+   }
+  },
+  {
+   "code": "WA",
+   "name": "워싱턴",
+   "region": "USA-3519",
+   "electors": 12,
+   "demVotes": 2369612,
+   "repVotes": 1584651,
+   "total": 4087631,
+   "houseDistricts": [
+    {
+     "winner": "D",
+     "demVotes": 181992,
+     "repVotes": 104329
+    },
+    {
+     "winner": "D",
+     "demVotes": 202980,
+     "repVotes": 134335
+    },
+    {
+     "winner": "D",
+     "demVotes": 160323,
+     "repVotes": 157690
+    },
+    {
+     "winner": "R",
+     "demVotes": 70710,
+     "repVotes": 150619
+    },
+    {
+     "winner": "R",
+     "demVotes": 127585,
+     "repVotes": 188648
+    },
+    {
+     "winner": "D",
+     "demVotes": 208710,
+     "repVotes": 138754
+    },
+    {
+     "winner": "D",
+     "demVotes": 295998,
+     "repVotes": 49207
+    },
+    {
+     "winner": "D",
+     "demVotes": 179003,
+     "repVotes": 155976
+    },
+    {
+     "winner": "D",
+     "demVotes": 171746,
+     "repVotes": 67631
+    },
+    {
+     "winner": "D",
+     "demVotes": 152544,
+     "repVotes": 114777
+    }
+   ],
+   "senateClasses": {
+    "1": "D",
+    "3": "D"
+   }
+  },
+  {
+   "code": "WI",
+   "name": "위스콘신",
+   "region": "USA-3553",
+   "electors": 10,
+   "demVotes": 1630866,
+   "repVotes": 1610184,
+   "total": 3298041,
+   "houseDistricts": [
+    {
+     "winner": "R",
+     "demVotes": 135825,
+     "repVotes": 162610
+    },
+    {
+     "winner": "D",
+     "demVotes": 268740,
+     "repVotes": 101890
+    },
+    {
+     "winner": "R",
+     "demVotes": 152977,
+     "repVotes": 164743
+    },
+    {
+     "winner": "D",
+     "demVotes": 191955,
+     "repVotes": 57660
+    },
+    {
+     "winner": "R",
+     "demVotes": 134581,
+     "repVotes": 243741
+    },
+    {
+     "winner": "R",
+     "demVotes": 0,
+     "repVotes": 239231
+    },
+    {
+     "winner": "R",
+     "demVotes": 128877,
+     "repVotes": 209224
+    },
+    {
+     "winner": "R",
+     "demVotes": 0,
+     "repVotes": 223981
+    }
+   ],
+   "senateClasses": {
+    "1": "D",
+    "3": "R"
+   }
+  },
+  {
+   "code": "WV",
+   "name": "웨스트버지니아",
+   "region": "USA-3554",
+   "electors": 4,
+   "demVotes": 235984,
+   "repVotes": 545382,
+   "total": 794731,
+   "houseDistricts": [
+    {
+     "winner": "R",
+     "demVotes": 65428,
+     "repVotes": 151511
+    },
+    {
+     "winner": "R",
+     "demVotes": 84278,
+     "repVotes": 160493
+    }
+   ],
+   "senateClasses": {
+    "1": "D",
+    "2": "R"
+   }
+  },
+  {
+   "code": "WY",
+   "name": "와이오밍",
+   "region": "USA-3527",
+   "electors": 3,
+   "demVotes": 73491,
+   "repVotes": 193559,
+   "total": 276765,
+   "houseDistricts": [
+    {
+     "winner": "R",
+     "demVotes": 47250,
+     "repVotes": 132206
+    }
+   ],
+   "senateClasses": {
+    "1": "R",
+    "2": "R"
+   }
+  }
+ ],
+ "primaries": [
+  {
+   "code": "AK",
+   "rep": 29,
+   "dem": 14,
+   "demDate": 413,
+   "repDate": 305
+  },
+  {
+   "code": "AL",
+   "rep": 50,
+   "dem": 52,
+   "demDate": 305,
+   "repDate": 305
+  },
+  {
+   "code": "AR",
+   "rep": 40,
+   "dem": 31,
+   "demDate": 305,
+   "repDate": 305
+  },
+  {
+   "code": "AS",
+   "rep": 9,
+   "dem": 6,
+   "demDate": 305,
+   "repDate": 308
+  },
+  {
+   "code": "AZ",
+   "rep": 43,
+   "dem": 72,
+   "demDate": 319,
+   "repDate": 319
+  },
+  {
+   "code": "CA",
+   "rep": 169,
+   "dem": 424,
+   "demDate": 305,
+   "repDate": 305
+  },
+  {
+   "code": "CO",
+   "rep": 37,
+   "dem": 72,
+   "demDate": 305,
+   "repDate": 305
+  },
+  {
+   "code": "CT",
+   "rep": 28,
+   "dem": 49,
+   "demDate": 402,
+   "repDate": 402
+  },
+  {
+   "code": "DA",
+   "rep": 0,
+   "dem": 13,
+   "demDate": 312,
+   "repDate": 0
+  },
+  {
+   "code": "DC",
+   "rep": 19,
+   "dem": 17,
+   "demDate": 604,
+   "repDate": 303
+  },
+  {
+   "code": "DE",
+   "rep": 16,
+   "dem": 17,
+   "demDate": 402,
+   "repDate": 402
+  },
+  {
+   "code": "FL",
+   "rep": 125,
+   "dem": 224,
+   "demDate": 319,
+   "repDate": 319
+  },
+  {
+   "code": "GA",
+   "rep": 59,
+   "dem": 108,
+   "demDate": 312,
+   "repDate": 312
+  },
+  {
+   "code": "GU",
+   "rep": 9,
+   "dem": 6,
+   "demDate": 608,
+   "repDate": 316
+  },
+  {
+   "code": "HI",
+   "rep": 19,
+   "dem": 22,
+   "demDate": 306,
+   "repDate": 312
+  },
+  {
+   "code": "IA",
+   "rep": 40,
+   "dem": 40,
+   "demDate": 305,
+   "repDate": 115
+  },
+  {
+   "code": "ID",
+   "rep": 32,
+   "dem": 20,
+   "demDate": 523,
+   "repDate": 302
+  },
+  {
+   "code": "IL",
+   "rep": 64,
+   "dem": 147,
+   "demDate": 319,
+   "repDate": 319
+  },
+  {
+   "code": "IN",
+   "rep": 58,
+   "dem": 67,
+   "demDate": 507,
+   "repDate": 507
+  },
+  {
+   "code": "KS",
+   "rep": 39,
+   "dem": 33,
+   "demDate": 319,
+   "repDate": 319
+  },
+  {
+   "code": "KY",
+   "rep": 46,
+   "dem": 45,
+   "demDate": 521,
+   "repDate": 521
+  },
+  {
+   "code": "LA",
+   "rep": 47,
+   "dem": 48,
+   "demDate": 323,
+   "repDate": 323
+  },
+  {
+   "code": "MA",
+   "rep": 40,
+   "dem": 92,
+   "demDate": 305,
+   "repDate": 305
+  },
+  {
+   "code": "MD",
+   "rep": 37,
+   "dem": 81,
+   "demDate": 514,
+   "repDate": 514
+  },
+  {
+   "code": "ME",
+   "rep": 20,
+   "dem": 24,
+   "demDate": 305,
+   "repDate": 305
+  },
+  {
+   "code": "MI",
+   "rep": 55,
+   "dem": 117,
+   "demDate": 227,
+   "repDate": 227
+  },
+  {
+   "code": "MN",
+   "rep": 39,
+   "dem": 75,
+   "demDate": 305,
+   "repDate": 305
+  },
+  {
+   "code": "MO",
+   "rep": 54,
+   "dem": 64,
+   "demDate": 323,
+   "repDate": 302
+  },
+  {
+   "code": "MP",
+   "rep": 9,
+   "dem": 6,
+   "demDate": 312,
+   "repDate": 315
+  },
+  {
+   "code": "MS",
+   "rep": 40,
+   "dem": 35,
+   "demDate": 312,
+   "repDate": 312
+  },
+  {
+   "code": "MT",
+   "rep": 31,
+   "dem": 17,
+   "demDate": 604,
+   "repDate": 604
+  },
+  {
+   "code": "NC",
+   "rep": 74,
+   "dem": 116,
+   "demDate": 305,
+   "repDate": 305
+  },
+  {
+   "code": "ND",
+   "rep": 29,
+   "dem": 13,
+   "demDate": 330,
+   "repDate": 304
+  },
+  {
+   "code": "NE",
+   "rep": 36,
+   "dem": 25,
+   "demDate": 514,
+   "repDate": 514
+  },
+  {
+   "code": "NH",
+   "rep": 22,
+   "dem": 23,
+   "demDate": 123,
+   "repDate": 123
+  },
+  {
+   "code": "NJ",
+   "rep": 12,
+   "dem": 107,
+   "demDate": 604,
+   "repDate": 604
+  },
+  {
+   "code": "NM",
+   "rep": 22,
+   "dem": 29,
+   "demDate": 604,
+   "repDate": 604
+  },
+  {
+   "code": "NV",
+   "rep": 26,
+   "dem": 36,
+   "demDate": 206,
+   "repDate": 208
+  },
+  {
+   "code": "NY",
+   "rep": 91,
+   "dem": 220,
+   "demDate": 402,
+   "repDate": 402
+  },
+  {
+   "code": "OH",
+   "rep": 79,
+   "dem": 127,
+   "demDate": 319,
+   "repDate": 319
+  },
+  {
+   "code": "OK",
+   "rep": 43,
+   "dem": 36,
+   "demDate": 305,
+   "repDate": 305
+  },
+  {
+   "code": "OR",
+   "rep": 31,
+   "dem": 56,
+   "demDate": 521,
+   "repDate": 521
+  },
+  {
+   "code": "PA",
+   "rep": 67,
+   "dem": 146,
+   "demDate": 423,
+   "repDate": 423
+  },
+  {
+   "code": "PR",
+   "rep": 23,
+   "dem": 51,
+   "demDate": 428,
+   "repDate": 421
+  },
+  {
+   "code": "RI",
+   "rep": 19,
+   "dem": 21,
+   "demDate": 402,
+   "repDate": 402
+  },
+  {
+   "code": "SC",
+   "rep": 50,
+   "dem": 55,
+   "demDate": 203,
+   "repDate": 224
+  },
+  {
+   "code": "SD",
+   "rep": 29,
+   "dem": 14,
+   "demDate": 604,
+   "repDate": 604
+  },
+  {
+   "code": "TN",
+   "rep": 58,
+   "dem": 63,
+   "demDate": 305,
+   "repDate": 305
+  },
+  {
+   "code": "TX",
+   "rep": 161,
+   "dem": 244,
+   "demDate": 305,
+   "repDate": 305
+  },
+  {
+   "code": "UT",
+   "rep": 40,
+   "dem": 30,
+   "demDate": 305,
+   "repDate": 305
+  },
+  {
+   "code": "VA",
+   "rep": 48,
+   "dem": 99,
+   "demDate": 305,
+   "repDate": 305
+  },
+  {
+   "code": "VI",
+   "rep": 4,
+   "dem": 6,
+   "demDate": 608,
+   "repDate": 208
+  },
+  {
+   "code": "VT",
+   "rep": 17,
+   "dem": 16,
+   "demDate": 305,
+   "repDate": 305
+  },
+  {
+   "code": "WA",
+   "rep": 43,
+   "dem": 92,
+   "demDate": 312,
+   "repDate": 312
+  },
+  {
+   "code": "WI",
+   "rep": 41,
+   "dem": 75,
+   "demDate": 402,
+   "repDate": 402
+  },
+  {
+   "code": "WV",
+   "rep": 32,
+   "dem": 20,
+   "demDate": 514,
+   "repDate": 514
+  },
+  {
+   "code": "WY",
+   "rep": 29,
+   "dem": 12,
+   "demDate": 413,
+   "repDate": 420
+  }
+ ],
+ "indonesia": [
+  {
+   "name": "Aceh",
+   "region": "IDN-1136",
+   "registered": 3742037
+  },
+  {
+   "name": "Kalimantan Timur",
+   "region": "IDN-1185",
+   "registered": 2778644
+  },
+  {
+   "name": "Kalimantan Utara",
+   "region": "IDN-1185",
+   "registered": 504252
+  },
+  {
+   "name": "Jawa Barat",
+   "region": "IDN-1223",
+   "registered": 35714901
+  },
+  {
+   "name": "Jawa Tengah",
+   "region": "IDN-1224",
+   "registered": 28289413
+  },
+  {
+   "name": "Bengkulu",
+   "region": "IDN-1225",
+   "registered": 1494828
+  },
+  {
+   "name": "Banten",
+   "region": "IDN-1226",
+   "registered": 8842646
+  },
+  {
+   "name": "DKI Jakarta",
+   "region": "IDN-1227",
+   "registered": 8252897
+  },
+  {
+   "name": "Kalimantan Barat",
+   "region": "IDN-1228",
+   "registered": 3958561
+  },
+  {
+   "name": "Lampung",
+   "region": "IDN-1229",
+   "registered": 6539128
+  },
+  {
+   "name": "Sumatera Selatan",
+   "region": "IDN-1230",
+   "registered": 6326348
+  },
+  {
+   "name": "Kepulauan Bangka Belitung",
+   "region": "IDN-1231",
+   "registered": 1067434
+  },
+  {
+   "name": "Bali",
+   "region": "IDN-1232",
+   "registered": 3269516
+  },
+  {
+   "name": "Jawa Timur",
+   "region": "IDN-1233",
+   "registered": 31402838
+  },
+  {
+   "name": "Kalimantan Selatan",
+   "region": "IDN-1234",
+   "registered": 3025220
+  },
+  {
+   "name": "Nusa Tenggara Timur",
+   "region": "IDN-1235",
+   "registered": 4008475
+  },
+  {
+   "name": "Sulawesi Selatan",
+   "region": "IDN-1236",
+   "registered": 6670582
+  },
+  {
+   "name": "Sulawesi Barat",
+   "region": "IDN-1237",
+   "registered": 985760
+  },
+  {
+   "name": "Kepulauan Riau",
+   "region": "IDN-1796",
+   "registered": 1500974
+  },
+  {
+   "name": "Gorontalo",
+   "region": "IDN-1837",
+   "registered": 881206
+  },
+  {
+   "name": "Jambi",
+   "region": "IDN-1930",
+   "registered": 2676107
+  },
+  {
+   "name": "Kalimantan Tengah",
+   "region": "IDN-1931",
+   "registered": 1935116
+  },
+  {
+   "name": "Papua Barat",
+   "region": "IDN-1933",
+   "registered": 385465
+  },
+  {
+   "name": "Papua Barat Daya",
+   "region": "IDN-1933",
+   "registered": 440826
+  },
+  {
+   "name": "Sumatera Utara",
+   "region": "IDN-381",
+   "registered": 10853940
+  },
+  {
+   "name": "Riau",
+   "region": "IDN-492",
+   "registered": 4732174
+  },
+  {
+   "name": "Sulawesi Utara",
+   "region": "IDN-513",
+   "registered": 1969603
+  },
+  {
+   "name": "Maluku Utara",
+   "region": "IDN-538",
+   "registered": 953978
+  },
+  {
+   "name": "Sumatera Barat",
+   "region": "IDN-539",
+   "registered": 4088606
+  },
+  {
+   "name": "DI Yogyakarta",
+   "region": "IDN-540",
+   "registered": 2870974
+  },
+  {
+   "name": "Maluku",
+   "region": "IDN-554",
+   "registered": 1341012
+  },
+  {
+   "name": "Nusa Tenggara Barat",
+   "region": "IDN-555",
+   "registered": 3918291
+  },
+  {
+   "name": "Sulawesi Tenggara",
+   "region": "IDN-556",
+   "registered": 1867931
+  },
+  {
+   "name": "Sulawesi Tengah",
+   "region": "IDN-557",
+   "registered": 2236703
+  },
+  {
+   "name": "Papua",
+   "region": "IDN-558",
+   "registered": 727835
+  },
+  {
+   "name": "Papua Selatan",
+   "region": "IDN-558",
+   "registered": 367269
+  },
+  {
+   "name": "Papua Tengah",
+   "region": "IDN-558",
+   "registered": 1128844
+  },
+  {
+   "name": "Papua Pegunungan",
+   "region": "IDN-558",
+   "registered": 1306414
+  },
+  {
+   "name": "재외",
+   "region": "",
+   "registered": 1750474
+  }
+ ],
+ "indonesianTickets": [
+  {
+   "name": "아니스 바스웨단",
+   "born": 1969,
+   "runningMate": "무하이민 이스칸다르",
+   "endorsers": [
+    "나스뎀",
+    "국민각성당",
+    "번영정의당"
+   ],
+   "mateBorn": 1966,
+   "mateParty": "국민각성당"
+  },
+  {
+   "name": "프라보워 수비안토",
+   "born": 1951,
+   "party": "그린드라",
+   "runningMate": "기브란 라카부밍 라카",
+   "endorsers": [
+    "그린드라",
+    "골카르",
+    "민주당",
+    "국민수권당",
+    "인도네시아연대당",
+    "초승달별당",
+    "가루다당"
+   ],
+   "mateBorn": 1987
+  },
+  {
+   "name": "간자르 프라노워",
+   "born": 1968,
+   "party": "투쟁민주당",
+   "runningMate": "마흐푸드 MD",
+   "endorsers": [
+    "투쟁민주당",
+    "통일개발당",
+    "인도네시아통일당",
+    "민중양심당"
+   ],
+   "mateBorn": 1957
+  }
+ ]
+}
