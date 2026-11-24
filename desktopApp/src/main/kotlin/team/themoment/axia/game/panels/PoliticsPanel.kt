@@ -17,6 +17,7 @@ import team.themoment.axia.simulation.nation.BudgetItem
 import team.themoment.axia.simulation.nation.CountryPolicyItem
 import team.themoment.axia.simulation.nation.InstitutionItem
 import team.themoment.axia.simulation.nation.RegulationItem
+import team.themoment.axia.simulation.people.Person
 import team.themoment.axia.simulation.politics.AppointmentProcedure
 import team.themoment.axia.simulation.politics.BillStage
 import team.themoment.axia.simulation.politics.BillSupport
@@ -77,7 +78,7 @@ fun PoliticsPanel(
         Hint("${openingContest.chamberName} 해산으로 과도 내각이 심의합니다. 총선 후에는 새 의회가 법안을 표결합니다.")
     }
     chamber?.let { ChamberComposition(it, politics.takenPartyNames, onRenameParty) }
-    ElectionSection(politics, today, onCallEarlyElection, onChooseElectionList)
+    ElectionSection(politics, today, onCallEarlyElection, onChooseElectionList, onRenamePerson)
     if (chamber != null && politics.schedule.legislative != null && profile.elections.coalitionNegotiations &&
         chamber.groups.any { it.role == PartyRole.LEAD }
     ) {
@@ -140,11 +141,14 @@ fun PoliticsPanel(
     StatRow("체제 분류", profile.regime.label)
     StatRow("입법부의 행정부 견제", billScore(profile.legislativeConstraints * 100))
     StatRow("시민사회 참여", billScore(profile.civilParticipation * 100))
-    ConstitutionSection(politics.constitution)
+    ConstitutionSection(politics.constitution, onRenamePerson)
 }
 
 @Composable
-private fun ConstitutionSection(constitution: ConstitutionSnapshot) {
+private fun ConstitutionSection(
+    constitution: ConstitutionSnapshot,
+    onRenamePerson: (Int, String) -> Unit,
+) {
     val profile = constitution.profile
     SectionTitle("헌법기관")
     StatRow("헌법 심사 기관", profile.court ?: "없음")
@@ -174,9 +178,10 @@ private fun ConstitutionSection(constitution: ConstitutionSnapshot) {
     constitution.indirectPresident?.let { election ->
         StatRow("대통령 간선", election.procedure.body)
         election.nextBallot?.let { StatRow("다음 투표", it.toString()) }
-        election.presidentElect?.let { StatRow("대통령 당선인", "${it.name} · 취임 ${election.accession}") }
+        election.candidates.forEach { CandidateRow("대통령 간선 후보", it, it.party, onRenamePerson) }
+        election.presidentElect?.let { CandidateRow("대통령 당선인", it, "${election.accession} 취임", onRenamePerson) }
         election.deputyBallot?.let { StatRow("부통령 간선", it.toString()) }
-        election.deputyElect?.let { StatRow("부통령 당선인", "${it.name} · 취임 ${election.deputyAccession}") }
+        election.deputyElect?.let { CandidateRow("부통령 당선인", it, "${election.deputyAccession} 취임", onRenamePerson) }
         election.lastDeputyBallot?.let { ballot ->
             StatRow("최근 부통령 선거", "${ballot.date} · 연방 양원 ${ballot.college.sumOf { it.voters }}명")
         }
@@ -443,6 +448,7 @@ private fun ElectionSection(
     today: LocalDate,
     onCallEarlyElection: () -> Unit,
     onChooseElectionList: (String?) -> Unit,
+    onRenamePerson: (Int, String) -> Unit,
 ) {
     val schedule = politics.schedule
     val suspended = schedule.suspended
@@ -500,16 +506,37 @@ private fun ElectionSection(
             }
         }
     }
-    politics.presidentElect?.let { StatRow("대통령 당선인", "${it.person.name} · ${it.inauguration} 취임") }
+    politics.presidentElect?.let { elected ->
+        CandidateRow("대통령 당선인", elected.person, "${elected.inauguration} 취임", onRenamePerson)
+        elected.deputy?.let { CandidateRow("부통령 당선인", it, "${elected.inauguration} 취임", onRenamePerson) }
+    }
+    politics.senateViceElection?.let { senate ->
+        val elected = senate.elected
+        if (elected != null) {
+            CandidateRow("상원 선출 부통령 당선인", elected, "${senate.inauguration} 취임", onRenamePerson)
+        } else if (senate.candidates.isNotEmpty()) {
+            StatRow("상원 부통령 선출", "${senate.ballot}부터")
+            senate.candidates.forEach { CandidateRow("부통령 후보", it, it.party, onRenamePerson) }
+        } else {
+            StatRow("상원 부통령 선출", "취임 가능한 후보 없음")
+        }
+    }
     politics.executiveCampaign?.let { campaign ->
         when {
             campaign.houseDate != null -> {
                 StatRow("하원 주 대표단 표결", "${campaign.houseDate} · 당선선 26개 주")
+                val count = requireNotNull(campaign.regionalCount)
+                count.popular.sortedByDescending { count.electors.getValue(it.person.id) }.take(3).forEach { vote ->
+                    CandidateRow("하원 선출 후보", vote.person, "선거인 ${count.electors.getValue(vote.person.id)}명", onRenamePerson)
+                }
             }
 
             campaign.runoffDate != null -> {
                 campaign.firstBallot.take(2).forEach { vote ->
-                    StatRow(vote.person.party ?: "무소속 후보", "${vote.person.name} · 1차 ${formatPercent(vote.share)}")
+                    CandidateRow(vote.person.party ?: "무소속 후보", vote.person, "1차 ${formatPercent(vote.share)}", onRenamePerson)
+                    campaign.nominations.find { it.nominee.id == vote.person.id }?.runningMate?.let {
+                        CandidateRow("부통령 후보", it, it.party, onRenamePerson)
+                    }
                 }
             }
 
@@ -518,21 +545,23 @@ private fun ElectionSection(
                     val standing = campaign.primaryStandings.find { it.party == entry.nominee.party }
                     if (standing != null) {
                         val candidates = listOfNotNull(entry.nominee, entry.rival).associateBy { it.id }
-                        StatRow(
-                            "${standing.party} 경선",
-                            "${candidates.getValue(
-                                standing.firstId,
-                            ).name} ${standing.firstDelegates}명 · ${candidates.getValue(
-                                standing.secondId,
-                            ).name} ${standing.secondDelegates}명",
-                        )
+                        val totals = listOf(standing.firstId to standing.firstDelegates, standing.secondId to standing.secondDelegates)
+                        for ((id, delegates) in totals) {
+                            val candidate = candidates.getValue(id)
+                            val detail = "대의원 ${delegates}명"
+                            if (standing.nextDate != null || id == entry.nominee.id) {
+                                CandidateRow("${standing.party} 경선", candidate, detail, onRenamePerson)
+                            } else {
+                                StatRow("${standing.party} 경선", "${candidate.name} · $detail")
+                            }
+                        }
                         StatRow("대의원 집계", standing.nextDate?.let { "다음 경선 $it" } ?: "후보 확정 · ${entry.nominee.name}")
                     } else {
-                        val primary = entry.primaryShare?.let { " · 경선 ${formatPercent(it)}" }.orEmpty()
-                        val ticket = entry.runningMate?.let { " · 부통령 후보 ${it.name}" }.orEmpty()
-                        StatRow(entry.nominee.party ?: "무소속 후보", entry.nominee.name + ticket + primary)
+                        val primary = entry.primaryShare?.let { "경선 ${formatPercent(it)}" }
+                        CandidateRow(entry.nominee.party ?: "무소속 후보", entry.nominee, primary, onRenamePerson)
                         if (entry.endorsers.isNotEmpty()) StatRow("추천 정당", entry.endorsers.joinToString(" · "))
                     }
+                    entry.runningMate?.let { CandidateRow("부통령 후보", it, it.party, onRenamePerson) }
                 }
             }
         }
@@ -564,6 +593,17 @@ private fun ElectionSection(
         )
     }
     politics.lastElection?.let { LastElection(it, politics.profile.id == "KOR") }
+}
+
+@Composable
+private fun CandidateRow(
+    label: String,
+    person: Person,
+    detail: String?,
+    onRename: (Int, String) -> Unit,
+) {
+    StatRow(label, listOfNotNull(person.name, detail).joinToString(" · "))
+    PersonRenameControl(person, onRename)
 }
 
 @Composable

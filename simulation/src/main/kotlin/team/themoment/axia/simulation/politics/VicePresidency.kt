@@ -5,6 +5,14 @@ import team.themoment.axia.simulation.people.Person
 import java.time.LocalDate
 import kotlin.random.Random
 
+/** 대통령 하원 선출과 별개로 진행되는 미국 상원 부통령 선거. */
+data class SenateViceElection(
+    val ballot: LocalDate,
+    val inauguration: LocalDate,
+    val candidates: List<Person>,
+    val elected: Person?,
+)
+
 /** 미국의 상원 부통령 선출 및 양국의 임기 중 부통령 결원. 표 이탈과 인선일은 모형값이다. */
 internal class VicePresidency(
     private val country: String,
@@ -53,6 +61,12 @@ internal class VicePresidency(
     fun officersAwaitingOffice(): List<Person> = elected?.let(::listOf) ?: senateCandidates
 
     fun awaitingSenate(): Boolean = firstCount != null
+
+    fun snapshot(): SenateViceElection? =
+        firstCount?.let { ballot ->
+            val candidates = if (elected == null) senateCandidates.filter(leadership::available) else emptyList()
+            SenateViceElection(ballot, requireNotNull(accession), candidates, senateChoice())
+        }
 
     fun senateChoice(): Person? = elected?.takeIf(leadership::available)
 

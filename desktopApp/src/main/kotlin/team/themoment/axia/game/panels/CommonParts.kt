@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import team.themoment.axia.simulation.Simulation
 import team.themoment.axia.simulation.people.Person
 import team.themoment.axia.simulation.politics.WorldNews
 import team.themoment.axia.theme.DossierColors
@@ -42,6 +43,7 @@ internal fun RenameControl(
     key: Any,
     current: String,
     takenNames: Collection<String> = emptyList(),
+    maxLength: Int = MAX_NAME_LENGTH,
     onRename: (String) -> Unit,
 ) {
     var open by remember(key) { mutableStateOf(false) }
@@ -54,7 +56,7 @@ internal fun RenameControl(
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             BasicTextField(
                 value = draft,
-                onValueChange = { draft = it.take(MAX_NAME_LENGTH) },
+                onValueChange = { draft = it.take(maxLength) },
                 singleLine = true,
                 textStyle = DossierType.number(13.sp).copy(color = DossierColors.ink),
                 modifier =
@@ -68,7 +70,7 @@ internal fun RenameControl(
             PaperTag(
                 if (taken) "중복된 이름" else "확인",
                 selected = true,
-                enabled = name.isNotEmpty() && name.none(Char::isISOControl) && !taken,
+                enabled = name.length in 1..maxLength && name.none(Char::isISOControl) && !taken,
                 onClick = {
                     onRename(name)
                     open = false
@@ -96,14 +98,23 @@ internal fun PersonCard(
         Text(person.name, style = DossierType.title(15.sp), color = DossierColors.ink)
         val party = person.party?.let { "$it · " }.orEmpty()
         // 시작 시점 재임자는 실제 취임일 자료가 없어 게임 시작 때부터 재임 중으로 적는다.
-        val tenure = if (person.generated) "${shortDate(person.since)} 취임 · 생성 인물" else "게임 시작 때 재임 중"
+        val tenure = if (person.since == Simulation.START_DATE && !person.generated) "게임 시작 때 재임 중" else "${shortDate(person.since)} 취임"
+        val origin = if (person.generated) " · 생성 인물" else ""
         Text(
-            "$party${today.year - person.born}세 · $tenure · ${person.termsServed}번째 임기",
+            "$party${today.year - person.born}세 · $tenure$origin · ${person.termsServed}번째 임기",
             style = DossierType.number(11.sp),
             color = DossierColors.inkMuted,
         )
-        RenameControl(person.id, person.name) { onRename(person.id, it) }
+        PersonRenameControl(person, onRename)
     }
+}
+
+@Composable
+internal fun PersonRenameControl(
+    person: Person,
+    onRename: (Int, String) -> Unit,
+) {
+    RenameControl(person.id, person.name, maxLength = Person.MAX_NAME_LENGTH) { onRename(person.id, it) }
 }
 
 @Composable

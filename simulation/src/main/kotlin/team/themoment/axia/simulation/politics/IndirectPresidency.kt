@@ -58,6 +58,7 @@ data class IndirectPresidentSnapshot(
     val deputyAccession: LocalDate?,
     val deputyElect: Person?,
     val lastDeputyBallot: PresidentialDivision?,
+    val candidates: List<Person>,
 )
 
 /** 의회가 정부의 신임과 독립적으로 뽑는 국가원수. 선출된 후에도 취임일까지 전임자가 재임한다. */
@@ -101,6 +102,7 @@ internal class IndirectPresidency(
             },
             deputyElect,
             lastDeputyBallot,
+            field.filter(leadership::available),
         )
 
     fun renamePerson(person: Person) {
@@ -108,10 +110,6 @@ internal class IndirectPresidency(
         field = field.map(::refresh)
         elected = elected?.let(::refresh)
         deputyElect = deputyElect?.let(::refresh)
-
-        fun update(division: PresidentialDivision) = division.copy(votes = division.votes.mapKeys { (p, _) -> refresh(p) })
-        divisions.replaceAll(::update)
-        lastDeputyBallot = lastDeputyBallot?.let(::update)
     }
 
     fun renameParty(change: PartyRename) {

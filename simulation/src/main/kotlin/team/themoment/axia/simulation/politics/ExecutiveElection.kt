@@ -71,6 +71,7 @@ internal class ExecutiveElection(
             president.party ?: endorsedIncumbent?.takeIf { it.first == president.id }?.second
         }
     private val vice = if (country == "USA" || country == "IDN") VicePresidency(country, leadership, random) else null
+    val senateViceElection: SenateViceElection? get() = vice?.snapshot()
 
     private val bilateralTicket = country == "BRA" || country == "TWN"
     private val reelectionOnLoss = country == "KOR" || country == "FIN"

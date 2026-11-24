@@ -17,7 +17,11 @@ data class Person(
     val termsServed: Int,
     val generated: Boolean,
     val born: Int,
-)
+) {
+    companion object {
+        const val MAX_NAME_LENGTH = 30
+    }
+}
 
 /**
  * 국가원수와 정부 수반. 같은 사람이면 [headOfGovernment]가 null이다.
@@ -170,7 +174,7 @@ class PeopleRegistry internal constructor(
     ): Person? {
         val trimmed = name.trim()
         val person = persons[id] ?: return null
-        if (trimmed.isEmpty() || trimmed.length > MAX_NAME_LENGTH) return null
+        if (trimmed.length !in 1..Person.MAX_NAME_LENGTH || trimmed.any(Char::isISOControl)) return null
         return update(person.copy(name = trimmed))
     }
 
@@ -186,7 +190,6 @@ class PeopleRegistry internal constructor(
         val MONARCH_TITLES = setOf("국왕", "천황")
         val MALE_TITLES = setOf("최고지도자", "왕세자", "왕세자 겸 총리")
         const val MAX_ATTEMPTS = 20
-        const val MAX_NAME_LENGTH = 30
         const val MIN_LEADER_AGE = 45
         const val MAX_LEADER_AGE = 66
     }
