@@ -58,6 +58,9 @@ COUNTRY_NAME_OVERRIDES = {
     "PGA": "스프래틀리 군도",
 }
 
+# 베트남의 이 세 도형은 ISO 코드와 GeoNames상 성이지만 Natural Earth의 이름은 광역권으로 실려 있다.
+REGION_NAME_OVERRIDES = {"VNM-497": "동나이성", "VNM-451": "박깐성", "VNM-461": "흥옌성"}
+
 ROOT = Path(__file__).resolve().parents[2]
 WORLD_OUT = ROOT / "simulation/src/main/resources/world/world.json"
 GEOMETRY_OUT = ROOT / "desktopApp/src/main/resources/map/world-map.bin"
@@ -631,7 +634,8 @@ def write_world(admin0, admin1, owners):
         properties = feature["properties"]
         region = {
             "id": properties["adm1_code"],
-            "name": first_name(properties, "name_ko", "name", "name_en", "gn_name", "woe_name")
+            "name": REGION_NAME_OVERRIDES.get(properties["adm1_code"])
+            or first_name(properties, "name_ko", "name", "name_en", "gn_name", "woe_name")
             or country_name(admin0_by_code[owners[properties["adm0_a3"]]]),
             "country": owners[properties["adm0_a3"]],
         }

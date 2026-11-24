@@ -50,21 +50,26 @@ internal fun regionalDemographics(
     return estimates.map { measured[it.region.id] ?: it }
 }
 
-/** 도시화율은 여전히 추정치다. 새 인구 비중으로 재가중해도 같은 범위의 도시 인구 총량을 보존한다. */
+/** 지역별 공표 도시화율 또는 도시·면적 추정치를 같은 범위의 전국 도시화율에 맞춘다. */
 private fun reweightPopulation(
     regions: List<RegionBaseline>,
     shares: List<Double>,
     urbanTarget: Double,
 ): List<RegionBaseline> {
     val total = shares.sum()
-    val meanUrban = regions.indices.sumOf { shares[it] * regions[it].urban } / total
+    val urbanRates =
+        regions.map { (region, _, estimatedUrban) ->
+            RegionalPopulation.byCountry[region.countryId]?.urbanShare(region.id) ?: estimatedUrban
+        }
+    val meanUrban = regions.indices.sumOf { shares[it] * urbanRates[it] } / total
     val target = urbanTarget.coerceIn(0.0, 1.0)
     return regions.mapIndexed { index, baseline ->
+        val local = urbanRates[index]
         val urban =
             when {
-                meanUrban < target -> baseline.urban + (1.0 - baseline.urban) * (target - meanUrban) / (1.0 - meanUrban)
-                meanUrban > target -> baseline.urban * target / meanUrban
-                else -> baseline.urban
+                meanUrban < target -> local + (1.0 - local) * (target - meanUrban) / (1.0 - meanUrban)
+                meanUrban > target -> local * target / meanUrban
+                else -> local
             }
         baseline.copy(share = shares[index], urban = urban.coerceIn(0.0, 1.0))
     }

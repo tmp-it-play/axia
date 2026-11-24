@@ -36,6 +36,7 @@ data class RegionSnapshot(
     val populationSource: String?,
     /** 지역 인구 중 도시 인구 비율. */
     val urbanShare: Double,
+    val hasUrbanPopulationData: Boolean,
     /** 1인당 소득의 전국 대비 배율. */
     val relativeIncome: Double,
     /** 지역 지지율. 지역의 인구 집단 구성 차이로 전국 지지율에서 벗어난다. */
@@ -79,9 +80,17 @@ internal data class RegionalPopulation(
     val url: String,
     val total: Long,
     val counts: Map<String, Long>,
+    val urbanCounts: Map<String, Long> = emptyMap(),
 ) {
     init {
         require(total > 0 && counts.values.all { it >= 0 } && counts.values.sum() == total)
+        require(urbanCounts.all { (id, n) -> id in counts && n in 0..counts.getValue(id) })
+    }
+
+    fun urbanShare(id: String): Double? {
+        val urban = urbanCounts[id] ?: return null
+        val population = counts.getValue(id)
+        return if (population > 0) urban.toDouble() / population else null
     }
 
     companion object {
@@ -233,16 +242,18 @@ internal class Regions(
         return regions.mapIndexed { i, region ->
             val estimate = estimates[i]
             val program = programs[region.id] ?: RegionalProgram.NONE
+            val populationData = RegionalPopulation.byCountry[world.regions.getValue(region.id).countryId]
             RegionSnapshot(
                 regionId = region.id,
                 name = region.name,
                 populationShare = region.share,
                 population = population * region.share,
                 populationSource =
-                    RegionalPopulation.byCountry[world.regions.getValue(region.id).countryId]
+                    populationData
                         ?.takeIf { region.id in it.counts }
                         ?.let { "${it.source} · ${it.date}" },
                 urbanShare = region.urban,
+                hasUrbanPopulationData = populationData?.urbanShare(region.id) != null,
                 relativeIncome = region.income,
                 approval = sentiments.getValue(region.id).approval,
                 groupShares = sentiments.getValue(region.id).groupShares,

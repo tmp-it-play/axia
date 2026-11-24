@@ -1,0 +1,143 @@
+country,source_label,population
+EGY,Alexandria,5573808
+EGY,Aswan,1670122
+EGY,Asyout,5112926
+EGY,Behera,6927724
+EGY,Beni-Suef,3624142
+EGY,Cairo,10299821
+EGY,Dakahlia,7086788
+EGY,Damietta,1626063
+EGY,ElWadi ElGidid,268834
+EGY,Fayoum,4115608
+EGY,Gharbia,5468353
+EGY,Giza,9578680
+EGY,Ismailia,1464224
+EGY,Kafr-El-Sheikh,3740624
+EGY,Kalyobia,6175627
+EGY,Luxor,1412746
+EGY,Matrouh,557193
+EGY,Menia,6398400
+EGY,Menoufia,4767510
+EGY,North Sinai,512110
+EGY,Port-Said,793976
+EGY,Qena,3674412
+EGY,Red Sea,406195
+EGY,Sharkia,7961136
+EGY,South Sinai,117388
+EGY,Suez,797045
+EGY,Suhag,5783044
+IDN,Aceh,5482500
+IDN,Sumatera Utara,15386600
+IDN,Sumatera Barat,5757200
+IDN,Riau,6642900
+IDN,Jambi,3679200
+IDN,Sumatera Selatan,8743500
+IDN,Bengkulu,2086000
+IDN,Lampung,9314000
+IDN,Kepulauan Bangka Belitung,1511900
+IDN,Kepulauan Riau,2152600
+IDN,DKI Jakarta,10672100
+IDN,Jawa Barat,49860300
+IDN,Jawa Tengah,37541000
+IDN,DI Yogyakarta,3736500
+IDN,Jawa Timur,41527900
+IDN,Banten,12307700
+IDN,Bali,4404300
+IDN,Nusa Tenggara Barat,5560300
+IDN,Nusa Tenggara Timur,5569100
+IDN,Kalimantan Barat,5623300
+IDN,Kalimantan Tengah,2773700
+IDN,Kalimantan Selatan,4222300
+IDN,Kalimantan Timur,3909700
+IDN,Kalimantan Utara,730000
+IDN,Sulawesi Utara,2681500
+IDN,Sulawesi Tengah,3086800
+IDN,Sulawesi Selatan,9362300
+IDN,Sulawesi Tenggara,2749000
+IDN,Gorontalo,1213200
+IDN,Sulawesi Barat,1481100
+IDN,Maluku,1920500
+IDN,Maluku Utara,1337100
+IDN,Papua Barat,569600
+IDN,Papua Barat Daya,617700
+IDN,Papua,1047100
+IDN,Papua Selatan,534400
+IDN,Papua Tengah,1452800
+IDN,Papua Pegunungan,1448400
+THA,กระบี่,482121
+THA,กรุงเทพมหานคร,5471588
+THA,กาญจนบุรี,895281
+THA,กาฬสินธุ์,968065
+THA,กำแพงเพชร,704948
+THA,ขอนแก่น,1779373
+THA,จันทบุรี,536436
+THA,ฉะเชิงเทรา,730543
+THA,ชลบุรี,1618066
+THA,ชัยนาท,316220
+THA,ชัยภูมิ,1113378
+THA,ชุมพร,508857
+THA,ตรัง,637017
+THA,ตราด,227052
+THA,ตาก,691714
+THA,นครนายก,260117
+THA,นครปฐม,924521
+THA,นครพนม,714284
+THA,นครราชสีมา,2625794
+THA,นครศรีธรรมราช,1540953
+THA,นครสวรรค์,1021883
+THA,นนทบุรี,1308092
+THA,นราธิวาส,819162
+THA,น่าน,472722
+THA,บึงกาฬ,420487
+THA,บุรีรัมย์,1573230
+THA,ปทุมธานี,1219199
+THA,ประจวบคีรีขันธ์,550977
+THA,ปราจีนบุรี,499563
+THA,ปัตตานี,737077
+THA,พระนครศรีอยุธยา,822106
+THA,พะเยา,458287
+THA,พังงา,267057
+THA,พัทลุง,520598
+THA,พิจิตร,521907
+THA,พิษณุโลก,841729
+THA,ภูเก็ต,423599
+THA,มหาสารคาม,937915
+THA,มุกดาหาร,351595
+THA,ยะลา,549946
+THA,ยโสธร,528878
+THA,ระนอง,193371
+THA,ระยอง,771189
+THA,ราชบุรี,864746
+THA,ร้อยเอ็ด,1284836
+THA,ลพบุรี,729697
+THA,ลำปาง,711478
+THA,ลำพูน,398440
+THA,ศรีสะเกษ,1450333
+THA,สกลนคร,1142657
+THA,สงขลา,1431959
+THA,สตูล,325470
+THA,สมุทรปราการ,1372970
+THA,สมุทรสงคราม,187993
+THA,สมุทรสาคร,592033
+THA,สระบุรี,638826
+THA,สระแก้ว,562902
+THA,สิงห์บุรี,201439
+THA,สุพรรณบุรี,826391
+THA,สุราษฎร์ธานี,1075788
+THA,สุรินทร์,1367842
+THA,สุโขทัย,577866
+THA,หนองคาย,514021
+THA,หนองบัวลำภู,506872
+THA,อำนาจเจริญ,374137
+THA,อุดรธานี,1558528
+THA,อุตรดิตถ์,439629
+THA,อุทัยธานี,322273
+THA,อุบลราชธานี,1869608
+THA,อ่างทอง,270726
+THA,เชียงราย,1298977
+THA,เชียงใหม่,1797075
+THA,เพชรบุรี,483668
+THA,เพชรบูรณ์,967421
+THA,เลย,635142
+THA,แพร่,426331
+THA,แม่ฮ่องสอน,287644

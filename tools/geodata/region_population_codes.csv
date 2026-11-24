@@ -1,4 +1,31 @@
 country,region,source_code,region_name
+BRA,BRA-1294,GO,고이아스
+BRA,BRA-1311,SP,상파울루
+BRA,BRA-1313,PE,페르남부쿠
+BRA,BRA-576,AC,아크리
+BRA,BRA-592,AM,아마조나스
+BRA,BRA-593,MA,마라냥
+BRA,BRA-594,PA,파라
+BRA,BRA-595,RO,혼도니아
+BRA,BRA-596,TO,토칸칭스
+BRA,BRA-599,DF,연방구
+BRA,BRA-600,MS,마투그로수두술
+BRA,BRA-601,MG,미나스제라이스
+BRA,BRA-602,MT,마투그로수
+BRA,BRA-612,RS,히우그란지두술
+BRA,BRA-613,PR,파라나
+BRA,BRA-614,SC,산타카타리나
+BRA,BRA-621,CE,세아라
+BRA,BRA-622,PI,피아우이
+BRA,BRA-623,AL,알라고아스
+BRA,BRA-624,BA,바이아
+BRA,BRA-625,ES,이스피리투산투
+BRA,BRA-626,PB,파라이바
+BRA,BRA-627,RJ,리우데자네이루
+BRA,BRA-628,RN,히우그란지두노르치
+BRA,BRA-629,SE,세르지피
+BRA,BRA-670,RR,호라이마
+BRA,BRA-681,AP,아마파
 CAN,CAN-630,2021A000246,매니토바
 CAN,CAN-631,2021A000247,서스캐처원
 CAN,CAN-632,2021A000248,앨버타
@@ -28,6 +55,33 @@ DEU,DEU-1600,DEE,작센안할트
 DEU,DEU-1601,DED,작센
 DEU,DEU-3487,DE4,브란덴부르크
 DEU,DEU-3488,DE8,메클렌부르크포어포메른
+EGY,EGY-1530,Gharbia,가르비야
+EGY,EGY-1531,Ismailia,이스마일리아
+EGY,EGY-1532,Menoufia,무누피아
+EGY,EGY-1533,Cairo,카이로
+EGY,EGY-1534,Kalyobia,칼리우비야
+EGY,EGY-1535,Sharkia,샤르키야
+EGY,EGY-1536,Suez,수에즈
+EGY,EGY-1537,Dakahlia,다칼리야
+EGY,EGY-1538,Port-Said,포트사이드
+EGY,EGY-1539,Damietta,다미에타
+EGY,EGY-1540,Matrouh,마트루
+EGY,EGY-1541,Behera,베헤이라
+EGY,EGY-1542,Fayoum,파이윰
+EGY,EGY-1543,Alexandria,알렉산드리아
+EGY,EGY-1544,Giza,기자
+EGY,EGY-1545,Menia,미니아
+EGY,EGY-1546,Beni-Suef,베니수에프
+EGY,EGY-1547,Kafr-El-Sheikh,카프르엘셰이크
+EGY,EGY-1548,Aswan,아스완
+EGY,EGY-1549,Asyout,아시우트
+EGY,EGY-1550,ElWadi ElGidid,알와디알자디드
+EGY,EGY-1551,Qena,케나
+EGY,EGY-1552,Suhag,소하그
+EGY,EGY-1556,Red Sea,홍해
+EGY,EGY-1557,South Sinai,자누브시나
+EGY,EGY-1558,North Sinai,샤말시나
+EGY,EGY-5494,Luxor,룩소르
 FRA,FRA-1442,FRY20,마르티니크
 FRA,FRA-2000,FRY30,프랑스령 기아나
 FRA,FRA-4601,FRY40,레위니옹
@@ -129,6 +183,86 @@ FRA,FRA-5354,FRI34,비엔
 FRA,FRA-5355,FRF34,보주
 FRA,FRA-5356,FRC14,욘
 FRA,FRA-5357,FR103,이블린
+IDN,IDN-1136,Aceh,아체
+IDN,IDN-1185,Kalimantan Timur+Kalimantan Utara,동칼리만탄
+IDN,IDN-1223,Jawa Barat,자와바랏
+IDN,IDN-1224,Jawa Tengah,중앙자와
+IDN,IDN-1225,Bengkulu,븡쿨루
+IDN,IDN-1226,Banten,반텐
+IDN,IDN-1227,DKI Jakarta,자카르타
+IDN,IDN-1228,Kalimantan Barat,서칼리만탄
+IDN,IDN-1229,Lampung,람풍
+IDN,IDN-1230,Sumatera Selatan,남수마트라
+IDN,IDN-1231,Kepulauan Bangka Belitung,방카벨리퉁
+IDN,IDN-1232,Bali,발리
+IDN,IDN-1233,Jawa Timur,동자와
+IDN,IDN-1234,Kalimantan Selatan,남칼리만탄
+IDN,IDN-1235,Nusa Tenggara Timur,동누사틍가라
+IDN,IDN-1236,Sulawesi Selatan,남술라웨시
+IDN,IDN-1237,Sulawesi Barat,서술라웨시
+IDN,IDN-1796,Kepulauan Riau,리아우 제도
+IDN,IDN-1837,Gorontalo,고론탈로
+IDN,IDN-1930,Jambi,잠비
+IDN,IDN-1931,Kalimantan Tengah,중앙칼리만탄
+IDN,IDN-1933,Papua Barat+Papua Barat Daya,서파푸아
+IDN,IDN-381,Sumatera Utara,북수마트라
+IDN,IDN-492,Riau,리아우
+IDN,IDN-513,Sulawesi Utara,북술라웨시
+IDN,IDN-538,Maluku Utara,북말루쿠
+IDN,IDN-539,Sumatera Barat,서수마트라
+IDN,IDN-540,DI Yogyakarta,욕야카르타
+IDN,IDN-554,Maluku,말루쿠
+IDN,IDN-555,Nusa Tenggara Barat,서누사틍가라
+IDN,IDN-556,Sulawesi Tenggara,동남술라웨시
+IDN,IDN-557,Sulawesi Tengah,중앙술라웨시
+IDN,IDN-558,Papua+Papua Selatan+Papua Tengah+Papua Pegunungan,파푸아
+JPN,JPN-1821,34,히로시마현
+JPN,JPN-1822,33,오카야마현
+JPN,JPN-1824,32,시마네현
+JPN,JPN-1825,31,돗토리현
+JPN,JPN-1826,35,야마구치현
+JPN,JPN-1827,41,사가현
+JPN,JPN-1829,40,후쿠오카현
+JPN,JPN-1830,43,구마모토현
+JPN,JPN-1831,45,미야자키현
+JPN,JPN-1832,38,에히메현
+JPN,JPN-1833,37,가가와현
+JPN,JPN-1834,39,고치현
+JPN,JPN-1835,44,오이타현
+JPN,JPN-1836,36,도쿠시마현
+JPN,JPN-1840,23,아이치현
+JPN,JPN-1841,21,기후현
+JPN,JPN-1842,17,이시카와현
+JPN,JPN-1843,24,미에현
+JPN,JPN-1844,20,나가노현
+JPN,JPN-1845,22,시즈오카현
+JPN,JPN-1846,16,도야마현
+JPN,JPN-1847,01,홋카이도
+JPN,JPN-1848,18,후쿠이현
+JPN,JPN-1849,28,효고현
+JPN,JPN-1850,26,교토부
+JPN,JPN-1851,29,나라현
+JPN,JPN-1852,27,오사카부
+JPN,JPN-1853,25,시가현
+JPN,JPN-1854,30,와카야마현
+JPN,JPN-1855,12,지바현
+JPN,JPN-1856,08,이바라키현
+JPN,JPN-1857,14,가나가와현
+JPN,JPN-1858,11,사이타마현
+JPN,JPN-1859,09,도치기현
+JPN,JPN-1860,13,도쿄도
+JPN,JPN-1861,19,야마나시현
+JPN,JPN-1862,05,아키타현
+JPN,JPN-1863,02,아오모리현
+JPN,JPN-1864,07,후쿠시마현
+JPN,JPN-1865,03,이와테현
+JPN,JPN-1866,04,미야기현
+JPN,JPN-1867,15,니가타현
+JPN,JPN-1868,06,야마가타현
+JPN,JPN-3500,42,나가사키현
+JPN,JPN-3501,46,가고시마현
+JPN,JPN-3502,47,오키나와현
+JPN,JPN-3503,10,군마현
 KOR,KOR-2494,충북,충청북도
 KOR,KOR-2495,인천,인천광역시
 KOR,KOR-2496,강원,강원도
@@ -172,6 +306,83 @@ POL,POL-3151,PL81,루블린
 POL,POL-3152,PL82,포드카르파츠키에
 POL,POL-3167,PL52,오폴레
 POL,POL-3170,PL21,마워폴스카
+THA,THA-374,แม่ฮ่องสอน,매홍손
+THA,THA-375,ชุมพร,춤폰
+THA,THA-376,นครศรีธรรมราช,나콘시탐마랏
+THA,THA-377,ภูเก็ต,푸껫
+THA,THA-378,พังงา,팡응아
+THA,THA-379,ระนอง,라농
+THA,THA-380,สุราษฎร์ธานี,수랏타니
+THA,THA-382,กระบี่,끄라비
+THA,THA-383,พัทลุง,파탈룽
+THA,THA-385,สตูล,사뚠
+THA,THA-386,สงขลา,송클라
+THA,THA-387,ตรัง,뜨랑
+THA,THA-388,ยะลา,얄라
+THA,THA-389,เชียงราย,치앙라이
+THA,THA-390,เชียงใหม่,치앙마이
+THA,THA-391,ลำปาง,람빵
+THA,THA-392,ลำพูน,람푼
+THA,THA-393,น่าน,난
+THA,THA-394,พะเยา,파야오
+THA,THA-395,แพร่,프래
+THA,THA-396,พิษณุโลก,핏사눌록
+THA,THA-397,สุโขทัย,수코타이
+THA,THA-398,อุตรดิตถ์,우따라딧
+THA,THA-399,กาญจนบุรี,깐짜나부리
+THA,THA-400,กำแพงเพชร,깜팽펫
+THA,THA-401,พิจิตร,피찟
+THA,THA-402,เพชรบูรณ์,펫차분
+THA,THA-403,สุพรรณบุรี,수판부리
+THA,THA-404,ตาก,딱
+THA,THA-405,อุทัยธานี,우타이타니
+THA,THA-406,อ่างทอง,앙통
+THA,THA-407,ชัยนาท,차이낫
+THA,THA-408,ลพบุรี,롭부리
+THA,THA-409,นครนายก,나콘나욕
+THA,THA-410,ปราจีนบุรี,쁘라찐부리
+THA,THA-411,นครสวรรค์,나콘사완
+THA,THA-412,พระนครศรีอยุธยา,아유타야
+THA,THA-413,ปทุมธานี,빠툼타니
+THA,THA-414,สิงห์บุรี,싱부리
+THA,THA-415,สระบุรี,사라부리
+THA,THA-416,กรุงเทพมหานคร,방콕
+THA,THA-417,นนทบุรี,논타부리
+THA,THA-418,นครปฐม,나콘빠톰
+THA,THA-419,เพชรบุรี,펫차부리
+THA,THA-420,ประจวบคีรีขันธ์,쁘라쭈압키리칸
+THA,THA-421,ราชบุรี,랏차부리
+THA,THA-422,สมุทรปราการ,사뭇쁘라깐
+THA,THA-423,สมุทรสาคร,사뭇사콘
+THA,THA-424,สมุทรสงคราม,사뭇송크람
+THA,THA-425,ศรีสะเกษ,시사껫
+THA,THA-426,อุบลราชธานี,우본랏차타니
+THA,THA-427,อำนาจเจริญ,암낫짜른
+THA,THA-428,ยโสธร,야소톤
+THA,THA-430,ชลบุรี,촌부리
+THA,THA-431,ฉะเชิงเทรา,차층사오
+THA,THA-432,จันทบุรี,짠타부리
+THA,THA-433,สระแก้ว,사깨오
+THA,THA-434,ระยอง,라영
+THA,THA-435,ตราด,뜨랏
+THA,THA-436,บุรีรัมย์,부리람
+THA,THA-437,ชัยภูมิ,차이야품
+THA,THA-438,ขอนแก่น,콘깬
+THA,THA-439,กาฬสินธุ์,깔라신
+THA,THA-440,มหาสารคาม,마하사라캄
+THA,THA-441,นครราชสีมา,나콘랏차시마
+THA,THA-442,ร้อยเอ็ด,로이엣
+THA,THA-443,สุรินทร์,수린
+THA,THA-445,เลย,르이
+THA,THA-446,หนองคาย,농카이
+THA,THA-447,สกลนคร,사꼰나콘
+THA,THA-448,อุดรธานี,우돈타니
+THA,THA-449,หนองบัวลำภู,농부아람푸
+THA,THA-472,นครพนม,나콘파놈
+THA,THA-473,มุกดาหาร,묵다한
+THA,THA-493,นราธิวาส,나라티왓
+THA,THA-494,ปัตตานี,빠따니
+THA,THA-5499,บึงกาฬ,븡깐
 TUR,TUR-2229,TR321,아이든
 TUR,TUR-2230,TR310,이즈미르
 TUR,TUR-2238,TR221,발리케시르
@@ -304,3 +515,66 @@ USA,USA-3560,42,펜실베이니아
 USA,USA-3561,23,메인
 USA,USA-3562,26,미시간
 USA,USA-3563,02,알래스카
+VNM,VNM-429,Quảng Ninh,꽝닌성
+VNM,VNM-444,Tây Ninh,떠이닌성
+VNM,VNM-450,Điện Biên,디엔비엔성
+VNM,VNM-451,Bắc Kạn,박깐성
+VNM,VNM-452,Thái Nguyên,타이응우옌성
+VNM,VNM-453,Lai Châu,라이쩌우성
+VNM,VNM-454,Lạng Sơn,랑선성
+VNM,VNM-455,Sơn La,선라성
+VNM,VNM-456,Thanh Hóa,타인호아성
+VNM,VNM-457,Tuyên Quang,뚜옌꽝성
+VNM,VNM-458,Yên Bái,옌바이성
+VNM,VNM-459,Hòa Bình,호아빈성
+VNM,VNM-460,Hải Dương,하이즈엉성
+VNM,VNM-4600,Hải Phòng,하이퐁
+VNM,VNM-461,Hưng Yên,흥옌성
+VNM,VNM-462,Hà Nội,하노이
+VNM,VNM-463,Bắc Ninh,박닌성
+VNM,VNM-464,Vĩnh Phúc,빈푹성
+VNM,VNM-466,Ninh Bình,닌빈성
+VNM,VNM-467,Hà Nam,하남성
+VNM,VNM-468,Nam Định,남딘성
+VNM,VNM-469,Phú Thọ,푸토성
+VNM,VNM-470,Bắc Giang,박장성
+VNM,VNM-471,Thái Bình,타이빈성
+VNM,VNM-474,Hà Tĩnh,하띤성
+VNM,VNM-475,Nghệ An,응에안성
+VNM,VNM-476,Quảng Bình,꽝빈성
+VNM,VNM-477,Đắk Lắk,닥락성
+VNM,VNM-478,Gia Lai,잘라이성
+VNM,VNM-479,Khánh Hòa,카인호아성
+VNM,VNM-480,Lâm Đồng,럼동성
+VNM,VNM-481,Ninh Thuận,닌투언성
+VNM,VNM-482,Phú Yên,푸옌성
+VNM,VNM-483,Bình Dương,빈즈엉성
+VNM,VNM-4834,Tiền Giang,띠엔장성
+VNM,VNM-4835,Đắk Nông,닥농성
+VNM,VNM-484,Bình Phước,빈프억성
+VNM,VNM-485,Bình Định,빈딘성
+VNM,VNM-486,Kon Tum,꼰뚬성
+VNM,VNM-487,Quảng Nam,꽝남성
+VNM,VNM-488,Quảng Ngãi,꽝응아이성
+VNM,VNM-489,Quảng Trị,꽝찌성
+VNM,VNM-490,Huế,트어티엔후에성
+VNM,VNM-491,Đà Nẵng,다낭
+VNM,VNM-495,Bà Rịa - Vũng Tàu,바리어붕따우성
+VNM,VNM-496,Bình Thuận,빈투언성
+VNM,VNM-497,Đồng Nai,동나이성
+VNM,VNM-498,An Giang,안장성
+VNM,VNM-499,Cần Thơ,껀터
+VNM,VNM-500,Đồng Tháp,동탑성
+VNM,VNM-501,TP. Hồ Chí Minh,호찌민시
+VNM,VNM-502,Kiên Giang,끼엔장성
+VNM,VNM-503,Long An,롱안성
+VNM,VNM-504,Bến Tre,벤째성
+VNM,VNM-505,Hậu Giang,하우장성
+VNM,VNM-506,Bạc Liêu,박리에우성
+VNM,VNM-507,Cà Mau,까마우성
+VNM,VNM-508,Sóc Trăng,속짱성
+VNM,VNM-509,Trà Vinh,짜빈성
+VNM,VNM-510,Vĩnh Long,빈롱성
+VNM,VNM-511,Cao Bằng,까오방성
+VNM,VNM-512,Hà Giang,하장성
+VNM,VNM-5483,Lào Cai,라오까이성
