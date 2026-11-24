@@ -146,6 +146,17 @@ class SimulationRunner(
         name: String,
     ) = perform(CampaignAction.RenameOrganization(organizationId, name))
 
+    fun renameParty(
+        country: String,
+        id: Int,
+        name: String,
+    ) = perform(CampaignAction.RenameParty(country, id, name))
+
+    fun renameRebels(
+        id: Int,
+        name: String,
+    ) = perform(CampaignAction.RenameRebels(id, name))
+
     fun renamePerson(
         personId: Int,
         name: String,
@@ -270,7 +281,7 @@ class SimulationRunner(
                         mutableNation.value = simulation.nationSnapshot()
                     }
 
-                    is CampaignAction.RenamePerson -> {
+                    is CampaignAction.RenamePerson, is CampaignAction.RenameParty, is CampaignAction.RenameRebels -> {
                         mutableWorld.value = simulation.worldSnapshot()
                     }
 

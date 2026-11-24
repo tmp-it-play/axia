@@ -10,8 +10,10 @@ import team.themoment.axia.format.formatPercent
 import team.themoment.axia.format.formatPopulation
 import team.themoment.axia.game.panels.CommoditySection
 import team.themoment.axia.game.panels.KeyIndicatorRows
+import team.themoment.axia.game.panels.OpeningPolicyRate
+import team.themoment.axia.game.panels.RenameControl
 import team.themoment.axia.simulation.WorldSnapshot
-import team.themoment.axia.simulation.economy.EconomyIndicators
+import team.themoment.axia.simulation.economy.EconomySnapshot
 import team.themoment.axia.simulation.nation.RegionSnapshot
 import team.themoment.axia.simulation.nation.RegionalProgram
 import team.themoment.axia.simulation.world.CountryKind
@@ -29,17 +31,19 @@ import kotlin.math.roundToInt
 fun SelectionPanel(
     world: World,
     regionId: String,
-    economy: EconomyIndicators?,
+    economy: EconomySnapshot,
     snapshot: WorldSnapshot,
     playerRegion: RegionSnapshot?,
     playerId: String,
     onClose: () -> Unit,
     modifier: Modifier = Modifier,
     onRegionalProgram: (String, RegionalProgram) -> Unit,
+    onRenameParty: (String, Int, String) -> Unit,
     controllerId: String? = null,
 ) {
     val region = world.region(regionId)
     val country = world.country(controllerId ?: region.countryId)
+    val indicators = economy.countries[country.id]
     val territory = region.territoryId?.let(world::territory)
     DossierPanel(title = country.name, onClose = onClose, scrollable = true, modifier = modifier.width(320.dp)) {
         if (country.kind == CountryKind.UNCLAIMED) {
@@ -54,13 +58,14 @@ fun SelectionPanel(
             StatRow("인구", formatPopulation(r.population))
             val source = r.populationSource ?: "도시 인구·면적 추정"
             Text("초기 인구 비중 · $source", style = DossierType.number(11.sp), color = DossierColors.inkMuted)
-            StatRow("도시화율 (추정)", "${(r.urbanShare * 100).roundToInt()}%")
+            val urbanLabel = if (r.hasUrbanPopulationData) "도시화율 (지역 통계·전국 보정)" else "도시화율 (추정)"
+            StatRow(urbanLabel, "${(r.urbanShare * 100).roundToInt()}%")
             StatRow("1인당 소득 (전국 = 100)", "${(r.relativeIncome * 100).roundToInt()}")
             val largest = r.groupShares.maxBy { it.value }
             StatRow("가장 큰 직업·은퇴 집단", largest.key.label, note = formatPercent(largest.value))
             StatRow("지역 범죄 지수", "%.1f".format(r.crime), note = "2024년 전국 = 100")
             StatRow("지역 지지율", "${r.approval.roundToInt()}%")
-            StatRow("지역 실업률", formatPercent(r.economy.unemployment), note = economy?.let { "전국 ${formatPercent(it.unemployment)}" })
+            StatRow("지역 실업률", formatPercent(r.economy.unemployment), note = indicators?.let { "전국 ${formatPercent(it.unemployment)}" })
             StatRow("전국 GDP 중 지역 비중", formatPercent(r.economy.gdpShare))
             SectionTitle("지역 사업")
             StatRow("사업 예산 · 전국 GDP 대비", formatPercent(r.programSpending))
@@ -97,7 +102,18 @@ fun SelectionPanel(
                 ?.executive
                 ?.winner
                 ?.let { StatRow("최근 대통령 당선인", it.name) }
-            politics.newParties.forEach { party -> StatRow(party.name, "${party.identity.label} · ${formatPercent(party.support)}") }
+            politics.newParties.forEach { party ->
+                StatRow(party.name, "${party.identity.label} · ${formatPercent(party.support)}")
+                RenameControl(id to party.foundation.id, party.name, politics.takenPartyNames) {
+                    onRenameParty(id, party.foundation.id, it)
+                }
+            }
+            politics.legislature?.groups.orEmpty().forEach { party ->
+                party.foundation?.let { origin ->
+                    StatRow(party.name, "${party.role.label} · ${party.seats}석")
+                    RenameControl(id to origin.id, party.name, politics.takenPartyNames) { onRenameParty(id, origin.id, it) }
+                }
+            }
             politics.pendingBill?.let { StatRow(if (it.conference) "양원 절충안" else "심의 중", "${it.title} · ${it.sponsor}") }
             politics.lastBill?.let { bill ->
                 val vote = bill.vote
@@ -117,10 +133,11 @@ fun SelectionPanel(
         snapshot.military.civilWars.firstOrNull { it.country == id && it.ended == null }?.let {
             StatRow("내전", "${it.rebels} · ${(it.rebelControl * 100).roundToInt()}% 통제", valueColor = DossierColors.negative)
         }
-        if (economy != null) {
+        if (indicators != null) {
             SectionTitle("국가 경제 지표")
-            KeyIndicatorRows(economy)
-            CommoditySection(id, snapshot.trade.commodities, snapshot.date, economy.supportedGrainTonnes) { world.country(it).name }
+            KeyIndicatorRows(indicators)
+            OpeningPolicyRate(economy.monetary.getValue(id))
+            CommoditySection(id, snapshot.trade.commodities, snapshot.date, indicators.supportedGrainTonnes) { world.country(it).name }
         }
     }
 }

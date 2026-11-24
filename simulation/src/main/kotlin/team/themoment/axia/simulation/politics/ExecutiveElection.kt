@@ -53,6 +53,35 @@ internal class ExecutiveElection(
         campaign = null
     }
 
+    fun partyNamesInOfficeOrCampaign(): Set<String> =
+        buildSet {
+            leadership.current().all().mapNotNullTo(this) { it.party }
+            campaign?.nominations?.forEach {
+                it.nominee.party?.let(::add)
+                it.rival?.party?.let(::add)
+            }
+            campaign?.firstBallot?.mapNotNullTo(this) { it.person.party }
+        }
+
+    fun renameParty(change: PartyRename) {
+        fun update(person: Person): Person =
+            if (person.party == change.old) {
+                leadership.changeAffiliation(person.id, change.name)
+                person.copy(party = change.name)
+            } else {
+                person
+            }
+
+        leadership.current().all().forEach(::update)
+        campaign =
+            campaign?.let { slate ->
+                slate.copy(
+                    nominations = slate.nominations.map { it.copy(nominee = update(it.nominee), rival = it.rival?.let(::update)) },
+                    firstBallot = slate.firstBallot.map { it.copy(person = update(it.person)) },
+                )
+            }
+    }
+
     fun prepare(
         date: LocalDate,
         election: LocalDate?,

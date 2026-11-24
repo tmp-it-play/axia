@@ -70,7 +70,7 @@ data class PresidentialVeto(
  * @property judicialIndependence V-Dem 사법 견제 지수. 위헌 심사에서 법률을 무효로 할 가능성에 비례한다.
  * @property reviewsLaws 법원이 의회 제정법을 무효로 할 수 있는지(영국 대법원은 못 한다).
  * @property executiveTermLimit 행정부 수반의 연속 임기 제한. 없으면 null.
- * @property noConfidence 의회가 정부를 불신임할 수 있는지.
+ * @property confidence 내각·정부 수반 불신임의 표결과 후속 절차.
  */
 @Serializable
 data class ConstitutionProfile(
@@ -79,7 +79,7 @@ data class ConstitutionProfile(
     val judicialIndependence: Double,
     val upperHouse: UpperHouse? = null,
     val executiveTermLimit: Int? = null,
-    val noConfidence: Boolean,
+    val confidence: ConfidenceRule? = null,
     val presidentialVeto: PresidentialVeto? = null,
     /** 근래 쿠데타(시도) 이력이 있어 군부 개입 위험이 있는 나라인지. */
     val coupProne: Boolean = false,

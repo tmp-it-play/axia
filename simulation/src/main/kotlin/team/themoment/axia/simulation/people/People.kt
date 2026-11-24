@@ -229,6 +229,14 @@ internal class LeadershipState(
         date: LocalDate,
     ): Person = registry.generate(countryId, "후보", party, date)
 
+    internal fun changeAffiliation(
+        id: Int,
+        party: String,
+    ): Person {
+        val person = requireNotNull(registry.get(id))
+        return registry.update(person.copy(party = party))
+    }
+
     fun seatPresident(
         candidate: Person,
         date: LocalDate,
@@ -303,10 +311,12 @@ internal class LeadershipState(
     fun replaceHead(
         party: String?,
         date: LocalDate,
-    ) {
+        title: String? = null,
+    ): Person {
         val head = parliamentaryHead()
-        val next = registry.generate(countryId, head.title, party ?: head.party, date)
+        val next = registry.generate(countryId, title ?: head.title, party, date)
         if (headOfGovernmentId != null) headOfGovernmentId = next.id else headOfStateId = next.id
+        return next
     }
 
     private fun executive(): Person =

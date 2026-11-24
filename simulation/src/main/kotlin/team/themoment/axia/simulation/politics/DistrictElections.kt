@@ -16,6 +16,7 @@ internal class DistrictElectorate(
     private val regions: List<ElectoralRegion>,
     private val roles: Map<String, PartyRole>,
     private val nationalApproval: Double,
+    private val modelNames: Map<String, String> = emptyMap(),
 ) {
     fun elect(
         shares: Map<String, Double>,
@@ -50,7 +51,7 @@ internal class DistrictElectorate(
             val winners =
                 List(count) { district ->
                     regionalWeights.keys.maxBy { party ->
-                        val draw = localAffinity(region.id, district, party)
+                        val draw = localAffinity(region.id, district, modelNames[party] ?: party)
                         regionalWeights.getValue(party) / -ln(draw)
                     }
                 }

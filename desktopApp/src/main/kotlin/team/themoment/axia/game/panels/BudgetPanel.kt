@@ -187,7 +187,13 @@ internal fun DraftControls(
         if (vote == null) StatRow("예상 심의 점수", billScore(support.score)) else StatRow("예상 찬성", voteSummary(vote))
     }
     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        PaperTag("변경안 발의 · ${politics.draft.size}건", selected = true, enabled = politics.draft.isNotEmpty(), onClick = onIntroduce)
+        PaperTag(
+            "변경안 발의 · ${politics.draft.size}건",
+            selected = true,
+            enabled =
+                politics.draft.isNotEmpty() && !politics.legislatureDissolved,
+            onClick = onIntroduce,
+        )
         if (politics.draft.isNotEmpty()) PaperTag("심의 근거", onClick = onViewBill)
         PaperTag("초안 초기화", enabled = politics.draft.isNotEmpty(), onClick = onClear)
     }

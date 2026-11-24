@@ -47,7 +47,18 @@ internal fun ideologicalDistance(
     return (abs(economic - otherEconomic) + abs(social - otherSocial)) / 4.0
 }
 
-internal class EmergingParties {
+internal class EmergingParties(
+    profile: PoliticalProfile,
+) {
+    private val initialNames =
+        buildSet {
+            profile.legislature?.groups?.mapTo(this) { it.name }
+            profile.elections.legislature
+                ?.openingContest
+                ?.parties
+                ?.mapTo(this) { it.name }
+        }
+    private var nextId = 1
     private val parties = mutableListOf<NewParty>()
 
     fun snapshot(): List<NewParty> = parties.toList()
@@ -60,6 +71,7 @@ internal class EmergingParties {
         moods: Map<Identity, Double>,
         shares: Map<Identity, Double>,
         random: Random,
+        takenNames: () -> Set<String>,
     ): List<NewParty> {
         parties.replaceAll { party ->
             val target =
@@ -75,16 +87,18 @@ internal class EmergingParties {
         for (identity in Identity.entries) {
             if (parties.size >= 3) break
             if (moods.getValue(identity) >= 35.0 || parties.any { it.identity == identity } ||
-                groups.any { it.foundingIdentity == identity }
+                groups.any { it.foundation?.identity == identity }
             ) {
                 continue
             }
             if (random.nextDouble() >= 0.08) continue
-            val taken = (groups.map { it.name } + parties.map { it.name }).toSet()
+            val taken = takenNames() + groups.map { it.modelName } + parties.map { it.foundation.originalName }
             val bases = PARTY_NAMES.getValue(identity)
             val names = bases + listOf("새", "미래", "국민").flatMap { prefix -> bases.map { "$prefix$it" } }
-            val name = names.firstOrNull { it !in taken } ?: "${bases.first()} ${taken.size + 1}"
-            val party = NewParty(name, identity, date, 0.01)
+            val name =
+                names.firstOrNull { it !in taken }
+                    ?: generateSequence(2) { it + 1 }.map { "${bases.first()} $it" }.first { it !in taken }
+            val party = NewParty(name, PartyFoundation(nextId++, name, identity), date, 0.01)
             parties += party
             founded += party
         }
@@ -98,7 +112,48 @@ internal class EmergingParties {
         return existing.mapValues { it.value * remaining } + fresh
     }
 
-    fun contenders() = parties.map { ParliamentaryGroup(it.name, 1, PartyRole.OPPOSITION, foundingIdentity = it.identity) }
+    fun contenders() = parties.map { ParliamentaryGroup(it.name, 1, PartyRole.OPPOSITION, foundation = it.foundation) }
+
+    fun takenNames(
+        chamber: Legislature?,
+        executive: ExecutiveElection,
+    ): Set<String> {
+        if (chamber == null) return emptySet()
+        return buildSet {
+            addAll(initialNames)
+            chamber.groups.mapTo(this) { it.name }
+            parties.mapTo(this) { it.name }
+            addAll(executive.partyNamesInOfficeOrCampaign())
+        }
+    }
+
+    /** 원외 시점과 당선 이후에 같은 창당 번호를 사용한다. 시나리오의 실존 정당은 번호가 없다. */
+    fun rename(
+        id: Int,
+        requested: String,
+        chamber: Legislature,
+        takenNames: Set<String>,
+    ): PartyRename? {
+        val index = parties.indexOfFirst { it.foundation.id == id }
+        val old = parties.getOrNull(index)?.name ?: chamber.groups.firstOrNull { it.foundation?.id == id }?.name ?: return null
+        val name = requested.trim()
+        if (name.length !in 1..40 || name.any(Char::isISOControl) || name in takenNames) return null
+        if (index >= 0) parties[index] = parties[index].copy(name = name)
+        return PartyRename(old, name)
+    }
+}
+
+/** 진행 중인 정치 상태에서 개명 전 이름으로 연결된 참조만 바꾼다. 과거 표결·선거 기록은 당시 명칭을 유지한다. */
+internal data class PartyRename(
+    val old: String,
+    val name: String,
+) {
+    fun label(value: String): String = if (value == old) name else value
+
+    fun group(party: ParliamentaryGroup): ParliamentaryGroup = if (party.name == old) party.copy(name = name) else party
+
+    fun rollCall(vote: RollCall): RollCall =
+        vote.copy(rows = vote.rows.map { it.copy(party = group(it.party)) }, negotiatingWith = vote.negotiatingWith?.let(::label))
 }
 
 private val PARTY_NAMES =

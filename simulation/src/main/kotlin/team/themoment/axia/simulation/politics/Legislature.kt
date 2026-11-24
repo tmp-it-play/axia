@@ -17,6 +17,14 @@ enum class PartyRole(
     OTHER("기타", 0.0),
 }
 
+/** 한 나라에서 창당 순서로 부여한 번호와 창당 당시 이름·성향. 개명 뒤에도 선거구의 지지 기반은 같다. */
+@Serializable
+data class PartyFoundation(
+    val id: Int,
+    val originalName: String,
+    val identity: Identity,
+)
+
 @Serializable
 data class ParliamentaryGroup(
     val name: String,
@@ -26,13 +34,15 @@ data class ParliamentaryGroup(
     val nonVoting: Int = 0,
     /** 일반 의석 외에 정당에 배정된 유보석. 표결에는 참여하되 다음 지역구 선거의 득표 기반에서는 뺀다. */
     val reservedSeats: Int = 0,
-    val foundingIdentity: Identity? = null,
+    val foundation: PartyFoundation? = null,
 ) {
     init {
         require(name.isNotBlank() && seats > 0 && nonVoting in 0..seats && reservedSeats in 0..seats)
     }
 
-    val identity: Identity? get() = foundingIdentity ?: partyIdentity(name, constituency)
+    val identity: Identity? get() = foundation?.identity ?: partyIdentity(name, constituency)
+
+    internal val modelName: String get() = foundation?.originalName ?: name
 
     internal fun supportMood(
         groups: Map<PopulationGroup, Double>,

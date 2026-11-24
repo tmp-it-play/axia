@@ -158,6 +158,7 @@ data class WarSnapshot(
 )
 
 data class CivilWarSnapshot(
+    val generatedId: Int?,
     val country: String,
     val rebels: String,
     val started: LocalDate,
@@ -290,11 +291,12 @@ internal class Military(
 
     private class CivilWar(
         val country: String,
-        val rebels: String,
+        var rebels: String,
         val started: LocalDate,
         var control: Double,
         var strength: Double,
         var intensity: Double,
+        val generatedId: Int? = null,
         var ended: LocalDate? = null,
     )
 
@@ -577,8 +579,25 @@ internal class Military(
         date: LocalDate,
     ): Boolean {
         if (civilWars.any { it.country == country && it.ended == null }) return false
-        civilWars += CivilWar(country, rebels, date, NEW_REBEL_CONTROL, random.nextDouble(0.2, 0.5), NEW_CIVIL_INTENSITY)
+        val used = civilWars.filter { it.country == country }.mapTo(mutableSetOf()) { it.rebels }
+        var name = rebels
+        var suffix = 2
+        while (name in used) name = "$rebels ${suffix++}"
+        civilWars += CivilWar(country, name, date, NEW_REBEL_CONTROL, random.nextDouble(0.2, 0.5), NEW_CIVIL_INTENSITY, civilWars.size + 1)
         return true
+    }
+
+    fun renameRebels(
+        id: Int,
+        requested: String,
+    ) {
+        val war = civilWars.firstOrNull { it.generatedId == id && it.ended == null } ?: return
+        val name = requested.trim()
+        if (name.length in 1..40 && name.none(Char::isISOControl) &&
+            civilWars.none { it.country == war.country && it !== war && it.rebels == name }
+        ) {
+            war.rebels = name
+        }
     }
 
     fun drainCivilVictories(): List<Pair<String, String>> = civilVictories.toList().also { civilVictories.clear() }
@@ -968,7 +987,10 @@ internal class Military(
                         treaty = war.treaty,
                     )
                 },
-            civilWars = civilWars.map { CivilWarSnapshot(it.country, it.rebels, it.started, it.control, it.intensity, it.ended) },
+            civilWars =
+                civilWars.map { war ->
+                    CivilWarSnapshot(war.generatedId, war.country, war.rebels, war.started, war.control, war.intensity, war.ended)
+                },
             disputes = disputes.toList(),
             mobilization = mobilization,
             regionOwners = regionOwners,

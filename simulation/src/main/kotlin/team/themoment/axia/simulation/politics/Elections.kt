@@ -232,6 +232,7 @@ internal object ElectionModel {
         previousRoles: Map<String, PartyRole>,
         president: String? = null,
         preference: CoalitionPreference? = null,
+        maxPartnerDistance: Double = 0.58,
     ): List<ParliamentaryGroup> {
         if (previousRoles.isNotEmpty() && PartyRole.LEAD !in previousRoles.values) return groups
         val inGovernment = { name: String ->
@@ -273,7 +274,7 @@ internal object ElectionModel {
             remaining.remove(partner)
             val distance = ideologicalDistance(formateur.identity, partner.identity)
             val formerPartners = inGovernment(formateur.name) && inGovernment(partner.name)
-            if (distance > 0.58 && !formerPartners) continue
+            if (distance > maxPartnerDistance && !formerPartners) continue
             coalition[partner.name] =
                 if (distance > 0.43 || previousRoles[partner.name] == PartyRole.SUPPLY) PartyRole.SUPPLY else PartyRole.COALITION
             seats += partner.votingSeats

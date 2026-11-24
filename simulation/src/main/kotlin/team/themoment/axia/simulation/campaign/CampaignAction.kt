@@ -164,6 +164,25 @@ sealed interface CampaignAction {
     }
 
     @Serializable
+    @SerialName("party.rename")
+    data class RenameParty(
+        val country: String,
+        val id: Int,
+        val name: String,
+    ) : CampaignAction {
+        override fun applyTo(simulation: Simulation) = simulation.renameParty(country, id, name)
+    }
+
+    @Serializable
+    @SerialName("rebels.rename")
+    data class RenameRebels(
+        val id: Int,
+        val name: String,
+    ) : CampaignAction {
+        override fun applyTo(simulation: Simulation) = simulation.renameRebels(id, name)
+    }
+
+    @Serializable
     @SerialName("person.rename")
     data class RenamePerson(
         val id: Int,

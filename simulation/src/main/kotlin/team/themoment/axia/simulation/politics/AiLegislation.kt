@@ -29,6 +29,10 @@ internal class AiLegislation {
     private var revenue = 0.0
     private var spending = 0.0
 
+    fun renameParty(change: PartyRename) {
+        pending = pending?.let { it.copy(sponsor = change.label(it.sponsor), vote = it.vote?.let(change::rollCall)) }
+    }
+
     fun dissolve(): Boolean {
         val lapsed = pending != null
         pending = null
@@ -81,9 +85,10 @@ internal class AiLegislation {
             return WorldNews(date, id, chamber?.name ?: government, "${bill.title} $verdict · $detail", major = false)
         }
         if (Math.floorMod(date.monthValue + id.hashCode(), 6) != 0) return null
-        val sponsor = chamber?.groups?.firstOrNull { it.role == PartyRole.LEAD }?.name ?: government
-        // 정당별 경기 부양 선호는 실측 강령이 없는 경우 이름에서 고정해 둔 게임 계수다.
-        val preference = Math.floorMod(sponsor.hashCode(), 101) / 100.0 - 0.5
+        val lead = chamber?.groups?.firstOrNull { it.role == PartyRole.LEAD }
+        val sponsor = lead?.name ?: government
+        // 실측 강령이 없는 경기 부양 선호는 창당 당시 이름으로 고정한다. 여당이 없는 정부는 국가 코드를 쓴다.
+        val preference = Math.floorMod((lead?.modelName ?: id).hashCode(), 101) / 100.0 - 0.5
         val stress = tanh((indicators.debtRatio - 0.7) * 1.5)
         val jobGap = tanh((indicators.unemployment - 0.06) * 12.0)
         val nextRevenue = (0.011 * stress + 0.006 * preference).coerceIn(-0.02, 0.025)

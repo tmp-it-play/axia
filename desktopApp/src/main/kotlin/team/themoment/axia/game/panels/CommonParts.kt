@@ -41,11 +41,15 @@ internal fun shortDate(date: LocalDate): String = SHORT_DATE.format(date)
 internal fun RenameControl(
     key: Any,
     current: String,
+    takenNames: Collection<String> = emptyList(),
     onRename: (String) -> Unit,
 ) {
     var open by remember(key) { mutableStateOf(false) }
     var draft by remember(key, current) { mutableStateOf(current) }
-    PaperTag(if (open) "취소" else "이름 바꾸기", onClick = { open = !open })
+    PaperTag(if (open) "취소" else "이름 바꾸기", onClick = {
+        draft = current
+        open = !open
+    })
     if (open) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             BasicTextField(
@@ -59,10 +63,17 @@ internal fun RenameControl(
                         .border(1.dp, DossierColors.inkMuted)
                         .padding(horizontal = 6.dp, vertical = 4.dp),
             )
-            PaperTag("확인", selected = true, enabled = draft.isNotBlank(), onClick = {
-                onRename(draft)
-                open = false
-            })
+            val name = draft.trim()
+            val taken = name != current && name in takenNames
+            PaperTag(
+                if (taken) "중복된 이름" else "확인",
+                selected = true,
+                enabled = name.isNotEmpty() && name.none(Char::isISOControl) && !taken,
+                onClick = {
+                    onRename(name)
+                    open = false
+                },
+            )
         }
     }
 }

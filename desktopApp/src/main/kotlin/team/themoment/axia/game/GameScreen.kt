@@ -190,6 +190,7 @@ fun GameScreen(
                                         panel = GamePanel.BUDGET
                                     },
                                     onRenamePerson = runner::renamePerson,
+                                    onRenameParty = { id, name -> runner.renameParty(nation.countryId, id, name) },
                                 )
                             }
 
@@ -218,7 +219,7 @@ fun GameScreen(
                             }
 
                             GamePanel.SITUATION -> {
-                                SituationPanel(worldState, countryName, pauseSettings, runner::setAutoPause)
+                                SituationPanel(worldState, countryName, pauseSettings, runner::setAutoPause, runner::renameRebels)
                             }
 
                             GamePanel.SOCIETY -> {
@@ -247,9 +248,10 @@ fun GameScreen(
                         SelectionPanel(
                             world = world,
                             regionId = regionId,
-                            economy = economy.countries[worldState.military.regionOwners[regionId] ?: world.region(regionId).countryId],
+                            economy = economy,
                             controllerId = worldState.military.regionOwners[regionId],
                             onRegionalProgram = runner::setRegionalProgram,
+                            onRenameParty = runner::renameParty,
                             snapshot = worldState,
                             playerRegion =
                                 mapData.regions[regionId]?.takeIf {

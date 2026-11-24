@@ -31,6 +31,7 @@ fun SituationPanel(
     countryName: (String) -> String,
     pauseSettings: Set<EventCategory>,
     onToggleAutoPause: (EventCategory, Boolean) -> Unit,
+    onRenameRebels: (Int, String) -> Unit,
 ) {
     val military = world.military
     val active = military.wars.filter { it.ceasefire == null }
@@ -45,8 +46,12 @@ fun SituationPanel(
     }
 
     SectionTitle("내전")
-    military.civilWars.filter { it.ended == null }.forEach {
-        StatRow("${countryName(it.country)} · ${it.rebels}", "반군 통제 ${formatPercent(it.rebelControl)}")
+    military.civilWars.filter { it.ended == null }.forEach { war ->
+        StatRow("${countryName(war.country)} · ${war.rebels}", "반군 통제 ${formatPercent(war.rebelControl)}")
+        war.generatedId?.let { id ->
+            val names = military.civilWars.filter { it.country == war.country }.map { it.rebels }
+            RenameControl(id, war.rebels, names) { onRenameRebels(id, it) }
+        }
     }
     military.civilWars.filter { it.ended != null }.forEach {
         StatRow(

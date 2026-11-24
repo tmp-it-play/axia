@@ -304,8 +304,13 @@ class Simulation(
             playerCut = ENVIRONMENT_CUT * nation.regulations.change(RegulationItem.ENVIRONMENT).coerceAtLeast(0.0),
         )
         rollWorldEvents(pauseFor)
-        politics.updateConstituencies(nation.groupSnapshots(player), nation.opinion(), nation.approval(), nation.electoralRegions())
-        politics.monthlyReview(date)
+        politics.updateConstituencies(
+            nation.groupSnapshots(player),
+            nation.opinion(),
+            nation.approval(),
+            nation.electoralRegions(),
+            monthlyReviewDate = date,
+        )
         proposals.forEach { proposal ->
             pendingProposals[proposal.from] = proposal
             events.custom(
@@ -665,6 +670,19 @@ class Simulation(
         organizationId: Int,
         name: String,
     ) = nation.renameOrganization(organizationId, name)
+
+    fun renameParty(
+        country: String,
+        id: Int,
+        name: String,
+    ) {
+        if (country == playerCountryId) politics.renameParty(id, name) else worldPolitics.country(country)?.renameParty(id, name)
+    }
+
+    fun renameRebels(
+        id: Int,
+        name: String,
+    ) = military.renameRebels(id, name)
 
     /** 실존·생성 인물 모두 이름을 바꿀 수 있다. */
     fun renamePerson(

@@ -4,7 +4,6 @@
   "reviewsLaws": true,
   "judicialIndependence": 0.822,
   "executiveTermLimit": 1,
-  "noConfidence": false,
   "sourceNote": "헌법 제70조 대통령 5년 단임, 제111조 헌법재판소 위헌법률심판. 단원제. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
   "coupProne": false
  },
@@ -20,7 +19,6 @@
    "oppositionSeats": 49
   },
   "executiveTermLimit": 2,
-  "noConfidence": false,
   "sourceNote": "2024-01-01 상원 민주당 48 + 민주당과 표결하는 무소속 3 = 51, 공화당 49. 수정헌법 제22조 대통령 2선 제한. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
   "coupProne": false
  },
@@ -28,7 +26,6 @@
   "court": null,
   "reviewsLaws": false,
   "judicialIndependence": 0.043,
-  "noConfidence": false,
   "sourceNote": "2018년 개헌으로 국가주석 연임 제한 폐지. 헌법 해석은 전인대 상무위원회. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
   "coupProne": false
  },
@@ -43,7 +40,13 @@
    "governmentSeats": 141,
    "oppositionSeats": 107
   },
-  "noConfidence": true,
+  "confidence": {
+   "procedure": "PARLIAMENTARY",
+   "majority": "PRESENT",
+   "consultationDays": 7,
+   "electionDays": 35,
+   "sourceNote": "헌법 제54·67·69조. 불신임 후 10일 안에 중의원 해산 또는 내각 총사직, 해산일부터 40일 이내 총선. https://www.shugiin.go.jp/internet/itdb_english.nsf/html/statics/english/constitution_e.htm"
+  },
   "sourceNote": "참의원 자민·공명 141석(2022 선거 후). 예산은 중의원 의결 우선(헌법 제60조)이라 지연으로 단순화. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
   "coupProne": false
  },
@@ -58,7 +61,12 @@
    "governmentSeats": 20,
    "oppositionSeats": 26
   },
-  "noConfidence": true,
+  "confidence": {
+   "procedure": "CONSTRUCTIVE",
+   "majority": "MEMBERS",
+   "consultationDays": 0,
+   "sourceNote": "기본법 제67조. 연방의회 재적 과반으로 후임 총리를 선출해야 불신임 성립. https://www.gesetze-im-internet.de/englisch_gg/index.html"
+  },
   "sourceNote": "연방참사원은 주정부 대표. 신호등 연정 정당만으로 구성된 주정부 표 20, CDU·CSU 주도 주정부 표 26, 나머지는 혼합 연정. 동의법률만 거부권이 있으나 거부권으로 단순화. 건설적 불신임(기본법 제67조). 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
   "coupProne": false
  },
@@ -73,7 +81,13 @@
    "governmentSeats": 270,
    "oppositionSeats": 235
   },
-  "noConfidence": true,
+  "confidence": {
+   "procedure": "PARLIAMENTARY",
+   "majority": "VOTES_CAST",
+   "consultationDays": 7,
+   "electionDays": 35,
+   "sourceNote": "하원 신임 관례. 정부 사임 또는 국왕에게 해산 요청. https://commonslibrary.parliament.uk/research-briefings/cbp-10915/"
+  },
   "sourceNote": "귀족원은 의회법(1911·1949)상 최대 1년 지연. 대법원은 의회 제정법을 무효화하지 못한다. 의석은 2024-01 정당별 대략값(무소속 크로스벤치 등 제외). 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
   "coupProne": false
  },
@@ -89,7 +103,13 @@
    "oppositionSeats": 248
   },
   "executiveTermLimit": 2,
-  "noConfidence": true,
+  "confidence": {
+   "procedure": "PARLIAMENTARY",
+   "majority": "MEMBERS",
+   "consultationDays": 7,
+   "electionDays": 28,
+   "sourceNote": "헌법 제8·12·49·50조. 가결 시 내각 사임, 대통령이 후임 총리 지명. 해산 뒤 총선은 20~40일, 해당 총선 뒤 1년간 재해산 금지. https://www.assemblee-nationale.fr/dyn/english/french-constitution"
+  },
   "sourceNote": "상원은 공화당·중도연합 다수. 의견 불일치 시 국민의회가 최종 의결(헌법 제45조). 대통령 연속 2선 제한. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
   "coupProne": false
  },
@@ -104,7 +124,6 @@
    "governmentSeats": 170,
    "oppositionSeats": 0
   },
-  "noConfidence": false,
   "sourceNote": "2020년 개헌으로 현직 대통령 임기 횟수 초기화. 연방평의회 거부는 두마 2/3로 재의결 가능하나 거부권으로 단순화. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
   "coupProne": false
  },
@@ -113,7 +132,12 @@
   "reviewsLaws": true,
   "judicialIndependence": 0.3,
   "executiveTermLimit": 2,
-  "noConfidence": true,
+  "confidence": {
+   "procedure": "PARLIAMENTARY",
+   "majority": "MEMBERS",
+   "consultationDays": 14,
+   "sourceNote": "헌법 제87·115조. 헌법상 재적 450명의 과반인 226표. 총리 불신임 시 전 내각 사임, 새 내각이 출범할 때까지 직무 수행. 시나리오 계엄 중 총선 유예. https://www.president.gov.ua/documents/constitution"
+  },
   "sourceNote": "단원제. 대통령 연속 2선 제한. 계엄 중 선거 유예. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
   "coupProne": false
  },
@@ -128,7 +152,13 @@
    "governmentSeats": 110,
    "oppositionSeats": 95
   },
-  "noConfidence": true,
+  "confidence": {
+   "procedure": "PARLIAMENTARY",
+   "majority": "VOTES_CAST",
+   "consultationDays": 7,
+   "electionDays": 42,
+   "sourceNote": "헌법 제75·85조. 각료회의는 인민원에 연대책임을 진다. 대통령이 총리를 임명하고 인민원을 해산할 수 있다. https://legislative.gov.in/constitution-of-india/"
+  },
   "sourceNote": "2024-01 라지야 사바 NDA 약 110석. 재정 법안은 로크 사바 우선(헌법 제109조)이라 지연으로 단순화. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
   "coupProne": false
  },
@@ -144,7 +174,6 @@
    "oppositionSeats": 25
   },
   "executiveTermLimit": 2,
-  "noConfidence": false,
   "sourceNote": "상원 정부 기반 정당 대략 38석, 자유당 등 야당 25석, 나머지 중도. 대통령 연속 2선 제한. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
   "coupProne": false
  },
@@ -159,7 +188,13 @@
    "governmentSeats": 0,
    "oppositionSeats": 12
   },
-  "noConfidence": true,
+  "confidence": {
+   "procedure": "PARLIAMENTARY",
+   "majority": "VOTES_CAST",
+   "consultationDays": 7,
+   "electionDays": 42,
+   "sourceNote": "하원 신임 관례. 사임하거나 총독에게 해산을 요청한다. https://www.ourcommons.ca/procedure/procedure-and-practice-4/ch02-4-e.html"
+  },
   "sourceNote": "상원 다수는 무소속(독립상원의원그룹 등). 보수당 12석. 관행상 하원 의결을 지연에 그친다. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
   "coupProne": false
  },
@@ -167,7 +202,6 @@
   "court": null,
   "reviewsLaws": false,
   "judicialIndependence": 0.003,
-  "noConfidence": false,
   "sourceNote": "최고인민회의 단원제. 사법 심사 없음. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
   "coupProne": false
  },
@@ -182,7 +216,13 @@
    "governmentSeats": 26,
    "oppositionSeats": 31
   },
-  "noConfidence": true,
+  "confidence": {
+   "procedure": "PARLIAMENTARY",
+   "majority": "VOTES_CAST",
+   "consultationDays": 7,
+   "electionDays": 42,
+   "sourceNote": "하원 관례에 따라 대체정부에 양보하거나 총독에게 하원 해산을 권고한다. https://www.aph.gov.au/About_Parliament/House_of_Representatives/Powers_practice_and_procedure/Practice7/HTML/Chapter9/7chap09_1_7"
+  },
   "sourceNote": "상원 노동당 26석, 연립야당 31석(자유·국민), 녹색당 11석·무소속 8석은 기타. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
   "coupProne": false
  },
@@ -198,7 +238,12 @@
    "oppositionSeats": 34
   },
   "executiveTermLimit": 2,
-  "noConfidence": true,
+  "confidence": {
+   "procedure": "CONSTRUCTIVE",
+   "majority": "MEMBERS",
+   "consultationDays": 0,
+   "sourceNote": "헌법 제158조. 세임 법정 정원 과반으로 지명된 후임 총리를 선출한다. https://www.sejm.gov.pl/prawo/konst/angielski/konse.htm"
+  },
   "presidentialVeto": {
    "holder": "안제이 두다",
    "party": "법과정의당",
@@ -218,7 +263,13 @@
    "governmentSeats": 115,
    "oppositionSeats": 90
   },
-  "noConfidence": true,
+  "confidence": {
+   "procedure": "PARLIAMENTARY",
+   "majority": "VOTES_CAST",
+   "consultationDays": 10,
+   "electionDays": 42,
+   "sourceNote": "헌법 제88·92·94조. 대통령이 총리를 지명하고 내각은 양원에서 신임을 받아야 한다. 해산 전 양원 의장 협의. 대통령 임기 마지막 6개월에는 의회 임기 마지막 6개월과 겹칠 때만 해산한다. 마타렐라 2기 취임 2022-02-03. https://www.quirinale.it/allegati_statici/ebookapp/20220203_insediamento.pdf https://www.senato.it/sites/default/files/media-documents/Costituzione_INGLESE_2023.pdf"
+  },
   "sourceNote": "완전 양원제. 2022 총선 후 상원 우파 연합 약 115석. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
   "coupProne": false
  },
@@ -227,7 +278,12 @@
   "reviewsLaws": false,
   "judicialIndependence": 0.981,
   "executiveTermLimit": 2,
-  "noConfidence": true,
+  "confidence": {
+   "procedure": "OPEN_BALLOT",
+   "majority": "VOTES_CAST",
+   "consultationDays": 7,
+   "sourceNote": "헌법 제61·64조. 대통령이 내각을 면직하고 의회가 총리를 선출한다. 두 후보가 연이어 과반을 얻지 못하면 공개 선거의 최다득표자를 임명한다. https://www.finlex.fi/fi/lainsaadanto/saadoskokoelma/1999/731"
+  },
   "sourceNote": "단원제. 헌법재판소 없이 의회 헌법위원회가 사전 심사. 대통령 연속 2선 제한. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
   "coupProne": false
  },
@@ -236,7 +292,13 @@
   "reviewsLaws": true,
   "judicialIndependence": 0.966,
   "executiveTermLimit": 2,
-  "noConfidence": true,
+  "confidence": {
+   "procedure": "PARLIAMENTARY",
+   "majority": "MEMBERS",
+   "consultationDays": 3,
+   "electionDays": 30,
+   "sourceNote": "헌법 제60·97조. 정부 요청 시 대통령은 불신임 가결 3일 이내에 조기 총선을 선언할 수 있다. 선거는 선언 후 20~40일. https://www.riigiteataja.ee/en/akt/530122020003"
+  },
   "sourceNote": "단원제. 대통령 연속 2선 제한(의회 간선). 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
   "coupProne": false
  },
@@ -245,7 +307,12 @@
   "reviewsLaws": true,
   "judicialIndependence": 0.925,
   "executiveTermLimit": 2,
-  "noConfidence": true,
+  "confidence": {
+   "procedure": "PARLIAMENTARY",
+   "majority": "PRESENT",
+   "consultationDays": 14,
+   "sourceNote": "헌법 제48·56·59조. 총리 불신임 시 내각이 사임하고 대통령이 후임 조각자를 지명한다. 의회 해산에는 별도 절차가 필요하다. https://www.saeima.lv/en/legislation/constitution"
+  },
   "sourceNote": "단원제. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
   "coupProne": false
  },
@@ -254,7 +321,13 @@
   "reviewsLaws": true,
   "judicialIndependence": 0.949,
   "executiveTermLimit": 2,
-  "noConfidence": true,
+  "confidence": {
+   "procedure": "PARLIAMENTARY",
+   "majority": "MEMBERS",
+   "consultationDays": 14,
+   "electionDays": 42,
+   "sourceNote": "헌법 제58·92·101조. 총리 불신임 시 정부 사임. 직접적 정부 불신임 시 내각 요청으로 대통령이 조기 총선을 공고할 수 있으며 대통령 임기 마지막 6개월 또는 조기 총선 뒤 6개월 이내에는 불가. https://e-seimas.lrs.lt/portal/legalActPrint/lt?category=TAD&documentId=TAIS.275302"
+  },
   "sourceNote": "단원제. 대통령 연속 2선 제한. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
   "coupProne": false
  },
@@ -263,7 +336,6 @@
   "reviewsLaws": true,
   "judicialIndependence": 0.178,
   "executiveTermLimit": 2,
-  "noConfidence": false,
   "sourceNote": "2017년 개헌 후 대통령제. 대통령 2선 제한(의회가 조기 선거를 정하면 한 번 더 출마 가능). 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16). 2016년 쿠데타 시도 이력으로 쿠데타 위험국으로 본다.",
   "coupProne": true
  },
@@ -271,7 +343,12 @@
   "court": "대법원",
   "reviewsLaws": true,
   "judicialIndependence": 0.894,
-  "noConfidence": true,
+  "confidence": {
+   "procedure": "CONSTRUCTIVE",
+   "majority": "MEMBERS",
+   "consultationDays": 0,
+   "sourceNote": "정부기본법 제28조. 크네세트 재적 과반이 새 정부의 구성·강령에 신임을 주면 즉시 교체된다. https://main.knesset.gov.il/EN/activity/Documents/BasicLawsPDF/BasicLawTheGovernment.pdf"
+  },
   "sourceNote": "단원제. 2024-01-01 대법원이 '합리성 기준' 제한 기본법 개정을 무효화했다. 건설적 불신임. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
   "coupProne": false
  },
@@ -280,7 +357,6 @@
   "reviewsLaws": true,
   "judicialIndependence": 0.109,
   "executiveTermLimit": 2,
-  "noConfidence": false,
   "sourceNote": "헌법수호위원회가 이슬람 율법·헌법 합치 여부로 모든 법률을 심사(헌법 제94조). 대통령 연속 2선 제한. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
   "coupProne": false
  },
@@ -288,7 +364,6 @@
   "court": null,
   "reviewsLaws": false,
   "judicialIndependence": 0.285,
-  "noConfidence": false,
   "sourceNote": "절대왕정. 슈라위원회는 자문 기구. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
   "coupProne": false
  },
@@ -304,7 +379,13 @@
    "oppositionSeats": 0
   },
   "executiveTermLimit": 2,
-  "noConfidence": true,
+  "confidence": {
+   "procedure": "TWO_NOMINATIONS",
+   "majority": "MEMBERS",
+   "consultationDays": 30,
+   "electionDays": 42,
+   "sourceNote": "헌법 제131·146조. 총리를 불신임하면 정부 사임. 대통령 지명 내각, 이어 원내 최대 정당·연합 지명 내각이 각 30일 안에 재적 과반 신임을 얻지 못하면 의회 해산, 60일 내 총선. https://www.presidency.eg/AR/مصر/الدستور/"
+  },
   "sourceNote": "상원은 자문 성격이 강해 지연으로 단순화. 2019년 개헌으로 대통령 임기 6년·2선, 현직 예외. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16). 2013년 쿠데타 이력으로 쿠데타 위험국으로 본다.",
   "coupProne": true
  },
@@ -320,7 +401,13 @@
    "oppositionSeats": 36
   },
   "executiveTermLimit": 2,
-  "noConfidence": true,
+  "confidence": {
+   "procedure": "ASSEMBLY_PRESIDENT",
+   "majority": "MEMBERS",
+   "consultationDays": 7,
+   "electionDays": 42,
+   "sourceNote": "헌법 제50·86·90·102(2)조, 부표 3. 대통령 불신임을 모형화한다. 대통령·내각이 사임하고 권한대행 아래 의회가 후보를 최저득표순으로 탈락시켜 투표 과반으로 선출한다. 최종 동률은 7일 내 재표결, 궐위 30일 내 선출 실패 시 해산한다. https://www.parliament.gov.za/storage/app/media/Acts/constitution/SAConstitution.pdf"
+  },
   "sourceNote": "NCOP 주 대표단 중 ANC 다수 6개 주. 일반 법안은 국민의회가 재의결 가능. 대통령은 의회 선출, 2선 제한. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
   "coupProne": false
  },
@@ -329,7 +416,13 @@
   "reviewsLaws": true,
   "judicialIndependence": 0.876,
   "executiveTermLimit": 2,
-  "noConfidence": true,
+  "confidence": {
+   "procedure": "PRESIDENT_APPOINTS",
+   "majority": "MEMBERS",
+   "consultationDays": 7,
+   "electionDays": 42,
+   "sourceNote": "증수조문 제2·3조. 입법원 재적 과반으로 행정원장을 불신임한다. 10일 이내 사직하며 해산 요청 가능, 총통이 의장과 협의해 결정한다. 총선은 해산 후 60일 이내. 부결 후 같은 행정원장에 1년간 재발의 불가. https://english.president.gov.tw/Page/95"
+  },
   "sourceNote": "단원제 입법원. 총통 2선 제한. 입법원은 행정원장 불신임 가능. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
   "coupProne": false
  },
@@ -338,7 +431,6 @@
   "reviewsLaws": true,
   "judicialIndependence": 0.529,
   "executiveTermLimit": 2,
-  "noConfidence": false,
   "sourceNote": "지역대표회의(DPD)는 입법 거부권이 없어 단원제로 본다. 대통령 2선 제한. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
   "coupProne": false
  },
@@ -346,7 +438,6 @@
   "court": null,
   "reviewsLaws": false,
   "judicialIndependence": 0.157,
-  "noConfidence": false,
   "sourceNote": "국회 단원제. 사법 심사 없음. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
   "coupProne": false
  },
@@ -361,7 +452,12 @@
    "governmentSeats": 0,
    "oppositionSeats": 0
   },
-  "noConfidence": true,
+  "confidence": {
+   "procedure": "PARLIAMENTARY",
+   "majority": "MEMBERS",
+   "consultationDays": 7,
+   "sourceNote": "2017년 헌법 제151·159·167·272조. 하원 재적 과반으로 가결. 첫 5년은 합동회의, 이후 하원에서 총리를 선출한다. https://cdc.parliament.go.th/draftconstitution2/download/article/article_20180829093502.pdf"
+  },
   "sourceNote": "2024-01 상원 250명 전원 군정 임명(2024년 5월 임기 만료). 일반 법안은 하원 재의결 가능. 총리 재임 8년 제한은 연임 제한으로 다루지 않는다. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16). 2006·2014년 쿠데타 이력으로 쿠데타 위험국으로 본다.",
   "coupProne": true
  },
@@ -376,7 +472,6 @@
    "governmentSeats": 20,
    "oppositionSeats": 0
   },
-  "noConfidence": false,
   "sourceNote": "2015년 개헌으로 현직 대통령 예외. 상원 다수는 임명·간선으로 정부 우호. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
   "coupProne": false
  },
@@ -391,7 +486,13 @@
    "governmentSeats": 0,
    "oppositionSeats": 0
   },
-  "noConfidence": true,
+  "confidence": {
+   "procedure": "PARLIAMENTARY",
+   "majority": "MEMBERS",
+   "consultationDays": 7,
+   "electionDays": 63,
+   "sourceNote": "헌법 제58(2)·91·95·224(1A)·224(2)·224A조. 재적 과반으로 가결한다. 대통령은 국민의회에서 후임 과반 후보가 없음을 확인하면 해산할 수 있다. 해산 후 대통령은 퇴임 총리·야당 대표와 협의해 과도 총리를 임명하며 총선은 90일 이내다. 양측이 합의하지 못하면 여야 동수 위원회, 위원회도 합의하지 못하면 선거관리위원회가 후보를 정한다. 게임에서는 협의로 무소속 과도 총리를 임명한다. https://na.gov.pk/uploads/documents/63ea176f52421_610.pdf"
+  },
   "sourceNote": "과도 내각 기간. 재정 법안은 국민의회 우선(헌법 제73조)이라 지연으로 단순화. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16). 1958·1977·1999년 쿠데타 이력으로 쿠데타 위험국으로 본다.",
   "coupProne": true
  }

@@ -55,11 +55,13 @@ fun PoliticsPanel(
     onCallEarlyElection: () -> Unit,
     onCoalitionPartner: (String?) -> Unit,
     onRenamePerson: (Int, String) -> Unit,
+    onRenameParty: (Int, String) -> Unit,
     onOppositionVeto: (Boolean) -> Unit,
 ) {
     val profile = politics.profile
     SectionTitle("현 정부")
     Text(politics.government, style = DossierType.title(16.sp), color = DossierColors.ink)
+    politics.nextGovernmentDecision?.let { StatRow("후임 정부 구성 협의일", shortDate(it)) }
     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
         politics.leadership.all().forEach { PersonCard(it, today, onRenamePerson) }
     }
@@ -69,7 +71,7 @@ fun PoliticsPanel(
     if (openingContest != null && chamber == null && politics.schedule.legislative != null) {
         Hint("${openingContest.chamberName} 해산으로 과도 내각이 심의합니다. 총선 후에는 새 의회가 법안을 표결합니다.")
     }
-    chamber?.let { ChamberComposition(it) }
+    chamber?.let { ChamberComposition(it, politics.takenPartyNames, onRenameParty) }
     ElectionSection(politics, today, onCallEarlyElection)
     if (chamber != null && politics.schedule.legislative != null && profile.elections.coalitionNegotiations &&
         chamber.groups.any { it.role == PartyRole.LEAD }
@@ -98,6 +100,7 @@ fun PoliticsPanel(
         politics.newParties.forEach { party ->
             StatRow(party.name, "지지 ${formatPercent(party.support)} · ${party.identity.label} 성향")
             Hint("${shortDate(party.founded)} 창당")
+            RenameControl(party.foundation.id, party.name, politics.takenPartyNames) { onRenameParty(party.foundation.id, it) }
         }
     }
 
@@ -142,7 +145,7 @@ private fun ConstitutionSection(constitution: ConstitutionSnapshot) {
         StatRow(house.name, "${house.power.label} · 정부 ${house.governmentSeats} · 야당 ${house.oppositionSeats} · 기타 ${house.otherSeats}")
     }
     StatRow("행정부 수반 연임 제한", profile.executiveTermLimit?.let { "${it}회" } ?: "없음")
-    StatRow("의회의 정부 불신임", if (profile.noConfidence) "가능" else "없음")
+    StatRow("의회의 정부 불신임", profile.confidence?.procedure?.label ?: "게임 미적용")
     profile.presidentialVeto?.let { StatRow("대통령 거부권", "${it.holder} (${it.party}) · 재의결 ${(it.override * 100).roundToInt()}%") }
     if (constitution.cases.isNotEmpty()) {
         SectionTitle("위헌 심판")
@@ -182,8 +185,12 @@ private fun ChecksSection(
 }
 
 @Composable
-private fun ChamberComposition(chamber: Legislature) {
-    var expanded by remember(chamber) { mutableStateOf(false) }
+private fun ChamberComposition(
+    chamber: Legislature,
+    takenNames: Set<String>,
+    onRenameParty: (Int, String) -> Unit,
+) {
+    var expanded by remember(chamber.name) { mutableStateOf(false) }
     SectionTitle("${chamber.name} · ${chamber.filledSeats}석")
     val reserved = chamber.groups.sumOf { it.reservedSeats }
     if (reserved > 0) StatRow("지역구 · 유보 의석", "${chamber.filledSeats - reserved}석 · ${reserved}석")
@@ -201,6 +208,9 @@ private fun ChamberComposition(chamber: Legislature) {
                 party.name,
                 "${party.role.label} · ${party.seats}석$allocation$excluded" + party.identity?.let { " · ${it.label}" }.orEmpty(),
             )
+            party.foundation?.let { origin ->
+                RenameControl(origin.id, party.name, takenNames) { onRenameParty(origin.id, it) }
+            }
         }
     }
 }
