@@ -51,9 +51,14 @@
 | `grain_harvest.json`, `grain_harvest_asap.json` | 지정 국가의 달력은 직접 편집. JRC 국가 단위 수확기와 FAO 작물 물량은 `tools/econdata/build_grain_harvest.py`로 결합 |
 | `central_banks.json` | 국가별 발표 금리·출처와 통화동맹을 직접 편집. BIS 보완 금리는 `tools/econdata/build_policy_rates.py`로 갱신 |
 | `trade.json`, `regimes.json` | `tools/tradedata/build_trade.py`, `tools/politicsdata/build_regimes.py` |
+| `electoral_areas.json`, `pakistan_districts.json` | 미국 주·지역구·경선과 인도네시아 주·등록 후보는 번들의 원표 출처를 대조한다. 파키스탄은 `tools/electiondata/build_pakistan.py`가 선관위 후보별 집계와 2023년 지역구 대응표를 결합한다. |
+| 프랑스·호주·독일·대만 선거구 | `tools/electiondata/build_france.py`, `build_australia.py`, `build_german_districts.py`, `build_taiwan_ballots.py`가 원표의 당·후보·지역별 득표를 번들에 반영한다. 프랑스는 Natural Earth admin-1으로 지도 지역과 연결한다. |
+| 명부·혼합제·의원직 | `mixed_constituencies.json`, `proportional_constituencies.json`, `parliamentary_mandates.json`. 법정 정원·득표 기준·충원 규칙과 국가별 원문을 함께 갱신한다. |
+| 영국·캐나다·인도·이란 선거구 | `tools/electiondata/build_plurality.py`의 원표·선거구령, `iranian_constituencies.json`의 주별 선거구·종교 대표 정원. 개표 자료를 갱신할 때 당시 선거구 경계 및 유권자 자격을 함께 대조한다. |
+| 상원 개선·간선 국가원수 | 미국은 `electoral_areas.json`, 나머지 상원은 `upper_renewals.json`으로 임기군별 선출·임명을 지정한다. 간선 국가원수와 과도기 절차는 `constitutions.json`을 사용한다. |
 | 국가 정책·선거·인물·사건 | 해당 JSON을 직접 편집. 국가 정책은 `housing_programs.json`, `national_programs.json`과 국가 모듈 참조 |
 
-통계 다운로드 도구는 `--cache-dir <폴더>`로 원본 응답을 재사용할 수 있다. 관측 연도와 단위, 국가·정부의 보고 범위를 확인하고, 결측과 보고된 0을 구분한다. 세입 구성은 총세입과 다섯 세목의 보고 범위를 맞추고 `budget.revenueCompositionSource`에 기록한다. 자료를 교체하면 출처와 남은 대체 범위를 함께 갱신한다. [데이터 결측 문서](DATA_GAPS.md)
+통계 다운로드 도구는 `--cache-dir <폴더>`로 원본 응답을 재사용할 수 있다. 관측 연도와 단위, 국가·정부의 보고 범위를 확인하고, 결측과 보고된 0을 구분한다. 세입 구성은 총세입과 다섯 세목의 보고 범위를 맞추고 `budget.revenueCompositionSource`에 기록한다. 일부 세목만 보고된 경우 미보고 세목 이름을 `budget.unreportedRevenueTaxes`에 보존한다. 자료를 교체하면 출처와 남은 대체 범위를 함께 갱신한다. [데이터 결측 문서](DATA_GAPS.md)
 
 ## 변경 검증
 
@@ -65,7 +70,7 @@
 | 경제·재정 | 첫날의 다섯 세목과 기타 세입의 합이 총세입과 일치해야 한다. 장기 실행에서 지표의 유한성과 상한 고착을 확인한다. 채무 감면은 합의 시점에 한 번 반영하고 채권자별 잔액·손실의 합을 국채 장부와 대조한다. |
 | 교역·외환 | 세계 수출 합계와 수입 합계를 대조한다. 국가별 상품은 기초 재고 + 생산 + 수입 = 기말 재고 + 소비 + 수출이다. IMF 자금 인출은 준비자산과 대출 원금을 같은 금액만큼 늘린다. |
 | 지역·영토 | 지역 GDP·경제활동인구 비중은 각각 합이 1이어야 한다. 지역 실업률을 경제활동인구로 가중해 전국 실업률과 대조한다. 영토 이관 전후 양국 인구·실질 GDP의 합을 확인한다. |
-| 정책·선거 | 정책의 법안 통과·집행·결산 시점, 국가별 시차와 지급액을 대조한다. 선거 후 정당별 의석 합계와 의회 정원, 정부 구성과 진행 중인 법안의 처리를 확인한다. |
+| 정책·선거 | 정책의 법안 통과·집행·결산 시점, 국가별 시차와 지급액을 대조한다. 선거 후 정당별 의석 합계와 의회 정원, 선거인·대의원·유보석 합계, 개원·총리 선출·대통령 취임 전후의 재임자와 진행 중인 법안을 대조한다. 같은 나라를 플레이어와 AI로 각각 검증한다. |
 
 화면은 앱에서 해당 패널을 열어 확인한다. 별도 렌더링이 필요하면 Compose `ImageComposeScene`과 임시 실행기로 PNG를 생성할 수 있다.
 
