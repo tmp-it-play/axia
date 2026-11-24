@@ -75,7 +75,14 @@
     },
     "ARE": {
       "received": null,
-      "paid": null
+      "paid": null,
+      "netOnly": {
+        "year": 2023,
+        "source": "NATIONAL_BOP",
+        "total": 3839346494,
+        "interest": null,
+        "reinvested": null
+      }
     },
     "ARG": {
       "received": {
@@ -214,11 +221,11 @@
       },
       "paid": {
         "year": 2023,
-        "source": "IMF_BOP",
-        "total": 94340122471,
-        "dividends": 39101601028,
-        "interest": 26968454678,
-        "reinvested": 16705714499
+        "source": "EUROSTAT_BOP",
+        "total": 94313148600,
+        "dividends": 38921393500,
+        "interest": 38169890000,
+        "reinvested": 16863954800
       }
     },
     "BEN": {
@@ -286,11 +293,11 @@
       },
       "paid": {
         "year": 2023,
-        "source": "IMF_BOP",
-        "total": 9980180000,
-        "dividends": 4059620000,
-        "interest": 723050000,
-        "reinvested": 4837370000
+        "source": "EUROSTAT_BOP",
+        "total": 9982885990,
+        "dividends": 4065039220,
+        "interest": 1083138210,
+        "reinvested": 4834708560
       }
     },
     "BHR": {
@@ -420,8 +427,22 @@
       }
     },
     "BRB": {
-      "received": null,
-      "paid": null
+      "received": {
+        "year": 2017,
+        "source": "IMF_BOP",
+        "total": 26099798,
+        "dividends": 5017773,
+        "interest": 7402424,
+        "reinvested": 11820449
+      },
+      "paid": {
+        "year": 2017,
+        "source": "IMF_BOP",
+        "total": 310334782,
+        "dividends": 84605130,
+        "interest": 156904376,
+        "reinvested": 43079008
+      }
     },
     "BRN": {
       "received": {
@@ -744,11 +765,11 @@
       },
       "paid": {
         "year": 2023,
-        "source": "IMF_BOP",
-        "total": 37388365326,
-        "dividends": 15930884979,
-        "interest": 522245378,
-        "reinvested": 13990143449
+        "source": "EUROSTAT_BOP",
+        "total": 37395138550,
+        "dividends": 15951661990,
+        "interest": 7398254600,
+        "reinvested": 14035922780
       }
     },
     "CZE": {
@@ -762,11 +783,11 @@
       },
       "paid": {
         "year": 2023,
-        "source": "IMF_BOP",
-        "total": 28242650311,
-        "dividends": 14467110155,
-        "interest": 4204053892,
-        "reinvested": 8161257321
+        "source": "EUROSTAT_BOP",
+        "total": 28212090170,
+        "dividends": 14413080220,
+        "interest": 5602107170,
+        "reinvested": 8185981650
       }
     },
     "DEU": {
@@ -834,11 +855,11 @@
       },
       "paid": {
         "year": 2023,
-        "source": "IMF_BOP",
-        "total": 30686129242,
-        "dividends": 18744143550,
-        "interest": 9604947081,
-        "reinvested": 42561369
+        "source": "EUROSTAT_BOP",
+        "total": 30714542760,
+        "dividends": 18762285080,
+        "interest": 11741836700,
+        "reinvested": 56335730
       }
     },
     "DOM": {
@@ -914,8 +935,22 @@
       }
     },
     "ERI": {
-      "received": null,
-      "paid": null
+      "received": {
+        "year": 2000,
+        "source": "IMF_BOP",
+        "total": 5856175,
+        "dividends": 103125,
+        "interest": 5753050,
+        "reinvested": 0
+      },
+      "paid": {
+        "year": 2000,
+        "source": "IMF_BOP",
+        "total": 9234601,
+        "dividends": 4421295,
+        "interest": 4813305,
+        "reinvested": 0
+      }
     },
     "ESP": {
       "received": {
@@ -928,11 +963,11 @@
       },
       "paid": {
         "year": 2023,
-        "source": "IMF_BOP",
-        "total": 119874836677,
-        "dividends": 24326389558,
-        "interest": 62818181170,
-        "reinvested": 24817640787
+        "source": "EUROSTAT_BOP",
+        "total": 119832909900,
+        "dividends": 24273022400,
+        "interest": 70556987600,
+        "reinvested": 24895851200
       }
     },
     "EST": {
@@ -946,11 +981,11 @@
       },
       "paid": {
         "year": 2023,
-        "source": "IMF_BOP",
-        "total": 3734614233,
-        "dividends": 1467613280,
-        "interest": 571865227,
-        "reinvested": 1432744945
+        "source": "EUROSTAT_BOP",
+        "total": 3731998820,
+        "dividends": 1468729790,
+        "interest": 833466040,
+        "reinvested": 1429046080
       }
     },
     "ETH": {
@@ -982,11 +1017,11 @@
       },
       "paid": {
         "year": 2023,
-        "source": "IMF_BOP",
-        "total": 29684765425,
-        "dividends": 13962310980,
-        "interest": 13470335068,
-        "reinvested": 435588644
+        "source": "EUROSTAT_BOP",
+        "total": 29655733800,
+        "dividends": 13914168400,
+        "interest": 15251736500,
+        "reinvested": 461715100
       }
     },
     "FJI": {
@@ -1018,15 +1053,22 @@
       },
       "paid": {
         "year": 2023,
-        "source": "IMF_BOP",
-        "total": 304686239907,
-        "dividends": 79487882631,
-        "interest": 184431065601,
-        "reinvested": 15957553348
+        "source": "EUROSTAT_BOP",
+        "total": 304423795500,
+        "dividends": 79306867200,
+        "interest": 207739356000,
+        "reinvested": 15952418900
       }
     },
     "FSM": {
-      "received": null,
+      "received": {
+        "year": 2014,
+        "source": "IMF_BOP",
+        "total": 5520100,
+        "dividends": 2172000,
+        "interest": 1370000,
+        "reinvested": 0
+      },
       "paid": {
         "year": 2023,
         "source": "NATIONAL_BOP_FY_SEPTEMBER",
@@ -1191,11 +1233,11 @@
       },
       "paid": {
         "year": 2023,
-        "source": "IMF_BOP",
-        "total": 14727994270,
-        "dividends": 2438908660,
-        "interest": 10569641257,
-        "reinvested": 1629226439
+        "source": "EUROSTAT_BOP",
+        "total": 14716493000,
+        "dividends": 2435087600,
+        "interest": 10652967600,
+        "reinvested": 1630600400
       }
     },
     "GRD": {
@@ -1281,11 +1323,11 @@
       },
       "paid": {
         "year": 2023,
-        "source": "IMF_BOP",
-        "total": 5681417715,
-        "dividends": 1840681866,
-        "interest": 1004462476,
-        "reinvested": 2557173812
+        "source": "EUROSTAT_BOP",
+        "total": 5671094110,
+        "dividends": 1836263660,
+        "interest": 1284476270,
+        "reinvested": 2550354180
       }
     },
     "HTI": {
@@ -1317,11 +1359,11 @@
       },
       "paid": {
         "year": 2023,
-        "source": "IMF_BOP",
-        "total": 35622243281,
-        "dividends": 13910446356,
-        "interest": 5803510101,
-        "reinvested": 9953142912
+        "source": "EUROSTAT_BOP",
+        "total": 35608182170,
+        "dividends": 13888865980,
+        "interest": 11756434250,
+        "reinvested": 9962773810
       }
     },
     "IDN": {
@@ -1371,16 +1413,30 @@
       },
       "paid": {
         "year": 2023,
-        "source": "IMF_BOP",
-        "total": 398845944889,
-        "dividends": 47791363825,
-        "interest": 75655088679,
-        "reinvested": 69474506393
+        "source": "EUROSTAT_BOP",
+        "total": 412124519400,
+        "dividends": 261224779200,
+        "interest": 88570364300,
+        "reinvested": 60380873300
       }
     },
     "IRN": {
-      "received": null,
-      "paid": null
+      "received": {
+        "year": 2014,
+        "source": "NATIONAL_BOP_FY_MARCH",
+        "total": 2858000000,
+        "dividends": null,
+        "interest": null,
+        "reinvested": null
+      },
+      "paid": {
+        "year": 2014,
+        "source": "NATIONAL_BOP_FY_MARCH",
+        "total": 886000000,
+        "dividends": null,
+        "interest": null,
+        "reinvested": null
+      }
     },
     "IRQ": {
       "received": {
@@ -1447,11 +1503,11 @@
       },
       "paid": {
         "year": 2023,
-        "source": "IMF_BOP",
-        "total": 135889376620,
-        "dividends": 24722546193,
-        "interest": 75786910454,
-        "reinvested": 20881611055
+        "source": "EUROSTAT_BOP",
+        "total": 135824255600,
+        "dividends": 24653640000,
+        "interest": 90014981100,
+        "reinvested": 20920992400
       }
     },
     "JAM": {
@@ -1762,7 +1818,14 @@
     },
     "LIE": {
       "received": null,
-      "paid": null
+      "paid": null,
+      "netOnly": {
+        "year": 2023,
+        "source": "NATIONAL_ACCOUNTS",
+        "total": 1750269897,
+        "interest": null,
+        "reinvested": 1078409331
+      }
     },
     "LKA": {
       "received": {
@@ -1811,11 +1874,11 @@
       },
       "paid": {
         "year": 2023,
-        "source": "IMF_BOP",
-        "total": 5185451207,
-        "dividends": 1800289561,
-        "interest": 768488098,
-        "reinvested": 2443558802
+        "source": "EUROSTAT_BOP",
+        "total": 5179427000,
+        "dividends": 1794849870,
+        "interest": 941163520,
+        "reinvested": 2443197350
       }
     },
     "LUX": {
@@ -1847,11 +1910,11 @@
       },
       "paid": {
         "year": 2023,
-        "source": "IMF_BOP",
-        "total": 3741902308,
-        "dividends": 1275763576,
-        "interest": 983105903,
-        "reinvested": 1353256399
+        "source": "EUROSTAT_BOP",
+        "total": 3740216700,
+        "dividends": 1278096600,
+        "interest": 1111576400,
+        "reinvested": 1350543700
       }
     },
     "MAR": {
@@ -1977,11 +2040,11 @@
       },
       "paid": {
         "year": 2023,
-        "source": "IMF_BOP",
-        "total": 1007723543,
-        "dividends": 489574864,
-        "interest": 303292606,
-        "reinvested": 150663649
+        "source": "EUROSTAT_BOP",
+        "total": 1007663470,
+        "dividends": 489720770,
+        "interest": 367317610,
+        "reinvested": 150733220
       }
     },
     "MLI": {
@@ -2013,11 +2076,11 @@
       },
       "paid": {
         "year": 2023,
-        "source": "IMF_BOP",
-        "total": 46147387782,
-        "dividends": 42693282825,
-        "interest": 1375615784,
-        "reinvested": -1594067771
+        "source": "EUROSTAT_BOP",
+        "total": 46146964490,
+        "dividends": 42694589850,
+        "interest": 1375413600,
+        "reinvested": -1595566280
       }
     },
     "MMR": {
@@ -2247,11 +2310,11 @@
       },
       "paid": {
         "year": 2023,
-        "source": "IMF_BOP",
-        "total": 419478519056,
-        "dividends": 251601042221,
-        "interest": 75144584638,
-        "reinvested": 55353912248
+        "source": "EUROSTAT_BOP",
+        "total": 419158375900,
+        "dividends": 251344941100,
+        "interest": 112422761000,
+        "reinvested": 55320389300
       }
     },
     "NOR": {
@@ -2265,11 +2328,11 @@
       },
       "paid": {
         "year": 2023,
-        "source": "IMF_BOP",
-        "total": 47533113130,
-        "dividends": 19281338749,
-        "interest": 22868527351,
-        "reinvested": 2254377538
+        "source": "EUROSTAT_BOP",
+        "total": 47492642340,
+        "dividends": 19254276580,
+        "interest": 22857925090,
+        "reinvested": 2252456030
       }
     },
     "NPL": {
@@ -2463,11 +2526,11 @@
       },
       "paid": {
         "year": 2023,
-        "source": "IMF_BOP",
-        "total": 44463000000,
-        "dividends": 13652000000,
-        "interest": 8349000000,
-        "reinvested": 17081000000
+        "source": "EUROSTAT_BOP",
+        "total": 44469111280,
+        "dividends": 13634003570,
+        "interest": 13718777490,
+        "reinvested": 17097948120
       }
     },
     "PRK": {
@@ -2485,11 +2548,11 @@
       },
       "paid": {
         "year": 2023,
-        "source": "IMF_BOP",
-        "total": 23880426159,
-        "dividends": 7715164345,
-        "interest": 8210595927,
-        "reinvested": 6514944150
+        "source": "EUROSTAT_BOP",
+        "total": 23857803200,
+        "dividends": 7699937300,
+        "interest": 9622488700,
+        "reinvested": 6508344700
       }
     },
     "PRY": {
@@ -2557,11 +2620,11 @@
       },
       "paid": {
         "year": 2023,
-        "source": "IMF_BOP",
-        "total": 17930053622,
-        "dividends": 7023799579,
-        "interest": 4698217156,
-        "reinvested": 4828229857
+        "source": "EUROSTAT_BOP",
+        "total": 17919087340,
+        "dividends": 7007040260,
+        "interest": 6067282430,
+        "reinvested": 4834276040
       }
     },
     "RUS": {
@@ -2673,8 +2736,22 @@
       }
     },
     "SGP": {
-      "received": null,
-      "paid": null
+      "received": {
+        "year": 1994,
+        "source": "IMF_BOP",
+        "total": 9783008981,
+        "dividends": null,
+        "interest": 9783008981,
+        "reinvested": null
+      },
+      "paid": {
+        "year": 1994,
+        "source": "IMF_BOP",
+        "total": 8222428207,
+        "dividends": null,
+        "interest": 8222428207,
+        "reinvested": null
+      }
     },
     "SLB": {
       "received": {
@@ -2821,11 +2898,11 @@
       },
       "paid": {
         "year": 2023,
-        "source": "IMF_BOP",
-        "total": 9500460771,
-        "dividends": 6075624866,
-        "interest": 2409651119,
-        "reinvested": 404160327
+        "source": "EUROSTAT_BOP",
+        "total": 9499112370,
+        "dividends": 6076040960,
+        "interest": 3020070900,
+        "reinvested": 403000510
       }
     },
     "SVN": {
@@ -2839,11 +2916,11 @@
       },
       "paid": {
         "year": 2023,
-        "source": "IMF_BOP",
-        "total": 3554250788,
-        "dividends": 1440896208,
-        "interest": 1011551107,
-        "reinvested": 914344300
+        "source": "EUROSTAT_BOP",
+        "total": 3450536430,
+        "dividends": 1296803090,
+        "interest": 1184347890,
+        "reinvested": 950895220
       }
     },
     "SWE": {
@@ -2901,8 +2978,22 @@
       }
     },
     "SYR": {
-      "received": null,
-      "paid": null
+      "received": {
+        "year": 2010,
+        "source": "IMF_BOP",
+        "total": 112979868,
+        "dividends": 0,
+        "interest": 112979868,
+        "reinvested": 0
+      },
+      "paid": {
+        "year": 2010,
+        "source": "IMF_BOP",
+        "total": 1790332591,
+        "dividends": 1684466879,
+        "interest": 105865712,
+        "reinvested": 0
+      }
     },
     "TCD": {
       "received": {
@@ -2978,7 +3069,14 @@
     },
     "TKM": {
       "received": null,
-      "paid": null
+      "paid": null,
+      "netOnly": {
+        "year": 1996,
+        "source": "IMF_COUNTRY_REPORT",
+        "total": 19500000,
+        "interest": 64400000,
+        "reinvested": null
+      }
     },
     "TLS": {
       "received": {
@@ -3255,8 +3353,22 @@
       }
     },
     "VNM": {
-      "received": null,
-      "paid": null
+      "received": {
+        "year": 2023,
+        "source": "IMF_ARTICLE_IV",
+        "total": 4600000000,
+        "dividends": null,
+        "interest": null,
+        "reinvested": null
+      },
+      "paid": {
+        "year": 2023,
+        "source": "IMF_ARTICLE_IV",
+        "total": 27000000000,
+        "dividends": null,
+        "interest": null,
+        "reinvested": null
+      }
     },
     "VUT": {
       "received": {
@@ -3295,8 +3407,22 @@
       }
     },
     "YEM": {
-      "received": null,
-      "paid": null
+      "received": {
+        "year": 2016,
+        "source": "IMF_BOP",
+        "total": 18349926,
+        "dividends": null,
+        "interest": 18349926,
+        "reinvested": null
+      },
+      "paid": {
+        "year": 2016,
+        "source": "IMF_BOP",
+        "total": 92267000,
+        "dividends": null,
+        "interest": 92267000,
+        "reinvested": null
+      }
     },
     "ZAF": {
       "received": {

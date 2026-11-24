@@ -10,10 +10,15 @@ from pathlib import Path
 from build_economy import WORLD, download
 from remittance_supplements import (
     BOP_REMITTANCES_USD_2023,
+    ECUADOR_TOTALS,
     FISCAL_BOP_REMITTANCES,
     PARTIAL_REMITTANCES,
+    SOMALIA_PERSONAL_PAYMENTS,
+    SPAIN_BOP_MILLION_EUR,
     UNCHANGED_ESTIMATE_SINCE,
+    USD_PER_EUR_2023,
     WORLD_BANK_REMITTANCE_ESTIMATES,
+    partner_benchmarks,
 )
 
 MATRIX_URL = "https://data360files.worldbank.org/data360-data/data/WB_KNOMAD/WB_KNOMAD_BRE.csv"
@@ -66,14 +71,23 @@ def knomad_matrix(cache):
     return matrix
 
 
-def opening_total(country, direction, reported, matrix_total):
+def opening_total(country, direction, reported, matrix_total, partner_report):
+    if country == "ESP":
+        amount = round(SPAIN_BOP_MILLION_EUR[direction] * 1_000_000 * USD_PER_EUR_2023)
+        return {"usd": amount, "year": 2023, "source": "NATIONAL_BOP", "scope": "Eurostat · 전 세계 피용자보수와 가계 간 개인이전"}
+    if country == "SOM" and direction == "paid" and 2023 not in reported:
+        return {"usd": SOMALIA_PERSONAL_PAYMENTS, "year": 2023, "source": "BANK_CHANNELS",
+                "scope": "중앙은행 · 은행·송금업자의 개인 지급만, 소말릴란드의 별도 몫 미보고"}
     national = BOP_REMITTANCES_USD_2023.get(country, {}).get(direction)
     if 2023 in reported:
         return {"usd": round(reported[2023]), "year": 2023, "source": "WDI"}
     if national is not None:
         if not isinstance(national, int) or national < 0:
             raise ValueError(f"보완 송금액 오류: {national}")
-        return {"usd": national, "year": 2023, "source": "NATIONAL_BOP"}
+        result = {"usd": national, "year": 2023, "source": "NATIONAL_BOP"}
+        if country == "LBY" and direction == "received":
+            result["scope"] = "중앙은행 공표 수취 0 · 네덜란드와 이탈리아의 지급 신고와 차이 있음"
+        return result
     fiscal = FISCAL_BOP_REMITTANCES.get(country, {}).get(direction)
     if fiscal is not None:
         return {"usd": fiscal, "year": 2023, "source": "FISCAL_BOP_SEPTEMBER"}
@@ -87,6 +101,9 @@ def opening_total(country, direction, reported, matrix_total):
     if reported:
         year = max(reported)
         return {"usd": round(reported[year]), "year": year, "source": "WDI"}
+    if partner_report and (matrix_total is None or partner_report["source"] == "WAGE_PAYMENT_FLOOR"
+                           and partner_report["usd"] > matrix_total):
+        return partner_report
     if matrix_total is not None:
         return {"usd": round(matrix_total), "year": 2021, "source": "KNOMAD"}
     partial = PARTIAL_REMITTANCES.get(country, {}).get(direction)
@@ -97,24 +114,59 @@ def opening_total(country, direction, reported, matrix_total):
 
 
 def build(codes, reports, matrix):
+    partner_reports, observed = partner_benchmarks()
     countries = {}
     for state, code in codes.items():
         countries[state] = {
-            "received": opening_total(state, "received", reports["received"].get(code, {}), matrix.get(("WLD", code))),
-            "paid": opening_total(state, "paid", reports["paid"].get(code, {}), matrix.get((code, "WLD"))),
+            "received": opening_total(state, "received", reports["received"].get(code, {}),
+                                      matrix.get(("WLD", code)), partner_reports.get((state, "received"))),
+            "paid": opening_total(state, "paid", reports["paid"].get(code, {}),
+                                  matrix.get((code, "WLD")), partner_reports.get((state, "paid"))),
             "destinations": {},
         }
+    budget_paid = {state: (data["paid"] or {"usd": 0})["usd"] for state, data in countries.items()}
+    budget_received = {state: (data["received"] or {"usd": 0})["usd"] for state, data in countries.items()}
+    # 에콰도르가 속령 등 번들 밖 상대에게 배정한 금액은 KNOMAD로 다른 국가에 배정하지 않는다.
+    for direction, budget, index in [("paid", budget_paid, 0), ("received", budget_received, 1)]:
+        with_partner = sum(usd for route, usd in observed.items() if route[index] == "ECU")
+        outside = ECUADOR_TOTALS[direction] - with_partner
+        if outside < 0:
+            raise ValueError(f"에콰도르 양자 {direction} 합이 중앙은행 총액을 초과합니다")
+        budget["ECU"] -= outside
+    for (sender, recipient), usd in sorted(observed.items()):
+        budget_paid[sender] -= usd
+        budget_received[recipient] -= usd
+        if usd <= 0 or min(budget_paid[sender], budget_received[recipient]) < 0:
+            raise ValueError(f"상대국 공표 송금이 연간 기준액을 초과합니다: {sender}, {recipient}")
+        countries[sender]["destinations"][recipient] = usd
+
     states = {code: state for state, code in codes.items()}
+    estimates = {}
+    estimated_paid = dict.fromkeys(countries, 0)
+    estimated_received = dict.fromkeys(countries, 0)
     for (sender, recipient), value in sorted(matrix.items()):
         if sender not in states or recipient not in states or sender == recipient or not value:
             continue
-        payer, payee = countries[states[sender]], countries[states[recipient]]
+        payer_id, payee_id = states[sender], states[recipient]
+        payer, payee = countries[payer_id], countries[payee_id]
+        # 국경 간 피용자보수 하한의 나머지는 송금국에 배정만 하고, 이민 인구 비중으로 수취국을 정하지 않는다.
+        if (payer_id, payee_id) in observed or payer["paid"]["source"] == "WAGE_PAYMENT_FLOOR":
+            continue
         # 양쪽 총액 중 어느 쪽도 넘기지 않는다. 연간 1달러 미만과 상대 미배정액은 잔액에 남는다.
         outgoing = value / matrix[sender, "WLD"] * payer["paid"]["usd"]
         incoming = value / matrix["WLD", recipient] * payee["received"]["usd"]
         matched = math.floor(min(outgoing, incoming))
         if matched:
-            payer["destinations"][states[recipient]] = matched
+            estimates[payer_id, payee_id] = matched
+            estimated_paid[payer_id] += matched
+            estimated_received[payee_id] += matched
+
+    # 확정 경로를 먼저 배정한다. 종전 추계가 남은 양쪽 예산 안에 들면 금액을 그대로 유지한다.
+    for (sender, recipient), usd in estimates.items():
+        matched = min(usd, usd * budget_paid[sender] // estimated_paid[sender],
+                      usd * budget_received[recipient] // estimated_received[recipient])
+        if matched:
+            countries[sender]["destinations"][recipient] = matched
     incoming = dict.fromkeys(countries, 0)
     for payer in countries.values():
         if sum(payer["destinations"].values()) > (payer["paid"] or {"usd": 0})["usd"]:

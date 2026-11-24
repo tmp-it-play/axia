@@ -8,8 +8,13 @@ enum class InvestmentIncomeSource(
     val label: String,
 ) {
     IMF_BOP("IMF 국제수지"),
+    EUROSTAT_BOP("Eurostat 국제수지"),
+    IMF_ARTICLE_IV("당국·IMF 연례협의 국제수지"),
+    IMF_COUNTRY_REPORT("당국·IMF 국가보고서 국제수지"),
     NATIONAL_BOP("공표 국제수지"),
+    NATIONAL_BOP_FY_MARCH("3월 종료 회계연도 국제수지"),
     NATIONAL_BOP_FY_SEPTEMBER("9월 말 회계연도 국제수지"),
+    NATIONAL_ACCOUNTS("공표 국민계정"),
 }
 
 /** 같은 보고연도·방향의 연간 달러 금액. 손실은 음수이며 미보고 세부항목은 null이다. */
@@ -23,7 +28,7 @@ data class InvestmentIncomeBenchmark(
     val reinvested: Long?,
 ) {
     init {
-        require(year in 2019..2023)
+        require(year in 1994..2023)
     }
 
     internal fun accrue(
@@ -42,10 +47,36 @@ data class InvestmentIncomeBenchmark(
 }
 
 @Serializable
+data class NetInvestmentIncomeBenchmark(
+    val year: Int,
+    val source: InvestmentIncomeSource,
+    val total: Long,
+    val reinvested: Long?,
+    val interest: Long?,
+) {
+    init {
+        require(year in 1994..2023)
+    }
+}
+
+@Serializable
 data class InvestmentIncomeBenchmarks(
     val received: InvestmentIncomeBenchmark?,
     val paid: InvestmentIncomeBenchmark?,
-)
+    val netOnly: NetInvestmentIncomeBenchmark? = null,
+) {
+    init {
+        require(netOnly == null || (received == null && paid == null))
+    }
+}
+
+data class NetInvestmentIncomeAmounts(
+    val total: Double,
+    val reinvested: Double?,
+    val interest: Double?,
+) {
+    val other: Double get() = total - (interest ?: 0.0) - (reinvested ?: 0.0)
+}
 
 data class InvestmentIncomeAmounts(
     val total: Double,
@@ -60,11 +91,13 @@ data class InvestmentIncomeSnapshot(
     val opening: InvestmentIncomeBenchmarks,
     val received: InvestmentIncomeAmounts? = null,
     val paid: InvestmentIncomeAmounts? = null,
+    val netOnly: NetInvestmentIncomeAmounts? = null,
 ) {
-    val net: Double get() = (received?.total ?: 0.0) - (paid?.total ?: 0.0)
+    val net: Double get() = netOnly?.total ?: ((received?.total ?: 0.0) - (paid?.total ?: 0.0))
 
     /** 금융계정 대응액. 자금 유입을 양수로 표시해 재투자 순수취와 상쇄한다. */
-    val reinvestmentFinancing: Double get() = (paid?.reinvested ?: 0.0) - (received?.reinvested ?: 0.0)
+    val reinvestmentFinancing: Double
+        get() = if (netOnly != null) -(netOnly.reinvested ?: 0.0) else (paid?.reinvested ?: 0.0) - (received?.reinvested ?: 0.0)
 }
 
 @Serializable
@@ -98,6 +131,8 @@ internal class WorldInvestmentIncome(
 
     fun settle(): List<InvestmentIncomeSnapshot> {
         val worldGdp = countries.sumOf(CountryEconomy::dollarGdp)
+        // 수취·지급이 분리되지 않는 순액에는 양쪽에 공통인 세계 명목달러 GDP 지수만 적용한다.
+        val netMonthlyScale = worldGdp / worldOpeningGdp / 12
         var weightedRates = 0.0
         for (i in countries.indices) {
             repricedRate[i] += (countries[i].policyRate - repricedRate[i]) / REPRICING_MONTHS
@@ -116,6 +151,14 @@ internal class WorldInvestmentIncome(
                         yieldIndex(foreignRate, foreignInitialRate),
                     ),
                 paid = opening[i].paid?.accrue(domesticGdp / openingGdp[i] / 12, yieldIndex(repricedRate[i], initialRate[i])),
+                netOnly =
+                    opening[i].netOnly?.let {
+                        NetInvestmentIncomeAmounts(
+                            total = it.total * netMonthlyScale,
+                            reinvested = it.reinvested?.times(netMonthlyScale),
+                            interest = it.interest?.times(netMonthlyScale),
+                        )
+                    },
             )
         }
     }

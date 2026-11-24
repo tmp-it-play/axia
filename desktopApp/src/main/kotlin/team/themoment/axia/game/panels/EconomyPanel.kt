@@ -86,7 +86,16 @@ fun EconomyPanel(
             }
         if (coverage.isNotEmpty()) Hint(coverage.joinToString(" · "))
         val investment = externalAccount.investmentIncome
-        StatRow("월 투자소득 수취 · 지급", incomePair(investment.received?.total, investment.paid?.total))
+        if (investment.netOnly != null) {
+            StatRow("월 투자소득 순수취", formatCompactDollars(investment.net))
+        } else {
+            StatRow("월 투자소득 수취 · 지급", incomePair(investment.received?.total, investment.paid?.total))
+        }
+        val opening = investment.opening
+        val pastYears = listOfNotNull(opening.received?.year, opening.paid?.year, opening.netOnly?.year).filter { it < 2023 }
+        if (pastYears.isNotEmpty()) {
+            Hint("${pastYears.distinct().sorted().joinToString("·")}년 명목 달러액을 시작 기준으로 사용합니다.")
+        }
         if (externalAccount.imfInterest > 0.0) StatRow("월 IMF 차입 이자", formatCompactDollars(externalAccount.imfInterest))
         if (externalAccount.netGrants != 0.0) {
             val label = if (externalAccount.netGrants > 0.0) "월 경제 원조 수취" else "월 경제 원조 지급"
@@ -109,7 +118,7 @@ fun EconomyPanel(
         if (externalAccount.openingReceived?.source == RemittanceSource.BOP_MINIMUM) {
             Hint("수취와 지급은 모두 하한입니다. 두 기준액의 차이는 기준연도 공표 순액과 같습니다.")
         }
-        Hint("양자 송금은 KNOMAD의 2021년 경로 비중으로 추정합니다. 양국 총액과 맞추고 남은 금액도 경상수지에 포함합니다.")
+        Hint("양국이 확인된 송금은 해당 지급국의 경제 규모에 연동합니다. 나머지는 KNOMAD의 2021년 경로 비중을 적용할 수 있는 범위에서 배정하며, 상대 미배정액도 경상수지에 포함합니다.")
     }
     InvestmentIncomeDetails(countryId, externalAccount.investmentIncome, externalAccount.settled)
     StatRow("준비자산 (금 제외)", formatCompactDollars(externalAccount.reserves))
@@ -171,8 +180,32 @@ private fun InvestmentIncomeDetails(
     var expanded by remember(countryId) { mutableStateOf(false) }
     PaperTag(if (expanded) "투자소득 내역 접기" else "투자소득 내역", onClick = { expanded = !expanded })
     if (!expanded) return
+    income.opening.netOnly?.let { base ->
+        StatRow(
+            "투자소득 연간 순수취 기준액",
+            "${formatCompactDollars(base.total.toDouble())} · ${base.year}년 ${base.source.label}",
+            note = if (base.year < 2023) "과거 명목액 대용" else null,
+        )
+        Hint("수취와 지급을 나눈 총액은 미보고입니다. 공표 순액을 세계 달러 GDP 변화에 연동합니다.")
+        base.interest?.let { StatRow("연간 투자이자 순수취 기준액", formatCompactDollars(it.toDouble())) }
+        income.netOnly?.let { monthly ->
+            monthly.interest?.let { StatRow("월 투자이자 순수취", formatCompactDollars(it)) }
+            if (monthly.interest != null || monthly.reinvested != null) {
+                StatRow("월 기타·미분류 순수취", formatCompactDollars(monthly.other))
+            }
+        }
+        income.netOnly?.reinvested?.let {
+            StatRow("월 재투자수익 순수취", formatCompactDollars(it))
+            StatRow("재투자 금융계정 대응액 (순유입)", formatCompactDollars(income.reinvestmentFinancing))
+        }
+        return
+    }
     for ((label, base) in listOf("투자소득 연간 수취 기준액" to income.opening.received, "투자소득 연간 지급 기준액" to income.opening.paid)) {
-        StatRow(label, base?.let { "${formatCompactDollars(it.total.toDouble())} · ${it.year}년 ${it.source.label}" } ?: "자료 없음 · 결산 미포함")
+        StatRow(
+            label,
+            base?.let { "${formatCompactDollars(it.total.toDouble())} · ${it.year}년 ${it.source.label}" } ?: "자료 없음 · 결산 미포함",
+            note = if (base != null && base.year < 2023) "과거 명목액 대용" else null,
+        )
     }
     if (settled) {
         if (income.received != null && income.paid != null) {

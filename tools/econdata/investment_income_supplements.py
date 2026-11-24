@@ -1,15 +1,15 @@
-"""2023년 공식 국제수지 표. 총액·배당(준법인 인출 포함)·이자·재투자는 같은 방향과 연도다."""
+"""국가별 공표 투자소득. 2023년 자료와 과거 명목 기준액의 연도·회계기간을 구분한다."""
 
 from remittance_supplements import CFA_PER_USD_2023
 
 
-def amounts(total, dividends=None, interest=None, reinvested=None, *, rate=1.0, source="NATIONAL_BOP"):
+def amounts(total, dividends=None, interest=None, reinvested=None, *, year=2023, rate=1.0, source="NATIONAL_BOP"):
     # 원표 단위는 백만 통화 단위, rate는 연평균 자국통화/달러. 누락된 세분은 공란으로 남긴다.
     def dollars(value):
         return round(value * 1_000_000 / rate) if value is not None else None
 
     return {
-        "year": 2023, "source": source, "total": dollars(total),
+        "year": year, "source": source, "total": dollars(total),
         "dividends": dollars(dividends), "interest": dollars(interest), "reinvested": dollars(reinvested),
     }
 
@@ -50,6 +50,13 @@ def national_accounts():
         "received": amounts(1284.9995134006147, rate=1.34307960114933),
         "paid": amounts(1011.24578115, rate=1.34307960114933),
     }
+    # 베트남 당국·IMF 2025년 Article IV 표 3(십억 USD, 소수점 한 자리).
+    # Investment income의 Receipts/Payments 행. 반올림한 양쪽의 차와 원표 순액은 0.1십억 USD 차이 난다.
+    # https://www.imf.org/-/media/files/publications/cr/2025/english/1vnmea2025001-source-pdf.pdf
+    accounts["VNM"] = {
+        "received": amounts(4600, source="IMF_ARTICLE_IV"),
+        "paid": amounts(27000, source="IMF_ARTICLE_IV"),
+    }
     # 북키프로스 중앙은행 BPM6 상세표 2, C.2 투자소득 총액 및 2.3 기타투자 이자, 백만 USD.
     # https://www.kktcmerkezbankasi.org/sites/default/files/2024%20-%20%C3%96demeler%20Dengesi%20Tablolar%C4%B1-Ayr%C4%B1nt%C4%B1l%C4%B1%20Sunum.pdf
     accounts["CYN"] = {"received": amounts(422.61, interest=387.22), "paid": amounts(104.23, interest=64.30)}
@@ -60,4 +67,37 @@ def national_accounts():
     accounts["FSM"] = {
         "paid": amounts(24.34126049692639 + 0.627289418237, 24.34126049692639, 0.627289418237, source="NATIONAL_BOP_FY_SEPTEMBER"),
     }
+    # 이란 중앙은행, 통계연감 1395 표 23.20, 백만 USD. 태양력 1392년(2013/14, 2014년 3월 종료).
+    # 소득계정에서 피용자보수와 투자소득을 따로 집계한다. 이후 열의 말줄임표는 미보고다.
+    # https://irandataportal.syr.edu/wp-content/uploads/National-Accounts-3.pdf
+    accounts["IRN"] = {
+        "received": amounts(2858, year=2014, source="NATIONAL_BOP_FY_MARCH"),
+        "paid": amounts(886, year=2014, source="NATIONAL_BOP_FY_MARCH"),
+    }
     return accounts
+
+
+def national_net_income():
+    # UAE 재무부의 2023년 전국 국제수지: 공공·민간을 포함한 투자소득 순유입 141억 AED.
+    # 2025년 개편표는 피용자보수 등을 포함하는 본원소득만 구분하므로 이 순액과 섞지 않는다.
+    # https://mof.gov.ae/wp-content/uploads/2024/10/Project-Tolerance-Supplement-Final.pdf
+    # https://api.worldbank.org/v2/country/ARE/indicator/PA.NUS.FCRF?date=2023&format=json
+    # 리히텐슈타인 표 1의 2023년 잠정 C열(백만 CHF). 거주경제 전체에서 국내 상호 지급은
+    # 상쇄된다. D.4 순액(C66)에서 토지·자원 임대 순액(C70+C75)을 제외한다. D.43은 C68+C73.
+    # https://www.statistikportal.li/statistikportal/publications/301-volkswirtschaftliche-gesamtrechnungen/2023/01/1/301.2023.02.1_02_volkswirtschaftliche-gesamtrechnung-2023-tabellen.xlsx
+    # https://api.worldbank.org/v2/country/CHE/indicator/PA.NUS.FCRF?date=2023&format=json
+    # https://www.elibrary.imf.org/display/book/9789211615227/ch026.xml
+    return {
+        # 투르크메니스탄 중앙은행·IMF 국가보고서 99/140 표 26(116쪽). 1996년 백만 USD.
+        # 순이자 64.4 + 순배당·이윤 -44.9 = 19.5. 기타소득 0.0이고 피용자보수 -2.8은 제외한다.
+        # 1997~1998년에는 'Other Income'에 분류를 확인할 수 없는 금액이 있다.
+        # https://www.imf.org/external/pubs/ft/scr/1999/cr99140.pdf
+        "TKM": {"year": 1996, "source": "IMF_COUNTRY_REPORT", "total": 19_500_000, "interest": 64_400_000, "reinvested": None},
+        "ARE": {"year": 2023, "source": "NATIONAL_BOP", "total": round(14_100_000_000 / 3.6725), "interest": None, "reinvested": None},
+        "LIE": {
+            "year": 2023, "source": "NATIONAL_ACCOUNTS",
+            "total": round((1572.73 - (6.82 - 6.69)) * 1_000_000 / 0.89849),
+            "interest": None,
+            "reinvested": round((1101.67 - 132.73) * 1_000_000 / 0.89849),
+        },
+    }

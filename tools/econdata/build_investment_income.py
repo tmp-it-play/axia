@@ -8,13 +8,18 @@ import argparse
 import json
 from decimal import Decimal
 from pathlib import Path
+from urllib.parse import urlencode
 from xml.etree import ElementTree
 
 from build_economy import WORLD, download
 from build_reserve_assets import COUNTRY_ALIASES
-from investment_income_supplements import national_accounts
+from investment_income_supplements import national_accounts, national_net_income
+from remittance_supplements import USD_PER_EUR_2023
 
 OUT = WORLD.with_name("investment_income.json")
+FIRST_YEAR = 2014
+HISTORICAL_FIRST_YEAR = 1994
+LAST_YEAR = 2023
 TOTAL = "_T_F_D4P"
 DISTRIBUTED = "D_F5_D42S"
 FDI_REINVESTED = "D_F5_D43S"
@@ -30,12 +35,61 @@ INDICATORS = (TOTAL, DISTRIBUTED, FDI_REINVESTED, FDI_EQUITY, STOCK_DIVIDENDS, F
               FUND_REINVESTED, FUND_INCOME, PORTFOLIO_EQUITY, WITHDRAWALS, *INTEREST)
 DIRECTIONS = {"CD_T": "received", "DB_T": "paid"}
 
+# Eurostat bop_c6_a 지급표. 직접투자 채무소득 합계(D4Q)에서 순수 이자(D41)를 분리한 원표다.
+# https://ec.europa.eu/eurostat/databrowser/view/bop_c6_a/default/table?lang=en
+EUROSTAT_COUNTRIES = {
+    "AL": "ALB", "AT": "AUT", "BA": "BIH", "BE": "BEL", "BG": "BGR", "CH": "CHE", "CY": "CYP",
+    "CZ": "CZE", "DE": "DEU", "DK": "DNK", "EE": "EST", "EL": "GRC", "ES": "ESP", "FI": "FIN",
+    "FR": "FRA", "HR": "HRV", "HU": "HUN", "IE": "IRL", "IS": "ISL", "IT": "ITA", "LT": "LTU",
+    "LU": "LUX", "LV": "LVA", "MD": "MDA", "ME": "MNE", "MK": "MKD", "MT": "MLT", "NL": "NLD",
+    "NO": "NOR", "PL": "POL", "PT": "PRT", "RO": "ROU", "RS": "SRB", "SE": "SWE", "SI": "SVN",
+    "SK": "SVK", "TR": "TUR", "UK": "GBR", "XK": "KOS",
+}
 
-def imf_reports(cache):
+
+def eurostat_payments(cache):
+    # S1/S1: 모든 거주·비거주 부문. WRL_REST: 보고국 외 전 세계. 단위는 백만 EUR.
+    # 지급에는 준비자산의 수익이 없다. 준비자산은 자산 측에만 존재하며 관련 부채는 그 금융상품으로 분류한다.
+    # 수취에는 준비자산 이자가 필요하므로 이 지급표를 적용하지 않는다.
+    items = ("D4P__F", "D4S__D__F5", "D43S__D__F5", "D4S__P__F5", "D4432__P__F52", "D422__O__F5",
+             "D41__D__FLA", "D41__O__FLA", "D41__P__F3")
+    filters = {"freq": "A", "currency": "MIO_EUR", "sector10": "S1", "sectpart": "S1", "stk_flow": "DEB",
+               "partner": "WRL_REST", "time": str(LAST_YEAR)}
+    query = urlencode({**filters, "bop_item": items}, doseq=True)
+    url = f"https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/bop_c6_a?{query}"
+    data = json.loads(download(url, cache / f"eurostat-investment-income-debits-{LAST_YEAR}.json" if cache else None),
+                      parse_float=Decimal)
+    indexes = {k: d["category"]["index"] for k, d in data["dimension"].items()}
+    if any(set(indexes[k]) != {v} for k, v in filters.items()) or [k for k in data["id"] if k not in filters] != ["bop_item", "geo"]:
+        raise ValueError("Eurostat 투자소득 단위·보고 범위가 달라졌습니다.")
+    currency = Decimal(str(USD_PER_EUR_2023)) * 1_000_000
+    result = {}
+    for geo, position in indexes["geo"].items():
+        if geo not in EUROSTAT_COUNTRIES:
+            continue
+        offsets = [str(indexes["bop_item"][item] * len(indexes["geo"]) + position) for item in items]
+        if not all(data["value"].get(o) is not None for o in offsets):
+            continue
+        total, direct, direct_retained, portfolio, fund_retained, withdrawals, direct_interest, other_interest, bond_interest = (
+            data["value"][o] for o in offsets
+        )
+        # 직접투자·증권투자 지분소득에서 같은 표의 재투자분을 차감해 분배소득을 얻는다.
+        result[EUROSTAT_COUNTRIES[geo]] = {
+            "year": LAST_YEAR, "source": "EUROSTAT_BOP", "total": round(total * currency),
+            "dividends": round((direct - direct_retained + portfolio - fund_retained + withdrawals) * currency),
+            "interest": round((direct_interest + other_interest + bond_interest) * currency),
+            "reinvested": round((direct_retained + fund_retained) * currency),
+        }
+    return result
+
+
+def imf_reports(cache, first=FIRST_YEAR, last=LAST_YEAR, countries=()):
     # SDMX의 SCALE은 표시 배율이다. OBS_VALUE는 이미 달러 단위다.
-    key = ".CD_T+DB_T." + "+".join(INDICATORS) + ".USD.A"
-    url = f"https://api.imf.org/external/sdmx/2.1/data/IMF.STA,BOP/{key}?startPeriod=2019&endPeriod=2023"
-    raw = download(url, cache / "imf-bop-investment-income-2019-2023.xml" if cache else None)
+    selected = "+".join(sorted(countries))
+    key = selected + ".CD_T+DB_T." + "+".join(INDICATORS) + ".USD.A"
+    url = f"https://api.imf.org/external/sdmx/2.1/data/IMF.STA,BOP/{key}?startPeriod={first}&endPeriod={last}"
+    suffix = f"-{selected}" if selected else ""
+    raw = download(url, cache / f"imf-bop-investment-income-{first}-{last}{suffix}.xml" if cache else None)
     reports = {}
     for series in ElementTree.fromstring(raw).findall(".//{*}Series"):
         entry = series.attrib
@@ -50,10 +104,10 @@ def imf_reports(cache):
             year = int(obs.attrib["TIME_PERIOD"])
             report = reports.setdefault((entry["COUNTRY"], direction), {}).setdefault(year, {})
             value = Decimal(obs.attrib["OBS_VALUE"])
-            if not value.is_finite() or not 2019 <= year <= 2023 or indicator in report:
+            if not value.is_finite() or not first <= year <= last or indicator in report:
                 raise ValueError(f"국제수지 중복 또는 관측값 오류: {entry}, {obs.attrib}")
             report[indicator] = value
-    if not reports:
+    if not reports and not selected:
         raise ValueError("IMF 투자소득 보고가 없습니다.")
     return reports
 
@@ -97,9 +151,10 @@ def observation(report, year):
     }
 
 
-def build(states, imf, national):
-    if not national.keys() <= set(states):
-        raise ValueError(f"알 수 없는 보완 자료 국가 코드: {national.keys() - set(states)}")
+def build(states, imf, national, net_income):
+    unknown = (national.keys() | net_income.keys()) - set(states)
+    if unknown:
+        raise ValueError(f"알 수 없는 보완 자료 국가 코드: {unknown}")
     countries = {}
     for country in states:
         entries = {}
@@ -107,10 +162,12 @@ def build(states, imf, national):
             reports = imf.get((COUNTRY_ALIASES.get(country, country), direction), {})
             year = max((y for y, r in reports.items() if TOTAL in r), default=None)
             local = national.get(country, {}).get(direction)
-            if local and (year is None or local["year"] > year):
+            if local and (year is None or local["year"] > year or local["year"] == year and local["source"] == "EUROSTAT_BOP"):
                 entries[direction] = local
             else:
                 entries[direction] = observation(reports[year], year) if year is not None else None
+        if country in net_income and not any(entries.values()):
+            entries["netOnly"] = net_income[country]
         countries[country] = entries
     return {"unit": "annual_USD", "countries": countries}
 
@@ -123,7 +180,18 @@ def main():
         cache.mkdir(parents=True, exist_ok=True)
     world = json.loads(WORLD.read_text(encoding="utf-8"))
     states = sorted(c["id"] for c in world["countries"] if c["kind"] == "STATE")
-    bundle = build(states, imf_reports(cache), national_accounts())
+    reports = imf_reports(cache)
+    national = national_accounts()
+    for country, paid in eurostat_payments(cache).items():
+        national.setdefault(country, {})["paid"] = paid
+    net_income = national_net_income()
+    bundle = build(states, reports, national, net_income)
+    missing = [COUNTRY_ALIASES.get(c, c) for c, entries in bundle["countries"].items() if not any(entries.values())]
+    if missing:
+        historical = imf_reports(cache, HISTORICAL_FIRST_YEAR, FIRST_YEAR - 1, missing)
+        for key, years in historical.items():
+            reports.setdefault(key, {}).update(years)
+        bundle = build(states, reports, national, net_income)
     OUT.write_text(json.dumps(bundle, indent=2) + "\n", encoding="utf-8")
 
 

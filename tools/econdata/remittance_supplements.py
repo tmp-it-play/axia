@@ -1,5 +1,9 @@
 """개인송금 연간 수취·지급액의 보완 자료. 단위는 미 달러다."""
 
+import csv
+from decimal import Decimal
+from pathlib import Path
+
 # WDI는 경상이전 중 가계 간 개인이전과 피용자보수 총액을 같은 방향으로 합산한다.
 # https://databank.worldbank.org/metadataglossary/world-development-indicators/series/BM.TRF.PWKR.CD.DT
 # WDI의 2023 공식 연평균 환율. 아래의 XAF 5개국과 토고 XOF의 환율이 같다.
@@ -34,6 +38,12 @@ BOP_REMITTANCES_USD_2023 = {
     # 대만 중앙은행 국제수지 연간 표 3, 7쪽 2023r 열(백만 USD). 개인이전 + 피용자보수.
     # https://www.cbc.gov.tw/public/data/economic/statistics/bop/english/eSY.pdf
     "TWN": {"received": (4_202 + 1_215) * 1_000_000, "paid": (10_539 + 885) * 1_000_000},
+    # 리비아 중앙은행 2023년 국제수지, 피용자보수 및 비정부 경상이전 수취 각 0.0백만 USD.
+    # IMF BPM6 D1·D752_S1W CD_T의 보고값도 각 0이다. 지급은 19.4 + 4,800.0으로 WDI와 일치한다.
+    # 미보고와 구분되는 리비아 측 보고액이다. 네덜란드·이탈리아 지급국의 거울통계와 차이가 있다.
+    # https://cbl.gov.ly/balance-of-payment/
+    # https://api.imf.org/external/sdmx/2.1/data/IMF.STA,BOP/LBY.CD_T.D1+D752_S1W.USD.A?startPeriod=2023&endPeriod=2023
+    "LBY": {"received": 0},
 }
 
 
@@ -79,11 +89,10 @@ PARTIAL_REMITTANCES = {
         "received": (2023, (100_150_000 + 38_560_000), "BOP_MINIMUM"),
         "paid": (2023, 20_900_000, "BOP_MINIMUM"),
     },
-    # UAE 중앙은행 2023 금융안정보고서, 환전소가 처리한 개인송금 수취 120억 AED.
-    # 은행 채널, 무역·투자 등 다른 용도 및 별도 피용자보수는 포함하지 않는다.
-    # https://centralbank.ae/media/3hvhkdfs/cbuae-financial-stability-report-2023_a4_e.pdf
-    # https://api.worldbank.org/v2/country/ARE/indicator/PA.NUS.FCRF?date=2023&format=json
-    "ARE": {"received": (2023, round(12_000_000_000 / 3.6725), "EXCHANGE_HOUSES")},
+    # UAE WDI 국제수지 수취 개인이전. 전국 개인이전만 집계하며 피용자보수는 미보고다.
+    # 환전소 경유금이나 가계 외 민간이전을 포함한 재무부 수치와 합산하지 않는다.
+    # https://api.worldbank.org/v2/country/ARE/indicator/BX.TRF.PWKR.CD?date=2023&format=json
+    "ARE": {"received": (2023, round(1_878_829_135.4663), "WDI_PERSONAL_TRANSFERS")},
     # ESAAMLG 에리트레아 상호평가 §69. 허가 환전·송금업자 경유 국경 간 개인 대 개인
     # 수취이며, 주로 해외 거주자의 가족 부양 목적이다. 다른 경로와 피용자보수는 별도다.
     # https://www.fatf-gafi.org/content/dam/fatf-gafi/fsrb-mer/Eritrea-MER-2025.pdf.coredownload.inline.pdf
@@ -97,3 +106,139 @@ PARTIAL_REMITTANCES = {
     # https://documents1.worldbank.org/curated/en/099051624114042163/pdf/P1787061921ca30fc187161b7d84a5e4532.pdf
     "SYR": {"received": (2022, 1_050_000_000, "HOUSEHOLD_SURVEY")},
 }
+
+
+# 유로스타트 bop_rem6, 2023년 경상가격 백만 EUR. DEB는 보고국에서 상대국으로 지급,
+# CRE는 보고국이 상대국으로부터 수취한 금액이다. 아래는 WDI 정의에 맞는 D1(피용자보수)과
+# D752(가계 간 개인이전)의 양수 관측만이다. 항목 결측은 합계 밖에 남긴다.
+# R1은 자본이전·사회부담금 등을 조정하는 별도 정의여서 사용하지 않는다.
+# https://ec.europa.eu/eurostat/databrowser/view/bop_rem6/default/table?lang=en
+# https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/bop_rem6?time=2023&currency=MIO_EUR
+# ECB 연평균 환율(USD/EUR). 환산 뒤 한 경로를 한 번만 반올림한다.
+# https://data.ecb.europa.eu/data/datasets/EXR/EXR.A.USD.EUR.SP00.A
+USD_PER_EUR_2023 = 1.0813
+
+# 스페인은 WDI의 양방향 금액이 피용자보수 항목 수준이다. bop_rem6의 ES, WRL_REST는
+# D1과 D752를 모두 공표한다. D752의 일부인 근로자송금(D752W)은 총액에 다시 더하지 않는다.
+# https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/bop_rem6?time=2023&currency=MIO_EUR&geo=ES&partner=WRL_REST
+SPAIN_BOP_MILLION_EUR = {"received": 5_077 + 3_000, "paid": 550 + 11_099}
+
+# 소말리아 중앙은행 2024년 6월 통계연보 표 3.1, 은행·송금업자의 2023년 개인송금
+# 지급(Remittance) 12개월. 수취 합은 2,181.29백만 USD로 세계은행 추계와 반올림 단위에서 일치한다.
+# 기업 지급·원조·기타 SWIFT 송금과 피용자보수는 포함하지 않는다. 소말릴란드 몫은 구분되지 않는다.
+# https://centralbank.gov.so/wp-content/uploads/2024/12/Statistical-Bulletin_June-2024.pdf
+SOMALIA_PERSONAL_PAYMENTS = round(sum([
+    180.92, 156.19, 159.66, 132.02, 148.07, 151.45, 136.45, 152.30, 170.23, 170.07, 150.37, 145.32,
+]) * 1_000_000)
+
+# 에콰도르 중앙은행 RRpais_a(수취)·REpais_a(지급) 2023년 열, 단위 USD.
+# 자국 표의 총액은 속령 등 게임에 별도 경제가 없는 상대를 포함한다. 원표의 ISO 숫자 코드를
+# UN M49와 대조했다. 689는 Kosovo, 736은 Sudán으로 같은 표의 Sudán del Sur(728)와 구별된다.
+# https://contenido.bce.fin.ec/documentos/Estadisticas/SectorExterno/BalanzaPagos/Remesas/Flujo_de_remesas_de_trabajadores.xlsx
+ECUADOR_TOTALS = {"received": 5_447_489_436, "paid": 700_864_485}
+
+# 수취국별로 실제 보고한 송금국의 관측액. EU27과 그 회원국을 함께 더하지 않는다.
+# 이탈리아은행 trimestrali_paese의 이탈리아→BHR·MCO·PRK는 인가업체를 통한 개인 간
+# 송금(D752W)이다. 다른 수취국에서 쓰는 유로스타트 이탈리아 D752에는 이를 다시 더하지 않는다.
+# https://www.bancaditalia.it/statistiche/tematiche/rapporti-estero/rimesse-immigrati/rimesse.xlsx
+# 유로스타트 VA는 교황청(바티칸 시국)이며 IT와 다르다. 프랑스 BOP와 통합되는 모나코는
+# 이탈리아은행이 외국 수취지를 Principato di Monaco(MC)로 구분한 행만 쓴다.
+# https://ec.europa.eu/eurostat/documents/39118/18471074/vademecum-balance-payments.pdf
+INCOMING_PARTNERS_MILLION_EUR = {
+    "BHR": {"NLD": 0.8 + 0.1, "ITA": 0.081 + 0.081 + 0.094 + 0.109},
+    "LIE": {"AUT": 6.0, "DNK": 0.1, "NLD": 0.8, "SWE": 2.4, "BIH": 0.1,
+            "CYP": 0.2, "HRV": 0.2, "ITA": 1.0},
+    "MCO": {"ITA": 0.001 + 0.001},
+    "PRK": {"NLD": 0.3, "ITA": 0.001},
+    "SGP": {"ALB": 0.1, "BEL": 16.0, "BIH": 0.2, "CZE": 0.2, "DNK": 13.4, "EST": 0.1,
+            "GRC": 0.9 + 1.0, "FIN": 2.0 + 1.0, "FRA": 26.0, "ITA": 8.8 + 0.8,
+            "MLT": 0.8, "NLD": 16.9 + 0.2, "SWE": 0.6, "CYP": 9.6,
+            "DEU": 1.0, "HRV": 0.4, "SRB": 1.0},
+    "VAT": {"NLD": 0.3},
+}
+PARTNER_COVERAGE = {
+    "BHR": "네덜란드 피용자보수·개인이전, 이탈리아 인가업체 개인송금, 에콰도르 근로자송금",
+    "LIE": "EU 27개국과 보스니아 헤르체고비나에서 지급한 피용자보수·개인이전",
+    "MCO": "이탈리아 인가업체의 대모나코 개인송금",
+    "PRK": "네덜란드 피용자보수와 이탈리아 인가업체 개인송금",
+    "SGP": "EU 27개국과 알바니아·보스니아 헤르체고비나·세르비아에서 지급한 피용자보수·개인이전",
+    "VAT": "네덜란드가 바티칸 시국에 지급한 피용자보수",
+}
+
+# 리히텐슈타인→상대국을 수취국이 신고한 CRE. 고용주 거주지는 리히텐슈타인이다.
+LIE_OUTGOING_MILLION_EUR = {
+    "ALB": 0.7 + 0.1, "AUT": 573.0 + 2.0, "GRC": 0.3, "NLD": 2.3, "KOS": 0.1 + 0.2,
+    "BIH": 2.1, "CZE": 0.2, "HRV": 0.2, "HUN": 0.1, "ITA": 0.3, "LVA": 4.0, "SRB": 2.0,
+}
+
+# 수취국의 CRE(피용자보수 D1과 가계 간 개인이전 D752). 스페인 지급은 자국이
+# 상대까지 명시한 근로자송금 D752W만 사용한다. 그 밖의 나라와 EU27 합계는 별도다.
+OTHER_OUTGOING_MILLION_EUR = {
+    "BHR": {"NLD": 1.5 + 0.1},
+    "LBY": {"NLD": 1.1},
+    "SGP": {"ALB": 1.0 + 0.1, "BEL": 6.0, "BIH": 4.0, "CYP": 0.4, "DEU": 5.0,
+            "DNK": 14.1, "EST": 3.9, "FIN": 2.0, "FRA": 13.0, "GRC": 6.0 + 0.1,
+            "HRV": 10.8 + 9.9, "ITA": 2.2, "KOS": 0.7 + 0.1, "LTU": 0.1,
+            "LVA": 65.0 + 31.0, "MNE": 24.0 + 1.0, "NLD": 43.0, "SRB": 3.0 + 3.0, "SWE": 0.9},
+    "ESP": {"MAR": 1_405.0, "ROU": 313.0},
+}
+
+
+def partner_benchmarks():
+    """확인된 상대국별 달러 금액과, 상대 미배정 EU 합계를 포함한 부분 기준액을 만든다."""
+    def usd(million_eur):
+        return round(million_eur * 1_000_000 * USD_PER_EUR_2023)
+
+    routes = {}
+    benchmarks = {}
+    with Path(__file__).with_name("ecuador_remittances_2023.csv").open(encoding="utf-8") as table:
+        for row in csv.DictReader(table):
+            partner = row["partner"]
+            for payer, payee, column in [(partner, "ECU", "received_by_ecuador_usd"), ("ECU", partner, "paid_by_ecuador_usd")]:
+                if row[column]:
+                    value = round(Decimal(row[column]))
+                    if value <= 0 or (payer, payee) in routes or payer == payee:
+                        raise ValueError(f"에콰도르 중앙은행 경로 오류: {payer}, {payee}")
+                    routes[payer, payee] = value
+    for payee, senders in INCOMING_PARTNERS_MILLION_EUR.items():
+        for payer, euros in senders.items():
+            routes[payer, payee] = usd(euros)
+        total = sum(routes[payer, payee] for payer in senders)
+        if payee == "BHR":
+            total += routes["ECU", payee]
+        if payee == "SGP":
+            # EU27 합계 중 비공개·미보고 회원국의 상대를 특정할 수 없는 금액도 포함된다.
+            # EU27(DEB D1 93.8 + D752 80.0)에 EU 밖의 ALB·BIH·SRB만 추가한다.
+            total = usd(93.8 + 80.0) + sum(routes[p, payee] for p in ("ALB", "BIH", "SRB"))
+        benchmarks[payee, "received"] = {
+            "usd": total, "year": 2023, "source": "PARTNER_REPORTS", "scope": PARTNER_COVERAGE[payee],
+        }
+    for payee, euros in LIE_OUTGOING_MILLION_EUR.items():
+        routes["LIE", payee] = usd(euros)
+    for payer, recipients in OTHER_OUTGOING_MILLION_EUR.items():
+        for payee, euros in recipients.items():
+            routes[payer, payee] = usd(euros)
+    # VGR 2023, 표 1 C34 국내 사업체 피용자보수 4,531.74m CHF, C54 국내 거주자
+    # 피용자보수 2,459.94m CHF. 같은 국내 근로 대가를 상쇄하면 국외 순지급 2,071.80m CHF.
+    # 이 순지급만으로 확인되는 2023년 지급 하한이 2021년 KNOMAD 지급 추계보다 크다.
+    # 여기에 EU27에서 받은 피용자보수 9.3m EUR와 수취국이 확인한 가계 간 지급도 더한다.
+    # D752 CRE는 EU27 9.7m + 비회원국 ALB 0.1, BIH 2.1, SRB 2.0, KOS 0.2m EUR다.
+    # https://www.statistikportal.li/statistikportal/publications/301-volkswirtschaftliche-gesamtrechnungen/2023/01/1/301.2023.02.1_02_volkswirtschaftliche-gesamtrechnung-2023-tabellen.xlsx
+    # https://api.worldbank.org/v2/country/CHE/indicator/PA.NUS.FCRF?date=2023&format=json
+    benchmarks["LIE", "paid"] = {
+        "usd": (round((4531.74 - 2459.94) * 1_000_000 / 0.89849) +
+                usd(9.3 + 9.7 + 0.1 + 2.1 + 2.0 + 0.2) + routes["LIE", "ECU"]),
+        "year": 2023,
+        "source": "WAGE_PAYMENT_FLOOR",
+    }
+    # 에콰도르 중앙은행 RRpais_a M218, ISO 336 Santa Sede (Vaticano). 2016년 수취 350 USD.
+    # 이 수취국의 이후 연도는 공란이다. 필리핀은 2023년 자국 은행 경유 금액을 천 USD 단위 0으로
+    # 공표했다. 서로 다른 연도를 합산하거나 이 두 경로로 바티칸의 전체 지급액을 정하지 않는다.
+    # https://contenido.bce.fin.ec/documentos/Estadisticas/SectorExterno/BalanzaPagos/Remesas/Flujo_de_remesas_de_trabajadores.xlsx
+    # https://www.bsp.gov.ph/Statistics/External/ofw2.aspx
+    # 2016년 자료는 바티칸의 대용치로만 남긴다. 같은 경로가 공란인 에콰도르 2023년 수취에는 배정하지 않는다.
+    benchmarks["VAT", "paid"] = {
+        "usd": 350, "year": 2016, "source": "PARTNER_REPORTS",
+        "scope": "에콰도르 수취 신고 경로만 · 2023년 에콰도르 미보고, 필리핀 은행 수취액은 천 달러 단위 0",
+    }
+    return benchmarks, routes
