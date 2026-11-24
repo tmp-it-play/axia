@@ -11,8 +11,8 @@
 | 금 제외 준비자산 | 25개국은 수입 대금 3개월분, 미얀마는 관측 월이 확인되지 않는 WDI 연간 값을 쓴다. | 국가별 2023년 말 달러 환산 잔액. 준비자산의 통화별 구성과 중앙은행 간 스와프도 미수록이다. 국제투자대조표는 같은 보고 기간의 금을 빼거나 금 외 구성 항목을 합산한다. [IMF 국제유동성](https://data.imf.org/en/Datasets/IL) · [IMF 국제투자대조표](https://data.imf.org/en/Datasets/IIP) · [WDI](https://data.worldbank.org/indicator/FI.RES.XGLD.CD) |
 | 통화정책 | 122개국은 자국 중앙은행이나 통화동맹 발권기관의 금리로 시작한다. 15개국은 기준 통화 금리를, 62개국은 모형 추정치를 쓴다. | 같은 정책수단의 2023년 말 금리·물가 목표·환율제도. 113개국은 통화 체제를 모형으로 지정하며, 그중 53개국에는 공표 금리가 있다. [국가별 공표 자료](../simulation/src/main/resources/world/central_banks.json) · [BIS 정책금리](https://data.bis.org/topics/CBPOL) |
 | 산업·고용·인구 구조 | 82개국의 272개 국가·지표 조합에 추정값을 쓴다. 섬유·식품·기술 제조 비중의 결측은 각각 74·71·45개국이다. 대만에는 병력·자원 지대·기술 제조 비중 추정이 남아 있다. 병력·순이동은 결측 시 번들에 0을 저장한다. | 제조업 세분류, 산업연관표, 직업별 고용·소득, 인구이동. 건설·광업·서비스업 세분 및 직업별 조세 부담에도 모형 배분을 쓴다. [구조 자료 생성기](../tools/econdata/build_structure.py) |
-| 개인송금 | 수취는 186개국에 연간 총액(추계 포함), 5개국에 일부 경로·조사·하한이 있고 8개국이 결측이다. 지급은 총액 196개국, 하한 1개국, 결측 2개국이다. 2023년 WDI 수취 167개국·지급 171개국을 기준으로 국가 국제수지와 세계은행 자료 등을 보완했다. | 미보고 국가·경로의 금액, 월별 계절성과 양자 실측. [세계은행 수취](https://data.worldbank.org/indicator/BX.TRF.PWKR.CD.DT) · [세계은행 지급](https://data.worldbank.org/indicator/BM.TRF.PWKR.CD.DT) · [KNOMAD 양자 추계](https://data360files.worldbank.org/data360-data/data/WB_KNOMAD/WB_KNOMAD_BRE.csv) |
-| 대외 투자소득 | 연간 투자소득 총액은 수취 182개국·지급 183개국에 있다. 이 중 수취 178개국·지급 180개국이 2023년 자료다. 배당·이자·재투자수익은 원표에서 식별할 수 있는 금액만 분리한다. | 수취 17개국·지급 16개국의 총액, 미분류 소득의 구성, 자산·상대국·월별 내역. [IMF 국제수지](https://data.imf.org/en/datasets/IMF.STA:BOP) · [국가별 보완 원표](../tools/econdata/investment_income_supplements.py) |
+| 개인송금 | 199개 경제 중 수취는 총액·추계 187곳, 일부 항목·경로·조사 11곳, 결측 1곳이다. 지급은 각각 194곳, 4곳, 1곳이다. 양방향 모두 결측인 곳은 소말릴란드다. 2023년 WDI 수취 166개국·지급 170개국을 기준으로 국가 국제수지와 세계은행 자료 등을 보완했다. | 미보고 국가·경로의 금액, 월별 계절성과 양자 실측. [세계은행 수취](https://data.worldbank.org/indicator/BX.TRF.PWKR.CD.DT) · [세계은행 지급](https://data.worldbank.org/indicator/BM.TRF.PWKR.CD.DT) · [KNOMAD 양자 추계](https://data360files.worldbank.org/data360-data/data/WB_KNOMAD/WB_KNOMAD_BRE.csv) |
+| 대외 투자소득 | 연간 수취·지급 총액은 각각 190개 경제에 있다. 이 중 2023년 자료는 수취 179곳·지급 181곳이다. 순액만 확인된 아랍에미리트·리히텐슈타인은 2023년, 투르크메니스탄은 1996년 자료를 쓴다. 배당·이자·재투자수익은 원표에서 식별할 수 있는 금액만 분리한다. | 순액만 있는 3곳의 수취·지급 총액, 나머지 6곳의 투자소득, 미분류 소득의 구성, 자산·상대국·월별 내역. [IMF 국제수지](https://data.imf.org/en/datasets/IMF.STA:BOP) · [국가별 보완 원표](../tools/econdata/investment_income_supplements.py) |
 | 교역·부가가치 | 199개 경제 중 바티칸만 상품·서비스 수출 비중과 교역 개방도를 추정한다. 소말리아·소말릴란드·바티칸은 농업·산업·제조업·서비스 부가가치가, 모나코는 농업 부가가치가 비어 있다. | 소말리아 생산계정은 소말릴란드를 분리할 수 있어야 한다. 유엔 자료에는 유엔 자체 추계가 포함된다. 소말릴란드의 실험적 지출계정은 교역 비중에 적용했다. [유엔 국민계정](https://unstats.un.org/unsd/snaama/downloads) · [소말릴란드 통계청](https://www.govsomaliland.org/uploads/files/2025/09/2025-09-06-05-36-34-2988-1757136994.pdf) |
 | 지역 인구·경제 | 32개 플레이 국가의 1,497개 구역 중 918곳의 인구 지분을 도시 인구·면적으로 추정한다. 그중 487곳에는 지도상의 도시 인구 표본도 없다. 미국 23곳과 프랑스 20곳은 해당 국가의 공식 지역 인구표 범위 밖이다. 지역 도시화율은 베트남 63개 성·시에만 공표 도시 인구를 적용하고, 나머지 1,434곳은 모형으로 배분한다. 지역별 생산·고용·실업·소득도 추정한다. | 지도 구역과 일치하는 지역 인구·연령·고용, 통근권과 범죄 신고 통계. 한국은 외국인을 제외한 2023년 말 주민등록인구, 미국은 2023년 7월 추계, 캐나다·유럽은 2024년 1월 1일 기준이다. 인도네시아는 2023년 6월 38개 주 추계를 지도 33구역으로 합산한다. 베트남은 2025년 통합 전 경계의 2023년 연평균, 일본·태국은 외국인을 포함한 등록인구, 브라질은 2023년 7월 1일 인구추계, 이집트는 2024년 1월 1일 인구추계다. [국가별 원표·기준일](../simulation/src/main/resources/world/region_population.json) · [구역 코드 대응표](../tools/geodata/region_population_codes.csv) |
 
@@ -46,7 +46,7 @@
 | 불신임 후 정부 구성 | 러시아의 석 달 이내 재표결과 총리 승인, 르완다의 발의·숙려·내각 교체를 포함한다. 의원 개인의 출석·서명·이탈, 연정 합의와 국가원수 재량의 보정에는 표결·조각 기록이 필요하다. [국가별 절차와 법적 근거](../simulation/src/main/resources/world/constitutions.json) |
 | 파키스탄 | 2018년 7월 270개 지역구의 후보별 잠정 개표에 10월 2개 지역구 선관위 개표서를 더한 53,420,071표를 사용한다. 2023년 획정된 266개 지역구에도 당시 선거구와 경계가 다른 곳은 전신 지역의 수치를 배분한다. 우편투표·재검표, 관보 공고일과 무소속의 입당 선택, 선거 전 개별 후보의 제휴·직업별 지지율은 남은 자료 차이다. [선거구 대응표](../tools/electiondata/pakistan_constituencies.csv) · [후보별 원자료와 집계](../tools/electiondata/build_pakistan.py) |
 | 유권자·조직·인물 | 노조 조직률은 PRK IRN SAU, 종교 중요도는 CHN GBR PRK AUS FIN IRN TWN에서 추정한다. 종교 조사는 2009년, 노조 통계는 연도가 서로 다르다. 정당별 지지층·경선 및 결선 지지 이전, 조직 회원 비율·정부 태도, 지도자별 취임일, 실제 연정 협약·내각 인선 자료가 필요하다. 비예산 규제 다수는 소득군 추정, 쿠데타 이력은 THA PAK EGY TUR만 수록한다. [성향 자료](../simulation/src/main/resources/world/society_identities.json) |
-| 은퇴와 직업 | 32개 플레이 국가의 연령별 경제활동참가율은 28개국의 2023년 조사, 3개국의 2023년 ILO 추정, 우크라이나의 2021년 관측을 쓴다. 연금 수급 자료는 65세 이상 전 연령 10개국, 65~74세 한정 6개국에 있다. 50~64세 수급 여부와 비취업을 함께 반영하는 국가는 9개국이다. 고령자의 직업 분포와 지역별 직업 이동은 추정한다. [연령대별 원자료 생성기](../tools/econdata/build_age_activity.py) |
+| 은퇴와 직업 | 32개 플레이 국가의 연령별 경제활동참가율은 28개국의 2023년 조사, 3개국의 2023년 ILO 추정, 우크라이나의 2021년 관측을 쓴다. 연금 수급 자료는 65세 이상 전 연령 23개국, 65~74세 한정 2개국에 있다. 50~64세 수급 여부와 비취업을 함께 반영하는 국가는 11개국이다. 고령자의 직업 분포와 지역별 직업 이동은 추정한다. [연령대별 원자료 생성기](../tools/econdata/build_age_activity.py) |
 
 ## 정책·사건의 모형 가정
 
@@ -103,62 +103,96 @@
 
 | 자료 범위 | 국가 수 | 국가 코드 |
 |---|---:|---|
-| 65세 이상 전 연령 · 해당 제도·조사 수급률 | 10 | AUS, BRA, CAN, FIN, FRA, GBR, JPN, KOR, USA, ZAF |
-| 65~74세만 관측 · 75세 이상 추정 | 6 | DEU, EST, ITA, LTU, LVA, POL |
-| 65세 이상 수급 자료 없음 | 16 | CHN, EGY, IDN, IND, IRN, ISR, PAK, PRK, RUS, RWA, SAU, THA, TUR, TWN, UKR, VNM |
-| 50~64세 수급 및 비취업 수급 자료 있음 | 9 | DEU, EST, FIN, FRA, ITA, LTU, LVA, POL, USA |
-| 50~64세 수급 및 비취업 수급 자료 없음 | 23 | AUS, BRA, CAN, CHN, EGY, GBR, IDN, IND, IRN, ISR, JPN, KOR, PAK, PRK, RUS, RWA, SAU, THA, TUR, TWN, UKR, VNM, ZAF |
+| 65세 이상 전 연령 · 해당 제도·조사 수급률 | 23 | AUS, BRA, CAN, CHN, DEU, EGY, EST, FIN, FRA, GBR, IND, ISR, ITA, JPN, KOR, LVA, RUS, THA, TUR, TWN, USA, VNM, ZAF |
+| 65~74세만 관측 · 75세 이상 추정 | 2 | LTU, POL |
+| 65세 이상 수급 자료 없음 | 7 | IDN, IRN, PAK, PRK, RWA, SAU, UKR |
+| 50~64세 수급 및 비취업 수급 자료 있음 | 11 | DEU, EST, FIN, FRA, ITA, JPN, LTU, LVA, POL, RUS, USA |
+| 50~64세 수급 및 비취업 수급 자료 없음 | 21 | AUS, BRA, CAN, CHN, EGY, GBR, IDN, IND, IRN, ISR, KOR, PAK, PRK, RWA, SAU, THA, TUR, TWN, UKR, VNM, ZAF |
 
-한국은 11개 제도 중 하나 이상 받은 사람, 일본은 공적연금·은급, 캐나다는 OAS·연방 보충급여, 브라질은 공적 퇴직·유족연금 수급자를 집계한다. 핀란드는 거주자 노령·부분노령연금, 프랑스는 거주자 본인 권리 연금(DREES ANCETRE 추계), 미국은 본인의 은퇴 사유 사회보장급여와 직역연금을 포함한다. [국가별 자료와 산식](../tools/econdata/pension_coverage.py)
+한국은 11개 제도 중 하나 이상 받은 사람, 일본은 공적연금·은급, 캐나다는 OAS·연방 보충급여, 브라질은 공적 퇴직·유족연금 수급자를 집계한다. 핀란드는 거주자 노령·부분노령연금, 프랑스는 거주자 본인 권리 연금(DREES ANCETRE 추계), 미국은 본인의 은퇴 사유 사회보장급여와 직역연금을 포함한다. [국가별 자료와 산식](../tools/econdata/pension_coverage.py) · [아시아 원표와 산식](../tools/econdata/asian_pensions.py)
 
-| 65세 이상 수급률이 범위로만 확인되는 제도 | 2023년 추정 범위 | 범위를 정한 근거 |
+독일 ASID는 6개 제도에서 본인 권리의 정기급여를 받는 비율을 92%로 집계했다. 85세 이상은 2019년 조사 갱신 추계다. 라트비아는 해외 거주자를 제외한 노령연금 수급자 398,103명을 국내 65세 이상 인구 402,089명과 대조했다. 대만은 같은 12월 호적 인구 기준으로 국민연금의 노령·기본보장급여 수급률이 42.10%다. 이스라엘은 노령·유족연금 월평균 수급자를 기초·기말 65세 이상 건강보험 등록인구의 평균으로 나눈 근사치 87.28%를 쓴다. [독일 연방정부 노후보장 보고서](https://dserver.bundestag.de/btd/20/140/2014086.pdf) · [대만 노동보험국 12월 연령별 지급표](https://events.bli.gov.tw/report/attachment_file/report/month/11212/a9070.pdf) · [이스라엘 국민보험공단 표 2·3·22](https://www.btl.gov.il/Publications/survey/Documents/skira2023.pdf)
+
+| 65세 이상 수급률이 범위로만 확인되는 제도 | 기준연도 수급률 범위 | 범위를 정한 근거 |
 |---|---:|---|
-| 호주 Services Australia 노령연금 | 54.92~56.75% | 6월 지급 기록 중 해외·주소 미확인자와 지급률 미확정자가 있다. [호주 사회서비스부 원표](https://data.gov.au/data/dataset/cff2ae8a-55e4-47db-a66d-e177fe0ac6a0/resource/7a6457a8-44a3-406c-b552-62eb0fef9d66/download/dss-demographics-june-2023-final.xlsx) |
-| 영국 국가연금 | 91.65~92.01% | 5월 양의 지급과 국내 거주를 확인할 수 있는 인원을 6월 말 인구와 비교한다. 북아일랜드는 지급액과 주소를 별도 표로 공개한다. 공표 셀의 통계적 교란·반올림, 인구 기준월 차이로 범위도 근사치다. [영국 노동연금부 지역표](https://stat-xplore.dwp.gov.uk/webapi/jsf/tableView/tableView.xhtml?table=SP+2+-+Region) · [북아일랜드 5월 통계](https://www.communities-ni.gov.uk/publications/benefits-statistics-summary-publication-national-statistics-may-2023) |
-| 남아공 SASSA 노령보조금 | 49.37~98.26% | 6월 말 60세 이상 수급자 3,934,291명 가운데 60~64세가 차지할 수 있는 인원은 최대 1,957,488명이다. 이 연령대를 제외한 수급자 범위를 65세 이상 인구 4,003,910명으로 나눈다. [지방재무부 전국 지급표 1.3](https://www.kzntreasury.gov.za/ResourceCenter/Public%20Finance/Estimates%20of%20Provincial%20Revenue%20and%20Expenditure/2024%20-25%20Estimates%20of%20Provincial%20Revenue%20and%20Expenditure/OPRE%2024-25.pdf) · [남아공 통계청 중간 인구 추계](https://www.statssa.gov.za/?PPN=P0302&SCH=73952&page_id=1854) |
+| 호주 Services Australia 노령연금 | 2023년 54.92~56.75% | 6월 지급 기록 중 해외·주소 미확인자와 지급률 미확정자가 있다. [호주 사회서비스부 원표](https://data.gov.au/data/dataset/cff2ae8a-55e4-47db-a66d-e177fe0ac6a0/resource/7a6457a8-44a3-406c-b552-62eb0fef9d66/download/dss-demographics-june-2023-final.xlsx) |
+| 영국 국가연금 | 2023년 91.65~92.01% | 5월 양의 지급과 국내 거주를 확인할 수 있는 인원을 6월 말 인구와 비교한다. 북아일랜드는 지급액과 주소를 별도 표로 공개한다. 공표 셀의 통계적 교란·반올림, 인구 기준월 차이로 범위도 근사치다. [영국 노동연금부 지역표](https://stat-xplore.dwp.gov.uk/webapi/jsf/tableView/tableView.xhtml?table=SP+2+-+Region) · [북아일랜드 5월 통계](https://www.communities-ni.gov.uk/publications/benefits-statistics-summary-publication-national-statistics-may-2023) |
+| 남아공 SASSA 노령보조금 | 2023년 49.37~98.26% | 6월 말 60세 이상 수급자 3,934,291명 가운데 60~64세가 차지할 수 있는 인원은 최대 1,957,488명이다. 이 연령대를 제외한 수급자 범위를 65세 이상 인구 4,003,910명으로 나눈다. [지방재무부 전국 지급표 1.3](https://www.kzntreasury.gov.za/ResourceCenter/Public%20Finance/Estimates%20of%20Provincial%20Revenue%20and%20Expenditure/2024%20-25%20Estimates%20of%20Provincial%20Revenue%20and%20Expenditure/OPRE%2024-25.pdf) · [남아공 통계청 중간 인구 추계](https://www.statssa.gov.za/?PPN=P0302&SCH=73952&page_id=1854) |
+| 에스토니아 국가 노령연금 | 2023년 95.76~100% | 국제협정 등에 따라 국내 지역을 배정하지 않은 수급자 17,651명의 연령이 알려지지 않았다. [연령별 SK111](https://andmed.stat.ee/en/stat/SK111) · [지역별 SK13](https://andmed.stat.ee/en/stat/SK13) |
+| 이탈리아 국내 노령·근속연금 | 2022년 70.7724~70.7732% | 국내 수급자 108명의 연령이 미상이다. [ISTAT 개인별 연금 수급](https://esploradati.istat.it/SDMXWS/rest/data/IT1,46_812_DF_DCAR_PENSIONATI2_3,1.0/A.IT.P_RSNU.OLSEN1.TOTAL.9.?startPeriod=2022&endPeriod=2022) |
+| 태국 회계감사총국 노령수당 | 2023년 약 75.19~84.81% | 60~69세 수급 인원에서 60~64세가 차지할 수 있는 범위를 연말 등록인구로 계산했다. 지급은 9월 말 회계연도 기준이다. [회계감사총국 지급표](https://new-migrate.data.go.th/en/dataset/cgd_esw_01) · [태국 통계청 등록인구 표 1.4](https://www.nso.go.th/public/e-book/Statistical-Yearbook/SYB-2025_webPage/File%20SYB/2025/1/T%201.4%202025.pdf) |
+| 튀르키예 SGK 기여형 노령연금 | 2023년 49.51~49.56% | 4A·4B·4C의 65세 이상 수급자에서 공훈연금 수급자를 제외했다. 해외 거주 수급자의 나이를 모르므로 최대 4,660명을 차감한 하한을 쓴다. [SGK 통계연감 제2권](https://sgd.sgk.gov.tr/Istatistik/Yillik/fcd5e59b-6af9-4d90-a451-ee7500eb1cb4/) · [튀르키예 통계청 고령 인구](https://veriportali.tuik.gov.tr/tr/press/53710/metadata) |
+| 중국·인도 공적연금 조사 | 중국 2015년 60.95~67.95%, 인도 2017~2019년 39.45~40.75% | CHARLS·LASI의 65세 이상 남녀별 수급률과 반올림으로 제한되는 당시 전체 표본의 범위다. 2023년 수급률은 미확인이다. [MRDRC 표 4.1.1·4.3.1](https://mrdrc.isr.umich.edu/wp-content/uploads/2024/04/wp439.pdf) |
+
+이집트의 2023년 노동시장패널에서 65세 이상 개인의 57%가 연금을 직접 받았다. 기여형과 비기여형은 구분되지 않는다. 베트남은 사회보험공단 자료로 산출한 2019년 기여형 퇴직연금 수급률 20.5%를 쓴다. [이집트 ELMPS 분석](https://www.wider.unu.edu/sites/default/files/Publications/Working-paper/PDF/wp2026-27-social-protection-egypt.pdf) · [ILO 베트남 사회보험 조사 표 2.1](https://www.ilo.org/sites/default/files/wcmsp5/groups/public/%40asia/%40ro-bangkok/%40ilo-hanoi/documents/publication/wcms_819801.pdf)
+
+일본의 2022년 11월 60~64세 노령연금 수급자는 207만 7,100명이다. 취업 여부를 확인하지 못한 4만 9,400명도 수급자로 센다. 은퇴 직업 인구에는 비취업을 확인한 64만 6,900명만 반영한다. 러시아는 2023년 연금 수급액과 이듬해 면접에서 확인한 노령·근속연금 종류를 결합했다. 50~64세 비취업은 연간 일·사업·부업 소득도 없었던 응답자에 한정한다. [일본 후생노동성 표 16](https://www.e-stat.go.jp/stat-search/file-download?fileKind=0&statInfId=000040120759) · [러시아 통계청 2024 가구소득조사](https://rosstat.gov.ru/free_doc/new_site/VNDN-2024/index.html)
 
 EU 노동력조사의 연금 모듈은 74세까지만 조사한다. 일부 수급 유형을 공표하지 않은 경우에도 확인할 수 있는 하한과 상한을 보존한다. 게임은 관측 가능한 연령대에 하한을 적용하고 조사 밖의 75세 이상은 전원을 수요 인구로 둔다. 50~64세에서는 전체 수급 인원과 비취업 수급 인원을 따로 집계한다. [연령별 번들](../simulation/src/main/resources/world/age_activity.json) · [Eurostat 조사 범위](https://ec.europa.eu/eurostat/cache/metadata/en/lfso_23_esms.htm)
+
+르완다의 2023년 조사에서 65세 이상 비경제활동자의 2.0%가 연금을 주된 생계 수단으로 꼽았다. 이 문항만으로는 일하는 수급자나 다른 소득으로 주로 생활하는 수급자의 수를 알 수 없다. 파키스탄 가계조사는 연금과 기타 급여를 한데 묻고, 인도네시아 고령자 통계는 연금·재향군인 급여 수급을 가구 단위로 집계한다. 세 나라 모두 전체 65세 이상 개인의 노령연금 수급률은 결측으로 남겼다. [르완다 통계청 표 5.1](https://www.statistics.gov.rw/sites/default/files/documents/2025-01/RW_LFS2023_Annual_report.pdf) · [파키스탄 통계청 개인 설문 문항 20~21](https://www.pbs.gov.pk/wp-content/uploads/2020/07/Male-Questionnaire-final-2.pdf) · [인도네시아 통계청 고령자 통계](https://www.bps.go.id/id/publication/2023/12/29/5d308763ac29278dd5860fad/statistik-penduduk-lanjut-usia-2023.html)
+
+사우디아라비아의 2023년 연금·사회보험 통계는 군인을 제외한다. 수급자는 60세 이상 271,416명으로 집계돼 65세 이상 인원을 분리할 수 없다. 우크라이나의 2021년 가계생활조사는 개인별 기타소득에 연금·장학금·실업급여를 합산한다. [걸프협력회의 통계센터 표 3](https://www.gccstat.org/images/gccstat/docman/publications/old_per_1_1.pdf) · [우크라이나 통계청 가계생활조사](https://stat.gov.ua/en/datasets/survey-living-conditions-households-annual)
 
 </details>
 
 <details>
 <summary>개인송금 기준액의 보완 자료와 결측 국가</summary>
 
-WDI 개인송금은 같은 방향의 가계 간 개인이전과 피용자보수를 합산한다. 아래는 2023년 WDI 이외의 자료를 썼거나 결측인 경우다. 2021년 KNOMAD 양자 경로에는 송금국·수취국 양쪽 기준액이 허용하는 금액까지 배정한다. 잔액은 상대 미배정으로 표시하고, 기준액 자체가 없는 방향은 월 합계에서 제외한다. [국가·연도별 번들](../simulation/src/main/resources/world/remittances.json) · [보완 자료와 산식](../tools/econdata/remittance_supplements.py)
+WDI 개인송금은 같은 방향의 가계 간 개인이전과 피용자보수를 합산한다. 아래는 2023년 WDI 이외의 자료를 썼거나 결측인 경우다. 상대국이 식별되는 신고액을 양쪽에 먼저 배정하고 남은 기준액 안에서 2021년 KNOMAD 양자 경로를 적용한다. 잔액은 상대 미배정으로 표시하고, 기준액 자체가 없는 방향은 월 합계에서 제외한다. [국가·연도별 번들](../simulation/src/main/resources/world/remittances.json) · [보완 자료와 산식](../tools/econdata/remittance_supplements.py)
 
 | 처리 방식 | 국가 수 | 국가 코드 |
 |---|---:|---|
-| 수취·지급 각각 · 2023년 국가 국제수지 | 7 | CAF, COG, GAB, GNQ, TCD, TGO, TWN |
+| 수취·지급 각각 · 2023년 국가 국제수지 | 8 | CAF, COG, ESP, GAB, GNQ, TCD, TGO, TWN |
 | 수취 · 세계은행 연간 추계 | 11 | 2023년 AFG, BRB, BRN, FSM, MMR, NZL, SOM, VNM, VUT, YEM / 2022년 IRN |
 | 수취 · 2021년 KNOMAD 국가 합계 | 1 | TKM |
-| 수취 · 일부 경로·조사 또는 하한 | 5 | 2023년 ARE 환전소, CUB 유엔무역개발회의 추계, CYN 국제수지 하한, ERI 허가 송금업자 / 2022년 SYR 가구조사 |
-| 수취 · 자료 없음 | 8 | BHR, LBY, LIE, MCO, PRK, SGP, SOL, VAT |
+| 수취 · 2023년 국가 국제수지 | 1 | LBY 중앙은행이 공표한 0. IMF의 피용자보수·개인이전 수취도 0이며 일부 상대국의 지급 신고와 차이가 있다. |
+| 수취 · 일부 항목·경로·조사 또는 하한 | 5 | 2023년 ARE 전국 가계 간 개인이전(피용자보수 미보고), CUB 유엔무역개발회의 추계, CYN 국제수지 하한, ERI 허가 송금업자 / 2022년 SYR 가구조사 |
+| 수취 · 2023년 상대국 신고 경로 | 6 | BHR, LIE, MCO, PRK, SGP, VAT |
+| 수취 · 자료 없음 | 1 | SOL |
 | 지급 · 2023년 9월 말 회계연도 국제수지 | 1 | FSM |
 | 지급 · 과거 WDI | 6 | 2022년 VUT, 2020년 AFG, 2019년 MMR, 2017년 BRB, 2016년 YEM, 2014년 VNM |
-| 지급 · 2021년 KNOMAD 국가 합계 | 11 | BRN, CUB, ERI, IRN, LIE, MCO, PRK, SGP, SOM, SYR, TKM |
-| 지급 · 2023년 국제수지 하한 | 1 | CYN |
-| 지급 · 자료 없음 | 2 | SOL, VAT |
+| 지급 · 2021년 KNOMAD 국가 합계 | 9 | BRN, CUB, ERI, IRN, MCO, PRK, SGP, SYR, TKM |
+| 지급 · 2023년 순액 등에서 계산한 하한 | 2 | CYN, LIE |
+| 지급 · 2023년 개인송금 채널 | 1 | SOM 은행·송금업자 개인 지급 18억 5,305만 달러. 기업 거래와 기타 SWIFT 송금은 제외한다. [소말리아 중앙은행 표 3.1](https://centralbank.gov.so/wp-content/uploads/2024/12/Statistical-Bulletin_June-2024.pdf) |
+| 지급 · 상대국 신고 경로 | 1 | VAT에서 에콰도르로 보낸 2016년 350달러. 에콰도르의 2023년 해당 셀은 공란이다. |
+| 지급 · 자료 없음 | 1 | SOL |
 
-세계은행의 2023년 수취 추계 중 AFG는 2021년, BRB는 2017년, FSM은 2014년, YEM은 2016년부터 금액이 같다. 북키프로스는 개인이전 순수취만 공표해 수취·지급 각각의 최소 개인이전에 해당 방향의 피용자보수를 더했다. 시리아·쿠바의 조사와 아랍에미리트·에리트레아의 송금업자 통계는 WDI 총액의 일부 범위만 포괄한다. [세계은행 연간 송금표](https://datacatalogfiles.worldbank.org/ddh-published/0066877/DR0095407/Inward_remittance_flows_%28July_13_2025%29.xlsx) · [국가별 원표와 범위](../tools/econdata/remittance_supplements.py)
+세계은행의 2023년 수취 추계 중 AFG는 2021년, BRB는 2017년, FSM은 2014년, YEM은 2016년부터 금액이 같다. 북키프로스는 개인이전 순수취만 공표해 수취·지급 각각의 최소 개인이전에 해당 방향의 피용자보수를 더했다. 시리아·쿠바의 조사와 에리트레아의 송금업자 통계는 가계 간 송금의 일부를 포괄한다. [세계은행 연간 송금표](https://datacatalogfiles.worldbank.org/ddh-published/0066877/DR0095407/Inward_remittance_flows_%28July_13_2025%29.xlsx) · [국가별 원표와 범위](../tools/econdata/remittance_supplements.py)
+
+게임의 양자 송금 경로 9,725개 중 282개는 보고기관에서 상대국을 확인했다. 에콰도르는 170개 송금국과 46개 수취국의 신고액을 제공한다. 번들 밖 상대에게 귀속된 수취 약 449만 달러와 지급 약 45만 달러는 다른 나라에 배정하지 않는다. [에콰도르 중앙은행 국가별 송금](https://contenido.bce.fin.ec/documentos/Estadisticas/SectorExterno/BalanzaPagos/Remesas/Flujo_de_remesas_de_trabajadores.xlsx) · [게임에 반영한 에콰도르 양자 자료](../tools/econdata/ecuador_remittances_2023.csv)
+
+스페인은 Eurostat의 전 세계 피용자보수와 개인이전을 합산해 양방향 총액을 복원했다. 싱가포르의 EU 수취액 중 회원국을 특정할 수 없는 약 8,012만 달러는 상대 미배정으로 남는다. 리히텐슈타인 지급 하한에는 국경 간 피용자보수 순지급과 상대국이 확인한 보수·개인이전이 들어간다. [Eurostat 양자 송금](https://ec.europa.eu/eurostat/databrowser/view/bop_rem6/default/table?lang=en) · [이탈리아은행 송금 원표](https://www.bancaditalia.it/statistiche/tematiche/rapporti-estero/rimesse-immigrati/rimesse.xlsx)
+
+세계은행은 소말릴란드의 과거 송금 수취 규모를 연간 5억~9억 달러로 추정했다. 2023년 송금업자 통계에는 기업 거래가 섞여 있고 소말리아 집계와의 중복 범위도 확인되지 않아 시작값을 비워 둔다. [세계은행 소말릴란드 조사](https://openknowledge.worldbank.org/bitstream/handle/10986/22583/9781464804915.pdf)
 
 </details>
 
 <details>
 <summary>대외 투자소득의 기준연도·세부 항목과 결측 국가</summary>
 
-IMF BPM6 연간 국제수지의 투자소득 총계로 수취·지급을 각각 집계한다. 2019~2023년 중 가장 최근 총계를 쓰며, 국가·지역 중앙은행이나 통계기관의 2023년 국제수지로 보완한다. 단위는 연간 명목 미 달러다. [IMF 국제수지](https://data.imf.org/en/datasets/IMF.STA:BOP) · [국가별 원표와 환산식](../tools/econdata/investment_income_supplements.py) · [국가·연도별 번들](../simulation/src/main/resources/world/investment_income.json)
+IMF BPM6 연간 국제수지의 투자소득 총계로 수취·지급을 각각 집계한다. 2014~2023년 중 방향별로 가장 최근 총계를 쓰며 국가·지역 통계기관의 원표로 보완한다. 양방향 총액과 공표 순액이 모두 없는 경우 IMF의 1994~2013년 보고도 확인한다. 과거 금액은 당시 명목 달러이며, 화면에 연도와 대용 여부를 표시한다. 단위는 연간 명목 미 달러다. [IMF 국제수지](https://data.imf.org/en/datasets/IMF.STA:BOP) · [국가별 원표와 환산식](../tools/econdata/investment_income_supplements.py) · [국가·연도별 번들](../simulation/src/main/resources/world/investment_income.json)
 
 | 출처와 연도 | 수취 | 지급 | 국가 코드 또는 범위 |
 |---|---:|---:|---|
-| IMF 2023년 | 169 | 170 | 국제수지 투자소득 총계를 보고한 국가 |
+| IMF 2023년 | 169 | 145 | 국제수지 투자소득 총계를 보고한 국가 |
+| Eurostat 2023년 지급 | 0 | 25 | 한 원표에서 총액·배당·재투자·직접투자 이자를 포함한 지급 이자를 식별한 국가. [연간 국제수지](https://ec.europa.eu/eurostat/databrowser/view/bop_c6_a/default/table?lang=en) |
 | 국가·지역 기관 2023년 | 9 | 9 | BRN, CAF, COG, CYN, GAB, GNQ, TCD, TGO, TWN |
-| 국가 기관 2023년 9월 말 회계연도 | 0 | 1 | FSM 지급. 수취는 원표의 상·하위 항목이 맞지 않아 총액 결측 |
+| 국가 기관 2023년 9월 말 회계연도 | 0 | 1 | FSM 지급. 같은 원표의 수취는 상·하위 항목이 맞지 않아 2014년 IMF 수취 총계를 사용 |
+| 베트남 당국·IMF 연례협의 2023년 | 1 | 1 | VNM 수취 46억·지급 270억 USD. 원표의 반올림으로 두 금액의 차와 공표 순액에 1억 USD 차이가 있다. |
 | IMF 2019~2022년 | 4 | 3 | 양방향 모두 2022년 VUT, 2020년 AFG, 2019년 MMR. SDS는 수취만 2019년 |
-| 양방향 모두 총액 결측 | 16 | 16 | ARE, BRB, CUB, ERI, IRN, LIE, MCO, PRK, SGP, SOL, SOM, SYR, TKM, VAT, VNM, YEM |
+| IMF 2014~2017년 | 3 | 2 | 2017년 BRB, 2016년 YEM, 2014년 FSM 수취 |
+| 이란 중앙은행 2013/14 회계연도 | 1 | 1 | IRN 2014년 3월 종료. 투자소득 수취 28억 5,800만·지급 8억 8,600만 달러. [이란 통계연감 표 23.20](https://irandataportal.syr.edu/wp-content/uploads/National-Accounts-3.pdf) |
+| IMF 1994~2010년 | 3 | 3 | 2010년 SYR, 2000년 ERI, 1994년 SGP |
+| 2023년 국가 순액만 공표 | — | — | ARE 순수취 141억 AED, LIE 순수취 15억 7,260만 CHF(순재투자 9억 6,894만 CHF 포함) |
+| 1996년 순액만 식별 | — | — | TKM 순이자 +6,440만 달러(수취 1억 2,270만·지급 5,830만), 순배당·이윤 −4,490만 달러를 합한 순수취 +1,950만 달러. 재투자수익은 분리되지 않는다. [중앙은행·IMF 표 26](https://www.imf.org/external/pubs/ft/scr/1999/cr99140.pdf) |
+| 양방향·순액 모두 결측 | 6 | 6 | CUB, MCO, PRK, SOL, SOM, VAT |
 
-배당(준법인 인출 포함)은 수취 166개국·지급 174개국, 이자는 176개국·177개국, 재투자수익은 164개국·173개국에서 적어도 한 구성 항목을 식별했다. 같은 방향·연도의 상위 합계와 나머지 항목으로 복원할 수 있는 금액도 포함한다. 기타·미분류는 총액에서 식별된 세 항목을 뺀 잔액이므로 보고되지 않은 배당·이자·재투자 손익도 섞일 수 있다. 손실에 따른 음수와 공표된 0을 보존한다. [세부 항목과 계산식](../tools/econdata/build_investment_income.py)
+배당(준법인 인출 포함)은 수취 170개국·지급 177개국, 이자는 각각 182개국, 재투자수익은 168개국·176개국에서 적어도 한 구성 항목을 식별했다. 같은 방향·연도의 상위 합계와 나머지 항목으로 복원할 수 있는 금액도 포함한다. 기타·미분류는 총액에서 식별된 세 항목을 뺀 잔액이므로 보고되지 않은 배당·이자·재투자 손익도 섞일 수 있다. 손실에 따른 음수와 공표된 0을 보존한다. [세부 항목과 계산식](../tools/econdata/build_investment_income.py)
 
-본원소득에 섞인 피용자보수·자원 임대료와 금융중개서비스 간접측정분(FISIM) 차감 전 이자 메모 항목은 투자소득 총계에 더하지 않는다. IMF 직접투자 채무소득 중 순수 이자가 분리되지 않는 금액은 미분류에 남긴다. 식별한 재투자수익에는 금융계정 대응액을 반영해 현금 결제에 중복 계상하지 않는다. [국제수지 월 결제](../simulation/src/main/kotlin/team/themoment/axia/simulation/economy/ExternalAccount.kt)
+아랍에미리트는 전국 국제수지의 순투자소득, 리히텐슈타인은 국내경제 전체 순재산소득에서 토지·자원 임대 순액을 제외한 값을 쓴다. 싱가포르의 2023년 공개 본원소득에는 피용자보수가 포함된다. 통계청의 1997년 비교표는 옛 BPM4 편제의 투자소득을 싣고 있어, 게임에서는 IMF BPM6 계열의 1994년 수취·지급액을 대용한다. [아랍에미리트 재무부 국제수지](https://mof.gov.ae/wp-content/uploads/2024/10/Project-Tolerance-Supplement-Final.pdf) · [리히텐슈타인 통계청 국민계정 표 1](https://www.statistikportal.li/statistikportal/publications/301-volkswirtschaftliche-gesamtrechnungen/2023/01/1/301.2023.02.1_02_volkswirtschaftliche-gesamtrechnung-2023-tabellen.xlsx) · [싱가포르 통계청 국제수지](https://tablebuilder.singstat.gov.sg/table/TS/M060301) · [싱가포르 통계청 편제 비교 부표 1](https://assets.app.optical.gov.sg/singstat/production/published/assets/de0c6b36-120b-40e8-8872-95a440e7c078.pdf)
+
+본원소득에 섞인 피용자보수·자원 임대료와 금융중개서비스 간접측정분(FISIM) 차감 전 이자 메모 항목은 투자소득 총계에 더하지 않는다. IMF 직접투자 채무소득 중 순수 이자가 분리되지 않는 금액은 미분류에 남긴다. Eurostat 지급 자료는 같은 연도·방향의 총액과 세부 항목을 함께 사용한다. 식별한 재투자수익에는 금융계정 대응액을 반영해 현금 결제에 중복 계상하지 않는다. [국제수지 월 결제](../simulation/src/main/kotlin/team/themoment/axia/simulation/economy/ExternalAccount.kt)
 
 </details>
 
