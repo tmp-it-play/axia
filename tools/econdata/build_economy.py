@@ -19,6 +19,7 @@ from pathlib import Path
 
 from local_macro import GDP_USD_2023, POPULATION, REAL_GROWTH_PERCENT, SUPPLEMENTAL_MACRO, UNEMPLOYMENT_PERCENT_2023
 from local_population import society_indicators
+from national_surveys import NATIONAL_INDICATORS
 
 ROOT = Path(__file__).resolve().parents[2]
 WORLD = ROOT / "simulation/src/main/resources/world/world.json"
@@ -327,6 +328,7 @@ def from_local_macro(country):
     if BASE_YEAR != 2023:
         return {}
     values = society_indicators(country)
+    values.update(NATIONAL_INDICATORS.get(country, {}))
     values.update(SUPPLEMENTAL_MACRO.get(country, {}))
     if country in GDP_USD_2023:
         values["gdp"] = GDP_USD_2023[country]
