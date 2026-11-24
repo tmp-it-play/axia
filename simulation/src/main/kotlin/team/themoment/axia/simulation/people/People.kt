@@ -341,7 +341,7 @@ internal class LeadershipState(
         val nominee = requireNotNull(registry.get(candidate.id))
         require(available(nominee) && (nominee.id != headOfStateId || actingSince != null))
         if (vicePresidentId != nominee.id) {
-            registry.update(nominee.copy(title = "부통령", since = date, termsServed = 1))
+            registry.update(nominee.copy(title = record.vicePresident?.title ?: "부통령", since = date, termsServed = 1))
         } else if (newTerm) {
             registry.update(nominee.copy(termsServed = nominee.termsServed + 1))
         }
@@ -361,7 +361,11 @@ internal class LeadershipState(
     ) {
         val acting = requireNotNull(registry.get(candidate.id))
         require(available(acting))
-        if (acting.id != vicePresidentId) registry.update(acting.copy(title = ACTING_PRESIDENT, since = date, termsServed = 0))
+        if (acting.id != vicePresidentId &&
+            acting.id != headOfGovernmentId
+        ) {
+            registry.update(acting.copy(title = ACTING_PRESIDENT, since = date, termsServed = 0))
+        }
         headOfStateId = acting.id
         actingSince = date
     }
@@ -432,6 +436,7 @@ internal class LeadershipState(
         date: LocalDate,
         random: Random,
         incoming: List<Person> = emptyList(),
+        transition: Boolean = false,
     ): String? {
         val current = current().all()
         for (person in (current + incoming + indirectCandidates()).distinctBy { it.id }) {
@@ -467,7 +472,18 @@ internal class LeadershipState(
                 vicePresidentId = null
                 return "${person.name} ${person.title} 퇴진. 최고지도자의 승인으로 ${acting.name} 권한대행이 대통령 직무를 맡았다."
             }
-            if (countryId == "USA" || countryId == "IDN") {
+            if (transition && person.id == headOfStateId && countryId in setOf("KOR", "FIN", "TWN")) {
+                val vice = current().vicePresident?.takeIf(::available)
+                if (vice != null && countryId == "TWN") {
+                    seatPresident(vice, date)
+                    return "${person.name} 총통 퇴진으로 ${vice.name} 부총통이 남은 임기를 승계했다."
+                }
+                val premier = requireNotNull(current().headOfGovernment)
+                val acting = if (available(premier)) premier else appointPremier(date, false)
+                actingPresident(acting, date)
+                return "${person.name} 퇴진으로 ${acting.name} ${acting.title}이 현 임기의 대통령 권한을 대행한다."
+            }
+            if (countryId in setOf("USA", "IDN", "BRA", "TWN")) {
                 if (person.id == vicePresidentId && person.id != headOfStateId) {
                     vicePresidentId = null
                     return "${person.name} 부통령이 건강 문제로 퇴진했다. 후임 부통령 인선이 필요하다."
@@ -482,7 +498,14 @@ internal class LeadershipState(
                         return "${person.name} 대통령 퇴진으로 ${vice.name} 부통령이 남은 임기를 승계했다."
                     }
                     vicePresidentId = null
-                    return "${person.name} 퇴진으로 대통령과 부통령이 모두 공석이 됐다."
+                    if (countryId == "BRA" && transition) {
+                        val speaker = nominate(null, date)
+                        actingPresident(speaker, date)
+                        return "${person.name} 대통령 퇴진과 부통령 공석으로 하원의장이 남은 임기 동안 대통령 권한을 대행한다."
+                    }
+                    if (countryId == "USA" || countryId == "IDN") {
+                        return "${person.name} 퇴진으로 대통령과 부통령이 모두 공석이 됐다."
+                    }
                 }
             }
             val heir = current().crownPrince

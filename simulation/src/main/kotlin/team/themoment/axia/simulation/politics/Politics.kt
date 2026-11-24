@@ -597,6 +597,7 @@ internal class Politics(
                 ?.let { decision -> applyConfidence(decision, date) }
         }
         inauguration?.let { news += CountryNews("취임", "${it.person.name} 대통령이 취임했다.", major = true) }
+        nextExecutive = executiveElection.scheduledPoll(nextExecutive)
         val nominated = executiveElection.prepare(date, nextExecutive, rules.executive, legislature?.groups.orEmpty(), approval)
         if (nominated && rules.executive?.partyPrimary == true) news += CountryNews("선거", "당내 경선이 끝나 본선 후보가 확정됐다.", major = false)
         var legislativeDue = nextLegislative?.let { it <= date } == true
@@ -724,8 +725,7 @@ internal class Politics(
         if (legislativeDue) holdPresidentialCollege()
         if (executive != null) {
             nextExecutive =
-                executiveElection.campaign?.houseDate ?: executiveElection.campaign?.runoffDate
-                    ?: requireNotNull(rules.executive).nextRegular(executive.campaign.firstDate, profile.id)
+                executiveElection.nextPoll(executive, requireNotNull(rules.executive))
         }
         lastElection =
             ElectionResult(
@@ -1100,6 +1100,7 @@ internal class Politics(
     private fun monthlyReview(date: LocalDate) {
         proposeOppositionBill(date)
         executiveElection.checkMortality(date, random, legislature)?.let { news += CountryNews("정부", it, major = true) }
+        nextExecutive = executiveElection.scheduledPoll(nextExecutive)
         considerNewParties(date)
         if (frenchAssemblyDissolved || earlyCalled || confidence?.legislationSuspended == true) return
         legislature?.let { chamber ->

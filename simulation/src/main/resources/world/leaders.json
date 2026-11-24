@@ -2,6 +2,7 @@
  "sourceNote": "2024-01-01 재임자. 정당은 parliaments.json의 정당 이름을 따른다. termsServed는 현재 임기를 포함한 연속 재임 횟수다. born은 출생 연도다.",
  "countries": {
   "KOR": {
+   "headOfGovernment": {"name": "한덕수", "title": "국무총리", "born": 1949},
    "culture": "korean",
    "headOfState": {
     "name": "윤석열",
@@ -145,6 +146,7 @@
    }
   },
   "BRA": {
+   "vicePresident": {"name": "제라우두 아우키민", "title": "부통령", "party": "브라질사회당", "born": 1952},
    "culture": "portuguese",
    "headOfState": {
     "name": "루이스 이나시우 룰라 다 시우바",
@@ -371,6 +373,7 @@
    }
   },
   "TWN": {
+   "vicePresident": {"name": "라이칭더", "title": "부총통", "party": "민주진보당", "born": 1959},
    "culture": "chinese",
    "headOfState": {
     "name": "차이잉원",

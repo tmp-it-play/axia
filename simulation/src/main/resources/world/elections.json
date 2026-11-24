@@ -16,7 +16,7 @@
       "title": "대통령",
       "partyPrimary": true
     },
-    "sourceNote": "제22대 총선 2024-04-10, 대통령 정기 선거 2027-03-03. 시·도별 254개 지역구와 준연동 46석. 정당투표 3% 또는 지역구 5석을 충족한 정당에 공직선거법 제189조를 적용한다. 위성정당의 별도 창당·공천은 모형화하지 않았다. https://law.go.kr/lsLinkCommonInfo.do?chrClsCd=010202&lsJoLnkSeq=1022658205 정기 의원 임기는 5월 30일, 2024년 시나리오 대통령 임기는 5월 10일에 시작한다. 다음 정기선거일은 공직선거법 제34조의 임기만료 전 기준 수요일이다. 민속절과 임시공휴일에 따른 이동은 추계에서 제외했다. https://www.law.go.kr/법령/공직선거법/제34조"
+    "sourceNote": "제22대 총선 2024-04-10, 대통령 정기 선거 2027-03-03. 시·도별 254개 지역구와 준연동 46석. 정당투표 3% 또는 지역구 5석을 충족한 정당에 공직선거법 제189조를 적용한다. 위성정당의 별도 창당·공천은 모형화하지 않았다. https://law.go.kr/lsLinkCommonInfo.do?chrClsCd=010202&lsJoLnkSeq=1022658205 정기 의원 임기는 5월 30일, 2024년 시나리오 대통령 임기는 5월 10일에 시작한다. 다음 정기선거일은 공직선거법 제34조의 임기만료 전 기준 수요일이다. 민속절과 임시공휴일에 따른 이동은 추계에서 제외했다. https://www.law.go.kr/법령/공직선거법/제34조 대통령 당선인 유고 시 헌법 제68조 제2항의 60일 이내 선거와 제71조의 권한대행을 적용한다. https://www.law.go.kr/법령/대한민국헌법/제68조"
   },
   "USA": {
     "system": "PRESIDENTIAL",
@@ -149,7 +149,7 @@
       "runoffDays": 21,
       "lastSundayRunoff": true
     },
-    "sourceNote": "헌법상 10월 첫 일요일 총선 2026-10-04(대통령 과반 미달 시 같은 달 마지막 일요일에 결선). https://en.wikipedia.org/wiki/2026_Brazilian_general_election https://international.tse.jus.br/en/elections/elections 27개 주·연방구에서 정당연방을 공동 명부로 취급하며 선거쿼터·후보 10%·잔여 80%/20%와 최고평균을 적용한다. 개인별 선호표는 추정한다. https://www.tse.jus.br/legislacao/compilada/res/2021/resolucao-no-23-677-de-16-de-dezembro-de-2021 2021년 개헌 후 시나리오 정기 대선은 10월 첫 일요일에 치르고, 2027년부터 대통령은 다음 해 1월 5일, 연방의원은 2월 1일 임기를 시작한다. https://www.camara.leg.br/noticias/1298895-presidente-da-republica-eleito-neste-ano-vai-tomar-posse-no-dia-5-de-janeiro"
+    "sourceNote": "헌법상 10월 첫 일요일 총선 2026-10-04(대통령 과반 미달 시 같은 달 마지막 일요일에 결선). https://en.wikipedia.org/wiki/2026_Brazilian_general_election https://international.tse.jus.br/en/elections/elections 27개 주·연방구에서 정당연방을 공동 명부로 취급하며 선거쿼터·후보 10%·잔여 80%/20%와 최고평균을 적용한다. 개인별 선호표는 추정한다. https://www.tse.jus.br/legislacao/compilada/res/2021/resolucao-no-23-677-de-16-de-dezembro-de-2021 2021년 개헌 후 시나리오 정기 대선은 10월 첫 일요일에 치르고, 2027년부터 대통령은 다음 해 1월 5일, 연방의원은 2월 1일 임기를 시작한다. https://www.camara.leg.br/noticias/1298895-presidente-da-republica-eleito-neste-ano-vai-tomar-posse-no-dia-5-de-janeiro 대통령과 부통령은 같은 후보조로 선출된다. 궐위 시 승계와 동시 궐위 시 권한대행·보궐은 헌법 제77·79~81조를 기준으로 한다. https://www4.planalto.gov.br/legislacao/legis-federal/constituicao"
   },
   "CAN": {
     "system": "PARLIAMENTARY",
@@ -226,7 +226,7 @@
       "title": "대통령",
       "runoffDays": 14
     },
-    "sourceNote": "선거법상 4월 셋째 일요일 2027-04-18. https://en.wikipedia.org/wiki/Next_Finnish_parliamentary_election 대통령 선거는 2024-01-28, 과반 미달 시 2024-02-11에 결선한다. https://valtioneuvosto.fi/en/-/1410853/presidential-election-on-sunday-28-january-2024 2023년 법정 지역구 13개에서 명부별 동트식. 올란드는 별도 1석. 지역별 선거연합·개인 선호표는 추정한다. https://www.finlex.fi/fi/lainsaadanto/2022/888 정기 대선은 1월 넷째 일요일, 대통령은 선출 다음 달 1일 취임한다. https://www.presidentti.fi/en/presidency/election-of-the-president/"
+    "sourceNote": "선거법상 4월 셋째 일요일 2027-04-18. https://en.wikipedia.org/wiki/Next_Finnish_parliamentary_election 대통령 선거는 2024-01-28, 과반 미달 시 2024-02-11에 결선한다. https://valtioneuvosto.fi/en/-/1410853/presidential-election-on-sunday-28-january-2024 2023년 법정 지역구 13개에서 명부별 동트식. 올란드는 별도 1석. 지역별 선거연합·개인 선호표는 추정한다. https://www.finlex.fi/fi/lainsaadanto/2022/888 정기 대선은 1월 넷째 일요일, 대통령은 선출 다음 달 1일 취임한다. https://www.presidentti.fi/en/presidency/election-of-the-president/ 당선인이 직무를 수행할 수 없으면 재선거를 소집한다. 일요일 투표까지의 준비 기간은 모형 일정이다. https://www.finlex.fi/en/legislation/1998/714 https://www.finlex.fi/api/media/statute-foreign-language-translation/688686/mainPdf/main.pdf"
   },
   "EST": {
     "system": "PARLIAMENTARY",
@@ -372,7 +372,7 @@
       "termYears": 4,
       "title": "총통"
     },
-    "sourceNote": "총통·입법위원 동시 선거 2024-01-13. 지역구 73석, 평지·산지 원주민 전국 선거구 각각 단기비이양식 3석, 득표 5% 이상 정당에 전국 명부 34석. 대만 중앙선관위 2020년 후보별 지역구·원주민 표와 전국 정당표가 출발점이다. https://web.cec.gov.tw/english/article/23101 https://data.cec.gov.tw/ 정기선거 당선 입법위원은 2월 1일, 총통은 5월 20일 임기를 시작한다. 해산 후 새 입법원은 결과 확정 후 10일 안에 소집한다. https://www.ly.gov.tw/Pages/Detail.aspx?nodeid=45579&pid=236624 https://english.president.gov.tw/Page/95 https://english.president.gov.tw/Page/651"
+    "sourceNote": "총통·입법위원 동시 선거 2024-01-13. 지역구 73석, 평지·산지 원주민 전국 선거구 각각 단기비이양식 3석, 득표 5% 이상 정당에 전국 명부 34석. 대만 중앙선관위 2020년 후보별 지역구·원주민 표와 전국 정당표가 출발점이다. https://web.cec.gov.tw/english/article/23101 https://data.cec.gov.tw/ 정기선거 당선 입법위원은 2월 1일, 총통은 5월 20일 임기를 시작한다. 해산 후 새 입법원은 결과 확정 후 10일 안에 소집한다. https://www.ly.gov.tw/Pages/Detail.aspx?nodeid=45579&pid=236624 https://english.president.gov.tw/Page/95 https://english.president.gov.tw/Page/651 당선인 한 명의 취임 전 사망과 두 자리 모두 결원인 경우를 대통령부통령선거파면법 제64·65조, 부총통 후임 선출은 제68~69조와 헌법 증수조문에 따라 처리한다. https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=D0020053"
   },
   "IDN": {
     "system": "PRESIDENTIAL",

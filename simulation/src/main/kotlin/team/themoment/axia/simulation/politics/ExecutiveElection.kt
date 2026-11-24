@@ -72,6 +72,19 @@ internal class ExecutiveElection(
         }
     private val vice = if (country == "USA" || country == "IDN") VicePresidency(country, leadership, random) else null
 
+    private val bilateralTicket = country == "BRA" || country == "TWN"
+    private val reelectionOnLoss = country == "KOR" || country == "FIN"
+
+    private data class ReplacementElection(
+        val firstPoll: LocalDate,
+        val termStart: LocalDate,
+        var ordinaryPoll: LocalDate? = null,
+        var caretakerSeated: Boolean = false,
+    )
+
+    private var replacement: ReplacementElection? = null
+    private var koreanTermEnd: LocalDate? = null
+    private var taiwanDeputyVote: LocalDate? = null
     private var bothElectsVacant: LocalDate? = null
     private var indonesianCaretakerUntil: LocalDate? = null
     private var senateWinnerSucceeds = false
@@ -84,6 +97,54 @@ internal class ExecutiveElection(
         upper: UpperHouse?,
         approval: Double,
     ): String? {
+        transitionOnLoss(date)?.let { return it }
+        val extra = replacement
+        if (extra != null && country != "FIN" && date >= extra.termStart && !extra.caretakerSeated) {
+            extra.caretakerSeated = true
+            if (bilateralTicket) leadership.seatVicePresident(null, date)
+            val acting =
+                if (country == "BRA") {
+                    leadership.nominate(chamber?.groups?.maxByOrNull { it.seats }?.name, date)
+                } else {
+                    requireNotNull(leadership.current().headOfGovernment)
+                }
+            leadership.actingPresident(acting, date)
+            val office =
+                when (country) {
+                    "BRA" -> "하원의장"
+                    "TWN" -> "행정원장"
+                    else -> "국무총리"
+                }
+            return "전임자의 임기가 끝나 ${acting.name} ${office}이 새 당선인 취임까지 대통령 권한을 대행한다."
+        }
+        if (country == "TWN" && leadership.current().vicePresident == null && extra == null) {
+            val ballot = taiwanDeputyVote ?: date.plusDays(30).also { taiwanDeputyVote = it }
+            if (date >= ballot && chamber != null) {
+                val presidentParty = leadership.current().headOfState.party
+                val sponsor = chamber.groups.firstOrNull { it.name == presidentParty }
+                // 총통의 지명 뒤 입법원이 선출한다. 교섭이 실패하면 다음 후보를 다시 지명한다.
+                val support =
+                    chamber.groups.sumOf { group ->
+                        val fraction =
+                            when {
+                                group.name == presidentParty -> 1.0
+                                group.role == PartyRole.COALITION -> 0.85
+                                else -> random.nextDouble(0.1, 0.65)
+                            }
+                        (group.seats * fraction).toInt()
+                    }
+                if (support > chamber.groups.sumOf { it.seats } / 2) {
+                    val elected = leadership.nominate(sponsor?.name ?: presidentParty, date)
+                    leadership.seatVicePresident(elected, date)
+                    taiwanDeputyVote = null
+                    return "총통이 지명한 ${elected.name} 후보가 입법원의 선출을 거쳐 남은 임기의 부총통에 취임했다."
+                }
+                taiwanDeputyVote = date.plusDays(30)
+                return "입법원이 부총통 후보를 선출하지 못해 총통이 후속 후보를 지명한다."
+            }
+        } else {
+            taiwanDeputyVote = null
+        }
         val beforeTerm = bothElectsVacant
         if (beforeTerm != null && date >= beforeTerm) {
             bothElectsVacant = null
@@ -93,7 +154,7 @@ internal class ExecutiveElection(
                 val senateWinner = vice?.senateChoice()
                 if (senateWinner != null) {
                     leadership.seatPresident(senateWinner, date)
-                    vice?.cancel()
+                    vice.cancel()
                     return "대통령 당선인의 유고로 상원이 선출한 ${senateWinner.name} 부통령 당선인이 대통령에 취임했다."
                 }
                 senateWinnerSucceeds = vice?.awaitingSenate() == true
@@ -150,9 +211,11 @@ internal class ExecutiveElection(
         chamber: Legislature?,
     ): String? {
         val elect = presidentElect
-        val pending = if (vice == null) emptyList() else listOfNotNull(elect?.person, elect?.deputy) + vice.officersAwaitingOffice()
-        val notice = leadership.checkMortality(date, risks, pending) ?: return null
-        val notices = mutableListOf(notice)
+        val pending = listOfNotNull(elect?.person, elect?.deputy) + vice?.officersAwaitingOffice().orEmpty()
+        val notice = leadership.checkMortality(date, risks, pending, transition = elect != null || replacement != null)
+        val change = transitionOnLoss(date)
+        if (notice == null) return change
+        val notices = listOfNotNull(notice, change).toMutableList()
         if (leadership.doubleVacancy) notices += fillDoubleVacancy(date, chamber)
         if (elect != null && vice != null) {
             val deputy = elect.deputy?.takeIf(leadership::available)
@@ -182,6 +245,55 @@ internal class ExecutiveElection(
             }
         }
         return notices.joinToString(" ")
+    }
+
+    /** 별도 임기로 당선된 인물만 교체한다. 전임 행정부는 원래의 임기까지 직무를 수행한다. */
+    private fun transitionOnLoss(date: LocalDate): String? {
+        if (!bilateralTicket && !reelectionOnLoss) return null
+        val elect = presidentElect ?: return null
+        val deputy = elect.deputy?.takeIf(leadership::available)
+        if (leadership.available(elect.person)) {
+            if (deputy == elect.deputy) return null
+            presidentElect = elect.copy(deputy = null)
+            return "부통령 당선인의 유고로 차기 임기의 부통령 자리가 공석이 됐다."
+        }
+        if (deputy != null) {
+            presidentElect = elect.copy(person = deputy, governingParty = deputy.party ?: elect.governingParty, deputy = null)
+            return "${deputy.name} 부통령 당선인이 ${elect.inauguration}부터 차기 대통령 임기를 승계한다."
+        }
+        val poll =
+            when (country) {
+                "BRA" -> elect.inauguration.plusDays(90)
+                "TWN" -> date.plusDays(49).with(TemporalAdjusters.nextOrSame(DayOfWeek.SATURDAY))
+                "KOR" -> date.plusDays(42).with(TemporalAdjusters.nextOrSame(DayOfWeek.WEDNESDAY))
+                else -> date.plusDays(35).with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY))
+            }
+        replacement = ReplacementElection(poll, elect.inauguration)
+        campaign = null
+        primaries = null
+        presidentElect = null
+        return "차기 대통령 당선인의 유고로 ${poll}에 대통령 재선거를 실시한다."
+    }
+
+    fun scheduledPoll(ordinary: LocalDate?): LocalDate? {
+        val extra = replacement ?: return ordinary
+        if (extra.ordinaryPoll == null) extra.ordinaryPoll = ordinary
+        return campaign?.runoffDate ?: extra.firstPoll
+    }
+
+    fun nextPoll(
+        result: ExecutiveResult,
+        rule: ExecutiveElectionRule,
+    ): LocalDate {
+        campaign?.houseDate?.let { return it }
+        campaign?.runoffDate?.let { return it }
+        val extra = replacement
+        replacement = null
+        if (extra != null && bilateralTicket) return requireNotNull(extra.ordinaryPoll)
+        if (country == "KOR") {
+            return requireNotNull(koreanTermEnd).minusDays(71).with(TemporalAdjusters.next(DayOfWeek.WEDNESDAY))
+        }
+        return rule.nextRegular(result.campaign.firstDate, country)
     }
 
     fun renamePerson(person: Person) {
@@ -218,6 +330,8 @@ internal class ExecutiveElection(
         presidentElect = null
         vice?.cancel()
         bothElectsVacant = null
+        replacement = null
+        taiwanDeputyVote = null
         indonesianCaretakerUntil = null
         senateWinnerSucceeds = false
     }
@@ -359,7 +473,14 @@ internal class ExecutiveElection(
                         ExecutiveNomination(first, rival, firstShare)
                     }
                 }
-            candidates += nomination
+            val mate =
+                if (bilateralTicket) {
+                    leadership.current().vicePresident?.takeIf { sitting?.id == nomination.nominee.id && it.id != sitting.id }
+                        ?: leadership.nominate(party, date)
+                } else {
+                    nomination.runningMate
+                }
+            candidates += nomination.copy(runningMate = mate)
             val id = nomination.nominee.id
             strengths[id] = strength * (if (officeBloc) exp(regime.incumbentBias * 1.7) else 1.0)
             positions[id] = identity
@@ -413,7 +534,7 @@ internal class ExecutiveElection(
         house: List<DistrictResult> = emptyList(),
     ): ExecutiveResult {
         var slate = requireNotNull(campaign)
-        if (vice != null && slate.houseDate == null) {
+        if ((vice != null || bilateralTicket) && slate.houseDate == null) {
             slate =
                 slate.copy(
                     nominations =
@@ -526,7 +647,9 @@ internal class ExecutiveElection(
                 (country != "IDN" || ballot.size > 2)
         if (runoff) {
             val next =
-                if (rule.lastSundayRunoff) {
+                if (country == "BRA" && replacement != null) {
+                    date.plusDays(21)
+                } else if (rule.lastSundayRunoff) {
                     date.with(
                         TemporalAdjusters.lastInMonth(DayOfWeek.SUNDAY),
                     )
@@ -549,15 +672,20 @@ internal class ExecutiveElection(
         round: Int,
         count: RegionalCount?,
     ): ExecutiveResult {
+        val extra = replacement
         val inauguration =
-            when (country) {
-                "USA" -> LocalDate.of(slate.firstDate.year + 1, 1, 20)
-                "IDN" -> LocalDate.of(slate.firstDate.year, 10, 20)
-                "BRA" -> LocalDate.of(slate.firstDate.year + 1, 1, 5)
-                "TWN" -> LocalDate.of(slate.firstDate.year, 5, 20)
-                "KOR" -> LocalDate.of(slate.firstDate.year, 5, 10)
-                "FIN" -> date.plusMonths(1).withDayOfMonth(1)
-                else -> date
+            if (extra != null && country != "FIN") {
+                maxOf(date, extra.termStart)
+            } else {
+                when (country) {
+                    "USA" -> LocalDate.of(slate.firstDate.year + 1, 1, 20)
+                    "IDN" -> LocalDate.of(slate.firstDate.year, 10, 20)
+                    "BRA" -> LocalDate.of(slate.firstDate.year + 1, 1, 5)
+                    "TWN" -> LocalDate.of(slate.firstDate.year, 5, 20)
+                    "KOR" -> koreanTermEnd ?: LocalDate.of(slate.firstDate.year, 5, 10)
+                    "FIN" -> date.plusMonths(1).withDayOfMonth(1)
+                    else -> date
+                }
             }
         val backing =
             winner.party ?: slate.nominations
@@ -577,14 +705,16 @@ internal class ExecutiveElection(
         campaign = null
         primaries = null
         presidentElect = PresidentElect(winner, inauguration, backing, deputy, separateDeputy = slate.houseDate != null)
+        if (country == "KOR") koreanTermEnd = inauguration.plusYears(rule.termYears.toLong())
         val installed = inaugurate(date)
         return ExecutiveResult(rule.title, slate, ballot, installed?.person ?: winner, round, count)
     }
 
     fun inaugurate(date: LocalDate): PresidentElect? {
+        transitionOnLoss(date)
         val elected = presidentElect?.takeIf { it.inauguration <= date } ?: return null
         leadership.seatPresident(elected.person, date)
-        if (vice != null && !elected.separateDeputy) leadership.seatVicePresident(elected.deputy, date, newTerm = true)
+        if ((vice != null || bilateralTicket) && !elected.separateDeputy) leadership.seatVicePresident(elected.deputy, date, newTerm = true)
         if (country == "IDN" && incomingFinalists.isNotEmpty()) lastFinalists = incomingFinalists
         indonesianCaretakerUntil = null
         endorsedIncumbent = elected.person.id to elected.governingParty

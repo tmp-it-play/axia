@@ -202,6 +202,7 @@ internal class AiCountryPolitics(
         enact: (String, Double, Double) -> Unit,
     ): List<WorldNews> {
         val departure = executiveElection.checkMortality(date, random, legislature)
+        nextExecutive = executiveElection.scheduledPoll(nextExecutive)
         val start = initial ?: indicators.also { initial = it }
         monthsInOffice++
         val damping = if (profile.regime.autocratic) AUTOCRATIC_DAMPING else 1.0
@@ -447,6 +448,7 @@ internal class AiCountryPolitics(
                 ?.let { chamber -> confidence?.afterElections(chamber, false, oldPresident != elected.person.id, date, true) }
                 ?.let { decision -> appointmentsNews += applyConfidence(decision, date) }
         }
+        nextExecutive = executiveElection.scheduledPoll(nextExecutive)
         val nominated = executiveElection.prepare(date, nextExecutive, rules.executive, legislature?.groups.orEmpty(), approval)
         val nominations =
             if (nominated &&
@@ -581,8 +583,7 @@ internal class AiCountryPolitics(
         if (legislativeDue) holdPresidentialCollege()
         if (executive != null) {
             nextExecutive =
-                executiveElection.campaign?.houseDate ?: executiveElection.campaign?.runoffDate
-                    ?: requireNotNull(rules.executive).nextRegular(executive.campaign.firstDate, countryId)
+                executiveElection.nextPoll(executive, requireNotNull(rules.executive))
         }
         val after = government()
         lastElection =
