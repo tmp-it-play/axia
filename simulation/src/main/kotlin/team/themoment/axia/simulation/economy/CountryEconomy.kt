@@ -172,10 +172,11 @@ internal class CountryEconomy(
 
     var outputGap = 0.0
         private set
-    var inflation = initial.inflation
-        private set
-    var unemployment = initial.unemployment
-        private set
+    private val openingInflation = initial.inflation
+    private var inflationContributions: InflationContributions? = null
+    private var unemploymentContributions: UnemploymentContributions? = null
+    val inflation: Double get() = inflationContributions?.rate ?: openingInflation
+    val unemployment: Double get() = unemploymentContributions?.rate ?: naturalUnemployment
 
     /** 최근 한 달 재정 흐름(자국 통화, 월간). */
     var monthlyRevenue = initial.revenue * initial.gdp / 12.0
@@ -269,11 +270,16 @@ internal class CountryEconomy(
             ),
         )
         pendingSectorShocks.keys.forEach { pendingSectorShocks[it] = 0.0 }
-        val importPrices = external.inflation - EXCHANGE_PASS_THROUGH * (realExchange - exchangeHistory.first()) + pendingInflation
+        inflationContributions =
+            InflationContributions(
+                expectations = expectedInflation,
+                outputGap = PHILLIPS_SLOPE * outputGap,
+                consumptionTax = fiscalPolicy.inflationImpulse,
+                commodityPrices = external.inflation,
+                exchangeRate = -EXCHANGE_PASS_THROUGH * (realExchange - exchangeHistory.first()),
+                shocks = pendingInflation,
+            )
         pendingInflation = 0.0
-        inflation =
-            (expectedInflation + PHILLIPS_SLOPE * outputGap + fiscalPolicy.inflationImpulse + importPrices)
-                .coerceIn(MIN_INFLATION, MAX_INFLATION)
         // 기대 물가는 신뢰도만큼 기준점에 묶인다. 환율이 고정된 나라는 교역재 가격 때문에 훨씬 강하게 묶인다.
         val anchorPull = if (monetary.anchorInflation == null) ANCHOR_PULL else FIXED_RATE_ANCHOR_PULL
         expectedInflation +=
@@ -283,9 +289,13 @@ internal class CountryEconomy(
         priceLevel *= monthly(inflation)
         dollarPriceLevel *= monthly(dollarInflation)
 
-        unemployment =
-            (naturalUnemployment + fiscalPolicy.naturalUnemploymentShift + warUnemployment - OKUN_COEFFICIENT * outputGap)
-                .coerceIn(MIN_UNEMPLOYMENT, MAX_UNEMPLOYMENT)
+        unemploymentContributions =
+            UnemploymentContributions(
+                naturalRate = naturalUnemployment,
+                laborPolicy = fiscalPolicy.naturalUnemploymentShift,
+                war = warUnemployment,
+                outputGap = -OKUN_COEFFICIENT * outputGap,
+            )
         populationGrowth += (LONG_RUN_POPULATION_GROWTH - populationGrowth) / DEMOGRAPHIC_TRANSITION_MONTHS
         val baselinePopulation = (population - pendingMigration) * monthly(populationGrowth)
         pendingMigration = 0.0
@@ -344,6 +354,8 @@ internal class CountryEconomy(
             growth = realGdp / realGdpHistory[historyIndex] - 1.0,
             inflation = inflation,
             unemployment = unemployment,
+            inflationContributions = inflationContributions,
+            unemploymentContributions = unemploymentContributions,
             budgetBalance = monthlyBalance * 12.0 / gdp,
             debtRatio = debtRatio,
             policyRate = policyRate,
@@ -420,10 +432,6 @@ internal class CountryEconomy(
         const val DEBT_ROLLOVER_MONTHS = SovereignDebt.MARKET_MATURITY_YEARS * 12
         const val MIN_RATE = 0.002
         const val MAX_RATE = 0.4
-        const val MIN_INFLATION = -0.1
-        const val MAX_INFLATION = 5.0
-        const val MIN_UNEMPLOYMENT = 0.005
-        const val MAX_UNEMPLOYMENT = 0.5
     }
 }
 

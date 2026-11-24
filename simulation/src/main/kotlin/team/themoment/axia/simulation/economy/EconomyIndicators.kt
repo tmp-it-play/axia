@@ -15,6 +15,9 @@ data class EconomyIndicators(
     val growth: Double,
     val inflation: Double,
     val unemployment: Double,
+    /** 최근 월 결산의 기여도. 시작 자료에는 원인이 구분되어 있지 않아 첫 결산 전에는 null이다. */
+    val inflationContributions: InflationContributions?,
+    val unemploymentContributions: UnemploymentContributions?,
     /** 최근 한 달 재정수지를 연간으로 환산한 GDP 대비 비율. 흑자면 양수. */
     val budgetBalance: Double,
     val debtRatio: Double,
@@ -30,6 +33,32 @@ data class EconomyIndicators(
     val supportedGrainTonnes: Double?,
 ) {
     val gdpPerCapita: Double get() = if (population > 0.0) gdp / population else 0.0
+}
+
+/** 최근 월에 결정된 연율 물가상승률의 구성. 각 항목의 0.01은 1%p를 뜻한다. */
+data class InflationContributions(
+    val expectations: Double,
+    val outputGap: Double,
+    val consumptionTax: Double,
+    val commodityPrices: Double,
+    val exchangeRate: Double,
+    val shocks: Double,
+) {
+    private val unconstrained = expectations + outputGap + consumptionTax + (commodityPrices + exchangeRate + shocks)
+    val rate = unconstrained.coerceIn(-0.1, 5.0)
+    val limitAdjustment: Double get() = rate - unconstrained
+}
+
+/** 최근 월의 실업률 구성. 시작 실업률을 자연실업률의 기준으로 사용한다. */
+data class UnemploymentContributions(
+    val naturalRate: Double,
+    val laborPolicy: Double,
+    val war: Double,
+    val outputGap: Double,
+) {
+    private val unconstrained = naturalRate + laborPolicy + war + outputGap
+    val rate = unconstrained.coerceIn(0.005, 0.5)
+    val limitAdjustment: Double get() = rate - unconstrained
 }
 
 enum class EconomySeries {

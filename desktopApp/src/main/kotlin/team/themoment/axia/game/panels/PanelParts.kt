@@ -6,6 +6,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -31,6 +35,8 @@ import team.themoment.axia.theme.DossierColors
 import team.themoment.axia.theme.DossierType
 import team.themoment.axia.ui.dossier.Contribution
 import team.themoment.axia.ui.dossier.ContributionBars
+import team.themoment.axia.ui.dossier.PaperTag
+import team.themoment.axia.ui.dossier.SectionTitle
 import team.themoment.axia.ui.dossier.StatRow
 import kotlin.math.roundToInt
 
@@ -98,6 +104,7 @@ internal fun KeyIndicatorRows(indicators: EconomyIndicators) {
     StatRow("경제성장률", formatPercent(indicators.growth, signed = true), note = indicators.note("growth"))
     StatRow("물가상승률", formatPercent(indicators.inflation), note = indicators.note("inflation"))
     StatRow("실업률", formatPercent(indicators.unemployment), note = indicators.note("unemployment"))
+    RateContributions(indicators)
     StatRow(
         "재정수지 (GDP 대비)",
         formatPercent(indicators.budgetBalance, signed = true),
@@ -106,6 +113,45 @@ internal fun KeyIndicatorRows(indicators: EconomyIndicators) {
     StatRow("국가부채 (GDP 대비)", formatPercent(indicators.debtRatio), note = indicators.note("debt"))
     StatRow("기준금리", formatRate(indicators.policyRate), note = indicators.note(POLICY_RATE_FIELD))
     StatRow("통화 가치 (달러 대비, 시작 대비)", formatPercent(kotlin.math.exp(indicators.realExchange) - 1.0, signed = true))
+}
+
+@Composable
+private fun RateContributions(indicators: EconomyIndicators) {
+    var expanded by remember { mutableStateOf(false) }
+    PaperTag("물가·실업률 산정 근거", selected = expanded, onClick = { expanded = !expanded })
+    if (!expanded) return
+    val inflation = indicators.inflationContributions
+    val unemployment = indicators.unemploymentContributions
+    if (inflation == null || unemployment == null) {
+        StatRow("시작 물가상승률", formatRate(indicators.inflation), note = indicators.note("inflation"))
+        StatRow("시작 실업률", formatRate(indicators.unemployment), note = indicators.note("unemployment"))
+        Hint("첫 월 결산부터 원인별 기여도를 볼 수 있습니다.")
+        return
+    }
+    SectionTitle("직전 월 결산 · 물가상승률")
+    RateContribution("기대 물가상승률", inflation.expectations)
+    RateContribution("경기 (산출 갭)", inflation.outputGap)
+    RateContribution("소비세 전가", inflation.consumptionTax)
+    RateContribution("국제 원유·곡물 가격", inflation.commodityPrices)
+    RateContribution("환율 전가", inflation.exchangeRate)
+    RateContribution("사건·국가 정책 충격", inflation.shocks)
+    if (inflation.limitAdjustment != 0.0) RateContribution("모형 상·하한 보정", inflation.limitAdjustment)
+    StatRow("물가상승률 (연율)", formatRate(inflation.rate))
+    SectionTitle("직전 월 결산 · 실업률")
+    RateContribution("자연실업률 (시작값)", unemployment.naturalRate)
+    RateContribution("노동 규제·고용 정책", unemployment.laborPolicy)
+    RateContribution("전쟁에 따른 실업", unemployment.war)
+    RateContribution("경기 (산출 갭)", unemployment.outputGap)
+    if (unemployment.limitAdjustment != 0.0) RateContribution("모형 상·하한 보정", unemployment.limitAdjustment)
+    StatRow("실업률", formatRate(unemployment.rate))
+}
+
+@Composable
+private fun RateContribution(
+    label: String,
+    share: Double,
+) {
+    StatRow(label, formatRate(share, signed = true) + "p")
 }
 
 internal val percentFormat: (Double) -> String = { formatPercent(it) }
