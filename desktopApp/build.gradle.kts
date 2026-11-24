@@ -1,4 +1,5 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.compose.desktop.application.tasks.AbstractJPackageTask
 
 plugins {
     alias(libs.plugins.kotlinJvm)
@@ -50,5 +51,13 @@ compose.desktop {
                 shortcut = true
             }
         }
+    }
+}
+
+tasks.withType<AbstractJPackageTask>().configureEach {
+    if (targetFormat == TargetFormat.Dmg) {
+        // Compose는 앱 번들을 만들 때만 --icon을 전달하므로 DMG 볼륨에도 같은 아이콘을 지정한다.
+        freeArgs.add("--icon")
+        freeArgs.add(iconFile.map { "\"${it.asFile.absolutePath}\"" })
     }
 }
