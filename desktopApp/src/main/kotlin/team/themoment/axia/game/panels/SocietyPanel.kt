@@ -66,9 +66,22 @@ fun SocietyPanel(nation: NationSnapshot) {
         "${formatPercent(demography.workingAgeParticipation)} · ${formatPercent(demography.olderParticipation)}",
         note = "${demography.participationYear}년 $participationSource",
     )
-    demography.earlyPensionOfWorkingAge?.let {
-        StatRow("50~64세 노령연금 수급자", formatPercent(it), note = "15~64세 인구 대비 · 2023년 EU-LFS")
+    StatRow(
+        "50~64세 노령연금 수급자",
+        demography.earlyPensionOfWorkingAge?.let { formatPercent(it) } ?: "자료 없음",
+        note = demography.earlyPensionSource?.let { "15~64세 인구 대비 · $it" } ?: "조기 수급자는 수요 추정에서 제외",
+    )
+    val pension = demography.olderPension
+    if (pension != null) {
+        val ages = pension.throughAge?.let { "65~${it}세" } ?: "65세 이상"
+        val coverage = pension.upperRate?.let { "${formatPercent(pension.rate)}~${formatPercent(it)}" } ?: formatPercent(pension.rate)
+        StatRow("$ages 연금 수급률", coverage, note = "${pension.year}년 ${pension.source}")
+        pension.rangeNote?.let { Hint(it) }
+        pension.throughAge?.let { Hint("${it + 1}세 이상은 수급 통계가 없어 해당 인구 전원을 수요에 포함합니다.") }
+    } else {
+        StatRow("65세 이상 연금 수급률", "자료 없음", note = "65세 이상 인구 전원을 수요로 추정")
     }
+    StatRow("추정 연금 수요 인구", formatPercent(demography.pensionDemandShare), note = "전체 인구 대비")
     StatRow("도시화율", formatPercent(demography.urbanShare))
     StatRow("순이민 (연환산)", formatPopulation(demography.netMigration))
     StatRow("인적 자본 (2024년 = 100)", demography.education.roundToInt().toString())

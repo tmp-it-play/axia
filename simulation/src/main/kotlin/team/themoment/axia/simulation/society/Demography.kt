@@ -19,8 +19,12 @@ data class DemographySnapshot(
     val olderParticipation: Double,
     val participationYear: Int,
     val participationModeled: Boolean,
-    /** EU-LFS에서 50~64세 노령연금 수급이 확인된 경우, 15~64세 인구 중 수급자 비율. */
+    /** 50~64세 수급자를 15~64세 전체 인구로 나눈 비율. */
     val earlyPensionOfWorkingAge: Double?,
+    val earlyPensionSource: String?,
+    val olderPension: OlderPensionCoverage?,
+    /** 전체 인구 대비 이번 달 추정 연금 수요 인구. */
+    val pensionDemandShare: Double,
     val urbanShare: Double,
     /** 순이민(연간, 명). */
     val netMigration: Double,
@@ -67,7 +71,10 @@ internal class Demography(
     val activity = AgeActivity.country(initial.id)
     private val workingShare: Double get() = 1.0 - childShare - elderlyShare
     private val laborShare: Double get() = workingShare * activity.workingAgeParticipation + elderlyShare * activity.olderParticipation
-    private val pensionDemand: Double get() = elderlyShare + workingShare * (activity.earlyPension?.recipientsOfWorkingAge ?: 0.0)
+    private val pensionDemand: Double
+        get() =
+            elderlyShare * (activity.olderPension?.modeledRate ?: 1.0) +
+                workingShare * (activity.earlyPension?.recipientsOfWorkingAge ?: 0.0)
     private val initialPensionDemand = pensionDemand
     private var urbanShare = structure.urbanShare
     private val baseMigration = structure.netMigration
@@ -88,7 +95,7 @@ internal class Demography(
         return (elderlyShare * (1.0 - activity.olderParticipation) + younger) / adultShare
     }
 
-    /** 고령 인구와 관측된 65세 미만 노령연금 수급자의 사회보장 수요 배율(시작 = 1). */
+    /** 고령층 수급 범위와 50~64세 노령연금 수급자에 따른 사회보장 수요 배율(시작 = 1). */
     val pensionPressure: Double get() = pensionDemand / initialPensionDemand
 
     fun advanceMonth(inputs: DemographyInputs) {
@@ -134,6 +141,9 @@ internal class Demography(
             participationYear = activity.year,
             participationModeled = activity.series == "EAP_2WAP_SEX_AGE_RT",
             earlyPensionOfWorkingAge = activity.earlyPension?.recipientsOfWorkingAge,
+            earlyPensionSource = activity.earlyPension?.let { "${it.year}년 ${it.source}" },
+            olderPension = activity.olderPension,
+            pensionDemandShare = pensionDemand,
             urbanShare = urbanShare,
             netMigration = netMigration,
             education = education,

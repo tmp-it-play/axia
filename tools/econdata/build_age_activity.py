@@ -1,4 +1,4 @@
-"""플레이 국가의 연령별 경제활동참가율과 유럽 노령연금 수급 자료를 생성한다.
+"""플레이 국가의 연령별 경제활동참가율과 연금 수급 자료를 생성한다.
 
 python3 tools/econdata/build_age_activity.py [--cache-dir 원본_디렉터리]
 ILO 기준은 2023년이다. 우크라이나는 전면 침공 전 마지막 2021년 노동력조사를 쓴다.
@@ -13,6 +13,7 @@ import json
 from pathlib import Path
 
 from build_economy import ROOT, download
+from pension_coverage import early_pension, national_pensions
 
 WORLD_DIR = ROOT / "simulation/src/main/resources/world"
 ILO = "https://rplumber.ilo.org/data/indicator/"
@@ -48,7 +49,7 @@ def ilo_rates(cache, series, year, country=None):
 
 
 def eurostat(cache, dataset, query):
-    name = dataset + "-2023-age-activity.json"
+    name = f"{dataset}-{query.replace('&', '-')}-2023.json"
     raw = download(f"{EU}{dataset}?sex=T&time=2023&unit=THS_PER&{query}", cache / name if cache else None)
     table = json.loads(raw)
     dimensions = [table["dimension"][axis]["category"]["index"] for axis in table["id"]]
@@ -65,9 +66,12 @@ def eurostat(cache, dataset, query):
     return rows
 
 
-def early_pensions(cache):
+def european_pensions(cache):
     pensions = eurostat(cache, "lfso_23pens01", "age=Y50-64")
     population = eurostat(cache, "lfsa_pganws", "age=Y15-64&citizen=TOTAL&wstatus=POP")
+    # 연금 모듈의 Y_GE65는 조사 상한 74세까지다. 전체 LFS에서 같은 연도 65세 이상 분모를 가져온다.
+    older_band = eurostat(cache, "lfso_23pens01", "age=Y_GE65")
+    older_population = eurostat(cache, "lfsa_pganws", "age=Y_GE65&citizen=TOTAL&wstatus=POP")
     results = {}
     for state, geo in EU_COUNTRIES.items():
         age_group = pensions[geo, "POP", "TOTAL"]
@@ -75,12 +79,31 @@ def early_pensions(cache):
         # ANY에는 노령과 장애 중복 수급자가 한 번 들어간다. 장애만 받는 사람을 제외한다.
         recipients = pensions[geo, "POP", "ANY"] - pensions[geo, "POP", "DIS_P_DIS_OTH_ONL"]
         not_employed = pensions[geo, "NEMP", "ANY"] - pensions[geo, "NEMP", "DIS_P_DIS_OTH_ONL"]
-        if not 0 <= not_employed <= recipients <= age_group <= working_age:
-            raise ValueError(f"Inconsistent 50–64 pension aggregates for {geo}")
+        band = older_band[geo, "POP", "TOTAL"]
+        any_pension = older_band[geo, "POP", "ANY"]
+        disability_only = older_band.get((geo, "POP", "DIS_P_DIS_OTH_ONL"))
+        pension_only = older_band[geo, "POP", "OLD_ONL"]
+        both = older_band.get((geo, "POP", "OLD_DIS_P_DIS_OTH"))
+        # 공표된 합계로 가능한 경우만 재구성한다. 두 세부 칸이 모두 비공개면 확인된 하한과 상한을 보존한다.
+        if disability_only is not None:
+            band_recipients = any_pension - disability_only
+        elif both is not None:
+            band_recipients = pension_only + both
+        else:
+            band_recipients = pension_only
+        all_older = older_population[geo, "POP", None]
+        if not 0 < band_recipients <= band <= all_older:
+            raise ValueError(f"Inconsistent 65–74 pension aggregates for {geo}")
         results[state] = {
-            "recipientsOfWorkingAge": round(recipients / working_age, 7),
-            "nonEmployedOfWorkingAge": round(not_employed / working_age, 7),
-            "nonEmployedOfAgeBand": round(not_employed / age_group, 7),
+            "earlyPension": early_pension(recipients, not_employed, age_group, working_age, "EU-LFS"),
+            "olderPension": {
+                "rate": round(band_recipients / band, 7), "shareOfOlder": round(band / all_older, 7),
+                "throughAge": 74, "year": 2023, "source": "EU-LFS 노령연금",
+                **({
+                    "upperRate": round(any_pension / band, 7),
+                    "rangeNote": "일부 연금 유형의 중복 수급 규모가 비공개여서 확인된 하한을 씁니다.",
+                } if disability_only is None and both is None else {}),
+            },
         }
     return results
 
@@ -104,7 +127,9 @@ def main():
     }
     modeled = ilo_rates(cache, "EAP_2WAP_SEX_AGE_RT", 2023)
     older = ilo_rates(cache, "EAP_DWAP_SEX_AGE_RT", 2021, "UKR")
-    pensions = early_pensions(cache)
+    pensions = european_pensions(cache)
+    for state, data in national_pensions(cache).items():
+        pensions.setdefault(state, {}).update(data)
     countries = {}
     for state in sorted(json.loads((WORLD_DIR / "playable.json").read_text())["countries"]):
         report = reported.get(state) or modeled.get(state) or older.get(state)
@@ -112,7 +137,7 @@ def main():
             raise ValueError(f"No paired age-specific participation rates for {state}")
         countries[state] = report
         if state in pensions:
-            report["earlyPension"] = pensions[state]
+            report.update(pensions[state])
     outfile = WORLD_DIR / "age_activity.json"
     outfile.write_text(json.dumps(countries, indent=2) + "\n", encoding="utf-8")
 

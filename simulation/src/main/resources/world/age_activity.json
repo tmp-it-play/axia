@@ -4,21 +4,38 @@
     "olderParticipation": 0.15506,
     "year": 2023,
     "source": "BA:518",
-    "series": "EAP_DWAP_SEX_AGE_RT"
+    "series": "EAP_DWAP_SEX_AGE_RT",
+    "olderPension": {
+      "rate": 0.5491624,
+      "upperRate": 0.5674962,
+      "year": 2023,
+      "source": "\ud638\uc8fc DSS \u00b7 Services Australia \ub178\ub839\uc5f0\uae08",
+      "rangeNote": "\ud574\uc678\u00b7\uc8fc\uc18c \ubbf8\ud655\uc778 \uc218\uae09\uc790\uc640 \uc9c0\uae09\ub960 \ubbf8\ud655\uc815\uc790\uac00 \uc788\uc5b4 \uad6d\ub0b4 \uc218\uae09 \ud558\ud55c\uc744 \uc501\ub2c8\ub2e4."
+    }
   },
   "BRA": {
     "workingAgeParticipation": 0.70305,
     "olderParticipation": 0.1479,
     "year": 2023,
     "source": "BX:6355",
-    "series": "EAP_DWAP_SEX_AGE_RT"
+    "series": "EAP_DWAP_SEX_AGE_RT",
+    "olderPension": {
+      "rate": 0.8076445,
+      "year": 2023,
+      "source": "IBGE PNAD \u00b7 \uacf5\uc801 \ud1f4\uc9c1\u00b7\uc720\uc871\uc5f0\uae08"
+    }
   },
   "CAN": {
     "workingAgeParticipation": 0.80262,
     "olderParticipation": 0.1493,
     "year": 2023,
     "source": "BA:147",
-    "series": "EAP_DWAP_SEX_AGE_RT"
+    "series": "EAP_DWAP_SEX_AGE_RT",
+    "olderPension": {
+      "rate": 0.9244898,
+      "year": 2023,
+      "source": "\uce90\ub098\ub2e4 \ud1b5\uacc4\uccad \u00b7 OAS\u00b7\uc5f0\ubc29 \ubcf4\ucda9\uae09\uc5ec"
+    }
   },
   "CHN": {
     "workingAgeParticipation": 0.75202,
@@ -36,7 +53,18 @@
     "earlyPension": {
       "recipientsOfWorkingAge": 0.0311201,
       "nonEmployedOfWorkingAge": 0.021885,
-      "nonEmployedOfAgeBand": 0.0617022
+      "nonEmployedOfAgeBand": 0.0617022,
+      "year": 2023,
+      "source": "EU-LFS"
+    },
+    "olderPension": {
+      "rate": 0.9190101,
+      "shareOfOlder": 0.5181825,
+      "throughAge": 74,
+      "year": 2023,
+      "source": "EU-LFS \ub178\ub839\uc5f0\uae08",
+      "upperRate": 0.9261762,
+      "rangeNote": "\uc77c\ubd80 \uc5f0\uae08 \uc720\ud615\uc758 \uc911\ubcf5 \uc218\uae09 \uaddc\ubaa8\uac00 \ube44\uacf5\uac1c\uc5ec\uc11c \ud655\uc778\ub41c \ud558\ud55c\uc744 \uc501\ub2c8\ub2e4."
     }
   },
   "EGY": {
@@ -55,7 +83,18 @@
     "earlyPension": {
       "recipientsOfWorkingAge": 0.0339914,
       "nonEmployedOfWorkingAge": 0.0169373,
-      "nonEmployedOfAgeBand": 0.0556836
+      "nonEmployedOfAgeBand": 0.0556836,
+      "year": 2023,
+      "source": "EU-LFS"
+    },
+    "olderPension": {
+      "rate": 0.9925625,
+      "shareOfOlder": 0.5500186,
+      "throughAge": 74,
+      "year": 2023,
+      "source": "EU-LFS \ub178\ub839\uc5f0\uae08",
+      "upperRate": 0.9945909,
+      "rangeNote": "\uc77c\ubd80 \uc5f0\uae08 \uc720\ud615\uc758 \uc911\ubcf5 \uc218\uae09 \uaddc\ubaa8\uac00 \ube44\uacf5\uac1c\uc5ec\uc11c \ud655\uc778\ub41c \ud558\ud55c\uc744 \uc501\ub2c8\ub2e4."
     }
   },
   "FIN": {
@@ -67,7 +106,14 @@
     "earlyPension": {
       "recipientsOfWorkingAge": 0.0355472,
       "nonEmployedOfWorkingAge": 0.0178029,
-      "nonEmployedOfAgeBand": 0.058569
+      "nonEmployedOfAgeBand": 0.058569,
+      "year": 2023,
+      "source": "EU-LFS"
+    },
+    "olderPension": {
+      "rate": 0.9896615,
+      "year": 2023,
+      "source": "\ud540\ub780\ub4dc \uc5f0\uae08\uc13c\ud130 \u00b7 \uac70\uc8fc\uc790 \ub178\ub839\u00b7\ubd80\ubd84\ub178\ub839\uc5f0\uae08"
     }
   },
   "FRA": {
@@ -79,7 +125,14 @@
     "earlyPension": {
       "recipientsOfWorkingAge": 0.0563557,
       "nonEmployedOfWorkingAge": 0.0497201,
-      "nonEmployedOfAgeBand": 0.157317
+      "nonEmployedOfAgeBand": 0.157317,
+      "year": 2023,
+      "source": "EU-LFS"
+    },
+    "olderPension": {
+      "rate": 0.9500018,
+      "year": 2023,
+      "source": "\ud504\ub791\uc2a4 DREES ANCETRE \u00b7 \uac70\uc8fc\uc790 \ubcf8\uc778\uad8c\ub9ac \uc5f0\uae08 \ucd94\uacc4"
     }
   },
   "GBR": {
@@ -87,7 +140,14 @@
     "olderParticipation": 0.11627,
     "year": 2023,
     "source": "BA:666",
-    "series": "EAP_DWAP_SEX_AGE_RT"
+    "series": "EAP_DWAP_SEX_AGE_RT",
+    "olderPension": {
+      "rate": 0.9164605,
+      "upperRate": 0.9200563,
+      "year": 2023,
+      "source": "\uc601\uad6d DWP\u00b7\ubd81\uc544\uc77c\ub79c\ub4dc DfC \u00b7 5\uc6d4 \uad6d\uac00\uc5f0\uae08, 6\uc6d4 \uc778\uad6c",
+      "rangeNote": "\ubd81\uc544\uc77c\ub79c\ub4dc \uc9c0\uae09\uc561\u00b7\uc8fc\uc18c\ub294 \ubcc4\ub3c4 \ud45c\uc785\ub2c8\ub2e4. \uc218\uc694\uc5d0\ub294 \ud558\ud55c\uc744 \uc4f0\uba70 \uc140 \uad50\ub780\uacfc \uc778\uad6c \uae30\uc900\uc6d4 \ucc28\uc774\ub85c \ubc94\uc704\ub294 \uadfc\uc0ac\uce58\uc785\ub2c8\ub2e4."
+    }
   },
   "IDN": {
     "workingAgeParticipation": 0.69394,
@@ -126,7 +186,16 @@
     "earlyPension": {
       "recipientsOfWorkingAge": 0.0346799,
       "nonEmployedOfWorkingAge": 0.0307868,
-      "nonEmployedOfAgeBand": 0.0835306
+      "nonEmployedOfAgeBand": 0.0835306,
+      "year": 2023,
+      "source": "EU-LFS"
+    },
+    "olderPension": {
+      "rate": 0.7749224,
+      "shareOfOlder": 0.4888302,
+      "throughAge": 74,
+      "year": 2023,
+      "source": "EU-LFS \ub178\ub839\uc5f0\uae08"
     }
   },
   "JPN": {
@@ -134,14 +203,24 @@
     "olderParticipation": 0.2565,
     "year": 2023,
     "source": "BA:259",
-    "series": "EAP_DWAP_SEX_AGE_RT"
+    "series": "EAP_DWAP_SEX_AGE_RT",
+    "olderPension": {
+      "rate": 0.952,
+      "year": 2023,
+      "source": "\ud6c4\uc0dd\ub178\ub3d9\uc131 \uad6d\ubbfc\uc0dd\ud65c\uae30\ucd08\uc870\uc0ac \u00b7 \uacf5\uc801\uc5f0\uae08\u00b7\uc740\uae09"
+    }
   },
   "KOR": {
     "workingAgeParticipation": 0.7148,
     "olderParticipation": 0.39724,
     "year": 2023,
     "source": "BA:222",
-    "series": "EAP_DWAP_SEX_AGE_RT"
+    "series": "EAP_DWAP_SEX_AGE_RT",
+    "olderPension": {
+      "rate": 0.909,
+      "year": 2023,
+      "source": "\ud1b5\uacc4\uccad 11\uc885 \uc5f0\uae08 \u00b7 \uc720\uc871\u00b7\uc7a5\uc560\u00b7\uc8fc\ud0dd\uc5f0\uae08 \ub4f1 \ud3ec\ud568"
+    }
   },
   "LTU": {
     "workingAgeParticipation": 0.78772,
@@ -152,7 +231,16 @@
     "earlyPension": {
       "recipientsOfWorkingAge": 0.0287166,
       "nonEmployedOfWorkingAge": 0.0191979,
-      "nonEmployedOfAgeBand": 0.0563579
+      "nonEmployedOfAgeBand": 0.0563579,
+      "year": 2023,
+      "source": "EU-LFS"
+    },
+    "olderPension": {
+      "rate": 0.9686549,
+      "shareOfOlder": 0.565674,
+      "throughAge": 74,
+      "year": 2023,
+      "source": "EU-LFS \ub178\ub839\uc5f0\uae08"
     }
   },
   "LVA": {
@@ -164,7 +252,18 @@
     "earlyPension": {
       "recipientsOfWorkingAge": 0.0328361,
       "nonEmployedOfWorkingAge": 0.0180041,
-      "nonEmployedOfAgeBand": 0.054503
+      "nonEmployedOfAgeBand": 0.054503,
+      "year": 2023,
+      "source": "EU-LFS"
+    },
+    "olderPension": {
+      "rate": 0.9886417,
+      "shareOfOlder": 0.5434671,
+      "throughAge": 74,
+      "year": 2023,
+      "source": "EU-LFS \ub178\ub839\uc5f0\uae08",
+      "upperRate": 0.9971604,
+      "rangeNote": "\uc77c\ubd80 \uc5f0\uae08 \uc720\ud615\uc758 \uc911\ubcf5 \uc218\uae09 \uaddc\ubaa8\uac00 \ube44\uacf5\uac1c\uc5ec\uc11c \ud655\uc778\ub41c \ud558\ud55c\uc744 \uc501\ub2c8\ub2e4."
     }
   },
   "PAK": {
@@ -183,7 +282,16 @@
     "earlyPension": {
       "recipientsOfWorkingAge": 0.0617179,
       "nonEmployedOfWorkingAge": 0.0510703,
-      "nonEmployedOfAgeBand": 0.1767073
+      "nonEmployedOfAgeBand": 0.1767073,
+      "year": 2023,
+      "source": "EU-LFS"
+    },
+    "olderPension": {
+      "rate": 0.9546787,
+      "shareOfOlder": 0.632794,
+      "throughAge": 74,
+      "year": 2023,
+      "source": "EU-LFS \ub178\ub839\uc5f0\uae08"
     }
   },
   "PRK": {
@@ -247,7 +355,19 @@
     "olderParticipation": 0.19215,
     "year": 2023,
     "source": "BA:453",
-    "series": "EAP_DWAP_SEX_AGE_RT"
+    "series": "EAP_DWAP_SEX_AGE_RT",
+    "olderPension": {
+      "rate": 0.8049106,
+      "year": 2023,
+      "source": "\ubbf8\uad6d Census SIPP \u00b7 12\uc6d4 \ubcf8\uc778 \uc740\ud1f4\u00b7\uc9c1\uc5ed\uc5f0\uae08"
+    },
+    "earlyPension": {
+      "recipientsOfWorkingAge": 0.0249239,
+      "nonEmployedOfWorkingAge": 0.0161883,
+      "nonEmployedOfAgeBand": 0.0562161,
+      "year": 2023,
+      "source": "\ubbf8\uad6d Census SIPP \u00b7 12\uc6d4"
+    }
   },
   "VNM": {
     "workingAgeParticipation": 0.78339,
@@ -261,6 +381,13 @@
     "olderParticipation": 0.06132,
     "year": 2023,
     "source": "BA:595",
-    "series": "EAP_DWAP_SEX_AGE_RT"
+    "series": "EAP_DWAP_SEX_AGE_RT",
+    "olderPension": {
+      "rate": 0.4937181,
+      "upperRate": 0.9826122,
+      "year": 2023,
+      "source": "\ub0a8\uc544\uacf5 SASSA \u00b7 \ub178\ub839\ubcf4\uc870\uae08\ub9cc",
+      "rangeNote": "60~64\uc138\uac00 \ud3ec\ud568\ub41c \uc9c0\uae09 \ucd1d\uacc4\ub9cc \uc788\uc5b4 \uadf8 \uc5f0\ub839 \uc778\uad6c\ub97c \ubaa8\ub450 \ube80 \ud558\ud55c\uc744 \uc501\ub2c8\ub2e4."
+    }
   }
 }
