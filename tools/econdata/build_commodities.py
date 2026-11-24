@@ -11,12 +11,12 @@ import csv
 import io
 import json
 import math
-import re
 import zipfile
 from pathlib import Path
 from urllib.parse import urlencode
 
 from build_economy import ROOT, SOURCE_CODES, WORLD, download
+from un_m49 import UN_M49, game_codes_by_m49
 
 BASE_YEAR = 2023
 WORLD_DIR = ROOT / "simulation/src/main/resources/world"
@@ -30,7 +30,10 @@ DAYS = 365  # 2023년 일평균 천 배럴을 연간 배럴로 환산한다.
 SUPPLEMENTAL_CEREALS = {"TWN": 1_692_109.09, "KOS": 477_149.06}
 FAO_ASIA = "https://bulks-faostat.fao.org/production/Production_Crops_Livestock_E_Asia.zip"
 FOOD_BALANCES = "https://bulks-faostat.fao.org/production/FoodBalanceSheets_E_All_Data.zip"
-UN_M49 = "https://unstats.un.org/unsd/methodology/m49/overview/"
+FBS_CATALOG_2023 = "https://data.apps.fao.org/catalog/en/dataset/2f264bb6-1238-459a-bf8b-0e2d0a16804a"
+FBS_QUERY_2023 = ("https://data.apps.fao.org/catalog/dataset/5c00a4e6-0ec8-4191-a0c0-a7cd5fda3674/"
+                  "resource/91b9d43c-55c4-4a2a-9b25-78f2fabba28b/download/fct-fbs-food-balances.query.sql")
+FBS_ARCHIVE = "https://api.data.apps.fao.org/api/v2/bigquery?" + urlencode({"sql_url": FBS_QUERY_2023, "item_code": 2905})
 KOSOVO_CROPS = "https://askdata.rks-gov.net/pxweb/en/ASKdata/ASKdata__Agriculture__Agricultural%20Household%20Survey/aeb02.px/"
 
 
@@ -38,24 +41,50 @@ def fetch(url, cache_dir, filename):
     return json.loads(download(url, cache_dir / filename if cache_dir else None))
 
 
+def prior_cereal_supply(candidates, iso_by_m49, cache_dir):
+    """FAO 지리공간 플랫폼에서 계속 공개하는 2010~2023판의 곡물 국내 공급 추계."""
+    if not candidates:
+        return {}
+    raw = download(FBS_ARCHIVE, cache_dir / "fbs-geoplatform-2905-2010-2023.csv" if cache_dir else None)
+    rows = list(csv.DictReader(io.StringIO(raw.decode("utf-8-sig"))))
+    if max(int(row["year"]) for row in rows) != 2023:
+        raise ValueError("FAO 지리공간 플랫폼의 수급표 판본이 바뀌었습니다. 구판 대용치를 다시 확인하세요.")
+    archived = {}
+    field = "domestic_supply_quantity_1000_tonnes"
+    for row in rows:
+        country = iso_by_m49.get(row["m49_code"].zfill(3))
+        if country not in candidates or row["year"] != str(BASE_YEAR) or not row[field]:
+            continue
+        if row[field + "_flag"] != "Estimated value":
+            continue
+        tonnes = float(row[field]) * 1000
+        if (row["item_code"] != "2905" or row["item"] != "Cereals - Excluding Beer"
+                or country in archived or not math.isfinite(tonnes) or tonnes < 0):
+            raise ValueError(f"FAO 지리공간 플랫폼의 곡물 국내 공급 오류: {country}")
+        archived[country] = tonnes
+    return archived
+
+
 def cereal_domestic_supply(states, cache_dir):
     """FBS 품목 2905(맥주 제외 곡물)·요소 5301(국내 공급)을 게임 국가별 연간 톤으로 읽는다."""
-    html = download(UN_M49, cache_dir / "un-m49.html" if cache_dir else None).decode("utf-8")
-    # UN 표에서 연속 세 열은 M49 숫자 코드, ISO alpha-2, ISO alpha-3이다.
-    iso_by_m49 = dict(re.findall(r"<td>\s*([0-9]{3})\s*</td>\s*<td>\s*[A-Z]{2}\s*</td>\s*<td>\s*([A-Z]{3})\s*</td>", html))
-    if iso_by_m49.get("156") != "CHN" or len(iso_by_m49) < 240:
-        raise ValueError("UN M49 국가 코드 표가 불완전합니다.")
     # FAO의 156/158은 본토/대만이다. 중국 전체(159)와 별도 속령은 합산하지 않는다.
-    iso_by_m49.update({"158": "TWN", "275": "PSX", "728": "SDS"})
+    iso_by_m49 = game_codes_by_m49(cache_dir)
     archive = download(FOOD_BALANCES, cache_dir / "FoodBalanceSheets_E_All_Data.zip" if cache_dir else None)
     supplies = {}
+    # 현행 수급표에서 국가 행이 없거나 미수집(L)일 때만 FAO에 공개된 이전 판본을 확인한다.
+    archive_candidates = {"NIC", "SYC"} & states
     with zipfile.ZipFile(io.BytesIO(archive)) as data, data.open("FoodBalanceSheets_E_All_Data.csv") as file:
-        for row in csv.DictReader(io.TextIOWrapper(file, encoding="utf-8-sig", newline="")):
+        rows = csv.DictReader(io.TextIOWrapper(file, encoding="utf-8-sig", newline=""))
+        last_year = max(int(key[1:]) for key in rows.fieldnames if key.startswith("Y") and key[1:].isdigit())
+        for row in rows:
             if row["Item Code"] != "2905" or row["Element Code"] != "5301":
                 continue
             country = iso_by_m49.get(row["Area Code (M49)"].lstrip("'"))
             raw = row[f"Y{BASE_YEAR}"]
-            if country not in states or not raw:
+            flag = row[f"Y{BASE_YEAR}F"]
+            if raw or flag != "L":
+                archive_candidates.discard(country)
+            if country not in states or not raw or flag not in {"A", "E", "I", "X"}:
                 continue
             if row["Unit"] != "1000 t" or row["Item"] != "Cereals - Excluding Beer" or row["Element"] != "Domestic supply quantity":
                 raise ValueError(f"FBS 곡물 국내 공급 단위·계열 오류: {country}")
@@ -65,7 +94,8 @@ def cereal_domestic_supply(states, cache_dir):
             supplies[country] = tonnes
     if not {"CHN", "TWN", "IND", "USA"}.issubset(supplies):
         raise ValueError("FBS 곡물 국내 공급 응답 또는 국가 코드 매핑이 불완전합니다.")
-    return supplies
+    prior = prior_cereal_supply(archive_candidates, iso_by_m49, cache_dir)
+    return supplies, last_year, prior
 
 
 def eia_series(product, activity, cache_dir):
@@ -117,7 +147,7 @@ def main():
         raise ValueError("GDP와 상품 기준 연도가 다릅니다.")
     gdp = {r["id"]: r["gdp"] for r in economy["countries"]}
     states = [r["id"] for r in json.loads(WORLD.read_text(encoding="utf-8"))["countries"] if r["kind"] == "STATE"]
-    domestic_supply = cereal_domestic_supply(set(states), args.cache_dir)
+    domestic_supply, fbs_end_year, prior_supply = cereal_domestic_supply(set(states), args.cache_dir)
 
     entries, observed_use = [], {}
     for country in states:
@@ -131,7 +161,8 @@ def main():
         entries.append({
             "id": country,
             "cerealTonnes": cereal,
-            "cerealDomesticSupplyTonnes": domestic_supply.get(country),
+            "cerealDomesticSupplyTonnes": domestic_supply.get(country, prior_supply.get(country)),
+            **({"cerealSupplyPriorEditionEndYear": 2023} if country in prior_supply else {}),
             "crudeBarrels": round(oil * 1000 * DAYS, 2) if oil is not None else None,
         })
 
@@ -148,9 +179,11 @@ def main():
         f"{BASE_YEAR}년. 곡물은 World Bank WDI AG.PRD.CREL.MT(FAO)의 연간 수확량이며 세계 집계는 {grain['WLD']:,.2f}톤이다. "
         "대만은 FAOSTAT QCL의 Cereals, primary(국가 214, 품목 1717), 코소보는 통계청 농가 조사 aeb02의 곡물 6종 합계로 보완한다. "
         f"{FAO_ASIA} {KOSOVO_CROPS} "
-        "cerealDomesticSupplyTonnes는 FAOSTAT Food Balances(2010~)의 Cereals - Excluding Beer(2905), "
+        f"cerealDomesticSupplyTonnes는 FAOSTAT Food Balances(2010~{fbs_end_year})의 {BASE_YEAR}년 Cereals - Excluding Beer(2905), "
         "Domestic supply quantity(5301)를 천 톤에서 톤으로 환산한 연간 공급 추계다. 식용·사료·종자·가공·손실 등 전체 국내 이용을 포함한다. "
-        f"이 값으로 게임 내 곡물 총생산을 국가별 수요에 배분하며, null에는 수록국의 인구 가중 1인당 공급량을 적용한다. {FOOD_BALANCES} {UN_M49} "
+        f"구판 사용국({', '.join(sorted(prior_supply)) or '없음'})은 FAO 지리공간 플랫폼이 공개한 2010~2023판의 같은 계열·연도 추계다. "
+        f"{FBS_CATALOG_2023} 이 값으로 게임 내 곡물 총생산을 국가별 수요에 배분하며, "
+        f"null에는 수록국의 인구 가중 1인당 공급량을 적용한다. {FOOD_BALANCES} {UN_M49} "
         f"원유는 미국 EIA 국제에너지통계의 원유·리스 콘덴세이트 생산(57/1, TBPD)에 1,000 × {DAYS}를 곱한 연간 배럴이다. "
         f"EIA 세계 일평균은 {crude['WORL']:,.3f}천 배럴이다. 국별 생산량 0은 출처에 실린 값, null은 해당 국가의 자료가 없다는 뜻이다. "
         "oilDemandWeight는 EIA 석유·기타 액체연료 소비(5/2, TBPD)를 대용치로 삼아 원유 수요를 배분하는 가중치다. "
@@ -161,7 +194,8 @@ def main():
     (WORLD_DIR / "commodities.json").write_text(json.dumps(output, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     for field in ("cerealTonnes", "crudeBarrels"):
         print(field, "관측", sum(e[field] is not None for e in entries), "/", len(entries))
-    print("FAO 곡물 국내 공급", len(domestic_supply), "/", len(states), "미수록", ", ".join(sorted(set(states) - domestic_supply.keys())))
+    print("FAO 곡물 국내 공급", "현행", len(domestic_supply), "이전 판본", len(prior_supply),
+          "미수록", ", ".join(sorted(set(states) - domestic_supply.keys() - prior_supply.keys())))
     print("석유 소비 추정", estimated_use)
 
 

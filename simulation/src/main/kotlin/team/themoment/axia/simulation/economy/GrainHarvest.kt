@@ -3,14 +3,15 @@ package team.themoment.axia.simulation.economy
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import java.time.Month
+import kotlin.math.abs
 import kotlin.math.exp
 
 /** 월 수확량과 월말 이월량을 그 나라 연평균 월 생산의 배수로 환산한 달력. */
 internal class GrainHarvest private constructor(
-    percent: List<Int>,
+    percent: List<Double>,
 ) {
     init {
-        require(percent.size == Month.entries.size && percent.all { it in 0..100 } && percent.sum() == 100) {
+        require(percent.size == Month.entries.size && percent.all { it in 0.0..100.0 } && abs(percent.sum() - 100.0) < 1e-9) {
             "Grain harvest shares must cover twelve months and total 100 percent"
         }
     }
@@ -21,7 +22,7 @@ internal class GrainHarvest private constructor(
     private val carry = DoubleArray(percent.size)
 
     init {
-        var cumulative = 0
+        var cumulative = 0.0
         for (i in percent.indices) {
             cumulative += percent[i] * percent.size - 100
             carry[i] = cumulative / 100.0
@@ -36,11 +37,17 @@ internal class GrainHarvest private constructor(
 
     companion object {
         private val calendars: Map<String, GrainHarvest> by lazy {
-            val file =
-                requireNotNull(GrainHarvest::class.java.getResourceAsStream("/world/grain_harvest.json")) {
-                    "Missing grain_harvest.json"
-                }.bufferedReader(Charsets.UTF_8).use { Json.decodeFromString<HarvestFile>(it.readText()) }
-            file.countries.mapValues { (_, row) -> GrainHarvest(row.percent) }
+            buildMap {
+                for (name in listOf("grain_harvest.json", "grain_harvest_asap.json")) {
+                    val file =
+                        requireNotNull(GrainHarvest::class.java.getResourceAsStream("/world/$name")) { "Missing $name" }
+                            .bufferedReader(Charsets.UTF_8)
+                            .use { Json.decodeFromString<HarvestFile>(it.readText()) }
+                    for ((id, row) in file.countries) {
+                        require(put(id, GrainHarvest(row.percent)) == null) { "Duplicate grain harvest calendar for $id" }
+                    }
+                }
+            }
         }
 
         fun forCountry(id: String): GrainHarvest? = calendars[id]
@@ -55,7 +62,7 @@ private data class HarvestFile(
 
 @Serializable
 private data class HarvestRow(
-    val percent: List<Int>,
+    val percent: List<Double>,
     val sourceNote: String,
 )
 

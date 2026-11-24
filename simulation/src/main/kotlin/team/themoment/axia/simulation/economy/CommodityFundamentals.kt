@@ -10,6 +10,7 @@ private data class CommodityRecord(
     val id: String,
     val cerealTonnes: Double?,
     val cerealDomesticSupplyTonnes: Double?,
+    val cerealSupplyPriorEditionEndYear: Int? = null,
     val crudeBarrels: Double?,
     val oilDemandWeight: Double,
 )
@@ -58,13 +59,18 @@ internal class CommodityFundamentals(
                 val totalWeight = demandWeights.sum()
                 require(totalWeight > 0.0 && totalSupply > 0.0)
                 initial.indices.map { i ->
+                    val record = observations.getValue(initial[i].id)
                     CommodityBaseline(
                         production[i] ?: 0.0,
                         totalSupply * (demandWeights[i] / totalWeight),
                         productionReported = production[i] != null,
                         harvest = if (commodity == Commodity.GRAIN) GrainHarvest.forCountry(initial[i].id) else null,
-                        domesticSupplyTonnes =
-                            if (commodity == Commodity.GRAIN) observations.getValue(initial[i].id).cerealDomesticSupplyTonnes else null,
+                        domesticSupply =
+                            if (commodity == Commodity.GRAIN) {
+                                record.cerealDomesticSupplyTonnes?.let { CerealDomesticSupply(it, record.cerealSupplyPriorEditionEndYear) }
+                            } else {
+                                null
+                            },
                     )
                 }
             }
