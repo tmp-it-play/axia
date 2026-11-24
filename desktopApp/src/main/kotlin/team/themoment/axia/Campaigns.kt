@@ -31,6 +31,12 @@ internal class Campaigns(
         private set
     var slots by mutableStateOf<Map<CampaignSlot, SavedCampaign?>>(emptyMap())
         private set
+    val continueSlot: CampaignSlot?
+        get() =
+            CampaignSlot.entries
+                .mapNotNull { slot -> slots[slot]?.let { slot to it.savedAt } }
+                .maxByOrNull { it.second }
+                ?.first
     var busy by mutableStateOf<String?>(null)
         private set
     var message by mutableStateOf<String?>(null)
@@ -115,8 +121,8 @@ internal class Campaigns(
         slot: CampaignSlot,
         campaign: CampaignSave,
     ) {
-        store.save(slot, campaign)
-        withContext(Dispatchers.Main) { slots = slots + (slot to campaign.summary()) }
+        val saved = store.save(slot, campaign)
+        withContext(Dispatchers.Main) { slots = slots + (slot to saved) }
     }
 
     fun dismissMessage() {

@@ -74,7 +74,7 @@ fun main() {
                     campaigns = campaigns,
                     updater = updater,
                     onInstallerLaunched = exit,
-                    onDiscardAndExit = exit,
+                    onExit = exit,
                 )
             }
         }
@@ -90,7 +90,7 @@ internal fun MenuBarScope.CampaignMenu(campaigns: Campaigns) {
             Item("${slot.label}에 기록", enabled = running, onClick = { campaigns.save(slot) })
         }
         Separator()
-        Item("자동저장 후 시작 화면으로", enabled = running, onClick = campaigns::leave)
+        Item("자동저장 후 로비로", enabled = running, onClick = campaigns::leave)
     }
 }
 

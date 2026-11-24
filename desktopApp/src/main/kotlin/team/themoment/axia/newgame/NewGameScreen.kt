@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -28,8 +29,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import team.themoment.axia.CampaignSlot
-import team.themoment.axia.SavedCampaign
 import team.themoment.axia.format.formatDollars
 import team.themoment.axia.format.formatPercent
 import team.themoment.axia.format.formatPopulation
@@ -55,9 +54,8 @@ private const val ESTIMATED_STAMP_THRESHOLD = 5
 internal fun NewGameScreen(
     data: EconomyData,
     playable: List<Country>,
-    slots: Map<CampaignSlot, SavedCampaign?>,
     onStart: (String, CampaignScenario) -> Unit,
-    onLoad: (CampaignSlot) -> Unit,
+    onBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var scenario by remember { mutableStateOf(CampaignScenario.HISTORICAL) }
@@ -69,27 +67,14 @@ internal fun NewGameScreen(
             style = DossierType.number(15.sp),
             color = DossierColors.deskTextMuted,
         )
-        if (slots.isNotEmpty()) {
-            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                Text("이어하기", style = DossierType.title(16.sp), color = DossierColors.deskText)
-                CampaignSlot.entries.filter { it in slots }.forEach { slot ->
-                    val saved = slots[slot]
-                    val detail =
-                        saved?.let { state ->
-                            val country = playable.firstOrNull { it.id == state.countryId }
-                            val scenarioName = if (state.scenario == CampaignScenario.HISTORICAL) "" else " · ${state.scenario.label}"
-                            "${country?.name ?: state.countryId} · ${state.date}$scenarioName"
-                        } ?: "파일 확인 필요"
-                    PaperTag("${slot.label} · $detail", onClick = { onLoad(slot) })
+        if (CampaignScenario.entries.size > 1) {
+            FlowRow(modifier = Modifier.padding(top = 12.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                CampaignScenario.entries.forEach { choice ->
+                    PaperTag(choice.label, selected = scenario == choice, onClick = { scenario = choice })
                 }
             }
+            Text(scenario.description, style = DossierType.number(13.sp), color = DossierColors.deskTextMuted)
         }
-        Row(modifier = Modifier.padding(top = 12.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            CampaignScenario.entries.forEach { choice ->
-                PaperTag(choice.label, selected = scenario == choice, onClick = { scenario = choice })
-            }
-        }
-        Text(scenario.description, style = DossierType.number(13.sp), color = DossierColors.deskTextMuted)
         LazyVerticalGrid(
             columns = GridCells.Adaptive(240.dp),
             modifier = Modifier.weight(1f).padding(top = 20.dp),
@@ -108,6 +93,8 @@ internal fun NewGameScreen(
         }
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             val chosen = playable.firstOrNull { it.id == selected }
+            PaperTag(text = "로비로 돌아가기", onClick = onBack)
+            Spacer(Modifier.width(16.dp))
             Text(
                 text = chosen?.let { "선택: ${it.name}" } ?: "서류철을 눌러 국가를 고르십시오",
                 style = DossierType.title(16.sp),

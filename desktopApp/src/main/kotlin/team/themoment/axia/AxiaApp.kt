@@ -9,19 +9,26 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import team.themoment.axia.game.GameScreen
+import team.themoment.axia.lobby.LoadGameScreen
+import team.themoment.axia.lobby.LobbyScreen
 import team.themoment.axia.map.WorldMapModel
 import team.themoment.axia.newgame.NewGameScreen
 import team.themoment.axia.simulation.economy.EconomyData
 import team.themoment.axia.simulation.world.Country
 import team.themoment.axia.simulation.world.World
+import team.themoment.axia.theme.CampaignTypography
 import team.themoment.axia.update.AppUpdater
 import team.themoment.axia.update.UpdateNotice
 
-/** 게임이 시작되기 전에는 국가 선택 화면, 시작한 뒤에는 게임 화면. 업데이트 알림은 두 화면 위에 띄운다. */
+private enum class StartScreen { LOBBY, LOAD, NEW_GAME }
+
 @Composable
 internal fun AxiaApp(
     world: World,
@@ -31,14 +38,37 @@ internal fun AxiaApp(
     campaigns: Campaigns,
     updater: AppUpdater?,
     onInstallerLaunched: () -> Unit,
-    onDiscardAndExit: () -> Unit,
+    onExit: () -> Unit,
 ) {
     Box(Modifier.fillMaxSize()) {
         val runner = campaigns.runner
         if (runner == null) {
-            NewGameScreen(data, playable, campaigns.slots, campaigns::start, campaigns::load)
+            var screen by remember { mutableStateOf(StartScreen.LOBBY) }
+            when (screen) {
+                StartScreen.LOBBY -> {
+                    val latest = campaigns.continueSlot
+                    LobbyScreen(
+                        mapModel = mapModel,
+                        canContinue = latest != null,
+                        onContinue = { latest?.let(campaigns::load) },
+                        onLoad = { screen = StartScreen.LOAD },
+                        onNewGame = { screen = StartScreen.NEW_GAME },
+                        onExit = onExit,
+                    )
+                }
+
+                StartScreen.LOAD -> {
+                    LoadGameScreen(world, campaigns.slots, campaigns::load) { screen = StartScreen.LOBBY }
+                }
+
+                StartScreen.NEW_GAME -> {
+                    NewGameScreen(data, playable, campaigns::start, onBack = { screen = StartScreen.LOBBY })
+                }
+            }
         } else {
-            GameScreen(world = world, mapModel = mapModel, runner = runner)
+            CampaignTypography {
+                GameScreen(world = world, mapModel = mapModel, runner = runner)
+            }
         }
         val busy = campaigns.busy
         if (busy != null) {
@@ -51,7 +81,7 @@ internal fun AxiaApp(
                     confirmButton = { TextButton(onClick = campaigns::dismissMessage) { Text("확인") } },
                     dismissButton = {
                         if (campaigns.exitSaveFailed) {
-                            TextButton(onClick = onDiscardAndExit) { Text("저장하지 않고 종료") }
+                            TextButton(onClick = onExit) { Text("저장하지 않고 종료") }
                         }
                     },
                 )

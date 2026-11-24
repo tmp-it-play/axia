@@ -12,6 +12,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardCopyOption
 import java.nio.file.StandardOpenOption
+import java.nio.file.attribute.FileTime
 import java.time.LocalDate
 import java.time.format.DateTimeParseException
 
@@ -38,7 +39,7 @@ internal class CampaignStore(
                         // 손상된 슬롯도 목록에 남긴다. 열 때 해당 파일의 오류를 보여 준다.
                         val entry =
                             try {
-                                read(path).summary()
+                                read(path).summary(path)
                             } catch (_: Exception) {
                                 null
                             }
@@ -65,21 +66,23 @@ internal class CampaignStore(
     suspend fun save(
         slot: CampaignSlot,
         campaign: CampaignSave,
-    ) = withContext(Dispatchers.IO) {
-        Files.createDirectories(directory)
-        val temporary = Files.createTempFile(directory, slot.file, ".tmp")
-        try {
-            val bytes = ByteBuffer.wrap(Json.encodeToString(campaign).toByteArray(Charsets.UTF_8))
-            FileChannel.open(temporary, StandardOpenOption.WRITE).use { channel ->
-                while (bytes.hasRemaining()) channel.write(bytes)
-                channel.force(true)
+    ): SavedCampaign =
+        withContext(Dispatchers.IO) {
+            Files.createDirectories(directory)
+            val temporary = Files.createTempFile(directory, slot.file, ".tmp")
+            try {
+                val bytes = ByteBuffer.wrap(Json.encodeToString(campaign).toByteArray(Charsets.UTF_8))
+                FileChannel.open(temporary, StandardOpenOption.WRITE).use { channel ->
+                    while (bytes.hasRemaining()) channel.write(bytes)
+                    channel.force(true)
+                }
+                val saved = campaign.summary(temporary)
+                Files.move(temporary, directory.resolve(slot.file), StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING)
+                saved
+            } finally {
+                Files.deleteIfExists(temporary)
             }
-            Files.move(temporary, directory.resolve(slot.file), StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING)
-        } finally {
-            Files.deleteIfExists(temporary)
         }
-        Unit
-    }
 
     companion object {
         private fun defaultDirectory(): Path {
@@ -100,6 +103,7 @@ internal data class SavedCampaign(
     val countryId: String,
     val date: LocalDate,
     val scenario: CampaignScenario,
+    val savedAt: FileTime,
 )
 
-internal fun CampaignSave.summary() = SavedCampaign(start.countryId, date, start.scenario)
+private fun CampaignSave.summary(path: Path) = SavedCampaign(start.countryId, date, start.scenario, Files.getLastModifiedTime(path))
