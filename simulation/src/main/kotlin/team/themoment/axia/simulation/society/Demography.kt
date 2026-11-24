@@ -13,6 +13,14 @@ data class DemographySnapshot(
     val childShare: Double,
     val workingShare: Double,
     val elderlyShare: Double,
+    /** 전체 15세 이상 인구 중 경제활동인구 비율. */
+    val adultParticipation: Double,
+    val workingAgeParticipation: Double,
+    val olderParticipation: Double,
+    val participationYear: Int,
+    val participationModeled: Boolean,
+    /** EU-LFS에서 50~64세 노령연금 수급이 확인된 경우, 15~64세 인구 중 수급자 비율. */
+    val earlyPensionOfWorkingAge: Double?,
     val urbanShare: Double,
     /** 순이민(연간, 명). */
     val netMigration: Double,
@@ -30,8 +38,8 @@ internal data class DemographyInputs(
     val socialChange: Double,
     val healthChange: Double,
     val educationChange: Double,
-    /** 이민 개방 규제의 시작 대비 변화(0~1). */
-    val immigrationChange: Double,
+    /** 국경 간 이동과 이민 정책으로 해당 월 기준 인구 성장 경로에 더해진 인원(연환산). */
+    val annualizedMigrationChange: Double,
     /** 1인당 실질소득 지수(시작 = 1). */
     val incomeIndex: Double,
     val realRate: Double,
@@ -44,7 +52,7 @@ internal data class DemographyInputs(
  * - 출산율은 소득 수준에 맞는 장기 수준(저출산국 1.3, 그 밖 1.6)으로 서서히 수렴하고, 사회보장 확대가 조금 올린다.
  * - 아동·고령 비중은 출산율과 기대수명이 정하는 목표로 각각 25년, 40년 반감기로 움직인다.
  * - 기대수명은 소득과 보건 지출로 오른다. 도시화율은 90%를 향해 천천히 오른다.
- * - 생산가능인구 비중의 변화는 노동력 증가율로 잠재성장률에 반영된다.
+ * - 연령대별 경제활동참가율을 적용한 노동력 비중의 변화가 잠재성장률에 반영된다.
  * - 집값은 소득 증가와 실질금리로 움직이고, 소득 대비 집값은 청년·부모 성향의 만족도에 들어간다.
  */
 internal class Demography(
@@ -56,26 +64,32 @@ internal class Demography(
     private var lifeTrend = structure.lifeExpectancy
     private var childShare = initial.society.childShare
     private var elderlyShare = initial.society.elderlyShare
-    private val initialElderly = elderlyShare
-    private val initialWorking = 1.0 - childShare - elderlyShare
+    val activity = AgeActivity.country(initial.id)
+    private val workingShare: Double get() = 1.0 - childShare - elderlyShare
+    private val laborShare: Double get() = workingShare * activity.workingAgeParticipation + elderlyShare * activity.olderParticipation
+    private val pensionDemand: Double get() = elderlyShare + workingShare * (activity.earlyPension?.recipientsOfWorkingAge ?: 0.0)
+    private val initialPensionDemand = pensionDemand
     private var urbanShare = structure.urbanShare
     private val baseMigration = structure.netMigration
     private var netMigration = baseMigration
     private var education = 100.0
     private var housePrice = 100.0
     private var lastIncome = 1.0
-    private var lastWorking = initialWorking
+    private var lastLaborShare = laborShare
 
-    /** 이번 달 생산가능인구 비중 변화로 생긴 연율 노동력 증가 효과. */
+    /** 이번 달 경제활동인구 비중 변화로 생긴 연율 노동력 증가 효과. */
     var laborGrowthEffect = 0.0
         private set
 
     /** 연령 자료에서 0~14세를 뺀 15세 이상 인구를 성인 집단의 분모로 쓴다. */
     val adultShare: Double get() = 1.0 - childShare
-    val retireeShare: Double get() = elderlyShare / adultShare
+    val retireeShare: Double get() {
+        val younger = workingShare * (activity.earlyPension?.nonEmployedOfWorkingAge ?: 0.0)
+        return (elderlyShare * (1.0 - activity.olderParticipation) + younger) / adultShare
+    }
 
-    /** 고령 인구 1인당 사회보장 수준을 맞추려면 필요한 지출 배율(시작 = 1). */
-    val pensionPressure: Double get() = elderlyShare / initialElderly
+    /** 고령 인구와 관측된 65세 미만 노령연금 수급자의 사회보장 수요 배율(시작 = 1). */
+    val pensionPressure: Double get() = pensionDemand / initialPensionDemand
 
     fun advanceMonth(inputs: DemographyInputs) {
         val floor = if (fertility < LOW_FERTILITY_TRAP) LOW_FERTILITY_FLOOR else LONG_RUN_FERTILITY
@@ -89,11 +103,10 @@ internal class Demography(
         val elderlyTarget = (0.05 + 0.012 * (lifeExpectancy - 60.0) - 0.04 * (fertility - 1.5)).coerceIn(0.02, 0.45)
         childShare += (childTarget - childShare) * (1.0 - 0.5.pow(1.0 / (CHILD_HALF_LIFE_YEARS * 12.0)))
         elderlyShare += (elderlyTarget - elderlyShare) * (1.0 - 0.5.pow(1.0 / (ELDERLY_HALF_LIFE_YEARS * 12.0)))
-        val working = 1.0 - childShare - elderlyShare
-        laborGrowthEffect = ln(working / lastWorking) * 12.0
-        lastWorking = working
+        laborGrowthEffect = ln(laborShare / lastLaborShare) * 12.0
+        lastLaborShare = laborShare
         urbanShare += (URBAN_CEILING - urbanShare) * URBANIZATION_RATE / 12.0
-        netMigration = baseMigration * (1.0 + MIGRATION_RESPONSE * inputs.immigrationChange)
+        netMigration = baseMigration + inputs.annualizedMigrationChange
         education += (100.0 * (1.0 + EDUCATION_RESPONSE * inputs.educationChange) - education) / EDUCATION_LAG_MONTHS
         val incomeGrowth = ln(inputs.incomeIndex / lastIncome) * 12.0
         lastIncome = inputs.incomeIndex
@@ -113,8 +126,14 @@ internal class Demography(
             fertility = fertility,
             lifeExpectancy = lifeExpectancy,
             childShare = childShare,
-            workingShare = 1.0 - childShare - elderlyShare,
+            workingShare = workingShare,
             elderlyShare = elderlyShare,
+            adultParticipation = laborShare / adultShare,
+            workingAgeParticipation = activity.workingAgeParticipation,
+            olderParticipation = activity.olderParticipation,
+            participationYear = activity.year,
+            participationModeled = activity.series == "EAP_2WAP_SEX_AGE_RT",
+            earlyPensionOfWorkingAge = activity.earlyPension?.recipientsOfWorkingAge,
             urbanShare = urbanShare,
             netMigration = netMigration,
             education = education,
@@ -142,7 +161,6 @@ internal class Demography(
         const val ELDERLY_HALF_LIFE_YEARS = 40.0
         const val URBAN_CEILING = 0.9
         const val URBANIZATION_RATE = 0.02
-        const val MIGRATION_RESPONSE = 3.0
         const val EDUCATION_RESPONSE = 8.0
         const val EDUCATION_LAG_MONTHS = 60.0
         const val RATE_SENSITIVITY = 2.0

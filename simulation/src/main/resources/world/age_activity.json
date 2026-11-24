@@ -1,0 +1,266 @@
+{
+  "AUS": {
+    "workingAgeParticipation": 0.8083,
+    "olderParticipation": 0.15506,
+    "year": 2023,
+    "source": "BA:518",
+    "series": "EAP_DWAP_SEX_AGE_RT"
+  },
+  "BRA": {
+    "workingAgeParticipation": 0.70305,
+    "olderParticipation": 0.1479,
+    "year": 2023,
+    "source": "BX:6355",
+    "series": "EAP_DWAP_SEX_AGE_RT"
+  },
+  "CAN": {
+    "workingAgeParticipation": 0.80262,
+    "olderParticipation": 0.1493,
+    "year": 2023,
+    "source": "BA:147",
+    "series": "EAP_DWAP_SEX_AGE_RT"
+  },
+  "CHN": {
+    "workingAgeParticipation": 0.75202,
+    "olderParticipation": 0.20598,
+    "year": 2023,
+    "source": "XA:2070",
+    "series": "EAP_2WAP_SEX_AGE_RT"
+  },
+  "DEU": {
+    "workingAgeParticipation": 0.79825,
+    "olderParticipation": 0.09076,
+    "year": 2023,
+    "source": "BA:2242",
+    "series": "EAP_DWAP_SEX_AGE_RT",
+    "earlyPension": {
+      "recipientsOfWorkingAge": 0.0311201,
+      "nonEmployedOfWorkingAge": 0.021885,
+      "nonEmployedOfAgeBand": 0.0617022
+    }
+  },
+  "EGY": {
+    "workingAgeParticipation": 0.46642,
+    "olderParticipation": 0.1112,
+    "year": 2023,
+    "source": "BA:582",
+    "series": "EAP_DWAP_SEX_AGE_RT"
+  },
+  "EST": {
+    "workingAgeParticipation": 0.8164,
+    "olderParticipation": 0.18122,
+    "year": 2023,
+    "source": "BA:42",
+    "series": "EAP_DWAP_SEX_AGE_RT",
+    "earlyPension": {
+      "recipientsOfWorkingAge": 0.0339914,
+      "nonEmployedOfWorkingAge": 0.0169373,
+      "nonEmployedOfAgeBand": 0.0556836
+    }
+  },
+  "FIN": {
+    "workingAgeParticipation": 0.79854,
+    "olderParticipation": 0.09639,
+    "year": 2023,
+    "source": "BA:2486",
+    "series": "EAP_DWAP_SEX_AGE_RT",
+    "earlyPension": {
+      "recipientsOfWorkingAge": 0.0355472,
+      "nonEmployedOfWorkingAge": 0.0178029,
+      "nonEmployedOfAgeBand": 0.058569
+    }
+  },
+  "FRA": {
+    "workingAgeParticipation": 0.74467,
+    "olderParticipation": 0.04712,
+    "year": 2023,
+    "source": "BA:148",
+    "series": "EAP_DWAP_SEX_AGE_RT",
+    "earlyPension": {
+      "recipientsOfWorkingAge": 0.0563557,
+      "nonEmployedOfWorkingAge": 0.0497201,
+      "nonEmployedOfAgeBand": 0.157317
+    }
+  },
+  "GBR": {
+    "workingAgeParticipation": 0.76995,
+    "olderParticipation": 0.11627,
+    "year": 2023,
+    "source": "BA:666",
+    "series": "EAP_DWAP_SEX_AGE_RT"
+  },
+  "IDN": {
+    "workingAgeParticipation": 0.69394,
+    "olderParticipation": 0.4709,
+    "year": 2023,
+    "source": "BA:510",
+    "series": "EAP_DWAP_SEX_AGE_RT"
+  },
+  "IND": {
+    "workingAgeParticipation": 0.59006,
+    "olderParticipation": 0.23854,
+    "year": 2023,
+    "source": "BA:14121",
+    "series": "EAP_DWAP_SEX_AGE_RT"
+  },
+  "IRN": {
+    "workingAgeParticipation": 0.4438,
+    "olderParticipation": 0.08191,
+    "year": 2023,
+    "source": "BA:675",
+    "series": "EAP_DWAP_SEX_AGE_RT"
+  },
+  "ISR": {
+    "workingAgeParticipation": 0.74021,
+    "olderParticipation": 0.22281,
+    "year": 2023,
+    "source": "BA:706",
+    "series": "EAP_DWAP_SEX_AGE_RT"
+  },
+  "ITA": {
+    "workingAgeParticipation": 0.66678,
+    "olderParticipation": 0.05417,
+    "year": 2023,
+    "source": "BA:2238",
+    "series": "EAP_DWAP_SEX_AGE_RT",
+    "earlyPension": {
+      "recipientsOfWorkingAge": 0.0346799,
+      "nonEmployedOfWorkingAge": 0.0307868,
+      "nonEmployedOfAgeBand": 0.0835306
+    }
+  },
+  "JPN": {
+    "workingAgeParticipation": 0.81094,
+    "olderParticipation": 0.2565,
+    "year": 2023,
+    "source": "BA:259",
+    "series": "EAP_DWAP_SEX_AGE_RT"
+  },
+  "KOR": {
+    "workingAgeParticipation": 0.7148,
+    "olderParticipation": 0.39724,
+    "year": 2023,
+    "source": "BA:222",
+    "series": "EAP_DWAP_SEX_AGE_RT"
+  },
+  "LTU": {
+    "workingAgeParticipation": 0.78772,
+    "olderParticipation": 0.12715,
+    "year": 2023,
+    "source": "BA:2245",
+    "series": "EAP_DWAP_SEX_AGE_RT",
+    "earlyPension": {
+      "recipientsOfWorkingAge": 0.0287166,
+      "nonEmployedOfWorkingAge": 0.0191979,
+      "nonEmployedOfAgeBand": 0.0563579
+    }
+  },
+  "LVA": {
+    "workingAgeParticipation": 0.76644,
+    "olderParticipation": 0.14768,
+    "year": 2023,
+    "source": "BA:2246",
+    "series": "EAP_DWAP_SEX_AGE_RT",
+    "earlyPension": {
+      "recipientsOfWorkingAge": 0.0328361,
+      "nonEmployedOfWorkingAge": 0.0180041,
+      "nonEmployedOfAgeBand": 0.054503
+    }
+  },
+  "PAK": {
+    "workingAgeParticipation": 0.54686,
+    "olderParticipation": 0.19976,
+    "year": 2023,
+    "source": "XA:2080",
+    "series": "EAP_2WAP_SEX_AGE_RT"
+  },
+  "POL": {
+    "workingAgeParticipation": 0.74827,
+    "olderParticipation": 0.06587,
+    "year": 2023,
+    "source": "BA:432",
+    "series": "EAP_DWAP_SEX_AGE_RT",
+    "earlyPension": {
+      "recipientsOfWorkingAge": 0.0617179,
+      "nonEmployedOfWorkingAge": 0.0510703,
+      "nonEmployedOfAgeBand": 0.1767073
+    }
+  },
+  "PRK": {
+    "workingAgeParticipation": 0.88884,
+    "olderParticipation": 0.43606,
+    "year": 2023,
+    "source": "XA:1957",
+    "series": "EAP_2WAP_SEX_AGE_RT"
+  },
+  "RUS": {
+    "workingAgeParticipation": 0.76286,
+    "olderParticipation": 0.06127,
+    "year": 2023,
+    "source": "BA:120",
+    "series": "EAP_DWAP_SEX_AGE_RT"
+  },
+  "RWA": {
+    "workingAgeParticipation": 0.66326,
+    "olderParticipation": 0.28946,
+    "year": 2023,
+    "source": "BA:1590",
+    "series": "EAP_DWAP_SEX_AGE_RT"
+  },
+  "SAU": {
+    "workingAgeParticipation": 0.67952,
+    "olderParticipation": 0.29743,
+    "year": 2023,
+    "source": "BA:627",
+    "series": "EAP_DWAP_SEX_AGE_RT"
+  },
+  "THA": {
+    "workingAgeParticipation": 0.75826,
+    "olderParticipation": 0.27273,
+    "year": 2023,
+    "source": "BA:741",
+    "series": "EAP_DWAP_SEX_AGE_RT"
+  },
+  "TUR": {
+    "workingAgeParticipation": 0.59534,
+    "olderParticipation": 0.12243,
+    "year": 2023,
+    "source": "BA:622",
+    "series": "EAP_DWAP_SEX_AGE_RT"
+  },
+  "TWN": {
+    "workingAgeParticipation": 0.720282,
+    "olderParticipation": 0.0991,
+    "year": 2023,
+    "source": "DGBAS 2023 Manpower Survey Tables 4, 6, 8",
+    "series": "TWN_MANPOWER_SURVEY"
+  },
+  "UKR": {
+    "workingAgeParticipation": 0.72712,
+    "olderParticipation": 0.08263,
+    "year": 2021,
+    "source": "BA:475",
+    "series": "EAP_DWAP_SEX_AGE_RT"
+  },
+  "USA": {
+    "workingAgeParticipation": 0.7472,
+    "olderParticipation": 0.19215,
+    "year": 2023,
+    "source": "BA:453",
+    "series": "EAP_DWAP_SEX_AGE_RT"
+  },
+  "VNM": {
+    "workingAgeParticipation": 0.78339,
+    "olderParticipation": 0.33094,
+    "year": 2023,
+    "source": "BA:1788",
+    "series": "EAP_DWAP_SEX_AGE_RT"
+  },
+  "ZAF": {
+    "workingAgeParticipation": 0.59795,
+    "olderParticipation": 0.06132,
+    "year": 2023,
+    "source": "BA:595",
+    "series": "EAP_DWAP_SEX_AGE_RT"
+  }
+}

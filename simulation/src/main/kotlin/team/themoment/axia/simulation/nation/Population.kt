@@ -207,16 +207,16 @@ internal class OccupationalMobility(
 }
 
 /**
- * 고용 구조, 자영업 비중, 고령 인구 비중, 소득 그룹별 공공부문 비중으로 집단 구성을 정하고,
+ * 고용 구조, 자영업 비중, 은퇴·고령 비경제활동 인구 비중, 소득 그룹별 공공부문 비중으로 집단 구성을 정하고,
  * 기본 소득 배율에 지니계수를 반영해 가계소득(GDP의 [HOUSEHOLD_INCOME_SHARE])을 나눈다.
  */
 internal fun composeGroups(
     society: InitialSociety,
     gdp: Double,
     population: Double,
+    retirees: Double,
 ): GroupComposition {
     val adults = 1.0 - society.childShare
-    val retirees = society.elderlyShare / adults
     val workforce = 1.0 - retirees
     val public = PUBLIC_SECTOR_SHARE[society.incomeGroup] ?: 0.1
     val rest = 1.0 - CAPITALIST_SHARE - public

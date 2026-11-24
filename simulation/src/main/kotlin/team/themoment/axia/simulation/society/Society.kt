@@ -62,6 +62,7 @@ internal data class SocietyProfile(
     val defenseShare: Double,
     val childShare: Double,
     val elderlyShare: Double,
+    val activity: AgeActivity,
     val lifeExpectancy: Double,
 )
 
@@ -124,7 +125,7 @@ internal class Electorate(
         val age: AgeBand get() =
             when {
                 ageMonths < 35 * 12 -> AgeBand.YOUNG
-                ageMonths < RETIREMENT -> AgeBand.MIDDLE
+                ageMonths < SENIOR_AGE -> AgeBand.MIDDLE
                 else -> AgeBand.OLD
             }
     }
@@ -164,16 +165,25 @@ internal class Electorate(
         val targets = sampleCounts(groupShares, SAMPLE_SIZE)
         val assignments = targets.flatMap { (group, count) -> List(count) { group } }.shuffled(random)
         val youngShare = (0.25 + 0.6 * profile.childShare - 0.3 * profile.elderlyShare).coerceIn(0.15, 0.5)
-        val youngAmongWorking = (youngShare / (1.0 - groupShares.getValue(PopulationGroup.RETIREES))).coerceIn(0.0, 0.8)
+        val retired = groupShares.getValue(PopulationGroup.RETIREES)
+        val olderAdults = profile.elderlyShare / (1.0 - profile.childShare)
+        val workingAge = 1.0 - profile.childShare - profile.elderlyShare
+        val earlyRetired = workingAge * (profile.activity.earlyPension?.nonEmployedOfWorkingAge ?: 0.0)
+        val earlyAmongRetired = earlyRetired / ((1.0 - profile.childShare) * retired)
+        val olderAmongOthers = olderAdults * profile.activity.olderParticipation / (1.0 - retired)
+        val youngAmongOthers = (youngShare / (1.0 - retired)).coerceAtMost(1.0 - olderAmongOthers)
         voters =
             Array(SAMPLE_SIZE) { i ->
                 val group = assignments[i]
                 val lifespan = lifespan()
+                val draw = random.nextDouble()
                 val age =
                     when {
-                        group == PopulationGroup.RETIREES -> random.nextInt(RETIREMENT, lifespan)
-                        random.nextDouble() < youngAmongWorking -> random.nextInt(ENTRY_AGE, 35 * 12)
-                        else -> random.nextInt(35 * 12, RETIREMENT)
+                        group == PopulationGroup.RETIREES && draw < earlyAmongRetired -> initialMiddleAge(earlyRetired = true)
+                        group == PopulationGroup.RETIREES -> random.nextInt(SENIOR_AGE, lifespan)
+                        draw < olderAmongOthers -> random.nextInt(SENIOR_AGE, lifespan)
+                        draw < olderAmongOthers + youngAmongOthers -> random.nextInt(ENTRY_AGE, 35 * 12)
+                        else -> initialMiddleAge(earlyRetired = false)
                     }
                 Voter(group, age, lifespan, random)
             }
@@ -188,7 +198,7 @@ internal class Electorate(
         }
     }
 
-    /** 65세에 은퇴하며, 사망한 표본 자리는 새로 진입하는 18세 코호트가 채운다. */
+    /** 국가별 경제활동·연금 자료에 맞춰 은퇴하며, 사망한 표본 자리는 새로 진입하는 18세 코호트가 채운다. */
     fun advanceMonth(
         population: Map<PopulationGroup, Double>,
         demographics: DemographySnapshot,
@@ -200,15 +210,15 @@ internal class Electorate(
             var voter = voters[i]
             voter.ageMonths++
             val exits = voter.ageMonths >= voter.lifespan + ((demographics.lifeExpectancy - profile.lifeExpectancy) * 12).toInt()
-            val retires = voter.ageMonths == RETIREMENT
-            // 연 1회 생일에 가치관을 재평가한다. 진입과 은퇴는 그 달에 반영한다.
-            if (exits || retires || voter.ageMonths % 12 == 0) {
+            // 연 1회 생일에 은퇴 여부와 가치관을 재평가한다. 표본 진입은 해당 월에 반영한다.
+            if (exits || voter.ageMonths % 12 == 0) {
                 samples.getValue(voter.group).countVoter(voter, -1)
                 if (exits) {
                     voter = Voter(occupations.random(random), ENTRY_AGE, lifespan(), random)
                     voters[i] = voter
-                } else if (retires) {
-                    voter.group = PopulationGroup.RETIREES
+                } else if (voter.group != PopulationGroup.RETIREES) {
+                    val chance = profile.activity.retirementProbability(voter.ageMonths / 12)
+                    if (chance > 0.0 && random.nextDouble() < chance) voter.group = PopulationGroup.RETIREES
                 }
                 assess(voter, demographics.childShare, salience)
                 samples.getValue(voter.group).countVoter(voter, 1)
@@ -235,6 +245,20 @@ internal class Electorate(
             samples.getValue(voter.group).countVoter(voter, 1)
             if (filled == vacancies.size) break
         }
+    }
+
+    private fun initialMiddleAge(earlyRetired: Boolean): Int {
+        if (earlyRetired) {
+            // 균등한 은퇴 유입을 가정하므로 각 연령의 은퇴 표본 수는 1~15에 비례한다.
+            val draw = random.nextInt(120)
+            val year = (1..15).first { draw < it * (it + 1) / 2 }
+            return (49 + year) * 12 + random.nextInt(12)
+        }
+        var age: Int
+        do {
+            age = random.nextInt(35 * 12, SENIOR_AGE)
+        } while (random.nextDouble() < profile.activity.earlyRetiredAt(age / 12))
+        return age
     }
 
     private fun lifespan(): Int = ((profile.lifeExpectancy + 7.0 + 7.0 * random.nextGaussian()).coerceIn(70.0, 100.0) * 12).toInt()
@@ -350,7 +374,7 @@ internal class Electorate(
 
     private companion object {
         const val ENTRY_AGE = 18 * 12
-        const val RETIREMENT = 65 * 12
+        const val SENIOR_AGE = 65 * 12
         const val SAMPLE_SIZE = 3_000
         const val MAX_PROBABILITY = 0.95
         const val REFERENCE_CHILD_SHARE = 0.18

@@ -196,7 +196,7 @@ class Nation internal constructor(
     /** 사건이 집단 만족도에 남긴 점수. 매달 [EVENT_DECAY]만큼 남는다. */
     private val eventMood = PopulationGroup.entries.associateWith { 0.0 }.toMutableMap()
 
-    private val composition = composeGroups(initial.society, initial.gdp, initial.population)
+    private val composition = composeGroups(initial.society, initial.gdp, initial.population, demography.retireeShare)
     private val mobility = OccupationalMobility(composition.shares, GROUP_SECTORS)
     private val regions = Regions(world, initial.id, structure.urbanShare)
     private val groups =
@@ -213,6 +213,7 @@ class Nation internal constructor(
                 defenseShare = initial.budget.defense,
                 childShare = initial.society.childShare,
                 elderlyShare = initial.society.elderlyShare,
+                activity = demography.activity,
                 lifeExpectancy = structure.lifeExpectancy,
             ),
             Random(seed),
@@ -275,7 +276,7 @@ class Nation internal constructor(
                 socialChange = budget.level(SpendingKind.SOCIAL) - budget.initialLevel(SpendingKind.SOCIAL),
                 healthChange = budget.level(SpendingKind.HEALTH) - budget.initialLevel(SpendingKind.HEALTH),
                 educationChange = budget.level(SpendingKind.EDUCATION) - budget.initialLevel(SpendingKind.EDUCATION),
-                immigrationChange = regulations.change(RegulationItem.IMMIGRATION),
+                annualizedMigrationChange = economy.annualizedMigrationChange,
                 incomeIndex = incomeIndex,
                 realRate = economy.policyRate - economy.expectedInflation,
                 housingSupply = module.housingSupply,

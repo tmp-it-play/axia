@@ -59,8 +59,18 @@ fun SocietyPanel(nation: NationSnapshot) {
         "아동 · 생산가능 · 고령 인구",
         "${formatPercent(demography.childShare)} · ${formatPercent(demography.workingShare)} · ${formatPercent(demography.elderlyShare)}",
     )
+    val participationSource = if (demography.participationModeled) "ILO 추정" else "조사값"
+    StatRow("경제활동참가율 (15세 이상)", formatPercent(demography.adultParticipation))
+    StatRow(
+        "15~64세 · 65세 이상 참가율",
+        "${formatPercent(demography.workingAgeParticipation)} · ${formatPercent(demography.olderParticipation)}",
+        note = "${demography.participationYear}년 $participationSource",
+    )
+    demography.earlyPensionOfWorkingAge?.let {
+        StatRow("50~64세 노령연금 수급자", formatPercent(it), note = "15~64세 인구 대비 · 2023년 EU-LFS")
+    }
     StatRow("도시화율", formatPercent(demography.urbanShare))
-    StatRow("순이민 (연간)", formatPopulation(demography.netMigration))
+    StatRow("순이민 (연환산)", formatPopulation(demography.netMigration))
     StatRow("인적 자본 (2024년 = 100)", demography.education.roundToInt().toString())
     StatRow("실질 집값 (2024년 = 100)", demography.housePrice.roundToInt().toString())
     StatRow("소득 대비 집값 부담", formatPercent(-demography.affordability, signed = true), note = "시작 대비")
@@ -81,7 +91,15 @@ fun SocietyPanel(nation: NationSnapshot) {
                 }
                 if (expanded == group.group) {
                     Column(Modifier.padding(start = 8.dp, top = 4.dp)) {
-                        if (group.group != PopulationGroup.RETIREES) {
+                        if (group.group == PopulationGroup.RETIREES) {
+                            val scope =
+                                if (demography.earlyPensionOfWorkingAge == null) {
+                                    "65세 이상 비경제활동인구"
+                                } else {
+                                    "65세 이상 비경제활동인구와 50~64세 비취업 노령연금 수급자"
+                                }
+                            Text(scope, style = DossierType.number(11.sp), color = DossierColors.inkMuted)
+                        } else {
                             val direction = if (group.netJobMoves < 0.0) "순유출" else "순유입"
                             StatRow("이번 달 직업 이동", "${formatPopulation(kotlin.math.abs(group.netJobMoves))} $direction")
                         }
