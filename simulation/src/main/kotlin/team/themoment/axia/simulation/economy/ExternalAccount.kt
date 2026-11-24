@@ -8,12 +8,18 @@ data class ExternalAccountSnapshot(
     val exports: Double,
     val imports: Double,
     val currentAccount: Double,
+    val remittances: MonthlyRemittances,
+    val openingReceived: RemittanceBenchmark?,
+    val openingPaid: RemittanceBenchmark?,
+    /** 월 경제 원조 순수취액(달러). 공여국의 지급액은 음수다. */
+    val netGrants: Double,
     val reserves: Double,
     val openingReserveSource: ReserveSource?,
     val importCover: Double?,
     val imfCredit: Double,
     val imfMonthsLeft: Int,
     val tradeArrears: Double,
+    val shortTermCredit: Double,
     val pegFailed: Boolean,
     val canRequestAssistance: Boolean,
     val settled: Boolean,
@@ -81,18 +87,22 @@ internal class ExternalAccount(
     initialGdp: Double,
     importShare: Double,
     opening: InitialReserveAssets?,
+    private val openingRemittances: OpeningRemittances,
 ) {
     private val openingImports = initialGdp * importShare / 12
     private var settled = false
     private var imports = 0.0
     private var exports = 0.0
     private var current = 0.0
+    private var remittances = MonthlyRemittances()
+    private var netGrants = 0.0
     private val openingReserveSource = opening?.source
     private var reserves = opening?.usd ?: (openingImports * 3)
     private var credit = 0.0
     private var payment = 0.0
     private var monthsLeft = 0
     private var arrears = 0.0
+    private var shortTermCredit = 0.0
     private var need = 0.0
     var member = false
     val canRequest get() = member && credit == 0.0 && need > 0.0
@@ -117,6 +127,8 @@ internal class ExternalAccount(
     /** 달러 이자는 경상수지, 원금은 금융 거래다. 미지급 수입대금은 무역신용 채무로 이월한다. */
     fun closeMonth(
         external: ExternalConditions,
+        transfers: MonthlyRemittances,
+        grant: Double,
         gdp: Double,
         debtRatio: Double,
         inflation: Double,
@@ -127,18 +139,23 @@ internal class ExternalAccount(
         exports = external.exports
         imports = external.imports
         val interest = credit * 0.03 / 12
-        current = exports - imports - interest
-        val trade = exports - imports
+        remittances = transfers
+        val operatingBalance = exports - imports + transfers.received - transfers.paid
+        netGrants = grant
+        current = operatingBalance + grant - interest
         // 통상의 경상적자는 민간 자본이 대부분 조달한다. 고물가·부채와 경기 충격은 자본 유출을 일으킨다.
         val flight =
             (inflation - 0.08).coerceIn(0.0, 0.5) * 0.15 +
                 (debtRatio - 0.9).coerceIn(0.0, 1.5) * 0.025 + (-external.gapShock).coerceIn(0.0, 0.10)
-        val privateFlow = -trade * 0.94 - gdp * flight / 12.0 + (3 * imports - reserves) * 0.07
+        val privateFlow = -operatingBalance * 0.94 - gdp * flight / 12.0 + (3 * imports - reserves) * 0.07
         val balance = current + privateFlow
         val intervention = if (defendsPeg) balance else balance * 0.3 - interest * 0.7
         reserves += intervention
         if (reserves < 0.0) {
-            arrears -= reserves
+            // 수입 대금을 전부 이연해도 모자라는 외화는 별도의 단기 대외신용으로 조달한다.
+            val importDeferral = minOf(-reserves, imports)
+            arrears += importDeferral
+            shortTermCredit += -reserves - importDeferral
             reserves = 0.0
         }
         val due = if (monthsLeft <= 1) credit else minOf(credit, payment)
@@ -149,10 +166,13 @@ internal class ExternalAccount(
         val clearArrears = minOf(arrears, (reserves - imports).coerceAtLeast(0.0))
         arrears -= clearArrears
         reserves -= clearArrears
+        val clearCredit = minOf(shortTermCredit, (reserves - imports).coerceAtLeast(0.0))
+        shortTermCredit -= clearCredit
+        reserves -= clearCredit
         val coverage = cover
         this.member = member
         // 낮은 국가별 보유액만으로 통화동맹 회원국 등에 대출을 실행하지 않는다. 순외화 유출이나 지급 연체가 있어야 한다.
-        val fundingShortfall = balance < 0.0 || arrears > 0.0
+        val fundingShortfall = balance < 0.0 || arrears > 0.0 || shortTermCredit > 0.0
         need = if (coverage != null && coverage < 1.5 && fundingShortfall) minOf(gdp * 0.05, 3 * imports - reserves) else 0.0
         if (defendsPeg && coverage != null && coverage < 0.5 && balance < 0.0) pegFailed = true
         return ((balance - intervention) / gdp).coerceIn(-0.035, 0.035)
@@ -163,12 +183,17 @@ internal class ExternalAccount(
             exports,
             imports,
             current,
+            remittances,
+            openingRemittances.received,
+            openingRemittances.paid,
+            netGrants,
             reserves,
             openingReserveSource,
             cover,
             credit,
             monthsLeft,
             arrears,
+            shortTermCredit,
             pegFailed,
             canRequest,
             settled,

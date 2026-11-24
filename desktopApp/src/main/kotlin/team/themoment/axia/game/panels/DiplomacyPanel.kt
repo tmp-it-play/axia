@@ -81,7 +81,7 @@ fun DiplomacyPanel(
         }
     }
     SectionTitle("양자 관계 (눌러서 행위 보기)")
-    Hint("플레이 가능 국가와 동맹국, 관계가 아주 좋거나 나쁜 나라를 보여 줍니다.")
+    Hint("플레이 가능 국가와 동맹국, 경제 원조 수원국, 관계가 아주 좋거나 나쁜 나라를 보여 줍니다.")
     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
         diplomacy.partners.forEach { partner -> PartnerCard(partner, politicalCapital, countryName, onAction) }
     }
@@ -127,6 +127,7 @@ private fun PartnerCard(
         ) {
             StatRow("상대 제재", "강도 ${(partner.sanctioningUs * 100).roundToInt()}", valueColor = DossierColors.negative)
         }
+        if (partner.aidMonthsLeft > 0) Hint("경제 원조 · 앞으로 ${partner.aidMonthsLeft}회 지급")
         if (open) {
             FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 DiplomaticAction.entries.forEach { action ->

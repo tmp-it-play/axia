@@ -56,6 +56,7 @@ class WorldEconomy internal constructor(
 
     private val reserveCurrencyIssuer = countriesById.getValue(RESERVE_CURRENCY_ISSUER)
     private val trade = TradeNetwork(countries, data, startMonth)
+    private val remittances = RemittanceNetwork(countries)
     internal val currencyNotices = mutableListOf<Pair<String, CurrencyNotice>>()
     private val histories = countries.associate { country -> country.id to EconomySeries.entries.associateWith { MonthlySeries() } }
 
@@ -69,17 +70,21 @@ class WorldEconomy internal constructor(
         random: Random,
         international: InternationalState,
         period: YearMonth,
+        grants: Map<String, Double>,
         imfMember: (String) -> Boolean,
     ): Map<String, DebtNotice> {
         currencyNotices.clear()
         val dollarInflation = reserveCurrencyIssuer.inflation
         val external = trade.advanceMonth(international, period)
+        val transfers = remittances.settle()
         monetary.decide(countriesById, period.plusMonths(1))
         val us = monetary.conditions(RESERVE_CURRENCY_ISSUER)
         val usRealRate = us.effectiveRate - reserveCurrencyIssuer.expectedInflation
         val euroExchange = countriesById.getValue(EURO_REFERENCE).realExchange
         val debtNotices = mutableMapOf<String, DebtNotice>()
-        countries.forEach { country ->
+        val totalGrants = grants.values.sum()
+        countries.forEachIndexed { i, country ->
+            val grant = if (country.id == playerCountryId) -totalGrants else grants[country.id] ?: 0.0
             val bank = monetary.banks.getValue(country.id)
             val defendsPeg = bank.framework == MonetaryFramework.CURRENCY_PEG && country.id in ADJUSTABLE_PEGS
             val payments = country.externalAccount
@@ -89,6 +94,8 @@ class WorldEconomy internal constructor(
             val pressure =
                 payments.closeMonth(
                     flows,
+                    transfers[i],
+                    grant,
                     country.dollarGdp,
                     country.debtRatio,
                     country.inflation,
@@ -123,6 +130,7 @@ class WorldEconomy internal constructor(
                     conditions,
                     external.getValue(country.id),
                     ExchangeInputs(usRealRate, anchor, random.nextGaussian(), pressure),
+                    grant,
                 )?.let { debtNotices[country.id] = it }
             companies.getValue(country.id).advance(
                 period,

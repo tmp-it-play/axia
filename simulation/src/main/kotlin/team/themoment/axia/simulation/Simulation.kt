@@ -258,7 +258,14 @@ class Simulation(
         val recovery = military.advanceRecovery(states.associateWith { economy.country(it).populationCount })
         recovery.netMigration.forEach { (id, change) -> economy.country(id).applyMigration(change) }
         states.forEach { economy.country(it).reconstructionShare = recovery.reconstructionShares[it] ?: 0.0 }
-        val debtNotices = economy.advanceMonth(random, international, YearMonth.from(date).minusMonths(1)) { diplomacy.isMember(it, "IMF") }
+        val grants = diplomacy.monthlyGrants(economy.country(playerCountryId).dollarGdp)
+        val debtNotices =
+            economy.advanceMonth(
+                random,
+                international,
+                YearMonth.from(date).minusMonths(1),
+                grants,
+            ) { diplomacy.isMember(it, "IMF") }
         processDebtNotices(debtNotices)
         economy.currencyNotices.forEach { (id, notice) ->
             val text =
@@ -283,11 +290,11 @@ class Simulation(
             .relationShifts
             .forEach { (other, points) -> diplomacy.nudge(playerCountryId, other, points) }
         applyWarWeariness()
-        nation.setExternalSpending(aid = diplomacy.aidSpending + military.aidSpending, mobilization = military.mobilization.cost)
+        nation.setExternalSpending(aid = military.aidSpending, mobilization = military.mobilization.cost)
 
         val indicators = economy.indicators()
         worldPolitics.advanceMonth(indicators, date, economy::setLegislatedFiscalTargets).forEach(::addWorldNews)
-        diplomacy.advanceMonth(date)
+        diplomacy.advanceMonth()
         military.advanceMonth(date, defenseInputs())
         applyMilitaryOutcomes()
         military.updateDisputes()
@@ -711,7 +718,6 @@ class Simulation(
         if (action == DiplomaticAction.CONDEMN) {
             nation.applyEvent(economy.country(playerCountryId), EventEffects(identityMood = mapOf(Identity.PATRIOTS to 1.0)))
         }
-        nation.setExternalSpending(aid = diplomacy.aidSpending + military.aidSpending, mobilization = military.mobilization.cost)
         return true
     }
 
@@ -795,13 +801,13 @@ class Simulation(
             diplomacy.setWar(playerCountryId, target, true)
             diplomacy.onWarStarted(playerCountryId, target, date)
         }
-        nation.setExternalSpending(aid = diplomacy.aidSpending + military.aidSpending, mobilization = military.mobilization.cost)
+        nation.setExternalSpending(aid = military.aidSpending, mobilization = military.mobilization.cost)
         return true
     }
 
     fun setMobilization(level: Mobilization) {
         military.setMobilization(level)
-        nation.setExternalSpending(aid = diplomacy.aidSpending + military.aidSpending, mobilization = level.cost)
+        nation.setExternalSpending(aid = military.aidSpending, mobilization = level.cost)
     }
 
     /** 선택지가 있는 사건에 대응한다. */

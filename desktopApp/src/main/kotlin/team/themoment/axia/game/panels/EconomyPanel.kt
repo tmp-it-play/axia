@@ -74,13 +74,36 @@ fun EconomyPanel(
     SectionTitle("대외 거래와 외환")
     if (externalAccount.settled) {
         StatRow("월 수출 · 수입", "${formatCompactDollars(externalAccount.exports)} · ${formatCompactDollars(externalAccount.imports)}")
+        val transfers = externalAccount.remittances
+        val received = externalAccount.openingReceived?.let { formatCompactDollars(transfers.received) } ?: "자료 없음"
+        val paid = externalAccount.openingPaid?.let { formatCompactDollars(transfers.paid) } ?: "자료 없음"
+        StatRow("월 개인송금 수취 · 지급", "$received · $paid")
+        if (externalAccount.netGrants != 0.0) {
+            val label = if (externalAccount.netGrants > 0.0) "월 경제 원조 수취" else "월 경제 원조 지급"
+            StatRow(label, formatCompactDollars(kotlin.math.abs(externalAccount.netGrants)))
+        }
         StatRow("월 경상수지", formatCompactDollars(externalAccount.currentAccount))
+    }
+    var showRemittances by remember(countryId) { mutableStateOf(false) }
+    PaperTag(if (showRemittances) "송금 내역 접기" else "송금 산정 근거", onClick = { showRemittances = !showRemittances })
+    if (showRemittances) {
+        for ((label, benchmark) in listOf("연간 수취 기준액" to externalAccount.openingReceived, "연간 지급 기준액" to externalAccount.openingPaid)) {
+            StatRow(label, benchmark?.let { "${formatCompactDollars(it.usd.toDouble())} · ${it.label}" } ?: "자료 없음 · 결산 미포함")
+        }
+        if (externalAccount.settled) {
+            val transfers = externalAccount.remittances
+            val received = externalAccount.openingReceived?.let { formatCompactDollars(transfers.unallocatedReceived) } ?: "자료 없음"
+            val paid = externalAccount.openingPaid?.let { formatCompactDollars(transfers.unallocatedPaid) } ?: "자료 없음"
+            StatRow("상대 미배정 수취 · 지급", "$received · $paid")
+        }
+        Hint("양자 송금은 KNOMAD의 2021년 경로 비중으로 추정합니다. 양국 총액과 맞추고 남은 금액도 경상수지에 포함합니다.")
     }
     StatRow("준비자산 (금 제외)", formatCompactDollars(externalAccount.reserves))
     StatRow("시작 잔액 근거", externalAccount.openingReserveSource?.label ?: "추정 · 시작 월 수입액의 3배")
     externalAccount.importCover?.let { StatRow("수입 대금 충당 기간", "%.1f개월".format(java.util.Locale.KOREA, it)) }
     if (externalAccount.pegFailed) Hint("외환보유액 부족으로 고정환율 방어가 종료됐습니다.")
-    if (externalAccount.tradeArrears > 0.0) StatRow("미결제 대외 지급액", formatCompactDollars(externalAccount.tradeArrears))
+    if (externalAccount.tradeArrears > 0.0) StatRow("미결제 수입 대금", formatCompactDollars(externalAccount.tradeArrears))
+    if (externalAccount.shortTermCredit > 0.0) StatRow("단기 대외신용 잔액", formatCompactDollars(externalAccount.shortTermCredit))
     if (externalAccount.imfCredit > 0.0) {
         StatRow("IMF 대출 잔액", formatCompactDollars(externalAccount.imfCredit))
         StatRow("상환 상태", if (externalAccount.imfMonthsLeft > 0) "만기까지 ${externalAccount.imfMonthsLeft}개월" else "만기 경과 · 미상환 원금")

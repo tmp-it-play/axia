@@ -133,7 +133,7 @@ internal class PlayerBudget(
     var countrySpendingChange = 0.0
         private set
 
-    /** 대외 원조(경제 원조와 군사 지원, GDP 대비 연간). */
+    /** 군사 지원 비용(GDP 대비 연간). 경제 원조는 양국의 월 결산에서 같은 달러액으로 정산한다. */
     var foreignAid = 0.0
 
     /** 동원 태세 유지비(GDP 대비 연간). 국방 예산 밖의 전시 추가 지출이다. */

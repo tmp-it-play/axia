@@ -71,7 +71,7 @@ enum class DiplomaticAction(
     val description: String,
 ) {
     SUMMIT("정상회담", 6.0, "관계가 서서히 오른다. 같은 나라와는 6개월에 한 번."),
-    AID("경제 원조", 2.0, "1년 동안 GDP의 0.1%를 원조해 관계를 크게 올린다."),
+    AID("경제 원조", 2.0, "자국 GDP의 0.1%를 12개월에 나눠 상대국 정부에 지급한다. 지급할 때마다 관계가 개선된다."),
     CONDEMN("공개 비난", 0.0, "관계가 떨어지고, 국내 안보 성향은 약간 만족한다."),
     SANCTION("제재 부과", 8.0, "교역이 끊기고 관계가 크게 떨어진다. 상대가 보복 제재를 할 수 있다."),
     LIFT_SANCTION("제재 해제", 4.0, "우리가 건 제재를 푼다."),
@@ -95,6 +95,7 @@ data class BilateralSnapshot(
     /** 상대가 우리에게 건 제재 강도. */
     val sanctioningUs: Double,
     val atWar: Boolean,
+    val aidMonthsLeft: Int,
     val available: Set<DiplomaticAction>,
 )
 
@@ -146,7 +147,7 @@ internal class Diplomacy(
     private val startStructure = DoubleArray(n * n)
     private val startValue = DoubleArray(n * n)
     private val summitReady = HashMap<String, LocalDate>()
-    private val aidUntil = HashMap<String, LocalDate>()
+    private val aidMonthsLeft = mutableMapOf<String, Int>()
     private val news = mutableListOf<WorldNews>()
     private val organizations = data.organizations.associateBy { it.id }.toMutableMap()
     private var membership = emptyMap<String, List<InternationalOrganization>>()
@@ -286,6 +287,8 @@ internal class Diplomacy(
         if (active) {
             wars += key
             transitTreaties.remove(key)
+            if (a == playerId) aidMonthsLeft.remove(b)
+            if (b == playerId) aidMonthsLeft.remove(a)
         } else {
             wars -= key
         }
@@ -327,7 +330,7 @@ internal class Diplomacy(
         j: Int,
     ): Double = startValue[i * n + j] + structural(ids[i], ids[j]) - startStructure[i * n + j]
 
-    fun advanceMonth(date: LocalDate) {
+    fun advanceMonth() {
         for (i in 0 until n) {
             for (j in i + 1 until n) {
                 val k = i * n + j
@@ -337,13 +340,10 @@ internal class Diplomacy(
                 set(offset, i, j, offset[k])
             }
         }
-        aidUntil.entries.removeIf { (country, until) ->
-            if (date < until) {
-                shift(playerId, country, AID_MONTHLY)
-                false
-            } else {
-                true
-            }
+        val grants = aidMonthsLeft.entries.iterator()
+        for (grant in grants) {
+            shift(playerId, grant.key, AID_MONTHLY)
+            if (grant.value == 1) grants.remove() else grant.setValue(grant.value - 1)
         }
     }
 
@@ -357,8 +357,8 @@ internal class Diplomacy(
         set(offset, i, j, offset[i * n + j] + points)
     }
 
-    /** 원조가 진행 중이면 GDP 대비 연간 원조액. */
-    val aidSpending: Double get() = aidUntil.size * AID_SHARE
+    /** 약정 한 건당 공여국 월초 달러 GDP의 연 0.1%를 열두 달에 걸쳐 결제한다. */
+    fun monthlyGrants(donorGdp: Double): Map<String, Double> = aidMonthsLeft.mapValues { donorGdp * AID_SHARE / 12 }
 
     fun available(
         target: String,
@@ -369,7 +369,7 @@ internal class Diplomacy(
         return DiplomaticAction.entries.filterTo(mutableSetOf()) { action ->
             when (action) {
                 DiplomaticAction.SUMMIT -> !atWar && (summitReady[target]?.let { date >= it } ?: true)
-                DiplomaticAction.AID -> !atWar && target !in aidUntil
+                DiplomaticAction.AID -> !atWar && target !in aidMonthsLeft
                 DiplomaticAction.CONDEMN, DiplomaticAction.EXPEL_DIPLOMATS -> true
                 DiplomaticAction.SANCTION -> sanction(playerId, target) < 1.0
                 DiplomaticAction.LIFT_SANCTION -> sanction(playerId, target) > 0.0
@@ -399,7 +399,7 @@ internal class Diplomacy(
             }
 
             DiplomaticAction.AID -> {
-                aidUntil[target] = date.plusYears(1)
+                aidMonthsLeft[target] = 12
             }
 
             DiplomaticAction.CONDEMN -> {
@@ -585,7 +585,7 @@ internal class Diplomacy(
         val notable =
             relations
                 .filter { (id, value) ->
-                    id in focus || kotlin.math.abs(value) >= NOTABLE_RELATION || allied(playerId, id)
+                    id in focus || id in aidMonthsLeft || kotlin.math.abs(value) >= NOTABLE_RELATION || allied(playerId, id)
                 }.keys
         return DiplomacySnapshot(
             playerId = playerId,
@@ -603,6 +603,7 @@ internal class Diplomacy(
                         sanctionedByUs = sanction(playerId, id),
                         sanctioningUs = sanction(id, playerId),
                         atWar = pair(playerId, id) in wars,
+                        aidMonthsLeft = aidMonthsLeft[id] ?: 0,
                         available = available(id, date),
                     )
                 },

@@ -23,6 +23,12 @@ internal class CountryEconomy(
 ) {
     private var population = initial.population
     private var populationGrowth = initial.populationGrowth
+
+    private var pendingMigration = 0.0
+
+    /** 국경 간 순이동과 이민 정책으로 기준 인구 성장 경로에 더해진 인원(연환산). */
+    var annualizedMigrationChange = 0.0
+        private set
     private var potentialGrowth = initial.potentialGrowth
     private val growthVolatility = initial.growthVolatility
     private val structure = StructureData.default.of(id)
@@ -38,10 +44,20 @@ internal class CountryEconomy(
         )
     private val pendingSectorShocks = Sector.entries.associateWith { 0.0 }.toMutableMap()
     val externalAccount =
-        ExternalAccount(initial.gdp, (structure.tradeOpenness - structure.exportShare).coerceAtLeast(0.0), ReserveAssets.of(id))
+        ExternalAccount(
+            initial.gdp,
+            (structure.tradeOpenness - structure.exportShare).coerceAtLeast(0.0),
+            ReserveAssets.of(id),
+            RemittanceData.countries.getValue(id),
+        )
     var reconstructionShare = 0.0
 
     fun applyMigration(net: Double) {
+        changePopulation(net)
+        pendingMigration += net
+    }
+
+    private fun changePopulation(net: Double) {
         require(net.isFinite() && population + net > 0.0)
         population += net
     }
@@ -54,7 +70,7 @@ internal class CountryEconomy(
         production: Double,
     ) {
         require(production.isFinite() && realGdp + production > 0.0)
-        applyMigration(residents)
+        changePopulation(residents)
         realGdp += production
         potentialGdp = realGdp / (1.0 + outputGap)
     }
@@ -201,6 +217,7 @@ internal class CountryEconomy(
         monetary: MonetaryConditions,
         external: ExternalConditions = ExternalConditions.NONE,
         exchange: ExchangeInputs = ExchangeInputs.FIXED_TO_DOLLAR,
+        netGrantUsd: Double = 0.0,
     ): DebtNotice? {
         policyRate = monetary.policyRate
         updateExchange(monetary, exchange)
@@ -269,7 +286,10 @@ internal class CountryEconomy(
             (naturalUnemployment + fiscalPolicy.naturalUnemploymentShift + warUnemployment - OKUN_COEFFICIENT * outputGap)
                 .coerceIn(MIN_UNEMPLOYMENT, MAX_UNEMPLOYMENT)
         populationGrowth += (LONG_RUN_POPULATION_GROWTH - populationGrowth) / DEMOGRAPHIC_TRANSITION_MONTHS
+        val baselinePopulation = (population - pendingMigration) * monthly(populationGrowth)
+        pendingMigration = 0.0
         population *= monthly(populationGrowth + fiscalPolicy.populationGrowthShift)
+        annualizedMigrationChange = (population - baselinePopulation) * 12.0
 
         // 국채 금리는 기준금리 변화의 일부를 따르고, 부채와 통화 신뢰 하락에 위험 프리미엄이 붙는다.
         val interestTarget =
@@ -280,10 +300,12 @@ internal class CountryEconomy(
         interestRate += (interestTarget.coerceIn(MIN_RATE, MAX_RATE) - interestRate) / DEBT_ROLLOVER_MONTHS
 
         val gdp = nominalGdp
-        monthlyRevenue = shares.revenue * gdp / 12.0
+        // 정부 간 경상이전은 월말 환율로 장부 통화에 환산하고 실제 수취·지급액 전부를 결산한다.
+        val grant = netGrantUsd * (gdp / dollarGdp)
+        monthlyRevenue = shares.revenue * gdp / 12.0 + grant.coerceAtLeast(0.0)
         monthlyPrimarySpending =
             (shares.primarySpending * (1.0 - STABILIZER * outputGap) + reconstructionShare) * gdp / 12.0 +
-            monthlyProducerPayment * priceLevel
+            monthlyProducerPayment * priceLevel + (-grant).coerceAtLeast(0.0)
         monthlyInterest = debt.annualInterest(if (debt.balance >= 0.0) interestRate else minOf(interestRate, MAX_ASSET_RETURN)) / 12.0
         return debt.closeMonth(gdp, monthlyRevenue, monthlyPrimarySpending, monthlyInterest, interestRate)
     }
