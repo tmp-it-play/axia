@@ -53,7 +53,7 @@
 | `trade.json`, `regimes.json` | `tools/tradedata/build_trade.py`, `tools/politicsdata/build_regimes.py` |
 | `electoral_areas.json`, `pakistan_districts.json` | 미국 주·지역구·경선과 인도네시아 주·등록 후보는 번들의 원표 출처를 대조한다. 파키스탄은 `tools/electiondata/build_pakistan.py`가 선관위 후보별 집계와 2023년 지역구 대응표를 결합한다. |
 | 프랑스·호주·독일·대만 선거구 | `tools/electiondata/build_france.py`, `build_australia.py`, `build_german_districts.py`, `build_taiwan_ballots.py`가 원표의 당·후보·지역별 득표를 번들에 반영한다. 프랑스는 Natural Earth admin-1으로 지도 지역과 연결한다. |
-| 명부·혼합제·의원직 | `mixed_constituencies.json`, `proportional_constituencies.json`, `parliamentary_mandates.json`. 법정 정원·득표 기준·충원 규칙과 국가별 원문을 함께 갱신한다. |
+| 명부·혼합제·의원직 | `mixed_constituencies.json`, `proportional_constituencies.json`, `parliamentary_mandates.json`. 법정 정원·득표 기준·충원 규칙과 국가별 원문을 함께 갱신한다. 한국의 2024년 비례 후보 정원·지역구 출마 여부와 정당별 투표 의향은 `korean_lists.json`에 있다. |
 | 영국·캐나다·인도·이란 선거구 | `tools/electiondata/build_plurality.py`의 원표·선거구령, `iranian_constituencies.json`의 주별 선거구·종교 대표 정원. 개표 자료를 갱신할 때 당시 선거구 경계 및 유권자 자격을 함께 대조한다. |
 | 상원 개선·간선 국가원수 | 미국은 `electoral_areas.json`, 나머지 상원은 `upper_renewals.json`으로 임기군별 선출·임명을 지정한다. 간선 국가원수와 과도기 절차는 `constitutions.json`을 사용한다. |
 | 국가 정책·선거·인물·사건 | 해당 JSON을 직접 편집. 국가 정책은 `housing_programs.json`, `national_programs.json`과 국가 모듈 참조 |
