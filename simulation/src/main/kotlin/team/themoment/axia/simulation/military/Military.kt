@@ -271,6 +271,9 @@ internal class Military(
     ) {
         val active: Boolean get() = ceasefire == null
 
+        /** 약정 당시 이 전쟁에 참여한 수원국. 휴전하면 당시 지원 기록을 보존한다. */
+        val aidRecipients = mutableSetOf<String>()
+
         val principalA = sideA.first()
         val principalB = sideB.first()
 
@@ -287,6 +290,14 @@ internal class Military(
                 in sideB -> -1
                 else -> 0
             }
+
+        fun supporters(
+            forSide: Int,
+            donor: String,
+        ): Set<String> {
+            val standing = if (forSide == 1) supportA else supportB
+            return if (aidRecipients.any { side(it) == forSide }) standing + donor else standing
+        }
     }
 
     private class CivilWar(
@@ -367,7 +378,6 @@ internal class Military(
             readiness[id] = (readiness[id] ?: target) + (target - (readiness[id] ?: target)) * READINESS_SMOOTHING
         }
         maxPower = ids.maxOf(::rawPower).coerceAtLeast(1e-9)
-        aid.entries.removeIf { date >= it.value }
         reviewPeace(date, inputs)
         advanceCivilWars(date)
         if (date.monthValue % 3 == 0) {
@@ -408,7 +418,7 @@ internal class Military(
             war.fronts.forEach { front ->
                 val attackerSide = war.side(front.attacker)
                 val supportFor = { side: Int ->
-                    val supporters = if (side == 1) war.supportA else war.supportB
+                    val supporters = war.supporters(side, playerId)
                     val allies = (if (side == 1) war.sideA else war.sideB) - setOf(front.attacker, front.defender)
                     supporters.sumOf { rawPower(it) * SUPPORT_SHARE * (if (it == playerId || it in aid) 1.5 else 1.0) } +
                         allies.sumOf { frontPower(it, war) * ALLY_SHARE }
@@ -615,6 +625,12 @@ internal class Military(
 
     val aidSpending: Double get() = aid.size * AID_SHARE
 
+    fun expireAid(date: LocalDate): Boolean {
+        if (!aid.entries.removeIf { date >= it.value }) return false
+        wars.filter { it.active }.forEach { it.aidRecipients.retainAll(aid.keys) }
+        return true
+    }
+
     fun routeChangeAllowed(
         target: String,
         partner: String,
@@ -696,7 +712,7 @@ internal class Military(
             MilitaryAction.MILITARY_AID -> {
                 aid[target] = date.plusYears(1)
                 wars.filter { it.active && it.side(target) != 0 }.forEach { war ->
-                    (if (war.side(target) == 1) war.supportA else war.supportB) += playerId
+                    war.aidRecipients += target
                 }
             }
 
@@ -978,8 +994,8 @@ internal class Military(
                         started = war.started,
                         sideA = war.sideA.toList(),
                         sideB = war.sideB.toList(),
-                        supportA = war.supportA.toList(),
-                        supportB = war.supportB.toList(),
+                        supportA = war.supporters(1, playerId).toList(),
+                        supportB = war.supporters(-1, playerId).toList(),
                         fronts = war.fronts.map { FrontSnapshot(it.attacker, it.defender, it.control, it.trend) },
                         intensity = war.intensity,
                         weariness = war.weariness.toMap(),

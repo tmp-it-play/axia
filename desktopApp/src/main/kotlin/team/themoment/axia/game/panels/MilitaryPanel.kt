@@ -78,7 +78,7 @@ fun MilitaryPanel(
     Hint("동원 태세를 올리면 준비태세가 서서히 오르고, GDP 대비 추가 지출(부분 0.5%, 총동원 2%)이 듭니다.")
     if (military.aid.isNotEmpty()) {
         SectionTitle("군사 지원")
-        military.aid.forEach { (id, until) -> StatRow(countryName(id), "${shortDate(until)}까지") }
+        military.aid.forEach { (id, until) -> StatRow(countryName(id), "${shortDate(until)} 만료") }
     }
 
     SectionTitle("전후 재건 예산")

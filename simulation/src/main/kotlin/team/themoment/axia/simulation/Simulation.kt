@@ -215,8 +215,11 @@ class Simulation(
     fun advanceDay(): DayUpdate {
         date = date.plusDays(1)
         val newMonth = date.dayOfMonth == 1
+        val aidExpired = military.expireAid(date)
         val pauseFor = mutableSetOf<EventCategory>()
         val offered = if (newMonth) advanceMonth(pauseFor) else false
+        // 월초에는 직전 달을 결산한 뒤 새 약정액을 예산에 반영한다.
+        if (aidExpired && !newMonth) nation.setExternalSpending(aid = military.aidSpending, mobilization = military.mobilization.cost)
         if (date.dayOfWeek == DayOfWeek.MONDAY) military.advanceWeek(date)
 
         val player = economy.country(playerCountryId)
