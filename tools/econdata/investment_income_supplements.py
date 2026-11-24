@@ -37,6 +37,14 @@ def national_accounts():
         code: {"received": amounts(*credit, rate=CFA_PER_USD_2023), "paid": amounts(*debit, rate=CFA_PER_USD_2023)}
         for code, (credit, debit) in cfa_accounts.items()
     }
+    # 미국 BEA 국제거래표 4.1, 2026-09-24 판의 2023 연간 열(백만 USD).
+    # 수취는 총액 2행, 배당 5+12행, FISIM 조정 후 이자 7+14+18+21행, 재투자 6행.
+    # 지급은 각각 24, 27+34, 29+36+40, 28행. 펀드소득 13·35행은 분배·유보를 나누지 않는다.
+    # https://apps.bea.gov/iTable/?reqid=62&step=6&isuri=1&6210=1&6200=56&6220=0&6221=0&6222=0
+    accounts["USA"] = {
+        "received": amounts(1_350_409, 375_035 + 284_056, 24_674 + 168_487 + 225_134 + 7_719, 205_041, source="US_BEA"),
+        "paid": amounts(1_294_851, 90_239 + 177_352, 46_883 + 460_725 + 300_791, 175_049, source="US_BEA"),
+    }
     # 대만 중앙은행, 연간 국제수지 표 3의 2023r, 백만 USD. 포트폴리오 주식·펀드 합계는 배당만 분리할 수 없다.
     # https://www.cbc.gov.tw/public/data/economic/statistics/bop/english/eSY.pdf
     accounts["TWN"] = {

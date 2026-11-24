@@ -9,6 +9,7 @@ enum class InvestmentIncomeSource(
 ) {
     IMF_BOP("IMF 국제수지"),
     EUROSTAT_BOP("Eurostat 국제수지"),
+    US_BEA("미국 경제분석국 국제거래표"),
     IMF_ARTICLE_IV("당국·IMF 연례협의 국제수지"),
     IMF_COUNTRY_REPORT("당국·IMF 국가보고서 국제수지"),
     NATIONAL_BOP("공표 국제수지"),

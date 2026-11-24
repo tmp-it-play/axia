@@ -35,7 +35,7 @@ INDICATORS = (TOTAL, DISTRIBUTED, FDI_REINVESTED, FDI_EQUITY, STOCK_DIVIDENDS, F
               FUND_REINVESTED, FUND_INCOME, PORTFOLIO_EQUITY, WITHDRAWALS, *INTEREST)
 DIRECTIONS = {"CD_T": "received", "DB_T": "paid"}
 
-# Eurostat bop_c6_a 지급표. 직접투자 채무소득 합계(D4Q)에서 순수 이자(D41)를 분리한 원표다.
+# Eurostat bop_c6_a 수취·지급표. 직접투자 채무소득 합계(D4Q)에서 순수 이자(D41)를 분리한 원표다.
 # https://ec.europa.eu/eurostat/databrowser/view/bop_c6_a/default/table?lang=en
 EUROSTAT_COUNTRIES = {
     "AL": "ALB", "AT": "AUT", "BA": "BIH", "BE": "BEL", "BG": "BGR", "CH": "CHE", "CY": "CYP",
@@ -47,40 +47,51 @@ EUROSTAT_COUNTRIES = {
 }
 
 
-def eurostat_payments(cache):
-    # S1/S1: 모든 거주·비거주 부문. WRL_REST: 보고국 외 전 세계. 단위는 백만 EUR.
-    # 지급에는 준비자산의 수익이 없다. 준비자산은 자산 측에만 존재하며 관련 부채는 그 금융상품으로 분류한다.
-    # 수취에는 준비자산 이자가 필요하므로 이 지급표를 적용하지 않는다.
-    items = ("D4P__F", "D4S__D__F5", "D43S__D__F5", "D4S__P__F5", "D4432__P__F52", "D422__O__F5",
-             "D41__D__FLA", "D41__O__FLA", "D41__P__F3")
-    filters = {"freq": "A", "currency": "MIO_EUR", "sector10": "S1", "sectpart": "S1", "stk_flow": "DEB",
+def eurostat_table(cache, flow, sector, items, cache_name):
+    # WRL_REST는 보고국 외 전 세계, S1은 모든 부문, 금액은 백만 EUR.
+    filters = {"freq": "A", "currency": "MIO_EUR", "sector10": sector, "sectpart": "S1", "stk_flow": flow,
                "partner": "WRL_REST", "time": str(LAST_YEAR)}
     query = urlencode({**filters, "bop_item": items}, doseq=True)
     url = f"https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/bop_c6_a?{query}"
-    data = json.loads(download(url, cache / f"eurostat-investment-income-debits-{LAST_YEAR}.json" if cache else None),
+    data = json.loads(download(url, cache / f"eurostat-investment-income-{cache_name}-{LAST_YEAR}.json" if cache else None),
                       parse_float=Decimal)
     indexes = {k: d["category"]["index"] for k, d in data["dimension"].items()}
     if any(set(indexes[k]) != {v} for k, v in filters.items()) or [k for k in data["id"] if k not in filters] != ["bop_item", "geo"]:
         raise ValueError("Eurostat 투자소득 단위·보고 범위가 달라졌습니다.")
-    currency = Decimal(str(USD_PER_EUR_2023)) * 1_000_000
     result = {}
     for geo, position in indexes["geo"].items():
         if geo not in EUROSTAT_COUNTRIES:
             continue
         offsets = [str(indexes["bop_item"][item] * len(indexes["geo"]) + position) for item in items]
-        if not all(data["value"].get(o) is not None for o in offsets):
-            continue
-        total, direct, direct_retained, portfolio, fund_retained, withdrawals, direct_interest, other_interest, bond_interest = (
-            data["value"][o] for o in offsets
-        )
-        # 직접투자·증권투자 지분소득에서 같은 표의 재투자분을 차감해 분배소득을 얻는다.
-        result[EUROSTAT_COUNTRIES[geo]] = {
-            "year": LAST_YEAR, "source": "EUROSTAT_BOP", "total": round(total * currency),
-            "dividends": round((direct - direct_retained + portfolio - fund_retained + withdrawals) * currency),
-            "interest": round((direct_interest + other_interest + bond_interest) * currency),
-            "reinvested": round((direct_retained + fund_retained) * currency),
-        }
+        if all(data["value"].get(o) is not None for o in offsets):
+            result[EUROSTAT_COUNTRIES[geo]] = [data["value"][o] for o in offsets]
     return result
+
+
+def eurostat_accounts(cache):
+    items = ("D4P__F", "D4S__D__F5", "D43S__D__F5", "D4S__P__F5", "D4432__P__F52", "D422__O__F5",
+             "D41__D__FLA", "D41__O__FLA", "D41__P__F3")
+    # 작성지침 1.b.2.4.2의 준비자산 이자는 거주 부문 S121, 상대 부문 S1의 수취로만 보고한다.
+    # https://ec.europa.eu/eurostat/documents/39118/18471074/vademecum-balance-payments.pdf
+    reserves = eurostat_table(cache, "CRE", "S121", ("D41__R__FLA",), "reserve-interest")
+    currency = Decimal(str(USD_PER_EUR_2023)) * 1_000_000
+    accounts = {}
+    for direction, flow, name in (("paid", "DEB", "debits"), ("received", "CRE", "credits")):
+        for country, values in eurostat_table(cache, flow, "S1", items, name).items():
+            if direction == "received" and country not in reserves:
+                continue
+            total, direct, direct_retained, portfolio, fund_retained, withdrawals, direct_interest, other_interest, bond_interest = values
+            interest = direct_interest + other_interest + bond_interest
+            if direction == "received":
+                interest += reserves[country][0]
+            # 직접투자·증권투자 지분소득에서 같은 표의 재투자분을 빼면 분배소득이 남는다.
+            # 준비자산의 비이자 소득은 배당으로 나눠 공표하지 않으므로 총액에만 남긴다.
+            accounts.setdefault(country, {})[direction] = {
+                "year": LAST_YEAR, "source": "EUROSTAT_BOP", "total": round(total * currency),
+                "dividends": round((direct - direct_retained + portfolio - fund_retained + withdrawals) * currency),
+                "interest": round(interest * currency), "reinvested": round((direct_retained + fund_retained) * currency),
+            }
+    return accounts
 
 
 def imf_reports(cache, first=FIRST_YEAR, last=LAST_YEAR, countries=()):
@@ -162,7 +173,9 @@ def build(states, imf, national, net_income):
             reports = imf.get((COUNTRY_ALIASES.get(country, country), direction), {})
             year = max((y for y, r in reports.items() if TOTAL in r), default=None)
             local = national.get(country, {}).get(direction)
-            if local and (year is None or local["year"] > year or local["year"] == year and local["source"] == "EUROSTAT_BOP"):
+            # 같은 연도면 직접투자 이자까지 구분하는 두 상세표를 우선한다.
+            if local and (year is None or local["year"] > year
+                          or local["year"] == year and local["source"] in ("EUROSTAT_BOP", "US_BEA")):
                 entries[direction] = local
             else:
                 entries[direction] = observation(reports[year], year) if year is not None else None
@@ -182,8 +195,8 @@ def main():
     states = sorted(c["id"] for c in world["countries"] if c["kind"] == "STATE")
     reports = imf_reports(cache)
     national = national_accounts()
-    for country, paid in eurostat_payments(cache).items():
-        national.setdefault(country, {})["paid"] = paid
+    for country, entries in eurostat_accounts(cache).items():
+        national.setdefault(country, {}).update(entries)
     net_income = national_net_income()
     bundle = build(states, reports, national, net_income)
     missing = [COUNTRY_ALIASES.get(c, c) for c, entries in bundle["countries"].items() if not any(entries.values())]
