@@ -49,7 +49,7 @@
 | `structure.json` | `tools/econdata/build_structure.py`가 WDI와 유엔·대만 국민계정을 결합. 북키프로스·소말릴란드 원표 발췌는 같은 폴더의 `local_accounts.py`, 인구동태·도시화율 보완 자료는 `local_population.py`, 제조 세분류·자원 지대 원표는 `structure_supplements.py` |
 | `age_activity.json` | `tools/econdata/build_age_activity.py`가 ILOSTAT·대만의 경제활동참가율, Eurostat의 연령별 연금 조사, `pension_coverage.py`의 국가별 수급 자료를 결합한다. 아시아의 행정기록과 조사 발췌는 `asian_pensions.py`에 있다. 미국 SIPP의 개인별 가중치는 2023년 12월에 한 번 적용한다. |
 | `remittances.json` | `tools/econdata/build_remittances.py`가 WDI와 세계은행의 연간 국가 추계, `remittance_supplements.py`의 국가별 원표, Eurostat·중앙은행의 상대국 신고액과 KNOMAD 양자 경로를 결합한다. 에콰도르가 신고한 양자 금액은 같은 폴더의 `ecuador_remittances_2023.csv`에 있다. EU27 합계와 회원국 지급액의 중복을 확인한다. 수취·지급별 출처, 연도, 부분 집계 범위와 추계가 같은 값으로 이어진 기간을 보존한다. |
-| `investment_income.json` | `tools/econdata/build_investment_income.py`가 IMF BPM6 국제수지와 Eurostat의 연간 지급 총액·세부 항목을 취합한다. 국가별 원표와 환산은 `investment_income_supplements.py`에 있다. 방향별 총액과 공표 순액 단독 결산은 서로 배타적이다. 오래된 국제수지 원표는 통계 기준연도, 회계연도 종료월과 출처를 함께 기록한다. |
+| `investment_income.json` | `tools/econdata/build_investment_income.py`가 IMF BPM6 국제수지와 Eurostat의 연간 수취·지급 총액과 세부 항목을 취합한다. Eurostat 수취 이자에는 중앙은행 부문(S121)이 보고한 준비자산 이자를 더한다. 국가별 원표와 환산은 `investment_income_supplements.py`에 있다. 방향별 총액과 공표 순액 단독 결산은 서로 배타적이다. 오래된 국제수지 원표는 통계 기준연도, 회계연도 종료월과 출처를 함께 기록한다. |
 | `reserve_assets.json`, `commodities.json` | `tools/econdata/build_reserve_assets.py`, `build_commodities.py` |
 | `grain_harvest.json`, `grain_harvest_asap.json` | 지정 국가의 달력은 직접 편집. JRC 국가 단위 수확기와 FAO 작물 물량은 `tools/econdata/build_grain_harvest.py`로 결합 |
 | `central_banks.json` | 국가별 발표 금리·출처와 통화동맹을 직접 편집. BIS 보완 금리는 `tools/econdata/build_policy_rates.py`로 갱신 |
