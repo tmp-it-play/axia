@@ -44,12 +44,14 @@
 |---|---|
 | `world.json`, `map/world-map.bin` | `tools/mapdata/build_map.py --ne-dir <폴더>`에 Natural Earth의 admin 0·1 GeoJSON을 전달 |
 | `geography.json` | `tools/geodata/build_geography.py`가 번들의 지도 형상과 세계 정의를 읽음 |
-| `regions.json`, `region_population.json` | `tools/geodata/build_regions.py`, `build_region_population.py`. 공식 행정구역 코드 대응은 같은 폴더의 `region_population_codes.csv` |
-| `economy.json`, `structure.json` | `tools/econdata/build_economy.py`, `build_structure.py` |
+| `regions.json`, `region_population.json` | `tools/geodata/build_regions.py`, `build_region_population.py`. 공식 행정구역 코드 대응은 같은 폴더의 `region_population_codes.csv`, 태국·이집트·인도네시아 PDF 원표 발췌는 `region_population_pdf_extracts.csv`, 베트남 통계연감 표 21·24의 2023년 성·시별 총인구·도시인구는 `vietnam_population_2023.csv` |
+| `economy.json` | `tools/econdata/build_economy.py`. 북키프로스·북한·소말릴란드의 GDP·성장률, 북키프로스의 노동력조사와 바티칸 등 인구 보완 계열은 `local_macro.py`. 연령·취업·실업 원표는 `local_population.py` |
+| `structure.json` | `tools/econdata/build_structure.py`가 WDI와 유엔·대만 국민계정을 결합. 북키프로스·소말릴란드 원표 발췌는 같은 폴더의 `local_accounts.py`, 인구동태·도시화율 보완 자료는 `local_population.py` |
 | `reserve_assets.json`, `commodities.json` | `tools/econdata/build_reserve_assets.py`, `build_commodities.py` |
-| `central_banks.json` | 국가별 정책수단을 직접 편집. BIS 보완 금리는 `tools/econdata/build_policy_rates.py`로 갱신 |
+| `grain_harvest.json`, `grain_harvest_asap.json` | 지정 국가의 달력은 직접 편집. JRC 국가 단위 수확기와 FAO 작물 물량은 `tools/econdata/build_grain_harvest.py`로 결합 |
+| `central_banks.json` | 국가별 발표 금리·출처와 통화동맹을 직접 편집. BIS 보완 금리는 `tools/econdata/build_policy_rates.py`로 갱신 |
 | `trade.json`, `regimes.json` | `tools/tradedata/build_trade.py`, `tools/politicsdata/build_regimes.py` |
-| 국가 정책·수확 달력·선거·인물·사건 | 해당 JSON을 직접 편집. 국가 정책은 `housing_programs.json`, `national_programs.json`과 국가 모듈 참조 |
+| 국가 정책·선거·인물·사건 | 해당 JSON을 직접 편집. 국가 정책은 `housing_programs.json`, `national_programs.json`과 국가 모듈 참조 |
 
 통계 다운로드 도구는 `--cache-dir <폴더>`로 원본 응답을 재사용할 수 있다. 관측 연도와 단위, 국가·정부의 보고 범위를 확인하고, 결측과 보고된 0을 구분한다. 세입 구성은 총세입과 다섯 세목의 보고 범위를 맞추고 `budget.revenueCompositionSource`에 기록한다. 자료를 교체하면 출처와 남은 대체 범위를 함께 갱신한다. [데이터 결측 문서](DATA_GAPS.md)
 
