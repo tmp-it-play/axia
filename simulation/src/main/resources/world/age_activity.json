@@ -160,7 +160,12 @@
     "olderParticipation": 0.4709,
     "year": 2023,
     "source": "BA:510",
-    "series": "EAP_DWAP_SEX_AGE_RT"
+    "series": "EAP_DWAP_SEX_AGE_RT",
+    "olderPension": {
+      "rate": 0.103,
+      "year": 2023,
+      "source": "\uc778\ub3c4\ub124\uc2dc\uc544 ILAS \u00b7 9\uac1c \uc8fc \uac1c\uc778\uac00\uc911 \uc870\uc0ac, \ubcf8\uc778\uc774 \uc2e0\uace0\ud55c \uc5f0\uae08\uc18c\ub4dd"
+    }
   },
   "IND": {
     "workingAgeParticipation": 0.59006,
@@ -262,11 +267,11 @@
       "source": "EU-LFS"
     },
     "olderPension": {
-      "rate": 0.9686549,
-      "shareOfOlder": 0.565674,
-      "throughAge": 74,
+      "rate": 0.942455,
+      "upperRate": 1.0,
       "year": 2023,
-      "source": "EU-LFS \ub178\ub839\uc5f0\uae08"
+      "source": "\ub9ac\ud22c\uc544\ub2c8\uc544 \ud1b5\uacc4\uccad\u00b7Sodra \u00b7 \uae30\uc5ec\ud615 \ub178\ub839\uc5f0\uae08",
+      "rangeNote": "\ud574\uc678 \uc218\uae09\uc790\uc758 \uc5f0\ub839\uc744 \ubab0\ub77c \ud574\uc678 \uc218\uae09\uc790 \uc804\uc6d0\uc744 \ube80 \uad6d\ub0b4 \ud558\ud55c\uc744 \uc801\uc6a9\ud569\ub2c8\ub2e4."
     }
   },
   "LVA": {
@@ -401,7 +406,12 @@
     "olderParticipation": 0.08263,
     "year": 2021,
     "source": "BA:475",
-    "series": "EAP_DWAP_SEX_AGE_RT"
+    "series": "EAP_DWAP_SEX_AGE_RT",
+    "olderPension": {
+      "rate": 0.66229,
+      "year": 2021,
+      "source": "\uc138\uacc4\uc740\ud589 Findex \u00b7 \uc804\uba74 \uce68\uacf5 \uc804 65\uc138 \uc774\uc0c1 \uc815\ubd80\u00b7\uad70\u00b7\uacf5\uacf5\ubd80\ubb38 \uc5f0\uae08, \uc9c0\uae09 \uc0ac\uc720 \ubbf8\uad6c\ubd84"
+    }
   },
   "USA": {
     "workingAgeParticipation": 0.7472,

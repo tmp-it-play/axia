@@ -204,6 +204,18 @@ def national_pensions(cache):
         # 11종 중복 수급은 한 번만 계산한다. 기초·장애·국민·직역·퇴직·개인·주택·농지연금 등을 포함한다.
         # https://kostat.go.kr/boardDownload.es?bid=11816&list_no=438202&seq=1
         "KOR": {"olderPension": {"rate": 0.909, "year": 2023, "source": "통계청 11종 연금 · 유족·장애·주택연금 등 포함"}},
+        # 리투아니아 통계청 2023년 12월 Sodra 표(5쪽): 해외 포함 65+ 일반 노령연금 588.3천 명.
+        # S3R571(vsd110)의 전 연령 해외 수급자 35,044명은 ESSPROS 노령연금(3111)의
+        # 해외 포함 707,624명(S3R805)과 국내 672,580명(S3R387)의 차이와 일치한다.
+        # 100명 단위 반올림의 하단과 해외 전원 차감으로 국내 65+ 하한을 구한다.
+        # https://vda.lrv.lt/media/viesa/saugykla/2024/4/EOcuMv13_8w.pdf
+        # https://osp-rs.stat.gov.lt/rest_json/data/S3R571_M3160405/?startPeriod=2023&endPeriod=2023
+        # https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/demo_pjanbroad?geo=LT&age=Y_GE65&sex=T&time=2024
+        "LTU": {"olderPension": {
+            "rate": round((588_250 - 35_044) / 586_984, 7), "upperRate": 1.0, "year": 2023,
+            "source": "리투아니아 통계청·Sodra · 기여형 노령연금",
+            "rangeNote": "해외 수급자의 연령을 몰라 해외 수급자 전원을 뺀 국내 하한을 적용합니다.",
+        }},
         # 라트비아 VSAA 2023년 12월 노령연금, 65~69세부터 90+까지의 양성 수급 인원.
         # 각 연령에서 해외(Ārvalstis)를 제외한다. 국내 6개 구간 합계는 398,103명.
         # https://data.gov.lv/dati/dataset/a6221ba7-b490-424f-bd7e-02794c6954a4/resource/88c267c7-dd47-4be3-9ca4-c09028774e43/download/vecuma_pensijas_12-2023.xlsx
@@ -230,6 +242,16 @@ def national_pensions(cache):
                 "러시아 통계청 가구조사 · 연간 근로·부업 소득 없는 비취업 수급자",
             ),
         },
+        # Global Findex 2021 공개 재현 패키지 data/raw/FINDEX/WLD_2021_FINDEX_v03_M.csv.
+        # economycode=UKR, age>=65인 133명(2021년 9~10월 전화 조사)의 wgt를 개인별로 합산한다.
+        # 지난 12개월 본인 정부·군·공공부문 연금 수령(fin38=1) 89명, 미수령(2) 44명, 미응답 없음.
+        # 급여 사유를 묻지 않아 노령·유족·장애를 구분할 수 없다.
+        # https://reproducibility.worldbank.org/catalog/498
+        # https://thedocs.worldbank.org/en/doc/7f53eaea4402fbc7b985f127446c9192-0430062022/original/GlobalFindex2021-MicrodataCodebook.pdf
+        "UKR": {"olderPension": {
+            "rate": round(122.88034937177474 / 185.5385764185527, 7), "year": 2021,
+            "source": "세계은행 Findex · 전면 침공 전 65세 이상 정부·군·공공부문 연금, 지급 사유 미구분",
+        }},
         # SASSA 2023/24 회계연도 1분기말(6월 30일) Old Age Grant 지급 3,934,291건. 국내 거주 60세 이상만
         # 1인 1건 수급한다. Stats SA 중간 인구 추계(7월 1일)의 60~64세 전원을 빼면 65+ 하한,
         # 지급 전부가 65+이면 상한이다. 이 제도 외의 연금이나 비취업 여부를 추론하지 않는다.
