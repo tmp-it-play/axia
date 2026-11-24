@@ -6,10 +6,18 @@ import team.themoment.axia.simulation.world.resource
 
 enum class RemittanceSource(
     val label: String,
+    val partial: Boolean = false,
 ) {
     WDI("세계은행 WDI"),
     NATIONAL_BOP("공표 국제수지"),
-    KNOMAD("KNOMAD 추계"),
+    FISCAL_BOP_SEPTEMBER("공표 국제수지 · 9월 말 회계연도"),
+    KNOMAD("KNOMAD 양자 추계"),
+    WORLD_BANK_ESTIMATE("세계은행 국가별 송금 추계"),
+    BOP_MINIMUM("개인이전 순액과 피용자보수로 계산한 최소액", true),
+    EXCHANGE_HOUSES("중앙은행 · 환전소의 개인송금만", true),
+    LICENSED_REMITTANCES("ESAAMLG · 허가 송금업자의 개인송금만", true),
+    UNCTAD_REMITTANCES("UNCTAD · 가계송금 수취 추계만", true),
+    HOUSEHOLD_SURVEY("세계은행 가구조사 · 가계송금 수취 추계만", true),
 }
 
 @Serializable
@@ -17,12 +25,14 @@ data class RemittanceBenchmark(
     val usd: Long,
     val year: Int,
     val source: RemittanceSource,
+    val unchangedSince: Int? = null,
 ) {
     init {
-        require(usd >= 0 && year in 2019..2023)
+        require(usd >= 0 && year in 2014..2023)
+        require(unchangedSince == null || (source == RemittanceSource.WORLD_BANK_ESTIMATE && unchangedSince < year))
     }
 
-    val label get() = "${source.label} · ${year}년"
+    val label get() = "${source.label} · ${year}년" + (unchangedSince?.let { " (${it}년부터 같은 금액)" } ?: "")
 }
 
 /** 최근 결산월 개인송금(달러). 상대 미배정액도 수취·지급 총액에 포함한다. */

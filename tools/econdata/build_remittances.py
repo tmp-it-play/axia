@@ -1,4 +1,4 @@
-"""WDI 2019~2023년 개인송금 총액과 KNOMAD 2021년 양자 추계로 월 결제의 연간 기준액을 생성한다."""
+"""2014~2023년 공표 송금액과 세계은행의 국가·양자 추계로 월 결제의 연간 기준액을 생성한다."""
 
 import argparse
 import csv
@@ -8,7 +8,13 @@ import math
 from pathlib import Path
 
 from build_economy import WORLD, download
-from remittance_supplements import BOP_REMITTANCES_USD_2023
+from remittance_supplements import (
+    BOP_REMITTANCES_USD_2023,
+    FISCAL_BOP_REMITTANCES,
+    PARTIAL_REMITTANCES,
+    UNCHANGED_ESTIMATE_SINCE,
+    WORLD_BANK_REMITTANCE_ESTIMATES,
+)
 
 MATRIX_URL = "https://data360files.worldbank.org/data360-data/data/WB_KNOMAD/WB_KNOMAD_BRE.csv"
 INDICATORS = {"received": "BX.TRF.PWKR.CD.DT", "paid": "BM.TRF.PWKR.CD.DT"}
@@ -18,8 +24,8 @@ OUT = WORLD.with_name("remittances.json")
 
 def wdi_totals(direction, state_codes, cache):
     code = INDICATORS[direction]
-    url = f"https://api.worldbank.org/v2/country/all/indicator/{code}?date=2019:2023&format=json&per_page=2000"
-    meta, rows = json.loads(download(url, cache / f"wdi-{code}-2019-2023.json" if cache else None))
+    url = f"https://api.worldbank.org/v2/country/all/indicator/{code}?date=2014:2023&format=json&per_page=5000"
+    meta, rows = json.loads(download(url, cache / f"wdi-{code}-2014-2023.json" if cache else None))
     if int(meta["pages"]) != 1 or len(rows) != int(meta["total"]):
         raise ValueError(f"WDI 응답이 완전하지 않습니다: {code}")
     result = {}
@@ -28,7 +34,7 @@ def wdi_totals(direction, state_codes, cache):
             continue
         value = row["value"]
         year = int(row["date"])
-        if not 2019 <= year <= 2023 or row["indicator"]["id"] != code:
+        if not 2014 <= year <= 2023 or row["indicator"]["id"] != code:
             raise ValueError(f"WDI 연도·지표 불일치: {row}")
         if value is not None:
             if not math.isfinite(value) or value < 0:
@@ -60,26 +66,42 @@ def knomad_matrix(cache):
     return matrix
 
 
-def opening_total(reported, national_total, matrix_total):
-    if national_total is not None and not (reported and 2023 in reported):
-        if not isinstance(national_total, int) or national_total < 0:
-            raise ValueError(f"보완 송금액 오류: {national_total}")
-        return {"usd": national_total, "year": 2023, "source": "NATIONAL_BOP"}
+def opening_total(country, direction, reported, matrix_total):
+    national = BOP_REMITTANCES_USD_2023.get(country, {}).get(direction)
+    if 2023 in reported:
+        return {"usd": round(reported[2023]), "year": 2023, "source": "WDI"}
+    if national is not None:
+        if not isinstance(national, int) or national < 0:
+            raise ValueError(f"보완 송금액 오류: {national}")
+        return {"usd": national, "year": 2023, "source": "NATIONAL_BOP"}
+    fiscal = FISCAL_BOP_REMITTANCES.get(country, {}).get(direction)
+    if fiscal is not None:
+        return {"usd": fiscal, "year": 2023, "source": "FISCAL_BOP_SEPTEMBER"}
+    estimate = WORLD_BANK_REMITTANCE_ESTIMATES.get(country) if direction == "received" else None
+    if estimate and estimate[0] > max(reported, default=0):
+        year, usd = estimate
+        benchmark = {"usd": usd, "year": year, "source": "WORLD_BANK_ESTIMATE"}
+        if country in UNCHANGED_ESTIMATE_SINCE:
+            benchmark["unchangedSince"] = UNCHANGED_ESTIMATE_SINCE[country]
+        return benchmark
     if reported:
         year = max(reported)
         return {"usd": round(reported[year]), "year": year, "source": "WDI"}
     if matrix_total is not None:
         return {"usd": round(matrix_total), "year": 2021, "source": "KNOMAD"}
+    partial = PARTIAL_REMITTANCES.get(country, {}).get(direction)
+    if partial:
+        year, usd, source = partial
+        return {"usd": usd, "year": year, "source": source}
     return None
 
 
 def build(codes, reports, matrix):
     countries = {}
     for state, code in codes.items():
-        national = BOP_REMITTANCES_USD_2023.get(state, {})
         countries[state] = {
-            "received": opening_total(reports["received"].get(code), national.get("received"), matrix.get(("WLD", code))),
-            "paid": opening_total(reports["paid"].get(code), national.get("paid"), matrix.get((code, "WLD"))),
+            "received": opening_total(state, "received", reports["received"].get(code, {}), matrix.get(("WLD", code))),
+            "paid": opening_total(state, "paid", reports["paid"].get(code, {}), matrix.get((code, "WLD"))),
             "destinations": {},
         }
     states = {code: state for state, code in codes.items()}
