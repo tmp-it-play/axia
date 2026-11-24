@@ -10,9 +10,11 @@ from pathlib import Path
 from build_economy import WORLD, download
 from remittance_supplements import (
     BOP_REMITTANCES_USD_2023,
+    DOMINICAN_FORMAL_RECEIPTS,
     ECUADOR_TOTALS,
     FISCAL_BOP_REMITTANCES,
     PARTIAL_REMITTANCES,
+    RECEIPT_COMPONENTS_2023,
     SOMALIA_PERSONAL_PAYMENTS,
     SPAIN_BOP_MILLION_EUR,
     UNCHANGED_ESTIMATE_SINCE,
@@ -91,6 +93,9 @@ def opening_total(country, direction, reported, matrix_total, partner_report):
     fiscal = FISCAL_BOP_REMITTANCES.get(country, {}).get(direction)
     if fiscal is not None:
         return {"usd": fiscal, "year": 2023, "source": "FISCAL_BOP_SEPTEMBER"}
+    if direction == "received" and country in RECEIPT_COMPONENTS_2023:
+        usd, source, scope = RECEIPT_COMPONENTS_2023[country]
+        return {"usd": usd, "year": 2023, "source": source, "scope": scope}
     estimate = WORLD_BANK_REMITTANCE_ESTIMATES.get(country) if direction == "received" else None
     if estimate and estimate[0] > max(reported, default=0):
         year, usd = estimate
@@ -133,6 +138,8 @@ def build(codes, reports, matrix):
         if outside < 0:
             raise ValueError(f"에콰도르 양자 {direction} 합이 중앙은행 총액을 초과합니다")
         budget["ECU"] -= outside
+    # 도미니카공화국에 들어온 푸에르토리코 송금은 번들 내 송금국을 정할 수 없는 잔액이다.
+    budget_received["DOM"] -= DOMINICAN_FORMAL_RECEIPTS["PRI"]
     for (sender, recipient), usd in sorted(observed.items()):
         budget_paid[sender] -= usd
         budget_received[recipient] -= usd

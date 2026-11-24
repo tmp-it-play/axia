@@ -49,26 +49,21 @@ BOP_REMITTANCES_USD_2023 = {
 
 # 세계은행 Migration and Development Brief 2025, 2025년 7월 13일자 연간 송금표.
 # WDI·중앙은행 2023년 총액이 없었던 국가의 수취 행, Y열(2023년, 백만 USD).
-# 은행이 과거 값을 연장한 BRB·FSM·YEM 계열도 추계다. 미보고 기간에 반복되는 0은 채택하지 않았다.
+# 은행이 과거 값을 연장한 BRB 계열도 추계다. 미보고 기간에 반복되는 0은 채택하지 않았다.
 # https://datacatalogfiles.worldbank.org/ddh-published/0066877/DR0095407/Inward_remittance_flows_%28July_13_2025%29.xlsx
 # 이란은 2023년 표에 신규 추계가 없어 Brief 37 그림 A.16의 2022년 추계(6억 달러)를 쓴다.
 # https://documents1.worldbank.org/curated/en/099818008142419054/pdf/IDU12966350716a711437b1850019065d7f1eda1.pdf
 WORLD_BANK_REMITTANCE_ESTIMATES = {
-    "AFG": (2023, 320_000_000),
     "BRB": (2023, 85_175_893),
     "BRN": (2023, 1_000_000),
-    "FSM": (2023, 23_338_700),
     "IRN": (2022, 600_000_000),
-    "MMR": (2023, 1_100_000_000),
     "NZL": (2023, 906_000_000),
     "SOM": (2023, 2_181_300_000),
-    "VNM": (2023, 14_000_000_000),
     "VUT": (2023, 144_967_341),
-    "YEM": (2023, 3_770_584_000),
 }
 
 # 2023년 추계가 같은 금액을 반복하는 계열의 시작 연도(통계표 원값 기준).
-UNCHANGED_ESTIMATE_SINCE = {"AFG": 2021, "BRB": 2017, "FSM": 2014, "YEM": 2016}
+UNCHANGED_ESTIMATE_SINCE = {"BRB": 2017}
 
 
 # 미크로네시아 통계청·EconMAP 국제수지 BOPdet, 2023년 9월 말 회계연도 AE열(백만 USD).
@@ -76,6 +71,29 @@ UNCHANGED_ESTIMATE_SINCE = {"AFG": 2021, "BRB": 2017, "FSM": 2014, "YEM": 2016}
 # https://pubs.pitiviti.org/fsm-fy24-economic-statistics-preliminary
 FISCAL_BOP_REMITTANCES = {
     "FSM": {"paid": round((8.880763788515965 + 3.3855037300000013) * 1_000_000)},
+}
+
+# WDI 2023년 수취가 없는 국가의 해당 연도 이주민 송금 추계, 국제수지 구성액 또는 수취 하한.
+RECEIPT_COMPONENTS_2023 = {
+    # 세계은행 Afghanistan Development Update(2024년 12월), 26쪽. 해외 거주 아프간인의
+    # 2023년 송금 추정치로 UN 현금 수송과 별도다. 이듬해 3월까지 포함한 FY2023과 기간이 다르다.
+    # https://thedocs.worldbank.org/en/doc/126f9684f0c7ff20248c0c7bf45ccccd-0310012024/original/Afghanistan-Development-Update-December-2024-Final.pdf
+    "AFG": (2_000_000_000, "MIGRANT_TRANSFER_ESTIMATE", "세계은행 · 해외 거주 아프간인의 연간 송금"),
+    # 같은 미크로네시아 BOPdet의 AE55 가계송금 수취와 AE42 외국 공관 근로자 보수.
+    "FSM": (round((43.38349643642729 + 2.01055) * 1_000_000), "NATIONAL_BOP_COMPONENTS",
+            "9월 말 회계연도 · 가계송금과 외국 공관 근로자 보수"),
+    # 미얀마 중앙은행 Quarterly Financial Statistics Bulletin 2024 Vol. IV, 9쪽.
+    # 2023 Q1~Q4 경상이전 수취 중 Workers’ Remittance 행(백만 USD). 피용자보수는 별도다.
+    # https://www.cbm.gov.mm/sites/default/files/upload2022/QFS_Bulletin_2024_Vol-IV.pdf
+    "MMR": (round((884.8 + 732.5 + 178.9 + 214.9) * 1_000_000), "NATIONAL_BOP_COMPONENTS",
+            "중앙은행 · 1~4분기 근로자송금 수취"),
+    # 베트남 정부가 인용한 중앙은행의 2023년 전국 해외 송금 수취 추계. 호찌민시 액수는 포함된다.
+    # https://en.baochinhphu.vn/remittances-to-ho-chi-minh-city-near-us74-bln-in-9-months-111241016221130023.htm
+    "VNM": (16_000_000_000, "MIGRANT_TRANSFER_ESTIMATE", "베트남 중앙은행 · 해외 베트남인의 연간 송금"),
+    # 예멘 중앙은행 2025 연보 52쪽 국제수지 개정표의 2023년 열(백만 USD). 순이전
+    # 6,657.12 = 근로자송금 3,240.46 + 공여자 자금 3,416.66. 양방향이 분리되지 않아 수취 하한이다.
+    # https://cby-ye.com/files/6a54b8310ee04.pdf
+    "YEM": (3_240_460_000, "NATIONAL_BOP_COMPONENTS", "아덴 중앙은행 이전수지 중 근로자송금 · 수취 하한"),
 }
 
 
@@ -184,6 +202,19 @@ OTHER_OUTGOING_MILLION_EUR = {
 }
 
 
+# 도미니카공화국 중앙은행 2023년 공식 채널 가계송금. 연간 국가별 거래 건수(TR의 O열)에
+# 같은 나라의 건당 평균 달러(PT의 O열, 셀 원값)를 곱해 달러로 반올림했다. 공식 채널 전체
+# 금액에 송금국 비중(PE의 O열)을 곱해도 각 금액이 일치한다. PRI는 미국과 별도 보고된다.
+# https://cdn.bancentral.gov.do/documents/estadisticas/sector-externo/documents/Remesas_TR.xlsx
+# https://cdn.bancentral.gov.do/documents/estadisticas/sector-externo/documents/Remesas_PT.xlsx
+# https://cdn.bancentral.gov.do/documents/estadisticas/sector-externo/documents/Remesas_PE.xlsx
+DOMINICAN_FORMAL_RECEIPTS = {
+    "USA": 7_586_636_996, "ESP": 532_546_128, "ITA": 72_484_986, "HTI": 92_413_340,
+    "CHE": 62_376_984, "PRI": 61_139_879, "PAN": 21_429_888, "DEU": 32_802_451,
+    "FRA": 40_297_580, "CAN": 62_214_220,
+}
+
+
 def partner_benchmarks():
     """확인된 상대국별 달러 금액과, 상대 미배정 EU 합계를 포함한 부분 기준액을 만든다."""
     def usd(million_eur):
@@ -191,6 +222,9 @@ def partner_benchmarks():
 
     routes = {}
     benchmarks = {}
+    for sender, amount in DOMINICAN_FORMAL_RECEIPTS.items():
+        if sender != "PRI":
+            routes[sender, "DOM"] = amount
     with Path(__file__).with_name("ecuador_remittances_2023.csv").open(encoding="utf-8") as table:
         for row in csv.DictReader(table):
             partner = row["partner"]
