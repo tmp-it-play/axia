@@ -152,6 +152,25 @@ internal data class PartyRename(
 
     fun group(party: ParliamentaryGroup): ParliamentaryGroup = if (party.name == old) party.copy(name = name) else party
 
+    fun upper(
+        house: UpperHouse,
+        chamber: Legislature,
+    ): UpperHouse {
+        val modelName = chamber.groups.firstOrNull { it.name == name }?.modelName
+        return house.copy(
+            groups =
+                house.groups.map {
+                    if (it.name ==
+                        old
+                    ) {
+                        it.copy(name = name, alignWith = modelName ?: it.alignWith)
+                    } else {
+                        it
+                    }
+                },
+        )
+    }
+
     fun rollCall(vote: RollCall): RollCall =
         vote.copy(rows = vote.rows.map { it.copy(party = group(it.party)) }, negotiatingWith = vote.negotiatingWith?.let(::label))
 }

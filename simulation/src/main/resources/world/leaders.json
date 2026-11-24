@@ -12,6 +12,7 @@
    }
   },
   "USA": {
+   "vicePresident": {"name": "카멀라 해리스", "title": "부통령", "party": "민주당", "born": 1964},
    "culture": "english",
    "headOfState": {
     "name": "조 바이든",
@@ -26,6 +27,7 @@
    "headOfState": {
     "name": "시진핑",
     "title": "국가주석",
+    "termsServed": 3,
     "party": "중국공산당",
     "born": 1953
    },
@@ -54,6 +56,7 @@
    "culture": "german",
    "headOfState": {
     "name": "프랑크발터 슈타인마이어",
+    "termsServed": 2,
     "title": "연방대통령",
     "born": 1956
    },
@@ -127,6 +130,7 @@
    }
   },
   "IND": {
+   "vicePresident": {"name": "자그디프 단카르", "title": "부통령", "born": 1951},
    "culture": "hindi",
    "headOfState": {
     "name": "드라우파디 무르무",
@@ -169,6 +173,7 @@
    "headOfState": {
     "name": "김정은",
     "title": "국무위원장",
+    "termsServed": 2,
     "party": "조선로동당",
     "born": 1984
    },
@@ -213,6 +218,7 @@
    "culture": "italian",
    "headOfState": {
     "name": "세르조 마타렐라",
+    "termsServed": 2,
     "title": "대통령",
     "born": 1941
    },
@@ -309,6 +315,11 @@
   },
   "IRN": {
    "culture": "persian",
+   "vicePresident": {
+    "name": "모하마드 모크베르",
+    "title": "제1부통령",
+    "born": 1955
+   },
    "headOfState": {
     "name": "알리 하메네이",
     "title": "최고지도자",
@@ -323,6 +334,7 @@
   },
   "SAU": {
    "culture": "arabic",
+   "crownPrinceIsPremier": true,
    "headOfState": {
     "name": "살만 빈 압둘아지즈",
     "title": "국왕",
@@ -330,7 +342,7 @@
    },
    "headOfGovernment": {
     "name": "무함마드 빈 살만",
-    "title": "총리",
+    "title": "왕세자 겸 총리",
     "born": 1985
    }
   },
@@ -375,6 +387,7 @@
    }
   },
   "IDN": {
+   "vicePresident": {"name": "마루프 아민", "title": "부통령", "born": 1943},
    "culture": "indonesian",
    "headOfState": {
     "name": "조코 위도도",
@@ -387,14 +400,22 @@
   "VNM": {
    "culture": "vietnamese",
    "headOfState": {
+    "name": "보반트엉",
+    "title": "국가주석",
+    "party": "베트남 공산당",
+    "born": 1970
+   },
+   "partyLeader": {
     "name": "응우옌푸쫑",
     "title": "공산당 총서기",
+    "termsServed": 3,
     "party": "베트남 공산당",
     "born": 1944
    },
    "headOfGovernment": {
     "name": "팜민찐",
     "title": "총리",
+    "termsServed": 2,
     "party": "베트남 공산당",
     "born": 1958
    }

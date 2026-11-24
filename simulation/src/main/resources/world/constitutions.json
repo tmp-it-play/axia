@@ -16,10 +16,31 @@
    "power": "VETO",
    "seats": 100,
    "governmentSeats": 51,
-   "oppositionSeats": 49
+   "oppositionSeats": 49,
+   "groups": [
+    {
+     "name": "민주당",
+     "seats": 48,
+     "role": "LEAD",
+     "alignWith": "민주당"
+    },
+    {
+     "name": "공화당",
+     "seats": 49,
+     "role": "OPPOSITION",
+     "alignWith": "공화당"
+    },
+    {
+     "name": "무소속 · 민주당 원내제휴",
+     "seats": 3,
+     "role": "LEAD",
+     "alignWith": "민주당"
+    }
+   ],
+   "sourceNote": "미 상원 제118대 제1회기 2024-01-01. https://www.senate.gov/about/parties-leadership/party-division.shtml"
   },
   "executiveTermLimit": 2,
-  "sourceNote": "2024-01-01 상원 민주당 48 + 민주당과 표결하는 무소속 3 = 51, 공화당 49. 수정헌법 제22조 대통령 2선 제한. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
+  "sourceNote": "2024-01-01 상원 민주당 48 + 의회 조직 구성에서 민주당과 제휴한 무소속 3 = 51, 공화당 49. 수정헌법 제22조 대통령 2선 제한. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
   "coupProne": false
  },
  "CHN": {
@@ -27,7 +48,12 @@
   "reviewsLaws": false,
   "judicialIndependence": 0.043,
   "sourceNote": "2018년 개헌으로 국가주석 연임 제한 폐지. 헌법 해석은 전인대 상무위원회. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
-  "coupProne": false
+  "coupProne": false,
+  "appointments": {
+   "procedure": "CHINESE_CONGRESS",
+   "firstSession": "2028-03-10",
+   "sourceNote": "헌법 제60·62·79·80·87조. 전인대가 국가주석을 선출하고 주석의 지명으로 총리를 결정한다. 총리 연속 두 임기 제한. 2023년 제14기 첫 회의를 기준으로 다음 인선을 추산. https://english.www.gov.cn/archive/laws_regulations/201911/20/content_WS5ed8856ec6d0b3f0e9499913.html"
+  }
  },
  "JPN": {
   "court": "최고재판소",
@@ -37,8 +63,68 @@
    "name": "참의원",
    "power": "DELAY",
    "seats": 248,
-   "governmentSeats": 141,
-   "oppositionSeats": 107
+   "governmentSeats": 144,
+   "oppositionSeats": 88,
+   "groups": [
+    {
+     "name": "자유민주당",
+     "seats": 117,
+     "role": "LEAD",
+     "alignWith": "자유민주당"
+    },
+    {
+     "name": "입헌민주·사민",
+     "seats": 40,
+     "role": "OPPOSITION",
+     "alignWith": "입헌민주당"
+    },
+    {
+     "name": "공명당",
+     "seats": 27,
+     "role": "COALITION",
+     "alignWith": "공명당"
+    },
+    {
+     "name": "일본유신회",
+     "seats": 20,
+     "role": "OPPOSITION",
+     "alignWith": "일본유신회"
+    },
+    {
+     "name": "국민민주·신록풍회",
+     "seats": 12,
+     "role": "OPPOSITION",
+     "alignWith": "국민민주당"
+    },
+    {
+     "name": "일본공산당",
+     "seats": 11,
+     "role": "OPPOSITION",
+     "alignWith": "일본공산당"
+    },
+    {
+     "name": "레이와 신센구미",
+     "seats": 5,
+     "role": "OPPOSITION",
+     "alignWith": "레이와 신센구미"
+    },
+    {
+     "name": "오키나와의 바람",
+     "seats": 2,
+     "role": "OTHER"
+    },
+    {
+     "name": "NHK로부터 국민을 지키는 당",
+     "seats": 2,
+     "role": "OTHER"
+    },
+    {
+     "name": "무회파",
+     "seats": 11,
+     "role": "OTHER"
+    }
+   ],
+   "sourceNote": "제212회 국회 폐회일(2023-12-13) 회파 명부. 247명 재적, 1석 공석. https://www.sangiin.go.jp/japanese/giin/old_kaiha/212kaiha.htm"
   },
   "confidence": {
    "procedure": "PARLIAMENTARY",
@@ -47,10 +133,16 @@
    "electionDays": 35,
    "sourceNote": "헌법 제54·67·69조. 불신임 후 10일 안에 중의원 해산 또는 내각 총사직, 해산일부터 40일 이내 총선. https://www.shugiin.go.jp/internet/itdb_english.nsf/html/statics/english/constitution_e.htm"
   },
-  "sourceNote": "참의원 자민·공명 141석(2022 선거 후). 예산은 중의원 의결 우선(헌법 제60조)이라 지연으로 단순화. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
+  "sourceNote": "참의원 자민·공명 144석(제212회 국회 말). 예산은 중의원 의결 우선(헌법 제60조)이라 지연으로 단순화. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
   "coupProne": false
  },
  "DEU": {
+  "indirectPresident": {
+   "procedure": "GERMANY",
+   "firstBallot": "2027-02-13",
+   "firstTermEnd": "2027-03-19",
+   "sourceNote": "기본법 제54·57조. 연방의원 전원과 같은 수의 주 의회 대표, 1·2차 재적 과반·3차 최다득표. 5년 연속 2회, 궐위 시 연방참사원 의장이 대행하고 30일 내 선거. 정기 투표일은 임기 만료 전 소집 기한 안의 모형 날짜. 주의회 대표 표심은 현 하원 정당 구성에 기반한 모형. https://www.bundestag.de/en/parliament/elections/federal_convention"
+  },
   "court": "연방헌법재판소",
   "reviewsLaws": true,
   "judicialIndependence": 0.947,
@@ -77,9 +169,83 @@
   "upperHouse": {
    "name": "귀족원",
    "power": "DELAY",
-   "seats": 800,
-   "governmentSeats": 270,
-   "oppositionSeats": 235
+   "seats": 785,
+   "governmentSeats": 269,
+   "oppositionSeats": 264,
+   "groups": [
+    {
+     "name": "보수당",
+     "seats": 269,
+     "role": "LEAD",
+     "alignWith": "보수당"
+    },
+    {
+     "name": "크로스벤치",
+     "seats": 184,
+     "role": "OTHER"
+    },
+    {
+     "name": "노동당",
+     "seats": 175,
+     "role": "OPPOSITION",
+     "alignWith": "노동당"
+    },
+    {
+     "name": "자유민주당",
+     "seats": 80,
+     "role": "OPPOSITION",
+     "alignWith": "자유민주당"
+    },
+    {
+     "name": "비소속",
+     "seats": 37,
+     "role": "OTHER"
+    },
+    {
+     "name": "주교",
+     "seats": 26,
+     "role": "OTHER"
+    },
+    {
+     "name": "민주연합당",
+     "seats": 6,
+     "role": "OPPOSITION",
+     "alignWith": "민주연합당"
+    },
+    {
+     "name": "녹색당",
+     "seats": 2,
+     "role": "OPPOSITION",
+     "alignWith": "녹색당"
+    },
+    {
+     "name": "얼스터 연합당",
+     "seats": 2,
+     "role": "OTHER"
+    },
+    {
+     "name": "독립 보수",
+     "seats": 1,
+     "role": "OTHER"
+    },
+    {
+     "name": "독립 사회민주",
+     "seats": 1,
+     "role": "OTHER"
+    },
+    {
+     "name": "의장",
+     "seats": 1,
+     "role": "OTHER"
+    },
+    {
+     "name": "플라이드 컴리",
+     "seats": 1,
+     "role": "OPPOSITION",
+     "alignWith": "플라이드 컴리"
+    }
+   ],
+   "sourceNote": "2024-01-01 의회 API House 2에서 반환된 재직 교섭단체별 인원. 귀족원에는 고정 정원이 없어 시작일의 재적을 표시한다. https://members-api.parliament.uk/api/Parties/StateOfTheParties/2/2024-01-01"
   },
   "confidence": {
    "procedure": "PARLIAMENTARY",
@@ -88,7 +254,7 @@
    "electionDays": 35,
    "sourceNote": "하원 신임 관례. 정부 사임 또는 국왕에게 해산 요청. https://commonslibrary.parliament.uk/research-briefings/cbp-10915/"
   },
-  "sourceNote": "귀족원은 의회법(1911·1949)상 최대 1년 지연. 대법원은 의회 제정법을 무효화하지 못한다. 의석은 2024-01 정당별 대략값(무소속 크로스벤치 등 제외). 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
+  "sourceNote": "귀족원은 의회법(1911·1949)상 최대 1년 지연. 대법원은 의회 제정법을 무효화하지 못한다. 의석은 2024-01-01 의회 API에서 집계. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
   "coupProne": false
  },
  "FRA": {
@@ -99,8 +265,61 @@
    "name": "상원",
    "power": "DELAY",
    "seats": 348,
-   "governmentSeats": 100,
-   "oppositionSeats": 248
+   "governmentSeats": 22,
+   "oppositionSeats": 230,
+   "groups": [
+    {
+     "name": "공화당",
+     "seats": 132,
+     "role": "OPPOSITION",
+     "alignWith": "공화당"
+    },
+    {
+     "name": "사회·생태·공화",
+     "seats": 64,
+     "role": "OPPOSITION",
+     "alignWith": "사회당·동맹"
+    },
+    {
+     "name": "중도연합",
+     "seats": 56,
+     "role": "OTHER"
+    },
+    {
+     "name": "민주·진보·독립",
+     "seats": 22,
+     "role": "LEAD",
+     "alignWith": "르네상스"
+    },
+    {
+     "name": "공산·공화·시민·생태",
+     "seats": 18,
+     "role": "OPPOSITION",
+     "alignWith": "민주공화좌파"
+    },
+    {
+     "name": "독립·공화·지역",
+     "seats": 18,
+     "role": "OTHER"
+    },
+    {
+     "name": "생태·연대·지역",
+     "seats": 16,
+     "role": "OPPOSITION",
+     "alignWith": "생태주의"
+    },
+    {
+     "name": "유럽 민주사회연합",
+     "seats": 16,
+     "role": "OTHER"
+    },
+    {
+     "name": "비소속",
+     "seats": 5,
+     "role": "OTHER"
+    }
+   ],
+   "sourceNote": "프랑스 상원 ODSEN 의원 임기·의원단 소속 이력과 선거구 명부의 2024-01-01 재임 347명을 집계했다. 비엔 1석은 이브 불루가 2023-12-31 사퇴해 공석이다. https://data.senat.fr/les-senateurs/ https://www.senat.fr/senateurs/news_2023-2024.html"
   },
   "executiveTermLimit": 2,
   "confidence": {
@@ -124,6 +343,13 @@
    "governmentSeats": 170,
    "oppositionSeats": 0
   },
+  "confidence": {
+   "procedure": "DUMA_CONFIDENCE",
+   "majority": "MEMBERS",
+   "consultationDays": 7,
+   "electionDays": 75,
+   "sourceNote": "헌법 제103·109·111·116·117조, 국가두마 의사규칙 제149~151조. 90명 발의, 정원 과반 226명. 첫 가결은 대통령의 내각 해임 또는 거부, 3개월 내 재가결은 내각 해임 또는 두마 해산. 두마 선출 후 1년, 대통령 임기 마지막 6개월, 제111조 제4항 강행 임명 후 1년에는 불신임 불가. 지명안 세 차례 거부 뒤에는 대통령이 총리를 임명한다. https://minjust.gov.ru/ru/documents/8011/ https://duma.gov.ru/duma/about/regulations/chapter-18/"
+  },
   "sourceNote": "2020년 개헌으로 현직 대통령 임기 횟수 초기화. 연방평의회 거부는 두마 2/3로 재의결 가능하나 거부권으로 단순화. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
   "coupProne": false
  },
@@ -142,6 +368,12 @@
   "coupProne": false
  },
  "IND": {
+  "indirectPresident": {
+   "procedure": "INDIA",
+   "firstBallot": "2027-07-18",
+   "firstTermEnd": "2027-07-25",
+   "sourceNote": "헌법 제54–62·65조. 선출직 양원의원과 주·델리·푸두체리 주의원, 가중 단기이양식. 5년, 공석 시 부통령 대행·6개월 이내 선거. 2022 ECI 가중치 30개 주·직할지 의원 4,033명·543,231표, 선출직 연방의원 1인 700표. 지명의원 12명 제외. 부통령은 헌법 제66~68조에 따라 지명직을 포함한 연방 양원만 1인 1표 단기이양식으로 선출. 2024 시작점에서 선거일·지방 정치 성향은 모형. https://eparlib.sansad.in/bitstream/123456789/994884/1/Electing_President_VicePresident_07Ed_2022.pdf"
+  },
   "court": "대법원",
   "reviewsLaws": true,
   "judicialIndependence": 0.724,
@@ -186,7 +418,38 @@
    "power": "DELAY",
    "seats": 105,
    "governmentSeats": 0,
-   "oppositionSeats": 12
+   "oppositionSeats": 15,
+   "groups": [
+    {
+     "name": "독립상원의원단",
+     "seats": 41,
+     "role": "OTHER"
+    },
+    {
+     "name": "캐나다 상원의원단",
+     "seats": 15,
+     "role": "OTHER"
+    },
+    {
+     "name": "보수당",
+     "seats": 15,
+     "role": "OPPOSITION",
+     "alignWith": "보수당"
+    },
+    {
+     "name": "진보 상원의원단",
+     "seats": 13,
+     "role": "OTHER"
+    },
+    {
+     "name": "비소속",
+     "seats": 12,
+     "role": "OTHER",
+     "nonVoting": 3,
+     "swearingDate": "2024-02-06"
+    }
+   ],
+   "sourceNote": "2023년 12월 1일 상원 명부에 회기 말 교섭단체 변경·퇴임·신규 임명을 반영한 1월 1일 재직 96명. 12월 임명 3인은 2월 6일 선서. https://sencanada.ca/content/sen/chamber/441/debates/app/166db_app-e.pdf https://www.cpahq.org/media/pcwkpcea/parl2024iss1finalonlinesinglereduced.pdf https://www.pm.gc.ca/en/news/news-releases/2023/12/20/prime-minister-announces-appointment-senators https://sencanada.ca/en/content/sen/chamber/441/debates/174db_2024-02-06-e"
   },
   "confidence": {
    "procedure": "PARLIAMENTARY",
@@ -195,7 +458,7 @@
    "electionDays": 42,
    "sourceNote": "하원 신임 관례. 사임하거나 총독에게 해산을 요청한다. https://www.ourcommons.ca/procedure/procedure-and-practice-4/ch02-4-e.html"
   },
-  "sourceNote": "상원 다수는 무소속(독립상원의원그룹 등). 보수당 12석. 관행상 하원 의결을 지연에 그친다. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
+  "sourceNote": "상원 다수는 무소속(독립상원의원그룹 등). 보수당 15석. 관행상 하원 의결을 지연에 그친다. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
   "coupProne": false
  },
  "PRK": {
@@ -203,7 +466,12 @@
   "reviewsLaws": false,
   "judicialIndependence": 0.003,
   "sourceNote": "최고인민회의 단원제. 사법 심사 없음. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
-  "coupProne": false
+  "coupProne": false,
+  "appointments": {
+   "procedure": "KOREAN_PEOPLES_ASSEMBLY",
+   "firstSession": "2024-04-11",
+   "sourceNote": "2019년 사회주의헌법 제90·91·97·101·102·124조. 최고인민회의가 국무위원장과 내각총리를 각각 선출한다. 2019년 제14기 첫 회기를 기준으로 5년 임기의 정상 만료 시점을 추산하며 실제 회기 연장은 예측하지 않는다. 고령 총리의 후임 지명은 모형값. https://www.ncnk.org/sites/default/files/DPRK%20constitution%20%282019%29.pdf"
+  }
  },
  "AUS": {
   "court": "고등법원",
@@ -214,7 +482,48 @@
    "power": "VETO",
    "seats": 76,
    "governmentSeats": 26,
-   "oppositionSeats": 31
+   "oppositionSeats": 42,
+   "groups": [
+    {
+     "name": "자유·국민 연합",
+     "seats": 31,
+     "role": "OPPOSITION",
+     "alignWith": "자유·국민 연합"
+    },
+    {
+     "name": "노동당",
+     "seats": 26,
+     "role": "LEAD",
+     "alignWith": "노동당"
+    },
+    {
+     "name": "녹색당",
+     "seats": 11,
+     "role": "OPPOSITION",
+     "alignWith": "녹색당"
+    },
+    {
+     "name": "원네이션",
+     "seats": 2,
+     "role": "OTHER"
+    },
+    {
+     "name": "재키 램비 네트워크",
+     "seats": 2,
+     "role": "OTHER"
+    },
+    {
+     "name": "호주연합당",
+     "seats": 1,
+     "role": "OTHER"
+    },
+    {
+     "name": "무소속",
+     "seats": 3,
+     "role": "OTHER"
+    }
+   ],
+   "sourceNote": "2022년 선거 후 전체 의석에서 2023년 소프(녹색당)·밴(자유당)의 무소속 이동을 반영. https://www.aph.gov.au/About_Parliament/Senate/Practice_and_Procedure/Odgers_Australian_Senate_Practice/Chapter_01 https://www.aph.gov.au/About_Parliament/Parliamentary_departments/Parliamentary_Library/Research/FlagPost/2024/December/Political_Party_Defections"
   },
   "confidence": {
    "procedure": "PARLIAMENTARY",
@@ -223,7 +532,7 @@
    "electionDays": 42,
    "sourceNote": "하원 관례에 따라 대체정부에 양보하거나 총독에게 하원 해산을 권고한다. https://www.aph.gov.au/About_Parliament/House_of_Representatives/Powers_practice_and_procedure/Practice7/HTML/Chapter9/7chap09_1_7"
   },
-  "sourceNote": "상원 노동당 26석, 연립야당 31석(자유·국민), 녹색당 11석·무소속 8석은 기타. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
+  "sourceNote": "상원 노동당 26석, 자유·국민 연합 31석, 녹색당 11석과 기타 교섭단체 8석. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
   "coupProne": false
  },
  "POL": {
@@ -234,8 +543,40 @@
    "name": "상원",
    "power": "DELAY",
    "seats": 100,
-   "governmentSeats": 66,
-   "oppositionSeats": 34
+   "governmentSeats": 61,
+   "oppositionSeats": 34,
+   "groups": [
+    {
+     "name": "시민연합",
+     "seats": 41,
+     "role": "LEAD",
+     "alignWith": "시민연합"
+    },
+    {
+     "name": "법과정의당",
+     "seats": 34,
+     "role": "OPPOSITION",
+     "alignWith": "법과정의당"
+    },
+    {
+     "name": "제3의 길",
+     "seats": 11,
+     "role": "COALITION",
+     "alignWith": "제3의 길"
+    },
+    {
+     "name": "신좌파",
+     "seats": 9,
+     "role": "COALITION",
+     "alignWith": "신좌파"
+    },
+    {
+     "name": "무소속",
+     "seats": 5,
+     "role": "OTHER"
+    }
+   ],
+   "sourceNote": "2023년 10월 15일 상원 선거 결과. 무소속 후보의 개인별 협력은 독립 교섭으로 근사한다. https://wybory.gov.pl/sejmsenat2023/en/dane_w_arkuszach https://data.ipu.org/parliament/PL/PL-UC01/election/PL-UC01-E20231015/"
   },
   "executiveTermLimit": 2,
   "confidence": {
@@ -253,6 +594,12 @@
   "coupProne": false
  },
  "ITA": {
+  "indirectPresident": {
+   "procedure": "ITALY",
+   "firstBallot": "2029-01-24",
+   "firstTermEnd": "2029-02-03",
+   "sourceNote": "헌법 제83·85·86조. 양원·지역 대표 58인. 1~3차 선거인단 3분의 2, 이후 절대과반. 7년 임기, 궐위 시 상원의장 대행. 해산·임기말 의회면 신임 의회 소집 뒤 15일 안에 선출. 소집·투표일과 지역 대표 표심은 모형. https://www.senato.it/istituzione/la-costituzione/parte-ii/titolo-ii/articolo-83 https://www.senato.it/istituzione/la-costituzione/parte-ii/titolo-ii/articolo-85"
+  },
   "court": "헌법재판소",
   "reviewsLaws": true,
   "judicialIndependence": 0.865,
@@ -260,8 +607,64 @@
    "name": "상원",
    "power": "VETO",
    "seats": 205,
-   "governmentSeats": 115,
-   "oppositionSeats": 90
+   "governmentSeats": 116,
+   "oppositionSeats": 72,
+   "groups": [
+    {
+     "name": "이탈리아의 형제들",
+     "seats": 63,
+     "role": "LEAD",
+     "alignWith": "이탈리아의 형제들"
+    },
+    {
+     "name": "민주당",
+     "seats": 37,
+     "role": "OPPOSITION",
+     "alignWith": "민주당 주도 중도좌파연합"
+    },
+    {
+     "name": "동맹",
+     "seats": 29,
+     "role": "COALITION",
+     "alignWith": "동맹"
+    },
+    {
+     "name": "오성운동",
+     "seats": 28,
+     "role": "OPPOSITION",
+     "alignWith": "오성운동"
+    },
+    {
+     "name": "전진 이탈리아",
+     "seats": 18,
+     "role": "COALITION",
+     "alignWith": "전진 이탈리아"
+    },
+    {
+     "name": "혼합·교섭단체 미가입",
+     "seats": 11,
+     "role": "OTHER"
+    },
+    {
+     "name": "생동하는 이탈리아",
+     "seats": 7,
+     "role": "OPPOSITION",
+     "alignWith": "행동당·생동하는 이탈리아"
+    },
+    {
+     "name": "자치 의원단",
+     "seats": 6,
+     "role": "OTHER",
+     "alignWith": "남티롤인민당 연합"
+    },
+    {
+     "name": "시민·우리 온건파",
+     "seats": 6,
+     "role": "COALITION",
+     "alignWith": "우리 온건파"
+    }
+   ],
+   "sourceNote": "제19대 상원 소속 변경 명부로 2024-01-01 재구성. 헌법 제59조 종신직 포함. 상하원 교섭단체가 일치하지 않는 정당연합은 대표 정당으로 연결하고 혼합 의원단은 독립 표결한다. https://www.senato.it/composizione/gruppi-parlamentari/riepilogo-della-composizione https://www.senato.it/composizione/gruppi-parlamentari/variazioni-nella-composizione-dei-gruppi-del-senato-nella-xix"
   },
   "confidence": {
    "procedure": "PARLIAMENTARY",
@@ -270,7 +673,7 @@
    "electionDays": 42,
    "sourceNote": "헌법 제88·92·94조. 대통령이 총리를 지명하고 내각은 양원에서 신임을 받아야 한다. 해산 전 양원 의장 협의. 대통령 임기 마지막 6개월에는 의회 임기 마지막 6개월과 겹칠 때만 해산한다. 마타렐라 2기 취임 2022-02-03. https://www.quirinale.it/allegati_statici/ebookapp/20220203_insediamento.pdf https://www.senato.it/sites/default/files/media-documents/Costituzione_INGLESE_2023.pdf"
   },
-  "sourceNote": "완전 양원제. 2022 총선 후 상원 우파 연합 약 115석. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
+  "sourceNote": "완전 양원제. 2024년 1월 상원 우파 연합 116석. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
   "coupProne": false
  },
  "FIN": {
@@ -288,6 +691,12 @@
   "coupProne": false
  },
  "EST": {
+  "indirectPresident": {
+   "procedure": "ESTONIA",
+   "firstBallot": "2026-09-02",
+   "firstTermEnd": "2026-10-12",
+   "sourceNote": "헌법 제79·80·83조. 2026 공식 일정·지방대표 107명 기준. 리기코구 68표 미달 시 국회의원과 지방대표로 구성한 선거인단으로 이관, 두 차례 미선출 시 의회로 환송. 지방 대표 표심은 현 하원 정당 구성 기반 추정. 궐위 시 의장 대행. https://www.valimised.ee/en/procedure-election-president-republic-2026"
+  },
   "court": "대법원(헌법심사부)",
   "reviewsLaws": true,
   "judicialIndependence": 0.966,
@@ -303,6 +712,12 @@
   "coupProne": false
  },
  "LVA": {
+  "indirectPresident": {
+   "procedure": "LATVIA",
+   "firstBallot": "2027-05-31",
+   "firstTermEnd": "2027-07-08",
+   "sourceNote": "헌법 제35·36·39·52조·대통령선거법. 사에이마 공개 표결, 매 차수 51표. 2차 후 최저 후보 탈락, 미선출 시 재공천. 임기 4년, 연속 8년 제한. 궐위 시 의장 대행. 정기 투표일은 모형. https://www.saeima.lv/en/legislative-process/constitution https://likumi.lv/ta/en/en/id/157307"
+  },
   "court": "헌법재판소",
   "reviewsLaws": true,
   "judicialIndependence": 0.925,
@@ -340,6 +755,12 @@
   "coupProne": true
  },
  "ISR": {
+  "indirectPresident": {
+   "procedure": "ISRAEL",
+   "firstBallot": "2028-06-05",
+   "firstTermEnd": "2028-07-21",
+   "sourceNote": "대통령 기본법 제3·5·8·10·23조. 히브리력 7년 단임, 만료 90~30일 전 선거. 크네세트 61표, 차순위 두 후보 결선은 후보 유효표 과반. 궐위 시 의장 대행·45일 이내 선거. 2021-07-07 취임 기준 히브리력 5788년 탐무즈 27일이 임기 경계. 정기 투표일은 법정 창 안의 모형. https://main.knesset.gov.il/EN/activity/Documents/BasicLawsPDF/BasicLawThePresident.pdf"
+  },
   "court": "대법원",
   "reviewsLaws": true,
   "judicialIndependence": 0.894,
@@ -358,14 +779,23 @@
   "judicialIndependence": 0.109,
   "executiveTermLimit": 2,
   "sourceNote": "헌법수호위원회가 이슬람 율법·헌법 합치 여부로 모든 법률을 심사(헌법 제94조). 대통령 연속 2선 제한. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
-  "coupProne": false
+  "coupProne": false,
+  "appointments": {
+   "procedure": "IRANIAN_MAJLES",
+   "sourceNote": "헌법 제87·89·131~133·135·136조. 대통령 유고 시 최고지도자의 승인으로 제1부통령이 권한을 대행하며 50일 내 대통령을 선출한다. 권한대행 기간 각료 문책·불신임은 정지된다. 의원 10인 이상이 각료 문책을 발의할 수 있고, 장관 절반 이상이 바뀌면 전체 내각의 신임이 필요하다. 대통령이 내각 명단을 의회에 제출하고 각료 후보별로 신임 표결을 받는다. 부결된 부처는 후속 후보를 지명한다. 후보별 득표 및 심사 간격은 모형값이다. https://www.wipo.int/wipolex/en/legislation/details/7697"
+  }
  },
  "SAU": {
   "court": null,
   "reviewsLaws": false,
   "judicialIndependence": 0.285,
   "sourceNote": "절대왕정. 슈라위원회는 자문 기구. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
-  "coupProne": false
+  "coupProne": false,
+  "appointments": {
+   "procedure": "SAUDI_ROYAL_COUNCIL",
+   "firstSession": "2026-08-14",
+   "sourceNote": "각료회의법 제9조 및 1444년 3월 1일 왕령. 최대 히즈라력 4년마다 국왕이 왕령으로 각료회의를 재구성하며 기존 내각은 후임 인선까지 직무를 수행한다. 정부기본법 제56조의 국왕 총리 겸직에 대한 2022년 특례로 왕세자가 총리를 맡았다. https://laws.boe.gov.sa/BoeLaws/Laws/LawDetails/93e87aa7-f344-4711-b97c-a9a700f1662b/2 https://www.spa.gov.sa/2387811"
+  }
  },
  "EGY": {
   "court": "최고헌법재판소",
@@ -439,7 +869,12 @@
   "reviewsLaws": false,
   "judicialIndependence": 0.157,
   "sourceNote": "국회 단원제. 사법 심사 없음. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
-  "coupProne": false
+  "coupProne": false,
+  "appointments": {
+   "procedure": "VIETNAMESE_ASSEMBLY",
+   "firstSession": "2026-07-26",
+   "sourceNote": "2013년 헌법 제4·70·71·85~88조. 국회가 국가주석을 선출하고 주석의 제청으로 총리를 선출한다. 2021년 7월 26일 제15대 첫 회기의 인선과 당시 5년 임기로 다음 회기를 추산. 결의 96/2023/QH15의 임기 제3년 말 신임 평가를 국가주석과 총리에 적용한다. 득표와 고령 후보의 교체 여부는 모형값. https://congbao.chinhphu.vn/van-ban/nghi-quyet-so-96-2023-qh15-39762.htm https://vietnamlawmagazine.vn/the-2013-constitution-of-the-socialist-republic-of-vietnam-4847.html https://en.baochinhphu.vn/pham-minh-chinh-sworn-in-as-viet-nams-prime-minister-11141808.htm https://en.baochinhphu.vn/vo-van-thuong-sworn-in-as-new-president-of-viet-nam-111230302142430588.htm"
+  }
  },
  "THA": {
   "court": "헌법재판소",
@@ -472,10 +907,22 @@
    "governmentSeats": 20,
    "oppositionSeats": 0
   },
+  "confidence": {
+   "procedure": "CABINET_CENSURE",
+   "majority": "TWO_THIRDS",
+   "consultationDays": 7,
+   "sourceNote": "2023년 헌법 제62·116·124·129·130조. 내각 전체 불신임은 대정부 질의 뒤 하원 3분의 1 서명, 48시간 경과 뒤 비밀투표에서 재적 3분의 2 찬성이 필요하다. 부결 시 서명자는 같은 회기 유사 발의 불가. 가결 시 총리가 내각 총사퇴, 대통령이 새 총리를 임명하며 구 내각은 통상 사무만 수행한다. 장관별 표결과 별도의 해산권은 내각 불신임에 포함하지 않는다. https://www.nec.gov.rw/fileadmin/user_upload/NEC/Publications/Electoral_Acts/Constitutuion_of_the_Republic_of_Rwanda-2023.pdf https://www.parliament.gov.rw/parliament/overview/how-parliament-works"
+  },
   "sourceNote": "2015년 개헌으로 현직 대통령 예외. 상원 다수는 임명·간선으로 정부 우호. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
   "coupProne": false
  },
  "PAK": {
+  "indirectPresident": {
+   "procedure": "PAKISTAN",
+   "firstBallot": "2024-03-09",
+   "firstTermEnd": "2023-09-09",
+   "sourceNote": "헌법 제41·44·49조·부칙2. 알비는 2023년 임기 만료 뒤 의회 해산으로 후임 취임까지 유임. 2024-03-09 양원·4개 주의회 간선. 주별 득표를 최소 주의회 재적 65석에 비례 환산해 반올림, 전국 의원 각 1표, 최다득표 동률 추첨. 5년 연속 2회, 궐위 시 상원의장 대행. 지방 표심·후속 선거일은 모형. https://ecp.gov.pk/storage/files/2/presidentialelection2024/Report%20Presidential%20Election-2024.pdf"
+  },
   "court": "대법원",
   "reviewsLaws": true,
   "judicialIndependence": 0.634,
@@ -491,7 +938,7 @@
    "majority": "MEMBERS",
    "consultationDays": 7,
    "electionDays": 63,
-   "sourceNote": "헌법 제58(2)·91·95·224(1A)·224(2)·224A조. 재적 과반으로 가결한다. 대통령은 국민의회에서 후임 과반 후보가 없음을 확인하면 해산할 수 있다. 해산 후 대통령은 퇴임 총리·야당 대표와 협의해 과도 총리를 임명하며 총선은 90일 이내다. 양측이 합의하지 못하면 여야 동수 위원회, 위원회도 합의하지 못하면 선거관리위원회가 후보를 정한다. 게임에서는 협의로 무소속 과도 총리를 임명한다. https://na.gov.pk/uploads/documents/63ea176f52421_610.pdf"
+   "sourceNote": "헌법 제58(2)·91·95·224(1A)·224(2)·224A조. 재적 과반으로 가결한다. 대통령은 국민의회에서 후임 과반 후보가 없음을 확인하면 해산할 수 있다. 해산 후 대통령은 퇴임 총리·야당 대표와 협의해 과도 총리를 임명하며 총선은 90일 이내다. 퇴임 총리는 후임 과도 총리 임명 때까지 직무를 수행한다. 해산 후 3일 내 합의하지 못하면 각 2명의 후보를 여야 각 4명의 위원회에 회부한다. 위원회가 3일 내 결정하지 못하면 선관위가 같은 후보 중 2일 내 최종 결정한다. 후보별 선호와 위원 표는 추정한다. 국민의회 개원 후 의장단을 선출하고 총리는 재적 과반, 미달하면 상위 후보 간 출석 투표 과반으로 선출한다. 단독 후보 미달 시 재등록, 동수면 재투표한다. https://na.gov.pk/uploads/documents/63849782ceae3_504.pdf 2024년 첫 회의 2월 29일·총리 선거 3월 3일을 기준으로 후속 총선에도 21일 뒤 개원, 3일 뒤 첫 총리 표결을 적용한다. https://na.gov.pk/uploads/documents/65e068a111c57_717.pdf https://na.gov.pk/uploads/documents/63ea176f52421_610.pdf"
   },
   "sourceNote": "과도 내각 기간. 재정 법안은 국민의회 우선(헌법 제73조)이라 지연으로 단순화. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16). 1958·1977·1999년 쿠데타 이력으로 쿠데타 위험국으로 본다.",
   "coupProne": true

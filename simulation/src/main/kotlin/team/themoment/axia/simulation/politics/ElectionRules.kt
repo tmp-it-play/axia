@@ -6,7 +6,9 @@ import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
+import java.time.DayOfWeek
 import java.time.LocalDate
+import java.time.temporal.TemporalAdjusters
 
 /** 정부가 어디서 나오는지. 선거 후 정부 재구성 방식을 정한다. */
 enum class GovernmentSystem(
@@ -72,16 +74,87 @@ data class LegislativeElectionRule(
     val earlyDissolution: Boolean,
     /** 정원 중 지역구 당선 정당에 비례해 따로 배분할 의석. */
     val reservedSeats: Int = 0,
+    /** 별도 선거인단이 뽑는 특별대표의 원내 집단. */
+    val reservedDelegation: String? = null,
     /** 혼합제에서 지역 단위로 선출하는 정원. */
     val constituencySeats: Int? = null,
     val openingContest: OpeningContest? = null,
+    val usHouse: Boolean = false,
+    val australianHouse: Boolean = false,
+    val iranianAssembly: Boolean = false,
+    val pluralityMap: PluralityMap? = null,
+    val frenchAssembly: Boolean = false,
+    val pakistanAssembly: Boolean = false,
+    val mixedSystem: MixedSystem? = null,
+    val proportionalSystem: ProportionalSystem? = null,
 ) {
     init {
         require(termYears in 1..7 && seats > 0 && reservedSeats in 0 until seats)
+        require(!pakistanAssembly || (seats == 336 && reservedSeats == 70 && openingContest != null))
+        require(reservedDelegation == null || (reservedSeats > 0 && reservedDelegation.isNotBlank()))
         require((electoralSystem == ElectoralSystem.MIXED) == (constituencySeats != null))
         require(constituencySeats == null || constituencySeats in 1..(seats - reservedSeats))
     }
 }
+
+private fun calendarPoll(
+    year: Int,
+    month: Int,
+    ordinal: Int,
+    weekday: DayOfWeek,
+): LocalDate = LocalDate.of(year, month, 1).with(TemporalAdjusters.dayOfWeekInMonth(ordinal, weekday))
+
+internal fun LegislativeElectionRule.nextRegular(
+    firstBallot: LocalDate,
+    country: String,
+): LocalDate {
+    val anniversary = firstBallot.plusYears(termYears.toLong())
+    val year = anniversary.year
+    return when (country) {
+        "USA" -> usFederalElection(year)
+        "PAK" -> PakistanSuccession.regularPoll(firstBallot)
+        "FRA" -> anniversary.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY))
+        "CAN" -> calendarPoll(year, 10, 3, DayOfWeek.MONDAY)
+        "BRA" -> calendarPoll(year, 10, 1, DayOfWeek.SUNDAY)
+        "EST" -> calendarPoll(year, 3, 1, DayOfWeek.SUNDAY)
+        "LVA" -> calendarPoll(year, 10, 1, DayOfWeek.SATURDAY)
+        "LTU" -> calendarPoll(year, 10, 2, DayOfWeek.SUNDAY)
+        "FIN" -> calendarPoll(year, 4, 3, DayOfWeek.SUNDAY)
+        "RUS" -> calendarPoll(year, 9, 3, DayOfWeek.SUNDAY)
+        "KOR" -> LocalDate.of(year, 5, 29).minusDays(50).with(TemporalAdjusters.next(DayOfWeek.WEDNESDAY))
+        else -> anniversary
+    }
+}
+
+internal fun ExecutiveElectionRule.nextRegular(
+    firstBallot: LocalDate,
+    country: String,
+): LocalDate {
+    val anniversary = firstBallot.plusYears(termYears.toLong())
+    return when (country) {
+        "USA" -> usFederalElection(anniversary.year)
+        "BRA" -> calendarPoll(anniversary.year, 10, 1, DayOfWeek.SUNDAY)
+        "FIN" -> calendarPoll(anniversary.year, 1, 4, DayOfWeek.SUNDAY)
+        "KOR" -> LocalDate.of(anniversary.year, 5, 9).minusDays(70).with(TemporalAdjusters.next(DayOfWeek.WEDNESDAY))
+        else -> anniversary
+    }
+}
+
+/** 개표 후 기존 의회가 임기를 마치는 국가. 대만 해산 후 첫 회의는 확정 후 10일 이내로 둔다. */
+internal fun newHouseTerm(
+    country: String,
+    poll: LocalDate,
+    early: Boolean,
+): LocalDate =
+    when (country) {
+        "USA" -> LocalDate.of(poll.year + 1, 1, 3)
+        "BRA" -> LocalDate.of(poll.year + 1, 2, 1)
+        "KOR" -> LocalDate.of(poll.year, 5, 30)
+        "IDN" -> LocalDate.of(poll.year, 10, 1)
+        "IRN" -> maxOf(poll, LocalDate.of(poll.year, 5, 27))
+        "TWN" -> if (early || poll.monthValue != 1) poll.plusDays(10) else LocalDate.of(poll.year, 2, 1)
+        else -> poll
+    }
 
 @Serializable
 data class ExecutiveElectionRule(

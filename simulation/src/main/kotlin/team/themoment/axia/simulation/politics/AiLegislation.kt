@@ -56,7 +56,7 @@ internal class AiLegislation {
             val vote = chamber?.forecast(score, score, PopulationGroup.entries.associateWith { score }, null)
             val lowerPassed = vote?.passes ?: (score >= 50.0)
             val upperYes = upper?.takeIf { chamber != null }?.forecast(score)
-            val upperPassed = upperYes == null || upperYes > requireNotNull(upper).seats / 2
+            val upperPassed = upperYes == null || upperYes > requireNotNull(upper).votingSeats / 2
             if (lowerPassed && !upperPassed && !bill.conference) {
                 pending =
                     bill.copy(

@@ -12,6 +12,8 @@ enum class ConfidenceProcedure(
     val label: String,
 ) {
     CONSTRUCTIVE("후임 정부 동시 선출"),
+    DUMA_CONFIDENCE("두마 재표결 · 대통령의 내각 해임 또는 해산"),
+    CABINET_CENSURE("하원 3분의 2 내각 불신임 · 대통령의 총리 임명"),
     PARLIAMENTARY("내각 사임 · 후계 정부 협의"),
     OPEN_BALLOT("총리 후보 표결 · 공개 선거"),
     ASSEMBLY_PRESIDENT("대통령 사임 · 의회 선출"),
@@ -21,6 +23,7 @@ enum class ConfidenceProcedure(
 
 enum class ConfidenceMajority {
     MEMBERS,
+    TWO_THIRDS,
     PRESENT,
     VOTES_CAST,
 }
@@ -46,6 +49,7 @@ internal data class ConfidenceDecision(
     val successor: Boolean = false,
     val election: LocalDate? = null,
     val acting: Boolean = false,
+    val early: Boolean = true,
 )
 
 private val ParliamentaryGroup.backsCabinet: Boolean
@@ -55,21 +59,54 @@ private val ParliamentaryGroup.backsCabinet: Boolean
 internal class GovernmentConfidence(
     private val country: String,
     private val rule: ConfidenceRule,
-    private val upper: UpperHouse?,
+    internal var upper: UpperHouse?,
+    private val pakistan: PakistanSuccession? = null,
 ) {
+    private val presidential =
+        when (rule.procedure) {
+            ConfidenceProcedure.DUMA_CONFIDENCE, ConfidenceProcedure.CABINET_CENSURE -> PresidentialCabinet(rule)
+            else -> null
+        }
     private var baseline: Double? = null
     private val partnerMood = mutableMapOf<String, Double>()
     var nextBallot: LocalDate? = null
+        get() = presidential?.nextDecision ?: field
         private set
     private var crisisStarted: LocalDate? = null
     private var newlyElected = false
     private var lastDissolutionElection: LocalDate? = null
     private var barredPremier: Int? = null
     private var barredUntil: LocalDate? = null
-    val caretaker: Boolean get() = crisisStarted != null
+    val caretaker: Boolean get() = presidential?.caretaker ?: (crisisStarted != null)
+    val routineBusiness: Boolean get() = rule.procedure == ConfidenceProcedure.CABINET_CENSURE && caretaker
 
     var dissolved: Boolean = false
+        get() = presidential?.dissolved ?: field
         private set
+
+    val governmentBillsSuspended: Boolean get() = routineBusiness || legislationSuspended
+
+    val legislationSuspended: Boolean get() = dissolved || pakistan?.awaitingElectionOfPremier == true
+
+    fun dissolveOnAdvice(
+        chamber: Legislature,
+        date: LocalDate,
+        poll: LocalDate,
+    ): ConfidenceDecision? = pakistan?.let { dissolvePakistan(it, chamber, date, poll, true) }
+
+    private fun dissolvePakistan(
+        procedure: PakistanSuccession,
+        chamber: Legislature,
+        date: LocalDate,
+        poll: LocalDate,
+        early: Boolean,
+    ): ConfidenceDecision {
+        val decision = procedure.dissolve(chamber, date, poll, early)
+        crisisStarted = date
+        dissolved = true
+        nextBallot = procedure.next
+        return decision
+    }
 
     fun recordDissolutionElection(date: LocalDate) {
         lastDissolutionElection = date
@@ -87,15 +124,17 @@ internal class GovernmentConfidence(
         val outgoingParty = (offices.headOfGovernment ?: offices.headOfState).party
         val party =
             when {
-                country == "PAK" && acting -> null
+                country == "RWA" -> null
+                country == "RUS" -> offices.headOfState.party
                 country == "TWN" -> offices.headOfState.party ?: outgoingParty
+                country == "PAK" -> lead
                 else -> lead ?: outgoingParty
             }
         val title =
             when (country) {
                 "ZAF" -> if (acting) "대통령 권한대행" else "대통령"
                 "TWN" -> if (acting) "행정원장 권한대행" else "행정원장"
-                "PAK" -> if (acting) "과도 총리" else "총리"
+                "PAK" -> "총리"
                 else -> null
             }
         val person = leadership.replaceHead(party, date, title)
@@ -103,6 +142,8 @@ internal class GovernmentConfidence(
     }
 
     fun resetGovernment() {
+        presidential?.reset()
+        pakistan?.reset()
         baseline = null
         partnerMood.clear()
         nextBallot = null
@@ -116,7 +157,16 @@ internal class GovernmentConfidence(
         legislativeDue: Boolean,
         presidentChanged: Boolean,
         date: LocalDate,
+        presidentElected: Boolean = presidentChanged,
     ): ConfidenceDecision? {
+        presidential?.let { return it.afterElections(chamber, legislativeDue, presidentElected, presidentChanged, date) }
+        if (legislativeDue && pakistan != null) {
+            val decision = pakistan.afterElection(chamber, date)
+            crisisStarted = date
+            dissolved = false
+            nextBallot = pakistan.next
+            return decision
+        }
         if (legislativeDue && caretaker) return afterCaretakerElection(chamber, date)
         if (rule.procedure != ConfidenceProcedure.PRESIDENT_APPOINTS || !presidentChanged) return null
         if (dissolved) return ConfidenceDecision(chamber, listOf("신임 총통이 총선까지 행정원장 권한대행을 지명했다."), acting = true)
@@ -150,8 +200,9 @@ internal class GovernmentConfidence(
         premier: Int,
         date: LocalDate,
         random: Random,
+        nextPresidential: LocalDate? = null,
     ): ConfidenceDecision? {
-        if (caretaker) return null
+        if (caretaker || dissolved) return null
         val news = mutableListOf<String>()
         val atFormation = baseline ?: approval.also { baseline = it }
         val parties =
@@ -167,6 +218,16 @@ internal class GovernmentConfidence(
                 }
             }
         val updated = if (news.isEmpty()) chamber else chamber.withGroups(parties)
+        if (presidential != null) {
+            val filed =
+                if (approval < 35 && approval < atFormation - 8 && random.nextDouble() < 0.25) {
+                    presidential.file(updated, premier, date, approval, nextPresidential)
+                } else {
+                    null
+                }
+            if (filed != null) return filed.copy(news = news + filed.news)
+            return if (news.isEmpty()) null else ConfidenceDecision(updated, news)
+        }
         val votes = parties.filter { it.role == PartyRole.OPPOSITION }.sumOf { it.votingSeats }
         if (votes > 0 && parties.filter { it.backsCabinet }.sumOf { it.votingSeats } < chamber.required &&
             approval < 35 && approval < atFormation - 8 && random.nextDouble() < 0.25 &&
@@ -184,7 +245,7 @@ internal class GovernmentConfidence(
         premier: Int,
         date: LocalDate,
     ): ConfidenceDecision {
-        check(!caretaker)
+        check(!caretaker && presidential == null)
         val votes = chamber.groups.filter { it.role == PartyRole.OPPOSITION }.sumOf { it.votingSeats }
         val against = chamber.groups.filter { it.backsCabinet }.sumOf { it.votingSeats }
         val members =
@@ -194,10 +255,14 @@ internal class GovernmentConfidence(
                 "ISR" -> 120
                 "PAK" -> 336
                 "TWN" -> 113
+                "LTU" -> 141
+                "EST" -> 101
+                "DEU" -> chamber.filledSeats + chamber.vacancies.size
                 else -> chamber.filledSeats
             }
         val required =
             when (rule.majority) {
+                ConfidenceMajority.TWO_THIRDS -> error("내각 전체 비밀투표는 르완다 절차로 처리한다.")
                 ConfidenceMajority.MEMBERS -> members
                 ConfidenceMajority.PRESENT -> chamber.votingSeats
                 ConfidenceMajority.VOTES_CAST -> votes + against
@@ -246,7 +311,20 @@ internal class GovernmentConfidence(
         nextLegislative: LocalDate?,
         nextPresidential: LocalDate?,
         president: Person,
+        premier: Int? = null,
     ): ConfidenceDecision? {
+        presidential?.let { return it.advance(chamber, date, nextLegislative, nextPresidential, president, premier) }
+        if (pakistan != null) {
+            if (!dissolved && pakistan.termEnd == date && nextLegislative != null) {
+                return dissolvePakistan(pakistan, chamber, date, nextLegislative, false)
+            }
+            if (pakistan.next != null) {
+                val decision = pakistan.advance(chamber, date)
+                nextBallot = pakistan.next
+                if (decision?.successor == true) resetGovernment()
+                return decision
+            }
+        }
         if (nextBallot?.let { date >= it } != true) return null
         val age = ChronoUnit.DAYS.between(requireNotNull(crisisStarted), date)
         val outgoing = chamber.groups.firstOrNull { it.role == PartyRole.LEAD }?.name
@@ -428,7 +506,7 @@ internal class GovernmentConfidence(
         return strongestProposal
     }
 
-    /** 상원 정당별 의석이 없는 게임에서는 하원의 기존 정부·야당별 합의 비율로 상원 표를 추계한다. */
+    /** 하원 협상에 참여한 교섭단체의 상원 동료 표. 구성 미상인 상원은 여야 블록별로 추계한다. */
     private fun upperSupports(
         chamber: Legislature,
         backing: Set<String>,
@@ -441,6 +519,23 @@ internal class GovernmentConfidence(
         fun share(block: List<ParliamentaryGroup>): Double {
             val total = block.sumOf { it.votingSeats }
             return if (total == 0) 0.0 else block.filter { it.name in backing }.sumOf { it.votingSeats }.toDouble() / total
+        }
+        if (house.groups.isNotEmpty()) {
+            val aligned =
+                chamber.groups
+                    .filter { it.name in backing }
+                    .map { it.modelName }
+                    .toSet()
+            val vote = house.session(chamber, date)
+            val yes =
+                vote.groups.sumOf { group ->
+                    when (group.alignWith) {
+                        in aligned -> group.votingSeats
+                        null -> (group.votingSeats * lowerYes.toDouble() / chamber.filledSeats).roundToInt()
+                        else -> 0
+                    }
+                }
+            return if (country == "ITA") yes > vote.votingSeats / 2 else yes + lowerYes > (vote.votingSeats + chamber.filledSeats) / 2
         }
         val senate =
             (
@@ -456,16 +551,21 @@ internal class GovernmentConfidence(
         date: LocalDate,
         regular: LocalDate,
     ): ConfidenceDecision {
-        val election = minOf(date.plusDays(requireNotNull(rule.electionDays).toLong()), regular)
+        val earlyPoll =
+            if (country ==
+                "FRA"
+            ) {
+                FrenchAssembly.earlyElection(date)
+            } else {
+                date.plusDays(requireNotNull(rule.electionDays).toLong())
+            }
+        val election = minOf(earlyPoll, regular)
         nextBallot = null
         if (election == regular && country != "ZAF" && country != "EGY" && country != "PAK") {
             return ConfidenceDecision(chamber, listOf("예정된 $regular 총선까지 관리정부가 직무를 수행한다."), acting = country == "TWN")
         }
         dissolved = true
-        if (country == "PAK") {
-            val notice = "대통령이 국민의회를 해산하고 퇴임 총리·야당 대표와 협의해 과도 총리를 임명했다. 총선은 ${election}에 치른다."
-            return ConfidenceDecision(chamber, listOf(notice), election = election, acting = true)
-        }
+        if (pakistan != null) return dissolvePakistan(pakistan, chamber, date, election, true)
         return ConfidenceDecision(chamber, listOf("후임 정부가 구성되지 않아 총선을 ${election}에 치른다."), election = election, acting = country == "TWN")
     }
 

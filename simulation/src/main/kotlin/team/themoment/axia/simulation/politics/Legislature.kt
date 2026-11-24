@@ -35,9 +35,12 @@ data class ParliamentaryGroup(
     /** 일반 의석 외에 정당에 배정된 유보석. 표결에는 참여하되 다음 지역구 선거의 득표 기반에서는 뺀다. */
     val reservedSeats: Int = 0,
     val foundation: PartyFoundation? = null,
+    /** 정당·의원단 의석 중 지역구 의석. 최초 의회에서 미상일 때만 null이다. */
+    val districtMandates: Int? = null,
 ) {
     init {
-        require(name.isNotBlank() && seats > 0 && nonVoting in 0..seats && reservedSeats in 0..seats)
+        require(name.isNotBlank() && seats >= 0 && nonVoting in 0..seats && reservedSeats in 0..seats)
+        require(districtMandates == null || districtMandates in 0..(seats - reservedSeats))
     }
 
     val identity: Identity? get() = foundation?.identity ?: partyIdentity(name, constituency)
@@ -65,6 +68,8 @@ data class Legislature(
     val filledSeats: Int,
     /** 정원 기준 등 별도 규칙이 있으면 필요한 찬성표를 직접 지정한다. */
     private val absoluteMajority: Int? = null,
+    val vacancies: List<SeatVacancy> = emptyList(),
+    val unassignedVacancies: Int = 0,
 ) {
     @Transient
     val votingSeats: Int = groups.sumOf { it.votingSeats }
@@ -74,12 +79,15 @@ data class Legislature(
 
     init {
         require(name.isNotBlank() && filledSeats > 0 && groups.sumOf { it.seats } == filledSeats)
-        require(groups.distinctBy { it.name }.size == groups.size && required in 1..votingSeats)
+        require(groups.distinctBy { it.name }.size == groups.size && required > 0 && unassignedVacancies >= 0)
     }
 
     /** 선거나 정부 재구성 후의 의회. 이름과 특별 가결선 규칙은 그대로 둔다. */
     internal fun withGroups(newGroups: List<ParliamentaryGroup>): Legislature =
         copy(groups = newGroups, filledSeats = newGroups.sumOf { it.seats })
+
+    internal fun withNewTerm(newGroups: List<ParliamentaryGroup>): Legislature =
+        copy(groups = newGroups, filledSeats = newGroups.sumOf { it.seats }, vacancies = emptyList(), unassignedVacancies = 0)
 
     internal fun forecast(
         policyScore: Double,

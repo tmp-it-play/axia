@@ -34,6 +34,9 @@ data class ElectionResult(
     val billLapsed: Boolean,
     val districts: List<DistrictResult> = emptyList(),
     val coalitionReport: String? = null,
+    val senate: List<SenateReturn> = emptyList(),
+    val pakistanReturn: PakistanReturn? = null,
+    val listSeats: Map<String, Map<String, Int>> = emptyMap(),
 ) {
     val governmentChanged: Boolean get() = governmentBefore != governmentAfter
 }
@@ -50,6 +53,8 @@ internal data class LegislativeSeats(
     val direct: Map<String, Int>,
     val reserved: Map<String, Int> = emptyMap(),
     val districts: List<DistrictResult> = emptyList(),
+    val districtMandates: Map<String, Int> = emptyMap(),
+    val listSeats: Map<String, Map<String, Int>> = emptyMap(),
 ) {
     fun total(name: String): Int = direct.getValue(name) + reserved.getOrDefault(name, 0)
 }
@@ -84,8 +89,14 @@ internal object ElectionModel {
         identityShares: Map<Identity, Double> = emptyMap(),
         noise: (ParliamentaryGroup) -> Double,
     ): Map<String, Double> {
-        val totalSeats = groups.sumOf { it.directSeats }.toDouble()
-        val implied = groups.associate { it.name to (lastVote[it.name] ?: (it.directSeats / totalSeats).pow(1.0 / system.seatExponent)) }
+        // 공석만 남은 정당도 보궐·다음 총선에 출마한다. 특별대표 집단은 직선 득표가 없다.
+        val bases = groups.associate { it.name to (if (it.seats == 0 && it.role != PartyRole.OTHER) 1 else it.directSeats) }
+        val totalSeats = bases.values.sum().toDouble()
+        val implied =
+            groups.associate {
+                it.name to
+                    (lastVote[it.name] ?: (bases.getValue(it.name) / totalSeats).pow(1.0 / system.seatExponent))
+            }
         // 권위주의 체제의 집권 우위는 이미 현재 의석에 담겨 있다. 가점을 더하면 선거마다 누적되므로,
         // 대신 지지율, 불만, 무작위 변동이 덜 반영되게만 한다.
         val damping = if (regime.autocratic) AUTOCRATIC_DAMPING else 1.0
@@ -143,13 +154,23 @@ internal object ElectionModel {
                         seats = count,
                         role = if (party.other) PartyRole.OTHER else PartyRole.OPPOSITION,
                         reservedSeats = seats.reserved.getOrDefault(party.name, 0),
+                        districtMandates = seats.districtMandates[party.name] ?: 0,
                     )
                 } else {
                     null
                 }
             }
         val chamber = Legislature(opening.chamberName, elected, elected.sumOf { it.seats })
-        val governed = formGovernment(chamber.groups, chamber.required, previousRoles = emptyMap())
+        val governed =
+            if (rule.pakistanAssembly) {
+                chamber.groups
+            } else {
+                formGovernment(
+                    chamber.groups,
+                    chamber.required,
+                    previousRoles = emptyMap(),
+                )
+            }
         val roles = governed.associate { it.name to it.role }
         val results =
             opening.parties.map { party ->
@@ -165,8 +186,37 @@ internal object ElectionModel {
         rule: LegislativeElectionRule,
         electorate: DistrictElectorate? = null,
     ): LegislativeSeats {
+        rule.pluralityMap?.let { return electorate?.plurality(it, shares) ?: PluralityDistricts.elect(it, MixedVotes(shares)) }
+        if (rule.iranianAssembly) {
+            return (
+                electorate?.iranianCount(
+                    shares,
+                ) ?: IranianAssembly.count(MixedVotes(shares), 50.0)
+            ).result(50.0, null, 0)
+        }
+        if (rule.australianHouse) return electorate?.australianHouse(shares) ?: AustralianHouse.elect(MixedVotes(shares))
+        if (rule.proportionalSystem !=
+            null
+        ) {
+            return electorate?.proportional(shares, rule) ?: ProportionalElections.elect(rule, MixedVotes(shares))
+        }
+        rule.mixedSystem?.let { return electorate?.mixedMember(shares, it) ?: MixedMemberElections.elect(it, MixedVotes(shares)) }
+        if (rule.frenchAssembly) return (electorate?.frenchAssembly(shares) ?: FrenchAssembly.count(shares)).seats
+        if (rule.pakistanAssembly) {
+            val opening = requireNotNull(rule.openingContest)
+            return electorate?.pakistanAssembly(shares, opening) ?: PakistanAssembly.elect(shares, opening)
+        }
         val openSeats = rule.seats - rule.reservedSeats
-        val districts = electorate?.elect(shares, openSeats, rule.electoralSystem, rule.constituencySeats).orEmpty()
+        val districts =
+            if (rule.usHouse) {
+                electorate?.usHouse(
+                    shares,
+                ) ?: RegionalElections.house(
+                    shares,
+                )
+            } else {
+                electorate?.elect(shares, openSeats, rule.electoralSystem, rule.constituencySeats).orEmpty()
+            }
         val direct =
             if (districts.isEmpty()) {
                 allocateSeats(shares, rule.electoralSystem, openSeats)
@@ -175,13 +225,41 @@ internal object ElectionModel {
                 val listSeats = openSeats - winners.values.sum()
                 allocateSeats(shares, ElectoralSystem.PROPORTIONAL, listSeats).mapValues { (name, count) -> count + (winners[name] ?: 0) }
             }
-        if (rule.reservedSeats == 0) return LegislativeSeats(direct, districts = districts)
+        val districtMandates =
+            when {
+                districts.isNotEmpty() -> {
+                    districts.flatMap { it.winners }.groupingBy { it }.eachCount()
+                }
+
+                rule.electoralSystem == ElectoralSystem.MAJORITARIAN -> {
+                    direct
+                }
+
+                rule.constituencySeats != null -> {
+                    allocateSeats(
+                        direct.mapValues {
+                            it.value.toDouble()
+                        },
+                        ElectoralSystem.PROPORTIONAL,
+                        rule.constituencySeats,
+                    )
+                }
+
+                else -> {
+                    emptyMap()
+                }
+            }
+        if (rule.reservedSeats == 0) return LegislativeSeats(direct, districts = districts, districtMandates = districtMandates)
+        rule.reservedDelegation?.let { delegation ->
+            require(delegation in direct && direct.getValue(delegation) == 0)
+            return LegislativeSeats(direct, mapOf(delegation to rule.reservedSeats), districts, districtMandates)
+        }
         val candidates = rule.openingContest?.parties.orEmpty()
         val independents = candidates.filter { it.other }.map { it.name }.toSet()
         val eligible = direct.filter { (name, seats) -> name !in independents && seats > 0 }
-        if (eligible.isEmpty()) return LegislativeSeats(direct, districts = districts)
+        if (eligible.isEmpty()) return LegislativeSeats(direct, districts = districts, districtMandates = districtMandates)
         val reserved = allocateSeats(eligible.mapValues { it.value.toDouble() }, ElectoralSystem.PROPORTIONAL, rule.reservedSeats)
-        return LegislativeSeats(direct, reserved, districts)
+        return LegislativeSeats(direct, reserved, districts, districtMandates)
     }
 
     /** 최대잉여법. 의석 비중 ∝ 득표율^지수. */
@@ -214,8 +292,14 @@ internal object ElectionModel {
             if (newSeats == 0) {
                 null
             } else {
-                val nonVoting = (newSeats * party.nonVoting.toDouble() / party.seats).roundToInt().coerceIn(0, newSeats)
-                party.copy(seats = newSeats, nonVoting = nonVoting, reservedSeats = seats.reserved.getOrDefault(party.name, 0))
+                val nonVoting = (newSeats * party.nonVoting.toDouble() / party.seats.coerceAtLeast(1)).roundToInt().coerceIn(0, newSeats)
+                party.copy(
+                    seats = newSeats,
+                    nonVoting = nonVoting,
+                    reservedSeats = seats.reserved.getOrDefault(party.name, 0),
+                    districtMandates =
+                        seats.districtMandates[party.name] ?: 0,
+                )
             }
         }
 
@@ -253,7 +337,7 @@ internal object ElectionModel {
                 party.copy(role = role)
             }
         }
-        val candidates = groups.filter { it.role != PartyRole.OTHER }.sortedByDescending { it.votingSeats }
+        val candidates = groups.filter { it.role != PartyRole.OTHER && it.votingSeats > 0 }.sortedByDescending { it.votingSeats }
         val formateur = candidates.firstOrNull { it.name == president } ?: incumbentLeader ?: candidates.firstOrNull() ?: return groups
         val coalition = mutableMapOf(formateur.name to PartyRole.LEAD)
         var seats = formateur.votingSeats

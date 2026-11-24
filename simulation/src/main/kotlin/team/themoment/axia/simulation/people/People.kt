@@ -27,11 +27,19 @@ data class Leadership(
     val headOfState: Person,
     val headOfGovernment: Person?,
     val parliamentary: Boolean,
+    val partyLeader: Person? = null,
+    val crownPrince: Person? = null,
+    val vicePresident: Person? = null,
+    val actingCouncil: List<Person> = emptyList(),
 ) {
     /** 실권을 쥔 사람. */
-    val leader: Person get() = if (parliamentary) headOfGovernment ?: headOfState else headOfState
+    val leader: Person get() = partyLeader ?: if (parliamentary) headOfGovernment ?: headOfState else headOfState
 
-    fun all(): List<Person> = listOfNotNull(headOfState, headOfGovernment)
+    fun all(): List<Person> =
+        (
+            (actingCouncil.ifEmpty { listOf(headOfState) }) +
+                listOfNotNull(headOfGovernment, partyLeader, crownPrince, vicePresident)
+        ).distinctBy { it.id }
 }
 
 @Serializable
@@ -63,6 +71,9 @@ internal data class CountryLeaders(
     val culture: String,
     val headOfState: LeaderRecord,
     val headOfGovernment: LeaderRecord? = null,
+    val partyLeader: LeaderRecord? = null,
+    val crownPrinceIsPremier: Boolean = false,
+    val vicePresident: LeaderRecord? = null,
 )
 
 /** 2024년 1월 1일 지도자(leaders.json)와 문화권별 이름 재료(names.json). */
@@ -126,6 +137,7 @@ class PeopleRegistry internal constructor(
         title: String,
         party: String?,
         since: LocalDate,
+        minimumAge: Int = MIN_LEADER_AGE,
     ): Person {
         val culture = PeopleData.default.culture(countryId)
         val taken = persons.values.mapTo(HashSet()) { it.name }
@@ -146,7 +158,7 @@ class PeopleRegistry internal constructor(
             attempts++
         } while (name in taken && attempts < MAX_ATTEMPTS)
         if (name in taken) name = "$name ${attempts + 1}세"
-        val born = since.year - random.nextInt(MIN_LEADER_AGE, MAX_LEADER_AGE + 1)
+        val born = since.year - random.nextInt(maxOf(minimumAge, MIN_LEADER_AGE), MAX_LEADER_AGE + 1)
         return add(Person(nextId, name, title, party, since, termsServed = 1, generated = true, born = born))
     }
 
@@ -172,7 +184,7 @@ class PeopleRegistry internal constructor(
 
     private companion object {
         val MONARCH_TITLES = setOf("국왕", "천황")
-        val MALE_TITLES = setOf("최고지도자")
+        val MALE_TITLES = setOf("최고지도자", "왕세자", "왕세자 겸 총리")
         const val MAX_ATTEMPTS = 20
         const val MAX_NAME_LENGTH = 30
         const val MIN_LEADER_AGE = 45
@@ -192,11 +204,32 @@ internal class LeadershipState(
     private val record = PeopleData.default.leaders(countryId)
     private var headOfStateId = registry.register(record.headOfState, start).id
     private var headOfGovernmentId = record.headOfGovernment?.let { registry.register(it, start).id }
+    private var partyLeaderId = record.partyLeader?.let { registry.register(it, start).id }
+    private var crownPrinceId = if (record.crownPrinceIsPremier) requireNotNull(headOfGovernmentId) else null
+    private var vicePresidentId = record.vicePresident?.let { registry.register(it, start).id }
 
     /** 선거로 뽑는 행정부 수반이 국가원수인지(이란은 대통령이 정부 수반이다). */
     private val executiveIsHeadOfState = record.headOfGovernment?.title != executiveTitle || executiveTitle == null
 
-    private val initialIds = listOfNotNull(headOfStateId, headOfGovernmentId)
+    var indirectVacancy: ((Person, LocalDate) -> String)? = null
+    var indirectCandidates: () -> List<Person> = { emptyList() }
+    private var actingSince: LocalDate? = null
+    private var council = emptyList<Int>()
+    private val withdrawn = mutableSetOf<Int>()
+    private val usTerms = mutableMapOf(headOfStateId to record.headOfState.termsServed)
+    private var usTermEnd = usInaugurationAfter(start)
+
+    private fun usInaugurationAfter(date: LocalDate): LocalDate {
+        val year = date.year - Math.floorMod(date.year - 2025, 4)
+        val boundary = LocalDate.of(year, 1, 20)
+        return if (date < boundary) boundary else boundary.plusYears(4)
+    }
+
+    fun available(person: Person): Boolean = person.id !in withdrawn
+
+    val doubleVacancy: Boolean get() = headOfStateId in withdrawn && countryId in setOf("USA", "IDN")
+
+    private val initialLeadership = current()
 
     /**
      * 정부 표기. 시작 지도자가 그대로면 데이터 문구를 쓴다. 바뀌었으면 실권자와 정당을 쓰고,
@@ -207,27 +240,86 @@ internal class LeadershipState(
         semiPresidential: Boolean,
     ): String {
         val now = current()
-        if (now.all().map { it.id } == initialIds || (parliamentary && now.leader.id == initialIds.last())) return initial
+        if (now.all().map { it.id to it.name } == initialLeadership.all().map { it.id to it.name } ||
+            (parliamentary && now.leader.id == initialLeadership.leader.id && now.leader.name == initialLeadership.leader.name)
+        ) {
+            return initial
+        }
         val head = now.headOfGovernment
-        if ((semiPresidential || !executiveIsHeadOfState) && head != null) return "${now.headOfState.name} · ${head.name}"
+        if ((semiPresidential || !executiveIsHeadOfState || record.crownPrinceIsPremier) &&
+            head != null
+        ) {
+            return "${now.headOfState.name} · ${head.name}"
+        }
         val leader = now.leader
         return "${leader.name} · ${leader.party ?: leader.title}"
     }
 
     fun current(): Leadership =
-        Leadership(requireNotNull(registry.get(headOfStateId)), headOfGovernmentId?.let { requireNotNull(registry.get(it)) }, parliamentary)
+        Leadership(
+            stateHead(),
+            headOfGovernmentId?.let { requireNotNull(registry.get(it)) },
+            parliamentary,
+            partyLeaderId?.let { requireNotNull(registry.get(it)) },
+            crownPrinceId?.let { requireNotNull(registry.get(it)) },
+            vicePresidentId?.let { requireNotNull(registry.get(it)) },
+            council.map { requireNotNull(registry.get(it)) },
+        )
+
+    /** 국가기관이 현직자를 다시 선출하거나 같은 소속의 새 인물을 임명한다. */
+    fun appointStateHead(
+        date: LocalDate,
+        retain: Boolean,
+    ): Person = appointee(current().headOfState, date, retain).also { headOfStateId = it.id }
+
+    fun appointPremier(
+        date: LocalDate,
+        retain: Boolean,
+    ): Person = appointee(requireNotNull(current().headOfGovernment), date, retain).also { headOfGovernmentId = it.id }
+
+    private fun appointee(
+        incumbent: Person,
+        date: LocalDate,
+        retain: Boolean,
+    ): Person =
+        if (retain) {
+            registry.update(
+                incumbent.copy(termsServed = incumbent.termsServed + 1),
+            )
+        } else {
+            registry.generate(countryId, incumbent.title, incumbent.party, date)
+        }
 
     /** 연임 제한에 걸려 다음 행정부 선거에 나설 수 없는지. */
-    fun termLimited(limit: Int?): Boolean = limit != null && executive().termsServed >= limit
+    fun termLimited(limit: Int?): Boolean =
+        limit != null && (if (countryId == "USA") usTerms[executive().id] ?: 0 else executive().termsServed) >= limit
 
     fun executiveIncumbent(): Person = executive()
 
-    fun eligibleIncumbent(limit: Int?): Person? = executive().takeIf { !termLimited(limit) && it.termsServed < RETIREMENT_TERMS }
+    fun eligibleIncumbent(limit: Int?): Person? =
+        executive().takeIf {
+            !termLimited(limit) && it.termsServed < RETIREMENT_TERMS &&
+                it.title != ACTING_PRESIDENT &&
+                council.isEmpty()
+        }
+
+    val iranActingPresident: Boolean get() = countryId == "IRN" && executive().title == ACTING_PRESIDENT
 
     fun nominate(
         party: String?,
         date: LocalDate,
-    ): Person = registry.generate(countryId, "후보", party, date)
+    ): Person = nominate(party, date, 45)
+
+    fun nominate(
+        party: String?,
+        date: LocalDate,
+        minimumAge: Int,
+    ): Person = registry.generate(countryId, "후보", party, date, minimumAge)
+
+    fun nominate(
+        record: LeaderRecord,
+        date: LocalDate,
+    ): Person = registry.register(record, date)
 
     internal fun changeAffiliation(
         id: Int,
@@ -237,19 +329,80 @@ internal class LeadershipState(
         return registry.update(person.copy(party = party))
     }
 
+    fun seatVicePresident(
+        candidate: Person?,
+        date: LocalDate,
+        newTerm: Boolean = false,
+    ) {
+        if (candidate == null) {
+            vicePresidentId = null
+            return
+        }
+        val nominee = requireNotNull(registry.get(candidate.id))
+        require(available(nominee) && (nominee.id != headOfStateId || actingSince != null))
+        if (vicePresidentId != nominee.id) {
+            registry.update(nominee.copy(title = "부통령", since = date, termsServed = 1))
+        } else if (newTerm) {
+            registry.update(nominee.copy(termsServed = nominee.termsServed + 1))
+        }
+        vicePresidentId = nominee.id
+    }
+
+    fun installIndonesianCouncil(date: LocalDate) {
+        require(countryId == "IDN")
+        council = listOf("외교장관", "내무장관", "국방장관").map { registry.generate(countryId, it, null, date).id }
+        headOfStateId = council.first()
+        actingSince = date
+    }
+
+    fun actingPresident(
+        candidate: Person,
+        date: LocalDate,
+    ) {
+        val acting = requireNotNull(registry.get(candidate.id))
+        require(available(acting))
+        if (acting.id != vicePresidentId) registry.update(acting.copy(title = ACTING_PRESIDENT, since = date, termsServed = 0))
+        headOfStateId = acting.id
+        actingSince = date
+    }
+
     fun seatPresident(
         candidate: Person,
         date: LocalDate,
     ) {
         val incumbent = executive()
         val nominee = requireNotNull(registry.get(candidate.id))
+        require(available(nominee))
         val elected =
-            if (incumbent.id == nominee.id) {
+            if (incumbent.id == nominee.id && incumbent.title != ACTING_PRESIDENT) {
                 incumbent.copy(termsServed = incumbent.termsServed + 1)
             } else {
-                nominee.copy(title = incumbent.title, since = date, termsServed = 1)
+                nominee.copy(
+                    title =
+                        if (iranActingPresident) {
+                            requireNotNull(record.headOfGovernment).title
+                        } else if (incumbent.title ==
+                            ACTING_PRESIDENT
+                        ) {
+                            record.headOfState.title
+                        } else {
+                            incumbent.title
+                        },
+                    since = date,
+                    termsServed = 1,
+                )
             }
+        if (countryId == "USA") {
+            usTerms[elected.id] = (usTerms[elected.id] ?: 0) + 1
+            usTermEnd = usInaugurationAfter(date)
+        }
+        actingSince = null
+        council = emptyList()
+        if (vicePresidentId == elected.id) vicePresidentId = null
         setExecutive(registry.update(elected))
+        if (countryId == "IRN" && elected.id != incumbent.id) {
+            vicePresidentId = registry.generate(countryId, requireNotNull(record.vicePresident).title, null, date).id
+        }
     }
 
     /** 의회에서 내각을 구성한다. 과도 내각을 이을 때는 새 정부 수반의 정식 [title]을 지정한다. */
@@ -278,11 +431,81 @@ internal class LeadershipState(
     fun checkMortality(
         date: LocalDate,
         random: Random,
+        incoming: List<Person> = emptyList(),
     ): String? {
-        for (person in current().all()) {
+        val current = current().all()
+        for (person in (current + incoming + indirectCandidates()).distinctBy { it.id }) {
+            if (!available(person)) continue
             if (!person.retires(date, random)) continue
+            withdrawn += person.id
+            if (person.id in council) {
+                val replacement = registry.generate(countryId, person.title, null, date)
+                council = council.map { if (it == person.id) replacement.id else it }
+                headOfStateId = council.first()
+                return "${person.title} ${person.name} 퇴진. 후임 장관 ${replacement.name}이 공동 권한대행에 합류했다."
+            }
+            if (current.none { it.id == person.id }) return "${person.name} 당선인 또는 후보가 건강 문제로 직무를 수행할 수 없게 됐다."
+            if (countryId == "IND" && person.id == vicePresidentId && person.id != headOfStateId) {
+                vicePresidentId = null
+                return "${person.name} 부통령 퇴진으로 연방 양원이 보궐선거를 준비한다."
+            }
+            if (person.id == headOfStateId && indirectVacancy != null) {
+                if (vicePresidentId == person.id) vicePresidentId = null
+                return requireNotNull(indirectVacancy)(person, date)
+            }
+            if (countryId == "IRN" && person.id == headOfGovernmentId) {
+                val vice = current().vicePresident
+                val acting =
+                    if (vice !=
+                        null
+                    ) {
+                        registry.update(vice.copy(title = ACTING_PRESIDENT, since = date, termsServed = 0))
+                    } else {
+                        registry.generate(countryId, ACTING_PRESIDENT, null, date)
+                    }
+                headOfGovernmentId = acting.id
+                vicePresidentId = null
+                return "${person.name} ${person.title} 퇴진. 최고지도자의 승인으로 ${acting.name} 권한대행이 대통령 직무를 맡았다."
+            }
+            if (countryId == "USA" || countryId == "IDN") {
+                if (person.id == vicePresidentId && person.id != headOfStateId) {
+                    vicePresidentId = null
+                    return "${person.name} 부통령이 건강 문제로 퇴진했다. 후임 부통령 인선이 필요하다."
+                }
+                if (person.id == headOfStateId) {
+                    val vice = current().vicePresident
+                    if (vice != null && vice.id != headOfStateId) {
+                        if (countryId == "USA" && date.plusYears(2) < usTermEnd) usTerms[vice.id] = (usTerms[vice.id] ?: 0) + 1
+                        actingSince = null
+                        headOfStateId = registry.update(vice.copy(title = record.headOfState.title, since = date, termsServed = 1)).id
+                        vicePresidentId = null
+                        return "${person.name} 대통령 퇴진으로 ${vice.name} 부통령이 남은 임기를 승계했다."
+                    }
+                    vicePresidentId = null
+                    return "${person.name} 퇴진으로 대통령과 부통령이 모두 공석이 됐다."
+                }
+            }
+            val heir = current().crownPrince
+            if (heir != null && person.id == headOfStateId) {
+                registry.update(heir.copy(title = "국왕", since = date, termsServed = 1))
+                headOfStateId = heir.id
+                if (headOfGovernmentId == heir.id) headOfGovernmentId = null
+                crownPrinceId = registry.generate(countryId, "왕세자", null, date).id
+                return "${person.name} 국왕이 물러나 ${heir.name} 왕세자가 왕위를 계승했다. 국왕이 각료회의를 주재한다."
+            }
+            if (heir != null && person.id == heir.id) {
+                val nextHeir = registry.generate(countryId, "왕세자", null, date)
+                crownPrinceId = nextHeir.id
+                if (headOfGovernmentId == heir.id) headOfGovernmentId = null
+                return "${person.name} 왕세자가 물러나 ${nextHeir.name} 왕세자가 후계자로 지명됐다."
+            }
             val successor = registry.generate(countryId, person.title, person.party, date)
-            if (person.id == headOfStateId) headOfStateId = successor.id else headOfGovernmentId = successor.id
+            when (person.id) {
+                headOfStateId -> headOfStateId = successor.id
+                vicePresidentId -> vicePresidentId = successor.id
+                partyLeaderId -> partyLeaderId = successor.id
+                else -> headOfGovernmentId = successor.id
+            }
             return "${person.title} ${person.name.josa("이", "가")} 건강 문제로 물러나고 ${successor.name.josa("이", "가")} 뒤를 이었다."
         }
         return null
@@ -303,7 +526,14 @@ internal class LeadershipState(
     ): Person {
         val leader = registry.generate(countryId, title, faction, date)
         headOfStateId = leader.id
+        indirectVacancy = null
+        indirectCandidates = { emptyList() }
+        council = emptyList()
+        actingSince = null
         headOfGovernmentId = null
+        partyLeaderId = null
+        crownPrinceId = null
+        vicePresidentId = null
         return leader
     }
 
@@ -319,8 +549,33 @@ internal class LeadershipState(
         return next
     }
 
+    /** 헌법기관이 이미 지명한 후보의 신원과 소속을 그대로 유지해 정부 수반에 임명한다. */
+    fun seatHeadNominee(
+        candidate: Person,
+        title: String,
+        date: LocalDate,
+    ): Person {
+        val person = requireNotNull(registry.get(candidate.id)).copy(title = title, since = date)
+        registry.update(person)
+        if (headOfGovernmentId != null) headOfGovernmentId = person.id else headOfStateId = person.id
+        return person
+    }
+
+    private fun stateHead(): Person {
+        val head = requireNotNull(registry.get(headOfStateId))
+        val start = actingSince ?: return head
+        val name = if (council.isEmpty()) head.name else council.joinToString(" · ") { requireNotNull(registry.get(it)).name }
+        return head.copy(name = name, title = ACTING_PRESIDENT, since = start, termsServed = 0)
+    }
+
     private fun executive(): Person =
-        requireNotNull(registry.get(if (executiveIsHeadOfState) headOfStateId else headOfGovernmentId ?: headOfStateId))
+        if (executiveIsHeadOfState) {
+            stateHead()
+        } else {
+            requireNotNull(
+                registry.get(headOfGovernmentId ?: headOfStateId),
+            )
+        }
 
     private fun setExecutive(person: Person) {
         if (executiveIsHeadOfState) headOfStateId = person.id else headOfGovernmentId = person.id
@@ -330,6 +585,7 @@ internal class LeadershipState(
 
     private companion object {
         const val JUNTA_TITLE = "국가재건평의회 의장"
+        const val ACTING_PRESIDENT = "대통령 권한대행"
 
         /** 임기 제한이 없어도 세 번 연임한 지도자는 다음 선거 전에 당내에서 교체된다. */
         const val RETIREMENT_TERMS = 3

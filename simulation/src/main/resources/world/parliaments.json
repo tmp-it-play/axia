@@ -4,6 +4,7 @@
     "chamber": {
       "name": "국회",
       "filledSeats": 298,
+      "unassignedVacancies": 2,
       "groups": [
         { "name": "국민의힘", "seats": 112, "role": "LEAD" },
         { "name": "더불어민주당", "seats": 167, "role": "OPPOSITION", "constituency": "WORKERS" },
@@ -16,10 +17,14 @@
     }
   },
   "USA": {
-    "sourceNote": "2024-01-01 현원. https://history.house.gov/institution/party-divisions/party-divisions/ https://history.house.gov/dropdowntemplate?htmlContentID=36507224029&id=36507224009 2022년 당선 222 대 213에서 공화당 의석 2석(산토스 제명, 매카시 사임)을 뺐다. 비표결 지역 대표 제외.",
+    "sourceNote": "2024-01-01 현원. https://history.house.gov/institution/party-divisions/party-divisions/ https://history.house.gov/dropdowntemplate?htmlContentID=36507224029&id=36507224009 2022년 당선 222 대 213에서 공화당 의석 2석(산토스 제명, 매카시 사임)을 뺐다. 두 공석의 표결권은 실제 후임 선서일에 발생하며 당선 정당은 게임에서 결정한다. https://clerk.house.gov/reference-files/House-Calendar-118th-Congress.pdf 비표결 지역 대표 제외.",
     "chamber": {
       "name": "연방 하원",
       "filledSeats": 433,
+      "vacancies": [
+        { "partyKey": "공화당", "method": "DISTRICT", "due": "2024-02-28", "districtSeat": true, "region": "뉴욕 3구" },
+        { "partyKey": "공화당", "method": "DISTRICT", "due": "2024-06-03", "districtSeat": true, "region": "캘리포니아 20구" }
+      ],
       "groups": [
         { "name": "민주당", "seats": 213, "role": "LEAD", "constituency": "WORKERS" },
         { "name": "공화당", "seats": 220, "role": "OPPOSITION", "constituency": "CAPITALISTS" }
@@ -66,10 +71,11 @@
     }
   },
   "GBR": {
-    "sourceNote": "2024-01-01 현원. 영국 의회 https://members-api.parliament.uk/api/Parties/StateOfTheParties/1/2024-01-01 공석 1석. 의장, 임시 부의장 로저 게일을 포함한 부의장 4명(보수 3, 노동 1), 등원을 거부한 신페인 7명은 일반 표결에서 제외. https://publications.parliament.uk/pa/cm5901/cmselect/cmproced/535/report.html",
+    "sourceNote": "2024-01-01 현원. 영국 의회 https://members-api.parliament.uk/api/Parties/StateOfTheParties/1/2024-01-01 공석 1석(2월 15일 웰링버러 보궐). https://www.parliament.uk/about/how/elections-and-voting/by-elections/by-elections-2019/ 의장, 임시 부의장 로저 게일을 포함한 부의장 4명(보수 3, 노동 1), 등원을 거부한 신페인 7명은 일반 표결에서 제외. https://publications.parliament.uk/pa/cm5901/cmselect/cmproced/535/report.html",
     "chamber": {
       "name": "하원",
       "filledSeats": 649,
+      "vacancies": [{ "partyKey": "보수당", "method": "DISTRICT", "due": "2024-02-15", "districtSeat": true, "region": "웰링버러" }],
       "groups": [
         { "name": "보수당", "seats": 350, "role": "LEAD", "constituency": "CAPITALISTS", "nonVoting": 3 },
         { "name": "노동당", "seats": 198, "role": "OPPOSITION", "constituency": "WORKERS", "nonVoting": 1 },
@@ -127,6 +133,7 @@
     "chamber": {
       "name": "최고 라다",
       "filledSeats": 401,
+      "unassignedVacancies": 49,
       "groups": [
         { "name": "인민의 종", "seats": 235, "role": "LEAD" },
         { "name": "유럽연대", "seats": 27, "role": "OPPOSITION" },
@@ -241,17 +248,18 @@
     }
   },
   "AUS": {
-    "sourceNote": "2022-05-21 총선. IPU Parline https://data.ipu.org/parliament/AU/AU-LC01/election/AU-LC01-E20220521/ 자유당·국민당 계열은 IPU 선거 연합 단위.",
+    "sourceNote": "2022-05-21 총선. IPU Parline https://data.ipu.org/parliament/AU/AU-LC01/election/AU-LC01-E20220521/ 2022년 12월 내셔널당 앤드루 기의 무소속 전환, 2023년 애스턴 자유당→노동당 보궐 교체 및 덩클리(노동당) 결원을 반영한 2024-01-01 재적 150명. https://www.aph.gov.au/About_Parliament/Parliamentary_departments/Parliamentary_Library/Research/FlagPost/2024/December/Political_Party_Defections https://www.aec.gov.au/Elections/supplementary_by_elections/index.htm",
     "chamber": {
       "name": "하원",
-      "filledSeats": 151,
+      "filledSeats": 150,
+      "vacancies": [{ "partyKey": "노동당", "method": "DISTRICT", "due": "2024-03-02", "districtSeat": true, "region": "Dunkley", "regionId": "AUS-2656" }],
       "groups": [
         { "name": "노동당", "seats": 77, "role": "LEAD", "constituency": "WORKERS" },
-        { "name": "자유·국민 연합", "seats": 58, "role": "OPPOSITION", "constituency": "CAPITALISTS" },
+        { "name": "자유·국민 연합", "seats": 56, "role": "OPPOSITION", "constituency": "CAPITALISTS" },
         { "name": "녹색당", "seats": 4, "role": "OPPOSITION" },
         { "name": "중도연합", "seats": 1, "role": "OTHER" },
         { "name": "캐터의 호주당", "seats": 1, "role": "OTHER" },
-        { "name": "무소속", "seats": 10, "role": "OTHER" }
+        { "name": "무소속", "seats": 11, "role": "OTHER" }
       ]
     }
   },
@@ -467,6 +475,7 @@
     "chamber": {
       "name": "입법원",
       "filledSeats": 112,
+      "unassignedVacancies": 1,
       "groups": [
         { "name": "민주진보당", "seats": 62, "role": "LEAD" },
         { "name": "중국국민당", "seats": 37, "role": "OPPOSITION" },
@@ -543,7 +552,8 @@
         { "name": "자유당", "seats": 4, "role": "SUPPLY" },
         { "name": "임베라쿠리 사회당", "seats": 2, "role": "OPPOSITION" },
         { "name": "민주녹색당", "seats": 2, "role": "OPPOSITION" },
-        { "name": "여성·청년·장애인 대표", "seats": 27, "role": "OTHER" }
+        { "name": "여성·청년·장애인 대표", "seats": 27,
+     "reservedSeats": 27, "role": "OTHER" }
       ]
     }
   },

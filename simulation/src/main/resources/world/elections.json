@@ -1,434 +1,791 @@
 {
- "KOR": {
-  "system": "PRESIDENTIAL",
-  "legislature": {
-   "next": "2024-04-10",
-   "termYears": 4,
-   "seats": 300,
-   "constituencySeats": 254,
-   "electoralSystem": "MIXED",
-   "earlyDissolution": false
+  "KOR": {
+    "system": "PRESIDENTIAL",
+    "legislature": {
+      "next": "2024-04-10",
+      "termYears": 4,
+      "seats": 300,
+      "constituencySeats": 254,
+      "electoralSystem": "MIXED",
+      "earlyDissolution": false,
+      "mixedSystem": "KOR"
+    },
+    "executive": {
+      "next": "2027-03-03",
+      "termYears": 5,
+      "title": "대통령",
+      "partyPrimary": true
+    },
+    "sourceNote": "제22대 총선 2024-04-10, 대통령 정기 선거 2027-03-03. 시·도별 254개 지역구와 준연동 46석. 정당투표 3% 또는 지역구 5석을 충족한 정당에 공직선거법 제189조를 적용한다. 위성정당의 별도 창당·공천은 모형화하지 않았다. https://law.go.kr/lsLinkCommonInfo.do?chrClsCd=010202&lsJoLnkSeq=1022658205 정기 의원 임기는 5월 30일, 2024년 시나리오 대통령 임기는 5월 10일에 시작한다. 다음 정기선거일은 공직선거법 제34조의 임기만료 전 기준 수요일이다. 민속절과 임시공휴일에 따른 이동은 추계에서 제외했다. https://www.law.go.kr/법령/공직선거법/제34조"
   },
-  "executive": {
-   "next": "2027-03-03",
-   "termYears": 5,
-   "title": "대통령",
-   "partyPrimary": true
+  "USA": {
+    "system": "PRESIDENTIAL",
+    "legislature": {
+      "next": "2024-11-05",
+      "termYears": 2,
+      "seats": 435,
+      "electoralSystem": "MAJORITARIAN",
+      "earlyDissolution": false,
+      "usHouse": true
+    },
+    "executive": {
+      "next": "2024-11-05",
+      "termYears": 4,
+      "title": "대통령",
+      "partyPrimary": true
+    },
+    "sourceNote": "11월 첫 월요일 다음 화요일 하원·대통령 선거. 주별 대의원 경선, 538명 선거인단과 무과반 시 하원 주별 선거. 주·선거구의 기준 개표, 배분 및 경선 일정은 electoral_areas.json에 수록. https://www.archives.gov/electoral-college/allocation 수정헌법 제12·20·22·25조와 3 USC §19. 투표 전 정당의 대체 후보 선정은 모형이며, 선거인단 투표 뒤 대통령 당선인 사망 시 부통령 당선인이 취임한다. 2년을 초과해 전임 잔여 임기를 맡은 승계자는 한 번만 선출될 수 있다. https://constitution.congress.gov/constitution/amendment-20/ https://constitution.congress.gov/constitution/amendment-22/ 하원 임기는 1월 3일, 대통령·부통령 임기는 1월 20일 시작한다. 주별 상원 임기군 및 보궐 선서는 electoral_areas.json의 상원 명부를 따른다. https://constitution.congress.gov/constitution/amendment-20/"
   },
-  "sourceNote": "2024-01-01 기준 법정 일정. 제22대 국회의원 선거 2024-04-10(지역구 254·비례 46), 제21대 대통령 선거 법정일 2027-03-03. https://en.wikipedia.org/wiki/2024_South_Korean_legislative_election"
- },
- "USA": {
-  "system": "PRESIDENTIAL",
-  "legislature": {
-   "next": "2024-11-05",
-   "termYears": 2,
-   "seats": 435,
-   "electoralSystem": "MAJORITARIAN",
-   "earlyDissolution": false
+  "CHN": {
+    "system": "NON_COMPETITIVE",
+    "sourceNote": "전국인민대표대회는 간접 선출이며 권력 구성을 바꾸는 경쟁 선거가 없다."
   },
-  "executive": {
-   "next": "2024-11-05",
-   "termYears": 4,
-   "title": "대통령",
-   "partyPrimary": true
+  "JPN": {
+    "system": "PARLIAMENTARY",
+    "legislature": {
+      "next": "2025-10-26",
+      "termYears": 4,
+      "seats": 465,
+      "constituencySeats": 289,
+      "electoralSystem": "MIXED",
+      "earlyDissolution": true,
+      "mixedSystem": "JPN"
+    },
+    "sourceNote": "중의원 임기 2025-10-30 만료 전 마지막 일요일. 47개 도도부현 지역구 289석과 11개 권역에서 각각 동트식으로 배분하는 비례 176석. https://laws.e-gov.go.jp/law/325AC1000000100"
   },
-  "sourceNote": "연방법상 선거일(11월 첫 월요일 다음 화요일) 2024-11-05. 하원 435석 전원·대통령. https://en.wikipedia.org/wiki/2024_United_States_elections 경선·코커스는 전국 단일 공천 경선으로 근사한다. https://www.usa.gov/primaries-caucuses"
- },
- "CHN": {
-  "system": "NON_COMPETITIVE",
-  "sourceNote": "전국인민대표대회는 간접 선출이며 권력 구성을 바꾸는 경쟁 선거가 없다."
- },
- "JPN": {
-  "system": "PARLIAMENTARY",
-  "legislature": {
-   "next": "2025-10-26",
-   "termYears": 4,
-   "seats": 465,
-   "constituencySeats": 289,
-   "electoralSystem": "MIXED",
-   "earlyDissolution": true
+  "DEU": {
+    "system": "PARLIAMENTARY",
+    "legislature": {
+      "next": "2025-09-28",
+      "termYears": 4,
+      "seats": 630,
+      "electoralSystem": "MIXED",
+      "earlyDissolution": true,
+      "mixedSystem": "DEU",
+      "constituencySeats": 299
+    },
+    "sourceNote": "연방의회 정원 630석. 299개 선거구 제1표와 제2표로 정당·주별 의석을 배분한다. 2023년 개정 선거법과 2024-07-30 헌법재판소의 3개 선거구 예외를 적용했다. 임기상 정기 선거일 2025-09-28. 기준표는 2021년 선거를 2025년 선거구에 다시 집계한 연방선거관리관 자료이며 우편투표 일부는 공식 추계다. https://www.bundeswahlleiterin.de/en/bundestagswahlen/2025/informationen-waehler/wahlsystem.html https://bundeswahlleiterin.de/bundestagswahlen/2025/wahlkreiseinteilung/umgerechnete-ergebnisse.html"
   },
-  "sourceNote": "2021-10-31 총선으로 구성된 중의원 임기 만료 2025-10-30. 만료 전 마지막 일요일을 법정 최종 기한으로 사용. 소선거구 289·비례 176. https://en.wikipedia.org/wiki/House_of_Representatives_(Japan)"
- },
- "DEU": {
-  "system": "PARLIAMENTARY",
-  "legislature": {
-   "next": "2025-09-28",
-   "termYears": 4,
-   "seats": 630,
-   "electoralSystem": "PROPORTIONAL",
-   "earlyDissolution": true
+  "GBR": {
+    "system": "PARLIAMENTARY",
+    "legislature": {
+      "next": "2025-01-28",
+      "termYears": 5,
+      "seats": 650,
+      "pluralityMap": "GBR",
+      "electoralSystem": "MAJORITARIAN",
+      "earlyDissolution": true
+    },
+    "sourceNote": "Dissolution and Calling of Parliament Act 2022: 2019-12-17 첫 개회 후 5년인 2024-12-17 자동 해산, 법정 최종 투표일 2025-01-28. https://en.wikipedia.org/wiki/Dissolution_and_Calling_of_Parliament_Act_2022 2023년 경계 개편의 전국 650개 선거구. 의회가 제공한 2019년 새 경계 환산 후보 득표와 ONS 선거구 중심점으로 최다 득표 한 명을 선출한다. 2019년 브렉시트당은 후신 리폼 UK로 연결. https://electionresults.parliament.uk/general-elections/5/candidacies.csv"
   },
-  "sourceNote": "기본법상 제21대 연방의회 선거 기간 2025-08-27~10-26 중 정기 선거일 2025-09-28. 2023년 선거법 개정으로 다음 선거부터 정원 630석. https://bundeswahlleiterin.de/en/bundestagswahlen/2025.html"
- },
- "GBR": {
-  "system": "PARLIAMENTARY",
-  "legislature": {
-   "next": "2025-01-28",
-   "termYears": 5,
-   "seats": 650,
-   "electoralSystem": "MAJORITARIAN",
-   "earlyDissolution": true
+  "FRA": {
+    "system": "SEMI_PRESIDENTIAL",
+    "legislature": {
+      "next": "2027-06-20",
+      "termYears": 5,
+      "seats": 577,
+      "electoralSystem": "MAJORITARIAN",
+      "frenchAssembly": true,
+      "earlyDissolution": true
+    },
+    "executive": {
+      "next": "2027-04-11",
+      "termYears": 5,
+      "title": "대통령",
+      "runoffDays": 14
+    },
+    "sourceNote": "내무부 2022년 577개 지역구(재외 11개 포함) 등록자·유효표·후보 정치계열을 사용한다. 1차 유효표 과반과 등록자의 25%, 결선 진출 등록자의 12.5%, 최소 상위 2명과 결선 최다득표. https://www.service-public.gouv.fr/particuliers/vosdroits/F1943 https://www.data.gouv.fr/datasets/elections-legislatives-des-12-et-19-juin-2022-resultats-du-1er-tour 2022년 6월 구성된 국민의회의 정기 총선(결선) 2027년 6월, 대통령 임기 만료 2027-05-13 전 결선 2027년 4월. https://en.wikipedia.org/wiki/Next_French_presidential_election 게임 첫 투표일은 기존 결선 예상일 14일 전이며 이후 임기도 1차 투표에서 센다. https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006527466 국민의회 해산 후 20~40일 내 선거와 이후 1년간 추가 해산 제한은 헌법 제12조를 적용한다. https://www.conseil-constitutionnel.fr/en/constitution-of-4-october-1958"
   },
-  "sourceNote": "Dissolution and Calling of Parliament Act 2022: 2019-12-17 첫 개회 후 5년인 2024-12-17 자동 해산, 법정 최종 투표일 2025-01-28. https://en.wikipedia.org/wiki/Dissolution_and_Calling_of_Parliament_Act_2022"
- },
- "FRA": {
-  "system": "SEMI_PRESIDENTIAL",
-  "legislature": {
-   "next": "2027-06-20",
-   "termYears": 5,
-   "seats": 577,
-   "electoralSystem": "MAJORITARIAN",
-   "earlyDissolution": true
+  "RUS": {
+    "system": "PRESIDENTIAL",
+    "legislature": {
+      "next": "2026-09-20",
+      "termYears": 5,
+      "seats": 450,
+      "constituencySeats": 225,
+      "electoralSystem": "MIXED",
+      "earlyDissolution": false,
+      "mixedSystem": "RUS"
+    },
+    "executive": {
+      "next": "2024-03-17",
+      "termYears": 6,
+      "title": "대통령",
+      "runoffDays": 21
+    },
+    "sourceNote": "2024-03-15~17 대통령 선거와 2026년 9월 셋째 일요일 정기 총선. 시나리오 개시 당시 연방법 제300-FZ의 225개 지역구와 연방 명부 225석을 적용한다. 명부 5%와 최저 2명부·전체 유효 정당표 과반 조건을 적용한다. https://www.rcoit.ru/upload/iblock/bb4/vestnik11_2015.pdf https://www.osce.org/files/f/documents/b/6/262306.pdf"
   },
-  "executive": {
-   "next": "2027-04-11",
-   "termYears": 5,
-   "title": "대통령",
-   "runoffDays": 14
+  "UKR": {
+    "system": "SEMI_PRESIDENTIAL",
+    "suspended": "계엄 기간 중 선거 유예",
+    "sourceNote": "2022-02-24 선포된 계엄이 이어지는 동안 헌법과 계엄법에 따라 최고 라다·대통령 선거를 치르지 않는다. https://en.wikipedia.org/wiki/Martial_law_in_Ukraine"
   },
-  "sourceNote": "2022년 6월 구성된 국민의회의 정기 총선(결선) 2027년 6월, 대통령 임기 만료 2027-05-13 전 결선 2027년 4월. 대통령은 1년에 한 번 국민의회를 해산할 수 있다. https://en.wikipedia.org/wiki/Next_French_presidential_election 게임 첫 투표일은 기존 결선 예상일 14일 전이며 이후 임기도 1차 투표에서 센다. https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006527466"
- },
- "RUS": {
-  "system": "PRESIDENTIAL",
-  "legislature": {
-   "next": "2026-09-20",
-   "termYears": 5,
-   "seats": 450,
-   "constituencySeats": 225,
-   "electoralSystem": "MIXED",
-   "earlyDissolution": false
+  "IND": {
+    "system": "PARLIAMENTARY",
+    "legislature": {
+      "next": "2024-06-04",
+      "termYears": 5,
+      "seats": 543,
+      "pluralityMap": "IND",
+      "electoralSystem": "MAJORITARIAN",
+      "earlyDissolution": true
+    },
+    "sourceNote": "제17대 로크 사바 임기 만료 2024-06-16 전 총선. 개표일 2024-06-04를 선거일로 사용. https://en.wikipedia.org/wiki/2024_Indian_general_election 2024년 ECI 일정의 543개 지역구(지정카스트 84·지정부족 47)에서 해당 지역 후보 중 최다 득표자가 당선된다. 2019년 개표 자료에서 현역 원내 정당·무소속 후보를 가져온다. 아삼 및 잠무카슈미르 재획정 구역은 이전의 가까운 선거구를 대응시켰고, 2019년 8월 벨로르는 주요 두 후보 집계다. 같은 정당 안의 후보 자격은 해당 지역구 자격을 충족하는 후보로 대체한다고 가정한다. https://ceo.sikkim.gov.in/UploadedFiles/NewsTender/schedule%20of%20General%20Election.pdf https://www.eci.gov.in/statistical-reports"
   },
-  "executive": {
-   "next": "2024-03-17",
-   "termYears": 6,
-   "title": "대통령",
-   "runoffDays": 21
+  "BRA": {
+    "system": "PRESIDENTIAL",
+    "legislature": {
+      "next": "2026-10-04",
+      "termYears": 4,
+      "seats": 513,
+      "electoralSystem": "PROPORTIONAL",
+      "earlyDissolution": false,
+      "proportionalSystem": "BRA"
+    },
+    "executive": {
+      "next": "2026-10-04",
+      "termYears": 4,
+      "title": "대통령",
+      "runoffDays": 21,
+      "lastSundayRunoff": true
+    },
+    "sourceNote": "헌법상 10월 첫 일요일 총선 2026-10-04(대통령 과반 미달 시 같은 달 마지막 일요일에 결선). https://en.wikipedia.org/wiki/2026_Brazilian_general_election https://international.tse.jus.br/en/elections/elections 27개 주·연방구에서 정당연방을 공동 명부로 취급하며 선거쿼터·후보 10%·잔여 80%/20%와 최고평균을 적용한다. 개인별 선호표는 추정한다. https://www.tse.jus.br/legislacao/compilada/res/2021/resolucao-no-23-677-de-16-de-dezembro-de-2021 2021년 개헌 후 시나리오 정기 대선은 10월 첫 일요일에 치르고, 2027년부터 대통령은 다음 해 1월 5일, 연방의원은 2월 1일 임기를 시작한다. https://www.camara.leg.br/noticias/1298895-presidente-da-republica-eleito-neste-ano-vai-tomar-posse-no-dia-5-de-janeiro"
   },
-  "sourceNote": "소선거구 225석. https://data.ipu.org/parliament/RU/RU-LC01/election/RU-LC01-E20210919/ 대통령 선거 2024-03-15~17(마지막 날 사용), 국가두마 정기 선거 2026년 9월 셋째 일요일. https://en.wikipedia.org/wiki/2024_Russian_presidential_election"
- },
- "UKR": {
-  "system": "SEMI_PRESIDENTIAL",
-  "suspended": "계엄 기간 중 선거 유예",
-  "sourceNote": "2022-02-24 선포된 계엄이 이어지는 동안 헌법과 계엄법에 따라 최고 라다·대통령 선거를 치르지 않는다. https://en.wikipedia.org/wiki/Martial_law_in_Ukraine"
- },
- "IND": {
-  "system": "PARLIAMENTARY",
-  "legislature": {
-   "next": "2024-06-04",
-   "termYears": 5,
-   "seats": 543,
-   "electoralSystem": "MAJORITARIAN",
-   "earlyDissolution": true
+  "CAN": {
+    "system": "PARLIAMENTARY",
+    "legislature": {
+      "next": "2025-10-20",
+      "termYears": 4,
+      "seats": 343,
+      "pluralityMap": "CAN",
+      "electoralSystem": "MAJORITARIAN",
+      "earlyDissolution": true
+    },
+    "sourceNote": "Canada Elections Act 고정 선거일 2025-10-20. 2023년 선거구 재획정으로 다음 선거부터 343석. https://en.wikipedia.org/wiki/2025_Canadian_federal_election 정기선거는 직전 총선에서 네 번째 해 10월 셋째 월요일이다. https://laws-lois.justice.gc.ca/eng/acts/E-2.01/section-56.1.html 2024-04-23 이전 해산은 2013년 획정 338구의 2021년 득표, 이후 해산은 선거청이 같은 표를 새 경계로 재집계한 343구를 쓴다. 준주별 한 석 포함. https://www.elections.ca/content.aspx?section=res&dir=rep/tra/2023rep&document=p4&lang=e"
   },
-  "sourceNote": "제17대 로크 사바 임기 만료 2024-06-16 전 총선. 개표일 2024-06-04를 선거일로 사용. https://en.wikipedia.org/wiki/2024_Indian_general_election"
- },
- "BRA": {
-  "system": "PRESIDENTIAL",
-  "legislature": {
-   "next": "2026-10-04",
-   "termYears": 4,
-   "seats": 513,
-   "electoralSystem": "PROPORTIONAL",
-   "earlyDissolution": false
+  "PRK": {
+    "system": "NON_COMPETITIVE",
+    "sourceNote": "최고인민회의 선거는 단일 후보 찬반 투표로 권력 구성을 바꾸지 않는다."
   },
-  "executive": {
-   "next": "2026-10-04",
-   "termYears": 4,
-   "title": "대통령",
-   "runoffDays": 21,
-   "lastSundayRunoff": true
+  "AUS": {
+    "system": "PARLIAMENTARY",
+    "legislature": {
+      "next": "2025-09-27",
+      "termYears": 3,
+      "seats": 150,
+      "australianHouse": true,
+      "electoralSystem": "MAJORITARIAN",
+      "earlyDissolution": true
+    },
+    "sourceNote": "하원 단독 선거의 법정 최종일 2025-09-27. 2023년 의석 재배분으로 다음 선거부터 150석. AEC 2023 정원 결정과 2024년 확정 선거구명을 다음 총선부터 적용. 2022년 선거구별 1순위·탈락 이전표, 신설 Bullwinkel은 6개 전신 선거구 유권자수 가중치로 추계. 기존 구획 변경과 가상 탈락순위의 미관측 이전율은 모형값. https://www.aec.gov.au/media/2023/07-27.htm https://www.aec.gov.au/voting/counting/hor_count.htm https://results.aec.gov.au/27966/website/HouseDownloadsMenu-27966-Csv.htm"
   },
-  "sourceNote": "헌법상 10월 첫 일요일 총선 2026-10-04(대통령 과반 미달 시 같은 달 마지막 일요일에 결선). https://en.wikipedia.org/wiki/2026_Brazilian_general_election https://international.tse.jus.br/en/elections/elections"
- },
- "CAN": {
-  "system": "PARLIAMENTARY",
-  "legislature": {
-   "next": "2025-10-20",
-   "termYears": 4,
-   "seats": 343,
-   "electoralSystem": "MAJORITARIAN",
-   "earlyDissolution": true
+  "POL": {
+    "system": "SEMI_PRESIDENTIAL",
+    "legislature": {
+      "next": "2027-11-07",
+      "termYears": 4,
+      "seats": 460,
+      "electoralSystem": "PROPORTIONAL",
+      "earlyDissolution": false,
+      "proportionalSystem": "POL"
+    },
+    "executive": {
+      "next": "2025-05-18",
+      "termYears": 5,
+      "title": "대통령",
+      "runoffDays": 14
+    },
+    "sourceNote": "헌법 98조: 세임 임기(2023-11-13 개회) 종료 전 30일 안의 휴일 선거, 최종 일요일 2027-11-07. 대통령 임기 만료 2025-08-06 전 100~75일 사이 1차 투표 2025년 5월. https://en.wikipedia.org/wiki/Next_Polish_parliamentary_election PKW 2023년 선거구 41곳의 실제 정당별 유효표와 지역 정원. 정당 전국 5%, 등록 연합 8%를 적용해 각 지역에서 동트식으로 계산한다. https://wybory.gov.pl/sejmsenat2023/statics/PKW_OBWIESZCZENIA/uploaded_files/1697617008_obwieszczenie-sejm.pdf"
   },
-  "sourceNote": "Canada Elections Act 고정 선거일 2025-10-20. 2023년 선거구 재획정으로 다음 선거부터 343석. https://en.wikipedia.org/wiki/2025_Canadian_federal_election"
- },
- "PRK": {
-  "system": "NON_COMPETITIVE",
-  "sourceNote": "최고인민회의 선거는 단일 후보 찬반 투표로 권력 구성을 바꾸지 않는다."
- },
- "AUS": {
-  "system": "PARLIAMENTARY",
-  "legislature": {
-   "next": "2025-09-27",
-   "termYears": 3,
-   "seats": 150,
-   "electoralSystem": "MAJORITARIAN",
-   "earlyDissolution": true
+  "ITA": {
+    "system": "PARLIAMENTARY",
+    "legislature": {
+      "next": "2027-12-19",
+      "termYears": 5,
+      "seats": 400,
+      "constituencySeats": 147,
+      "electoralSystem": "MIXED",
+      "earlyDissolution": true,
+      "mixedSystem": "ITA"
+    },
+    "sourceNote": "2022-10-13 개원한 의회의 임기 만료 뒤 70일 안 정기 총선. 국내 지역구 147석은 공동후보도 경쟁한다. 국내 비례 245석은 3% 정당·10% 연합 기준으로 배분한다. 재외 4개 권역은 유럽 3·남미 2·북중미 2·나머지 1석이다. https://temi.camera.it/leg19/temi/elezioni-e-referendum https://www.camera.it/temiap/2022/08/03/OCD177-5672.pdf"
   },
-  "sourceNote": "하원 단독 선거의 법정 최종일 2025-09-27. 2023년 의석 재배분으로 다음 선거부터 150석. https://en.wikipedia.org/wiki/Next_Australian_federal_election"
- },
- "POL": {
-  "system": "SEMI_PRESIDENTIAL",
-  "legislature": {
-   "next": "2027-11-07",
-   "termYears": 4,
-   "seats": 460,
-   "electoralSystem": "PROPORTIONAL",
-   "earlyDissolution": false
+  "FIN": {
+    "system": "PARLIAMENTARY",
+    "legislature": {
+      "next": "2027-04-18",
+      "termYears": 4,
+      "seats": 200,
+      "electoralSystem": "PROPORTIONAL",
+      "earlyDissolution": true,
+      "proportionalSystem": "FIN"
+    },
+    "executive": {
+      "next": "2024-01-28",
+      "termYears": 6,
+      "title": "대통령",
+      "runoffDays": 14
+    },
+    "sourceNote": "선거법상 4월 셋째 일요일 2027-04-18. https://en.wikipedia.org/wiki/Next_Finnish_parliamentary_election 대통령 선거는 2024-01-28, 과반 미달 시 2024-02-11에 결선한다. https://valtioneuvosto.fi/en/-/1410853/presidential-election-on-sunday-28-january-2024 2023년 법정 지역구 13개에서 명부별 동트식. 올란드는 별도 1석. 지역별 선거연합·개인 선호표는 추정한다. https://www.finlex.fi/fi/lainsaadanto/2022/888 정기 대선은 1월 넷째 일요일, 대통령은 선출 다음 달 1일 취임한다. https://www.presidentti.fi/en/presidency/election-of-the-president/"
   },
-  "executive": {
-   "next": "2025-05-18",
-   "termYears": 5,
-   "title": "대통령",
-   "runoffDays": 14
+  "EST": {
+    "system": "PARLIAMENTARY",
+    "legislature": {
+      "next": "2027-03-07",
+      "termYears": 4,
+      "seats": 101,
+      "electoralSystem": "PROPORTIONAL",
+      "earlyDissolution": false,
+      "proportionalSystem": "EST"
+    },
+    "sourceNote": "헌법상 3월 첫 일요일 2027-03-07. 정부의 자의적 해산 권한이 없다. https://en.wikipedia.org/wiki/Next_Estonian_parliamentary_election 12개 선거구 개인쿼터, 지역명부 10% 후보·0.75쿼터 반올림, 전국 5% 진입·보정 0.9 지수·5% 개인후보 기준. 2023년 후보별 득표는 에스토니아 선거관리청 개방자료(CC BY 4.0)에서 집계했다. https://opendata.valimised.ee/api/RK_2023/VOTING_RESULT_IN_COUNTIES.xml https://www.valimised.ee/en/estonian-elections-nutshell/ascertaining-results/ascertaining-election-results-riigikogu-elections"
   },
-  "sourceNote": "헌법 98조: 세임 임기(2023-11-13 개회) 종료 전 30일 안의 휴일 선거, 최종 일요일 2027-11-07. 대통령 임기 만료 2025-08-06 전 100~75일 사이 1차 투표 2025년 5월. https://en.wikipedia.org/wiki/Next_Polish_parliamentary_election"
- },
- "ITA": {
-  "system": "PARLIAMENTARY",
-  "legislature": {
-   "next": "2027-12-19",
-   "termYears": 5,
-   "seats": 400,
-   "constituencySeats": 147,
-   "electoralSystem": "MIXED",
-   "earlyDissolution": true
+  "LVA": {
+    "system": "PARLIAMENTARY",
+    "legislature": {
+      "next": "2026-10-03",
+      "termYears": 4,
+      "seats": 100,
+      "electoralSystem": "PROPORTIONAL",
+      "earlyDissolution": false,
+      "proportionalSystem": "LVA"
+    },
+    "sourceNote": "헌법상 10월 첫 토요일 2026-10-03. 조기 해산은 국민투표를 거쳐야 한다. https://en.wikipedia.org/wiki/Next_Latvian_parliamentary_election 전국 5% 이상 정당을 2022년 확정 수치인 리가 36·비제메 26·라트갈레 13·쿠르제메 12·젬갈레 13석에 생트라귀로 배분한다. https://likumi.lv/ta/id/332998"
   },
-  "sourceNote": "국내 소선거구 147석. 해외 선거구 8석은 나머지 전국 배분에 합산한다. https://temi.camera.it/leg19/temi/elezioni-e-referendum 제19대 의회(2022-10-13 개회) 임기 만료 2027-10-12, 해산 후 70일 안 선거. 법정 최종 기한에 가까운 일요일 사용. https://en.wikipedia.org/wiki/Next_Italian_general_election"
- },
- "FIN": {
-  "system": "PARLIAMENTARY",
-  "legislature": {
-   "next": "2027-04-18",
-   "termYears": 4,
-   "seats": 200,
-   "electoralSystem": "PROPORTIONAL",
-   "earlyDissolution": true
+  "LTU": {
+    "system": "SEMI_PRESIDENTIAL",
+    "legislature": {
+      "next": "2024-10-13",
+      "termYears": 4,
+      "seats": 141,
+      "constituencySeats": 71,
+      "electoralSystem": "MIXED",
+      "earlyDissolution": false,
+      "mixedSystem": "LTU"
+    },
+    "executive": {
+      "next": "2024-05-12",
+      "termYears": 5,
+      "title": "대통령",
+      "runoffDays": 14
+    },
+    "sourceNote": "2024-10-13 총선 1차와 2024-05-12 대선 1차. 재외 선거구를 포함한 71개 실명 지역구에서 과반·결선을 처리한다. 전국 70석은 5% 봉쇄조항과 유효표 60% 이상 대표 조건의 잉여 배분이다. https://www.e-tar.lt/portal/lt/legalActPrint?documentId=921dd780904011eea5a28c81c82193a8 https://www.e-tar.lt/portal/lt/legalActPrint?documentId=418f26f0082b11edb4cae1b158f98ea5"
   },
-  "executive": {
-   "next": "2024-01-28",
-   "termYears": 6,
-   "title": "대통령",
-   "runoffDays": 14
+  "TUR": {
+    "system": "PRESIDENTIAL",
+    "legislature": {
+      "next": "2028-05-14",
+      "termYears": 5,
+      "seats": 600,
+      "electoralSystem": "PROPORTIONAL",
+      "earlyDissolution": false,
+      "proportionalSystem": "TUR"
+    },
+    "executive": {
+      "next": "2028-05-14",
+      "termYears": 5,
+      "title": "대통령",
+      "runoffDays": 14
+    },
+    "sourceNote": "2023-05-14 동시 선거 후 5년 임기. 다음 동시 선거 2028년 5월. https://en.wikipedia.org/wiki/Next_Turkish_presidential_election 2023년 81개 주 87개 선거구. 등록 선거연합 합산 전국 7% 진입 후 각 명부는 지역별 동트식으로 경쟁한다. 명부 공천 순서는 추정한다. https://www.ysk.gov.tr/doc/karar/dosya/45639002/2023-1255.pdf"
   },
-  "sourceNote": "선거법상 4월 셋째 일요일 2027-04-18. https://en.wikipedia.org/wiki/Next_Finnish_parliamentary_election 대통령 선거는 2024-01-28, 과반 미달 시 2024-02-11에 결선한다. https://valtioneuvosto.fi/en/-/1410853/presidential-election-on-sunday-28-january-2024"
- },
- "EST": {
-  "system": "PARLIAMENTARY",
-  "legislature": {
-   "next": "2027-03-07",
-   "termYears": 4,
-   "seats": 101,
-   "electoralSystem": "PROPORTIONAL",
-   "earlyDissolution": false
+  "ISR": {
+    "system": "PARLIAMENTARY",
+    "legislature": {
+      "next": "2026-10-27",
+      "termYears": 4,
+      "seats": 120,
+      "electoralSystem": "PROPORTIONAL",
+      "earlyDissolution": true,
+      "proportionalSystem": "ISR"
+    },
+    "sourceNote": "기본법상 정기 선거일 2026-10-27. 크네세트는 자진 해산할 수 있다. https://en.wikipedia.org/wiki/Next_Israeli_legislative_election 전국 3.25%·바데르오페르 방식과 2022년 잉여표 약정. 양당 약정과 해당 당의 우선순위를 차례로 계산한다. https://m.knesset.gov.il/en/about/lexicon/pages/seats.aspx"
   },
-  "sourceNote": "헌법상 3월 첫 일요일 2027-03-07. 정부의 자의적 해산 권한이 없다. https://en.wikipedia.org/wiki/Next_Estonian_parliamentary_election"
- },
- "LVA": {
-  "system": "PARLIAMENTARY",
-  "legislature": {
-   "next": "2026-10-03",
-   "termYears": 4,
-   "seats": 100,
-   "electoralSystem": "PROPORTIONAL",
-   "earlyDissolution": false
+  "IRN": {
+    "system": "PRESIDENTIAL",
+    "legislature": {
+      "next": "2024-03-01",
+      "termYears": 4,
+      "seats": 290,
+      "iranianAssembly": true,
+      "electoralSystem": "MAJORITARIAN",
+      "earlyDissolution": false
+    },
+    "sourceNote": "제12대 이슬람 의회 선거 2024-03-01, 정원 290석. 후보 자격은 헌법수호위원회가 심사한다. 무당적 대통령 후보를 인물로 선출한다. 2024년 1월 시점에서 직전 정기 선거와 임기로 산정한 모형 선거일이다. https://en.wikipedia.org/wiki/2024_Iranian_legislative_election 전국 208개 선거구(종교 공동체 선거구 5곳 포함), 유권자는 정원까지 후보를 선택한다. 2023년 개정 선거법 제9·10조에 따른 1차 투표용지의 20%, 잔여석 두 배 후보의 상대다수 결선. 2024년 5월 10일 결선일. 승인 후보 수·계열별 개인 지지와 후속 선거의 결선일(8주)은 추계. https://irandataportal.syr.edu/wp-content/uploads/Majles-Electoral-Districts-2024.pdf https://data.ipu.org/parliament/IR/IR-LC01/election/IR-LC01-E20240301/",
+    "executive": {
+      "next": "2025-06-20",
+      "termYears": 4,
+      "title": "대통령",
+      "nonpartisan": true,
+      "runoffDays": 7
+    }
   },
-  "sourceNote": "헌법상 10월 첫 토요일 2026-10-03. 조기 해산은 국민투표를 거쳐야 한다. https://en.wikipedia.org/wiki/Next_Latvian_parliamentary_election"
- },
- "LTU": {
-  "system": "SEMI_PRESIDENTIAL",
-  "legislature": {
-   "next": "2024-10-13",
-   "termYears": 4,
-   "seats": 141,
-   "constituencySeats": 71,
-   "electoralSystem": "MIXED",
-   "earlyDissolution": false
+  "SAU": {
+    "system": "NON_COMPETITIVE",
+    "sourceNote": "절대군주제로 국가 차원의 선거가 없다."
   },
-  "executive": {
-   "next": "2024-05-12",
-   "termYears": 5,
-   "title": "대통령",
-   "runoffDays": 14
+  "EGY": {
+    "system": "PRESIDENTIAL",
+    "legislature": {
+      "next": "2025-12-14",
+      "termYears": 5,
+      "seats": 596,
+      "constituencySeats": 284,
+      "electoralSystem": "MIXED",
+      "earlyDissolution": false,
+      "mixedSystem": "EGY"
+    },
+    "sourceNote": "2021-01-12 개원한 하원의 임기 만료 전 60일 안 다음 선거. 2020년 법 174호의 143개 개인후보 선거구에서 284석을 선출한다. 4개 권역 절대명부 100·100·42·42석과 대통령 지명 28석을 별도로 구성한다. 개별 명부 내 당선 순번·임명자의 정당·현지 투표는 모형이다. https://www.elections.eg/images/pdfs/laws/PoliRightsAmendments2020-140.pdf https://www.mahmoudm.net/_files/ugd/a57d22_f8c9cce706db4a7eb3e00180241015f3.pdf",
+    "executive": {
+      "next": "2029-12-12",
+      "termYears": 6,
+      "title": "대통령",
+      "nonpartisan": true,
+      "runoffDays": 28
+    }
   },
-  "sourceNote": "소선거구 71석. https://data.ipu.org/parliament/LT/LT-LC01/election/LT-LC01-E20201011/ 세이마스 정기 선거 2024-10-13(1차), 대통령 선거 2024-05-12(1차). https://en.wikipedia.org/wiki/2024_Lithuanian_parliamentary_election"
- },
- "TUR": {
-  "system": "PRESIDENTIAL",
-  "legislature": {
-   "next": "2028-05-14",
-   "termYears": 5,
-   "seats": 600,
-   "electoralSystem": "PROPORTIONAL",
-   "earlyDissolution": false
+  "ZAF": {
+    "system": "PARLIAMENTARY",
+    "legislature": {
+      "next": "2024-05-29",
+      "termYears": 5,
+      "seats": 400,
+      "electoralSystem": "PROPORTIONAL",
+      "earlyDissolution": false,
+      "proportionalSystem": "ZAF"
+    },
+    "sourceNote": "총선 2024-05-29. 대통령은 국민의회가 선출한다. https://en.wikipedia.org/wiki/2024_South_African_general_election 9개 주 지역투표로 200석을 먼저 배분하고 지역·전국 투표를 합산해 전국 보정 200석을 정한다. 쿼터·잉여·잔여 최고평균을 구분한다. https://www.gov.za/sites/default/files/gcis_document/202402/50179gen2336.pdf https://www.gov.za/sites/default/files/gcis_document/202304/48432electoralamendmentact1of2023.pdf"
   },
-  "executive": {
-   "next": "2028-05-14",
-   "termYears": 5,
-   "title": "대통령",
-   "runoffDays": 14
+  "TWN": {
+    "system": "PRESIDENTIAL",
+    "legislature": {
+      "next": "2024-01-13",
+      "termYears": 4,
+      "seats": 113,
+      "constituencySeats": 73,
+      "electoralSystem": "MIXED",
+      "earlyDissolution": false,
+      "mixedSystem": "TWN"
+    },
+    "executive": {
+      "next": "2024-01-13",
+      "termYears": 4,
+      "title": "총통"
+    },
+    "sourceNote": "총통·입법위원 동시 선거 2024-01-13. 지역구 73석, 평지·산지 원주민 전국 선거구 각각 단기비이양식 3석, 득표 5% 이상 정당에 전국 명부 34석. 대만 중앙선관위 2020년 후보별 지역구·원주민 표와 전국 정당표가 출발점이다. https://web.cec.gov.tw/english/article/23101 https://data.cec.gov.tw/ 정기선거 당선 입법위원은 2월 1일, 총통은 5월 20일 임기를 시작한다. 해산 후 새 입법원은 결과 확정 후 10일 안에 소집한다. https://www.ly.gov.tw/Pages/Detail.aspx?nodeid=45579&pid=236624 https://english.president.gov.tw/Page/95 https://english.president.gov.tw/Page/651"
   },
-  "sourceNote": "2023-05-14 동시 선거 후 5년 임기. 다음 동시 선거 2028년 5월. https://en.wikipedia.org/wiki/Next_Turkish_presidential_election"
- },
- "ISR": {
-  "system": "PARLIAMENTARY",
-  "legislature": {
-   "next": "2026-10-27",
-   "termYears": 4,
-   "seats": 120,
-   "electoralSystem": "PROPORTIONAL",
-   "earlyDissolution": true
+  "IDN": {
+    "system": "PRESIDENTIAL",
+    "legislature": {
+      "next": "2024-02-14",
+      "termYears": 5,
+      "seats": 580,
+      "electoralSystem": "PROPORTIONAL",
+      "earlyDissolution": false,
+      "proportionalSystem": "IDN"
+    },
+    "executive": {
+      "next": "2024-02-14",
+      "termYears": 5,
+      "title": "대통령",
+      "runoffDays": 133
+    },
+    "sourceNote": "총선 2024-02-14(대통령·국민대표회의). 국민대표회의 정원은 이번 선거부터 580석. https://en.wikipedia.org/wiki/2024_Indonesian_general_election 결선 간격은 2024년 계획일인 6월 26일을 기준으로 잡고 주별 득표율과 재외 유권자를 별도로 집계한다. https://www.kpu.go.id/dmdocument/1675917628DINAMIKA%20PEMILU.pdf 헌법 제6A조, 다자 대결 전국 과반 및 38개 주 중 20곳 이상에서 20% 이상 득표. 양자 대결에서는 최다득표. https://www.dpr.go.id/dokumen/jdih/undang-undang-dasar 2024년 대선 후보 3개 조·추천 정당은 KPU 제1632호, 대통령 취임은 10월 20일이다. https://jdih.kpu.go.id/data/data_kepkpu/2023kpt1632.pdf https://infopemilu.kpu.go.id/Pemilu/Peserta_pemilu KPU 규칙 6/2023 부록 I의 84개 지역구와 580석. 전국 4% 이상 정당을 지역별 생트라귀식으로 배분한다. https://jdih.kpu.go.id/data/data_pkpu/2023pkpu006.pdf 선거법 제427조와 헌법 제8조. 취임 전 당선인 유고 시 러닝메이트가 승계하며, 양 당선인이 모두 유고하면 국민협의회가 상위 두 진영의 후보조에서 선출한다. 재임 중 정·부통령 동시 궐위 때는 외교·내무·국방장관 공동 대행 후 30일 안에 잔여임기 후임조를 선출한다. https://jdih.kpu.go.id/data/data_uu/UU_Nomor_7_Tahun_2017_-_Batang_Tubuh_-_Hal._151-317.pdf 국민대표회의의 새 의원 임기는 10월 1일 선서로 시작한다. https://berkas.dpr.go.id/setjen/dokumen/persipar-Jadwal-Rapat-Jadwal-Rapat-Paripurna-DPR-RI-Masa-Persidangan-I-Tahun-Sidang-2024-2025-PERIODE-KEANGGOTAAN-2024-2029-1736997818.pdf"
   },
-  "sourceNote": "기본법상 정기 선거일 2026-10-27. 크네세트는 자진 해산할 수 있다. https://en.wikipedia.org/wiki/Next_Israeli_legislative_election"
- },
- "IRN": {
-  "system": "PRESIDENTIAL",
-  "legislature": {
-   "next": "2024-03-01",
-   "termYears": 4,
-   "seats": 290,
-   "electoralSystem": "MAJORITARIAN",
-   "earlyDissolution": false
+  "VNM": {
+    "system": "NON_COMPETITIVE",
+    "sourceNote": "국회 선거는 조국전선이 후보를 심사하는 일당 체제 선거로 권력 구성을 바꾸지 않는다."
   },
-  "sourceNote": "제12대 이슬람 의회 선거 2024-03-01, 정원 290석. 후보 자격은 헌법수호위원회가 심사한다. 무당적 대통령 후보를 인물로 선출한다. 2024년 1월 시점에서 직전 정기 선거와 임기로 산정한 모형 선거일이다. https://en.wikipedia.org/wiki/2024_Iranian_legislative_election",
-  "executive": {
-   "next": "2025-06-20",
-   "termYears": 4,
-   "title": "대통령",
-   "nonpartisan": true,
-   "runoffDays": 7
+  "THA": {
+    "system": "PARLIAMENTARY",
+    "legislature": {
+      "next": "2027-06-27",
+      "termYears": 4,
+      "seats": 500,
+      "constituencySeats": 400,
+      "electoralSystem": "MIXED",
+      "earlyDissolution": true,
+      "mixedSystem": "THA"
+    },
+    "sourceNote": "2023-05-14 선거 임기 만료 뒤 45일 안 정기 총선. 77개 주의 2023년 확정 지역구 400석과 별도 전국 명부 100석. https://www.ect.go.th/web-upload/1xff0d34e409a13ef56eea54c52a291126/m_document/2048/14110/file_download/4a500eff61b27408fa6d318cbd2d8e42-copy49.pdf https://anfrel.org/wp-content/uploads/2023/08/ANFREL_2023-Thai-General-Election-in.pdf"
+  },
+  "RWA": {
+    "system": "PRESIDENTIAL",
+    "legislature": {
+      "next": "2024-07-15",
+      "termYears": 5,
+      "seats": 80,
+      "reservedSeats": 27,
+      "reservedDelegation": "여성·청년·장애인 대표",
+      "electoralSystem": "PROPORTIONAL",
+      "earlyDissolution": false,
+      "proportionalSystem": "RWA"
+    },
+    "executive": {
+      "next": "2024-07-15",
+      "termYears": 5,
+      "title": "대통령"
+    },
+    "sourceNote": "하원 직선 비례대표 53석, 특별 선거인단 여성 24·청년 2·장애인 1석. 간선 27석은 하나의 무당적 대표 집단으로 묶는다. https://www.parliament.gov.rw/chamber-of-deputies-2/about 대통령·하원 동시 선거 2024-07-15. 2015년 개헌으로 2024년부터 대통령 임기 5년. https://en.wikipedia.org/wiki/2024_Rwandan_general_election 직선 53석에서 전국 5%·최대잉여법을 적용한다. 여성 24·청년 2·장애인 1 간선 대표단은 별도 27석이다. https://www.nec.gov.rw/fileadmin/user_upload/NEC/Publications/Electoral_Acts/Itegeko_Ngenga_rigeanga_amatora_29_07_2019.pdf"
+  },
+  "PAK": {
+    "system": "PARLIAMENTARY",
+    "legislature": {
+      "next": "2024-02-08",
+      "termYears": 5,
+      "seats": 336,
+      "electoralSystem": "MAJORITARIAN",
+      "earlyDissolution": true,
+      "reservedSeats": 70,
+      "pakistanAssembly": true,
+      "openingContest": {
+        "chamberName": "국민의회",
+        "headOfGovernmentTitle": "총리",
+        "parties": [
+          {
+            "name": "파키스탄 정의운동(PTI) 계열",
+            "votes": 17014812
+          },
+          {
+            "name": "파키스탄 무슬림연맹 나와즈파(PML-N)",
+            "votes": 13055964
+          },
+          {
+            "name": "파키스탄 인민당(PPPP)",
+            "votes": 6951056
+          },
+          {
+            "name": "무소속",
+            "votes": 6111190,
+            "other": true
+          },
+          {
+            "name": "통합행동위원회(MMA) 계열",
+            "votes": 2573939
+          },
+          {
+            "name": "테흐리크에라바이크 파키스탄(TLP)",
+            "votes": 2242122
+          },
+          {
+            "name": "대민주연합(GDA)",
+            "votes": 1260147
+          },
+          {
+            "name": "아와미 국민당(ANP)",
+            "votes": 815998
+          },
+          {
+            "name": "통합민족운동 파키스탄(MQM-P)",
+            "votes": 733245
+          },
+          {
+            "name": "파키스탄 무슬림연맹 카이드파(PML-Q)",
+            "votes": 517408
+          },
+          {
+            "name": "발루치스탄 아와미당(BAP)",
+            "votes": 319348
+          },
+          {
+            "name": "발루치스탄 국민당(BNP)",
+            "votes": 238817
+          },
+          {
+            "name": "Allah-o-Akbar Tehreek",
+            "votes": 179096
+          },
+          {
+            "name": "Sindh United Party",
+            "votes": 140303
+          },
+          {
+            "name": "Paktunkhwa Milli Awami Party",
+            "votes": 134846
+          },
+          {
+            "name": "Pak Sarzameen Party",
+            "votes": 126128
+          },
+          {
+            "name": "아와미 무슬림연맹(AML)",
+            "votes": 119362
+          },
+          {
+            "name": "Pakistan Awami Raj",
+            "votes": 115226
+          },
+          {
+            "name": "Pakistan Muslim League (Functional)",
+            "votes": 72553
+          },
+          {
+            "name": "Qaumi Watan Party",
+            "votes": 57249
+          },
+          {
+            "name": "Pakistan Rah-e-Haq Party",
+            "votes": 55859
+          },
+          {
+            "name": "Balochistan National Party (Awami)",
+            "votes": 55206
+          },
+          {
+            "name": "Tehreek-e-Labbaik Islam",
+            "votes": 55155
+          },
+          {
+            "name": "All Pakistan Muslim League",
+            "votes": 36566
+          },
+          {
+            "name": "Pakistan National Muslim League",
+            "votes": 35415
+          },
+          {
+            "name": "Jamiat Ulama-e-Islam Nazryati Pakistan",
+            "votes": 34247
+          },
+          {
+            "name": "Pakistan Human Party",
+            "votes": 34246
+          },
+          {
+            "name": "National Party",
+            "votes": 33432
+          },
+          {
+            "name": "Mutahidda Qabil Party",
+            "votes": 28469
+          },
+          {
+            "name": "Jamiat Ulama-e-Islam (Sami)",
+            "votes": 24582
+          },
+          {
+            "name": "잠후리 와탄당(JWP)",
+            "votes": 23274
+          },
+          {
+            "name": "Jamiat Ulema-e-Pakistan (Noorani)",
+            "votes": 22145
+          },
+          {
+            "name": "Mohajir Qaumi Movement (Haqiqi)",
+            "votes": 21521
+          },
+          {
+            "name": "Majlis-e-Wahdat-e-Muslimeen Pakistan",
+            "votes": 19615
+          },
+          {
+            "name": "Awami Workers Party",
+            "votes": 17935
+          },
+          {
+            "name": "Pakistan Justice and Democratic Party",
+            "votes": 12637
+          },
+          {
+            "name": "Pakistan Kissan Ittehad (Ch. Anwar)",
+            "votes": 12255
+          },
+          {
+            "name": "Pakistan Peoples Party (Shaheed Bhutto)",
+            "votes": 10032
+          },
+          {
+            "name": "Hazara Democratic Party",
+            "votes": 7942
+          },
+          {
+            "name": "Pakistan Tehreek-e-lnsaf (Nazriati)",
+            "votes": 6755
+          },
+          {
+            "name": "Pakistan Muslim Alliance",
+            "votes": 6703
+          },
+          {
+            "name": "Pakistan Saraiki Party",
+            "votes": 6523
+          },
+          {
+            "name": "Sunni Tehreek",
+            "votes": 5943
+          },
+          {
+            "name": "Sunni Ittehad Council",
+            "votes": 5939
+          },
+          {
+            "name": "Tehreek Jawanan Pakistan",
+            "votes": 5841
+          },
+          {
+            "name": "Pakistan Awami Inqalab",
+            "votes": 5046
+          },
+          {
+            "name": "Roshan Pakistan League",
+            "votes": 4267
+          },
+          {
+            "name": "Tehreek Tabdili Nizam Pakistan",
+            "votes": 4161
+          },
+          {
+            "name": "Pakistan Tehreek-e-lnsaf (Gulalai)",
+            "votes": 4146
+          },
+          {
+            "name": "Balochistan National Movement",
+            "votes": 3971
+          },
+          {
+            "name": "Tabdeeli Pasand Party (Pakistan)",
+            "votes": 3698
+          },
+          {
+            "name": "Amun Taraqqi Party",
+            "votes": 3646
+          },
+          {
+            "name": "Jamote Quami Movement",
+            "votes": 3269
+          },
+          {
+            "name": "Barabri Party Pakistan",
+            "votes": 2702
+          },
+          {
+            "name": "Move On Pakistan",
+            "votes": 2580
+          },
+          {
+            "name": "All Pakistan Muslim League (Jinnah)",
+            "votes": 2418
+          },
+          {
+            "name": "Pakistan Falah Party",
+            "votes": 2167
+          },
+          {
+            "name": "Pasban",
+            "votes": 2154
+          },
+          {
+            "name": "Pakistan Awami League",
+            "votes": 1958
+          },
+          {
+            "name": "Pakistan Aman Tehreek",
+            "votes": 1718
+          },
+          {
+            "name": "Pakistan Quami Yakjehti Party",
+            "votes": 1571
+          },
+          {
+            "name": "Pakistan Muslim League (Zia-ul-Haq Shaheed)",
+            "votes": 1406
+          },
+          {
+            "name": "Pakistan Muslim League (Sher-e-Bangal)",
+            "votes": 1332
+          },
+          {
+            "name": "Pakistan Freedom Movement",
+            "votes": 1096
+          },
+          {
+            "name": "Mustaqbil Pakistan",
+            "votes": 1053
+          },
+          {
+            "name": "Humdardan-e-Watan Pakistan",
+            "votes": 936
+          },
+          {
+            "name": "Pakistan Aman Party",
+            "votes": 852
+          },
+          {
+            "name": "Aam Admi Tehreek Pakistan",
+            "votes": 828
+          },
+          {
+            "name": "Awami Justice Party Pakistan",
+            "votes": 730
+          },
+          {
+            "name": "Saraikistan Democratic Party",
+            "votes": 724
+          },
+          {
+            "name": "Pakistan Supreme Democratic",
+            "votes": 708
+          },
+          {
+            "name": "Aam Log Party Pakistan",
+            "votes": 606
+          },
+          {
+            "name": "Tehreek-e-Suba Hazara",
+            "votes": 545
+          },
+          {
+            "name": "Awam League",
+            "votes": 493
+          },
+          {
+            "name": "Pakistan Welfare Party",
+            "votes": 426
+          },
+          {
+            "name": "Aam Awam Party",
+            "votes": 364
+          },
+          {
+            "name": "Jannat Pakistan Party",
+            "votes": 248
+          },
+          {
+            "name": "National Peace Council Party",
+            "votes": 242
+          },
+          {
+            "name": "Front National (Pakistan)",
+            "votes": 233
+          },
+          {
+            "name": "Pakistan Muslim League Organization",
+            "votes": 211
+          },
+          {
+            "name": "All Pakistan Tehreek",
+            "votes": 155
+          },
+          {
+            "name": "Pakistan Human Rights Party",
+            "votes": 139
+          },
+          {
+            "name": "Pakistan Tehreek-e-Insaniat",
+            "votes": 98
+          },
+          {
+            "name": "Pakistan Muslim League (Council)",
+            "votes": 91
+          },
+          {
+            "name": "Peoples Movement of Pakistan",
+            "votes": 37
+          }
+        ]
+      }
+    },
+    "sourceNote": "2023-08-09 하원 해산 후 과도 내각. 2023-11-02 대통령·선관위가 2024-02-08 총선일에 합의했다. https://www.supremecourt.gov.pk/downloads_judgements/const.p._32_2023_03nov2023.pdf 헌법 제51·52·58·91조. 정원 336석 중 266석은 지역구, 여성 60석은 주별, 비무슬림 10석은 전국 단위로 정당의 지역구 당선 의석에 비례해 배분한다. 2023-11-30 선관위 최종 획정 Form 7의 266개 지역구를 사용한다. 구 연방직할부족지역은 카이베르파크툰크와주 정원에 포함된다. https://ecp.gov.pk/storage/files/2/Delimitation%202023/Form-7%20National%20Assembly%20-%20Dated%2031-11-2023.pdf 2018-07-25 선관위 잠정 집계의 보존본에서 실제 투표한 270개 지역구 후보를 집계하고 연기된 NA-60·NA-103은 10월 선관위 Form 47의 유효표를 더했다. 총 272개 지역구 53,420,071표. https://dnd.com.pk/wp-content/uploads/2018/10/Form-47-NA-60-Rawalpindi-IV.pdf https://dnd.com.pk/wp-content/uploads/2018/10/Form-47-NA-103-Faisalabad-III.pdf 경계가 달라진 구는 같은 군 또는 전신 지역구의 득표를 사용한다. 헌법 제51조 제6항·선거법 제98조·선거규칙 제92·94조. 개표 12일 뒤에 전국 당선인을 일괄 공고하는 모형이며, 관보 공고 후 3일간 무소속 당선인의 입당을 접수하고 마지막 날 유보석을 배분한다. 지역별 득표와 전국 당선 규모에 따른 입당 성향은 추정이다. 이 모형은 지역구를 확보한 정당이 유보석 명부를 제출했다고 가정한다. 2024년 개별 후보 제휴와 세부 투표소별 경계는 추정 대상이다. https://www.pakp.gov.pk/wp-content/uploads/2024/07/Constitution.pdf https://www.ecp.gov.pk/storage/files/2/Elections%20Act%202017%20updated/Updated%20Elections%20Act%202017-231011-105435.pdf https://ecp.gov.pk/storage/files/1/eleclaws18.pdf https://github.com/colincookman/pakistan_election_results_2018/blob/81761f218106a8b054e4b70651d002f4050a1696/data/pk_candidate_data_consolidated_090418.csv"
   }
- },
- "SAU": {
-  "system": "NON_COMPETITIVE",
-  "sourceNote": "절대군주제로 국가 차원의 선거가 없다."
- },
- "EGY": {
-  "system": "PRESIDENTIAL",
-  "legislature": {
-   "next": "2025-12-14",
-   "termYears": 5,
-   "seats": 596,
-   "constituencySeats": 284,
-   "electoralSystem": "MIXED",
-   "earlyDissolution": false
-  },
-  "sourceNote": "개별 후보 선출 284석은 모형 소선거구로 배분한다. 명부 284석·임명 28석은 전국 배분으로 단순화한다. https://data.ipu.org/parliament/EG/EG-LC01/election/EG-LC01-E20201024/ 하원 임기(2021-01-12 개회) 만료 전 60일 안 선거. 정원 596석(선출 568·임명 28). 무당적 대통령 후보를 인물로 선출한다. 2024년 1월 시점에서 직전 정기 선거와 임기로 산정한 모형 선거일이다. https://en.wikipedia.org/wiki/2025_Egyptian_parliamentary_election https://sis.gov.eg/en/egypt/system-of-government/executive-authority/president-of-the-republic/",
-  "executive": {
-   "next": "2029-12-12",
-   "termYears": 6,
-   "title": "대통령",
-   "nonpartisan": true,
-   "runoffDays": 28
-  }
- },
- "ZAF": {
-  "system": "PARLIAMENTARY",
-  "legislature": {
-   "next": "2024-05-29",
-   "termYears": 5,
-   "seats": 400,
-   "electoralSystem": "PROPORTIONAL",
-   "earlyDissolution": false
-  },
-  "sourceNote": "총선 2024-05-29. 대통령은 국민의회가 선출한다. https://en.wikipedia.org/wiki/2024_South_African_general_election"
- },
- "TWN": {
-  "system": "PRESIDENTIAL",
-  "legislature": {
-   "next": "2024-01-13",
-   "termYears": 4,
-   "seats": 113,
-   "constituencySeats": 73,
-   "electoralSystem": "MIXED",
-   "earlyDissolution": false
-  },
-  "executive": {
-   "next": "2024-01-13",
-   "termYears": 4,
-   "title": "총통"
-  },
-  "sourceNote": "지역구 73석. 원주민 6석과 전국 명부 34석은 모형에서 전국 단위로 함께 배분한다. https://web.cec.gov.tw/english/article/23101 총통·입법위원 동시 선거 2024-01-13, 입법원 정원 113석. https://en.wikipedia.org/wiki/2024_Taiwanese_general_election"
- },
- "IDN": {
-  "system": "PRESIDENTIAL",
-  "legislature": {
-   "next": "2024-02-14",
-   "termYears": 5,
-   "seats": 580,
-   "electoralSystem": "PROPORTIONAL",
-   "earlyDissolution": false
-  },
-  "executive": {
-   "next": "2024-02-14",
-   "termYears": 5,
-   "title": "대통령",
-   "runoffDays": 133
-  },
-  "sourceNote": "총선 2024-02-14(대통령·국민대표회의). 국민대표회의 정원은 이번 선거부터 580석. https://en.wikipedia.org/wiki/2024_Indonesian_general_election 결선 간격은 2024년 계획일인 6월 26일을 기준으로 잡고 지방별 별도 득표 요건은 전국 득표로 근사한다. https://www.kpu.go.id/dmdocument/1675917628DINAMIKA%20PEMILU.pdf"
- },
- "VNM": {
-  "system": "NON_COMPETITIVE",
-  "sourceNote": "국회 선거는 조국전선이 후보를 심사하는 일당 체제 선거로 권력 구성을 바꾸지 않는다."
- },
- "THA": {
-  "system": "PARLIAMENTARY",
-  "legislature": {
-   "next": "2027-06-27",
-   "termYears": 4,
-   "seats": 500,
-   "constituencySeats": 400,
-   "electoralSystem": "MIXED",
-   "earlyDissolution": true
-  },
-  "sourceNote": "소선거구 400석. https://thailand.prd.go.th/en/content/category/detail/id/48/iid/190994 하원 임기(2023-05-14 선거) 만료 2027-05-13 후 45일 안 선거. 법정 최종 기한에 가까운 일요일 사용. https://en.wikipedia.org/wiki/Next_Thai_general_election"
- },
- "RWA": {
-  "system": "PRESIDENTIAL",
-  "legislature": {
-   "next": "2024-07-15",
-   "termYears": 5,
-   "seats": 80,
-   "electoralSystem": "PROPORTIONAL",
-   "earlyDissolution": false
-  },
-  "executive": {
-   "next": "2024-07-15",
-   "termYears": 5,
-   "title": "대통령"
-  },
-  "sourceNote": "대통령·하원 동시 선거 2024-07-15. 2015년 개헌으로 2024년부터 대통령 임기 5년. https://en.wikipedia.org/wiki/2024_Rwandan_general_election"
- },
- "PAK": {
-  "system": "PARLIAMENTARY",
-  "legislature": {
-   "next": "2024-02-08",
-   "termYears": 5,
-   "seats": 336,
-   "electoralSystem": "MAJORITARIAN",
-   "earlyDissolution": true,
-   "reservedSeats": 70,
-   "openingContest": {
-    "chamberName": "국민의회",
-    "headOfGovernmentTitle": "총리",
-    "parties": [
-     { "name": "파키스탄 정의운동(PTI) 계열", "votes": 16903702 },
-     { "name": "파키스탄 무슬림연맹 나와즈파(PML-N)", "votes": 12934589 },
-     { "name": "파키스탄 인민당(PPPP)", "votes": 6925943 },
-     { "name": "무소속", "votes": 6087410, "other": true },
-     { "name": "통합행동위원회(MMA) 계열", "votes": 2573939 },
-     { "name": "테흐리크에라바이크 파키스탄(TLP)", "votes": 2234316 },
-     { "name": "대민주연합(GDA)", "votes": 1260147 },
-     { "name": "아와미 국민당(ANP)", "votes": 815998 },
-     { "name": "통합민족운동 파키스탄(MQM-P)", "votes": 733245 },
-     { "name": "파키스탄 무슬림연맹 카이드파(PML-Q)", "votes": 517408 },
-     { "name": "발루치스탄 아와미당(BAP)", "votes": 319348 },
-     { "name": "발루치스탄 국민당(BNP)", "votes": 238817 },
-     { "name": "아와미 무슬림연맹(AML)", "votes": 119362 },
-     { "name": "잠후리 와탄당(JWP)", "votes": 23274 }
-    ]
-   }
-  },
-  "sourceNote": "2023-08-09 하원 해산 후 과도 내각. 2023-11-02 대통령·선관위가 2024-02-08 총선일에 합의했다. https://www.supremecourt.gov.pk/downloads_judgements/const.p._32_2023_03nov2023.pdf 헌법 제51·52·58·91조. 정원 336석 중 266석은 지역구, 여성 60석은 주별, 비무슬림 10석은 전국 단위로 정당의 지역구 당선 의석에 비례해 배분한다. 게임에서는 유보석 70석을 전국 단위로 배분한다. https://na.gov.pk/uploads/documents/63ea176f52421_610.pdf 첫 선거의 지지 기반은 2018-07-25 국민의회 선거구별 ECP 잠정 집계의 2018-09-04 보존본이다. 당시 투표한 270개 선거구(연기된 NA-60·103 제외)의 후보 득표 53,123,733표를 합산했다. 지역구 당선 또는 전국 득표율 1% 이상 정당·연합과 무소속을 포함한 51,687,498표를 기준으로 지지율을 계산한다. 나머지 71개 정당의 1,436,235표는 제외했다. PTI·MMA 계열은 2018년 당시 소속 기준이며 2024년 후보별 소속 변경이나 실제 총선 결과는 반영하지 않는다. https://github.com/colincookman/pakistan_election_results_2018/blob/81761f218106a8b054e4b70651d002f4050a1696/data/pk_candidate_data_consolidated_090418.csv"
- }
 }

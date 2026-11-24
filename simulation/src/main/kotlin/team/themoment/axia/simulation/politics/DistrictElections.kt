@@ -10,6 +10,8 @@ data class DistrictResult(
     val regionId: String,
     val regionName: String,
     val winners: List<String>,
+    val constituencies: List<String> = emptyList(),
+    val uncovered: Map<String, String> = emptyMap(),
 )
 
 internal class DistrictElectorate(
@@ -18,6 +20,47 @@ internal class DistrictElectorate(
     private val nationalApproval: Double,
     private val modelNames: Map<String, String> = emptyMap(),
 ) {
+    fun plurality(
+        map: PluralityMap,
+        shares: Map<String, Double>,
+    ) = PluralityDistricts.elect(map, MixedVotes(shares, regions, roles, nationalApproval, modelNames))
+
+    fun iranianCount(shares: Map<String, Double>) =
+        IranianAssembly.count(MixedVotes(shares, regions, roles, nationalApproval, modelNames), nationalApproval)
+
+    fun australianHouse(shares: Map<String, Double>) =
+        AustralianHouse.elect(MixedVotes(shares, regions, roles, nationalApproval, modelNames))
+
+    fun proportional(
+        shares: Map<String, Double>,
+        rule: LegislativeElectionRule,
+    ): LegislativeSeats = ProportionalElections.elect(rule, MixedVotes(shares, regions, roles, nationalApproval, modelNames))
+
+    fun mixedMember(
+        shares: Map<String, Double>,
+        system: MixedSystem,
+    ): LegislativeSeats = MixedMemberElections.elect(system, MixedVotes(shares, regions, roles, nationalApproval, modelNames))
+
+    fun frenchAssembly(shares: Map<String, Double>) = FrenchAssembly.count(shares, regions, roles, nationalApproval, modelNames)
+
+    fun usHouse(shares: Map<String, Double>) =
+        RegionalElections.house(
+            shares,
+            regions,
+            nationalApproval,
+            roles.entries
+                .firstOrNull {
+                    it.value ==
+                        PartyRole.LEAD
+                }?.key,
+            modelNames,
+        )
+
+    fun pakistanAssembly(
+        shares: Map<String, Double>,
+        opening: OpeningContest,
+    ): LegislativeSeats = PakistanAssembly.elect(shares, opening, regions, nationalApproval, roles, modelNames)
+
     fun elect(
         shares: Map<String, Double>,
         seats: Int,

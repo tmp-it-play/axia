@@ -688,7 +688,11 @@ class Simulation(
     fun renamePerson(
         personId: Int,
         name: String,
-    ): Person? = people.rename(personId, name)
+    ): Person? =
+        people.rename(personId, name)?.also { person ->
+            politics.renamePerson(person)
+            worldPolitics.renamePerson(person)
+        }
 
     /** 외교 행위. 정치 자본이 모자라거나 상대가 거절하면 아무 일도 없다(거절되면 자본을 돌려준다). */
     fun diplomaticAction(

@@ -1,0 +1,7039 @@
+{
+  "JPN": {
+    "source": "참의원 248석, 6년 임기와 3년 반수 개선. 최고재판소 공직선거법 별표 3의 45개 선거구 74석과 전국명부 50석. 첫 선거일 2025-07-20과 실제 2022년 당별 의석을 사용하되 임기군별 현역 소속·후보 득표는 추정한다. https://www.courts.go.jp/english/Judgments/search/1955/index.html https://www.sangiin.go.jp/eng/guide/index.htm",
+    "units": [
+      {
+        "name": "홋카이도",
+        "size": 3,
+        "method": "SNTV",
+        "next": "2025-07-20",
+        "years": 6,
+        "region": "JPN-1847"
+      },
+      {
+        "name": "아오모리현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2025-07-20",
+        "years": 6,
+        "region": "JPN-1863"
+      },
+      {
+        "name": "이와테현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2025-07-20",
+        "years": 6,
+        "region": "JPN-1865"
+      },
+      {
+        "name": "미야기현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2025-07-20",
+        "years": 6,
+        "region": "JPN-1866"
+      },
+      {
+        "name": "아키타현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2025-07-20",
+        "years": 6,
+        "region": "JPN-1862"
+      },
+      {
+        "name": "야마가타현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2025-07-20",
+        "years": 6,
+        "region": "JPN-1868"
+      },
+      {
+        "name": "후쿠시마현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2025-07-20",
+        "years": 6,
+        "region": "JPN-1864"
+      },
+      {
+        "name": "이바라키현",
+        "size": 2,
+        "method": "SNTV",
+        "next": "2025-07-20",
+        "years": 6,
+        "region": "JPN-1856"
+      },
+      {
+        "name": "도치기현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2025-07-20",
+        "years": 6,
+        "region": "JPN-1859"
+      },
+      {
+        "name": "군마현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2025-07-20",
+        "years": 6,
+        "region": "JPN-3503"
+      },
+      {
+        "name": "사이타마현",
+        "size": 4,
+        "method": "SNTV",
+        "next": "2025-07-20",
+        "years": 6,
+        "region": "JPN-1858"
+      },
+      {
+        "name": "지바현",
+        "size": 3,
+        "method": "SNTV",
+        "next": "2025-07-20",
+        "years": 6,
+        "region": "JPN-1855"
+      },
+      {
+        "name": "가나가와현",
+        "size": 4,
+        "method": "SNTV",
+        "next": "2025-07-20",
+        "years": 6,
+        "region": "JPN-1857"
+      },
+      {
+        "name": "야마나시현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2025-07-20",
+        "years": 6,
+        "region": "JPN-1861"
+      },
+      {
+        "name": "도쿄도",
+        "size": 6,
+        "method": "SNTV",
+        "next": "2025-07-20",
+        "years": 6,
+        "region": "JPN-1860"
+      },
+      {
+        "name": "니가타현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2025-07-20",
+        "years": 6,
+        "region": "JPN-1867"
+      },
+      {
+        "name": "도야마현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2025-07-20",
+        "years": 6,
+        "region": "JPN-1846"
+      },
+      {
+        "name": "이시카와현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2025-07-20",
+        "years": 6,
+        "region": "JPN-1842"
+      },
+      {
+        "name": "후쿠이현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2025-07-20",
+        "years": 6,
+        "region": "JPN-1848"
+      },
+      {
+        "name": "나가노현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2025-07-20",
+        "years": 6,
+        "region": "JPN-1844"
+      },
+      {
+        "name": "기후현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2025-07-20",
+        "years": 6,
+        "region": "JPN-1841"
+      },
+      {
+        "name": "시즈오카현",
+        "size": 2,
+        "method": "SNTV",
+        "next": "2025-07-20",
+        "years": 6,
+        "region": "JPN-1845"
+      },
+      {
+        "name": "아이치현",
+        "size": 4,
+        "method": "SNTV",
+        "next": "2025-07-20",
+        "years": 6,
+        "region": "JPN-1840"
+      },
+      {
+        "name": "미에현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2025-07-20",
+        "years": 6,
+        "region": "JPN-1843"
+      },
+      {
+        "name": "시가현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2025-07-20",
+        "years": 6,
+        "region": "JPN-1853"
+      },
+      {
+        "name": "교토부",
+        "size": 2,
+        "method": "SNTV",
+        "next": "2025-07-20",
+        "years": 6,
+        "region": "JPN-1850"
+      },
+      {
+        "name": "오사카부",
+        "size": 4,
+        "method": "SNTV",
+        "next": "2025-07-20",
+        "years": 6,
+        "region": "JPN-1852"
+      },
+      {
+        "name": "효고현",
+        "size": 3,
+        "method": "SNTV",
+        "next": "2025-07-20",
+        "years": 6,
+        "region": "JPN-1849"
+      },
+      {
+        "name": "나라현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2025-07-20",
+        "years": 6,
+        "region": "JPN-1851"
+      },
+      {
+        "name": "와카야마현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2025-07-20",
+        "years": 6,
+        "region": "JPN-1854"
+      },
+      {
+        "name": "돗토리·시마네",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2025-07-20",
+        "years": 6,
+        "region": "JPN-1825"
+      },
+      {
+        "name": "오카야마현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2025-07-20",
+        "years": 6,
+        "region": "JPN-1822"
+      },
+      {
+        "name": "히로시마현",
+        "size": 2,
+        "method": "SNTV",
+        "next": "2025-07-20",
+        "years": 6,
+        "region": "JPN-1821"
+      },
+      {
+        "name": "야마구치현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2025-07-20",
+        "years": 6,
+        "region": "JPN-1826"
+      },
+      {
+        "name": "도쿠시마·고치",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2025-07-20",
+        "years": 6,
+        "region": "JPN-1836"
+      },
+      {
+        "name": "가가와현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2025-07-20",
+        "years": 6,
+        "region": "JPN-1833"
+      },
+      {
+        "name": "에히메현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2025-07-20",
+        "years": 6,
+        "region": "JPN-1832"
+      },
+      {
+        "name": "후쿠오카현",
+        "size": 3,
+        "method": "SNTV",
+        "next": "2025-07-20",
+        "years": 6,
+        "region": "JPN-1829"
+      },
+      {
+        "name": "사가현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2025-07-20",
+        "years": 6,
+        "region": "JPN-1827"
+      },
+      {
+        "name": "나가사키현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2025-07-20",
+        "years": 6,
+        "region": "JPN-3500"
+      },
+      {
+        "name": "구마모토현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2025-07-20",
+        "years": 6,
+        "region": "JPN-1830"
+      },
+      {
+        "name": "오이타현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2025-07-20",
+        "years": 6,
+        "region": "JPN-1835"
+      },
+      {
+        "name": "미야자키현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2025-07-20",
+        "years": 6,
+        "region": "JPN-1831"
+      },
+      {
+        "name": "가고시마현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2025-07-20",
+        "years": 6,
+        "region": "JPN-3501"
+      },
+      {
+        "name": "오키나와현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2025-07-20",
+        "years": 6,
+        "region": "JPN-3502"
+      },
+      {
+        "name": "전국 비례대표",
+        "size": 50,
+        "method": "LIST",
+        "next": "2025-07-20",
+        "years": 6
+      },
+      {
+        "name": "홋카이도",
+        "size": 3,
+        "method": "SNTV",
+        "next": "2028-07-20",
+        "years": 6,
+        "region": "JPN-1847"
+      },
+      {
+        "name": "아오모리현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2028-07-20",
+        "years": 6,
+        "region": "JPN-1863"
+      },
+      {
+        "name": "이와테현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2028-07-20",
+        "years": 6,
+        "region": "JPN-1865"
+      },
+      {
+        "name": "미야기현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2028-07-20",
+        "years": 6,
+        "region": "JPN-1866"
+      },
+      {
+        "name": "아키타현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2028-07-20",
+        "years": 6,
+        "region": "JPN-1862"
+      },
+      {
+        "name": "야마가타현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2028-07-20",
+        "years": 6,
+        "region": "JPN-1868"
+      },
+      {
+        "name": "후쿠시마현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2028-07-20",
+        "years": 6,
+        "region": "JPN-1864"
+      },
+      {
+        "name": "이바라키현",
+        "size": 2,
+        "method": "SNTV",
+        "next": "2028-07-20",
+        "years": 6,
+        "region": "JPN-1856"
+      },
+      {
+        "name": "도치기현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2028-07-20",
+        "years": 6,
+        "region": "JPN-1859"
+      },
+      {
+        "name": "군마현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2028-07-20",
+        "years": 6,
+        "region": "JPN-3503"
+      },
+      {
+        "name": "사이타마현",
+        "size": 4,
+        "method": "SNTV",
+        "next": "2028-07-20",
+        "years": 6,
+        "region": "JPN-1858"
+      },
+      {
+        "name": "지바현",
+        "size": 3,
+        "method": "SNTV",
+        "next": "2028-07-20",
+        "years": 6,
+        "region": "JPN-1855"
+      },
+      {
+        "name": "가나가와현",
+        "size": 4,
+        "method": "SNTV",
+        "next": "2028-07-20",
+        "years": 6,
+        "region": "JPN-1857"
+      },
+      {
+        "name": "야마나시현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2028-07-20",
+        "years": 6,
+        "region": "JPN-1861"
+      },
+      {
+        "name": "도쿄도",
+        "size": 6,
+        "method": "SNTV",
+        "next": "2028-07-20",
+        "years": 6,
+        "region": "JPN-1860"
+      },
+      {
+        "name": "니가타현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2028-07-20",
+        "years": 6,
+        "region": "JPN-1867"
+      },
+      {
+        "name": "도야마현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2028-07-20",
+        "years": 6,
+        "region": "JPN-1846"
+      },
+      {
+        "name": "이시카와현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2028-07-20",
+        "years": 6,
+        "region": "JPN-1842"
+      },
+      {
+        "name": "후쿠이현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2028-07-20",
+        "years": 6,
+        "region": "JPN-1848"
+      },
+      {
+        "name": "나가노현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2028-07-20",
+        "years": 6,
+        "region": "JPN-1844"
+      },
+      {
+        "name": "기후현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2028-07-20",
+        "years": 6,
+        "region": "JPN-1841"
+      },
+      {
+        "name": "시즈오카현",
+        "size": 2,
+        "method": "SNTV",
+        "next": "2028-07-20",
+        "years": 6,
+        "region": "JPN-1845"
+      },
+      {
+        "name": "아이치현",
+        "size": 4,
+        "method": "SNTV",
+        "next": "2028-07-20",
+        "years": 6,
+        "region": "JPN-1840"
+      },
+      {
+        "name": "미에현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2028-07-20",
+        "years": 6,
+        "region": "JPN-1843"
+      },
+      {
+        "name": "시가현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2028-07-20",
+        "years": 6,
+        "region": "JPN-1853"
+      },
+      {
+        "name": "교토부",
+        "size": 2,
+        "method": "SNTV",
+        "next": "2028-07-20",
+        "years": 6,
+        "region": "JPN-1850"
+      },
+      {
+        "name": "오사카부",
+        "size": 4,
+        "method": "SNTV",
+        "next": "2028-07-20",
+        "years": 6,
+        "region": "JPN-1852"
+      },
+      {
+        "name": "효고현",
+        "size": 3,
+        "method": "SNTV",
+        "next": "2028-07-20",
+        "years": 6,
+        "region": "JPN-1849"
+      },
+      {
+        "name": "나라현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2028-07-20",
+        "years": 6,
+        "region": "JPN-1851"
+      },
+      {
+        "name": "와카야마현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2028-07-20",
+        "years": 6,
+        "region": "JPN-1854"
+      },
+      {
+        "name": "돗토리·시마네",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2028-07-20",
+        "years": 6,
+        "region": "JPN-1825"
+      },
+      {
+        "name": "오카야마현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2028-07-20",
+        "years": 6,
+        "region": "JPN-1822"
+      },
+      {
+        "name": "히로시마현",
+        "size": 2,
+        "method": "SNTV",
+        "next": "2028-07-20",
+        "years": 6,
+        "region": "JPN-1821"
+      },
+      {
+        "name": "야마구치현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2028-07-20",
+        "years": 6,
+        "region": "JPN-1826"
+      },
+      {
+        "name": "도쿠시마·고치",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2028-07-20",
+        "years": 6,
+        "region": "JPN-1836"
+      },
+      {
+        "name": "가가와현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2028-07-20",
+        "years": 6,
+        "region": "JPN-1833"
+      },
+      {
+        "name": "에히메현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2028-07-20",
+        "years": 6,
+        "region": "JPN-1832"
+      },
+      {
+        "name": "후쿠오카현",
+        "size": 3,
+        "method": "SNTV",
+        "next": "2028-07-20",
+        "years": 6,
+        "region": "JPN-1829"
+      },
+      {
+        "name": "사가현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2028-07-20",
+        "years": 6,
+        "region": "JPN-1827"
+      },
+      {
+        "name": "나가사키현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2028-07-20",
+        "years": 6,
+        "region": "JPN-3500"
+      },
+      {
+        "name": "구마모토현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2028-07-20",
+        "years": 6,
+        "region": "JPN-1830"
+      },
+      {
+        "name": "오이타현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2028-07-20",
+        "years": 6,
+        "region": "JPN-1835"
+      },
+      {
+        "name": "미야자키현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2028-07-20",
+        "years": 6,
+        "region": "JPN-1831"
+      },
+      {
+        "name": "가고시마현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2028-07-20",
+        "years": 6,
+        "region": "JPN-3501"
+      },
+      {
+        "name": "오키나와현",
+        "size": 1,
+        "method": "SNTV",
+        "next": "2028-07-20",
+        "years": 6,
+        "region": "JPN-3502"
+      },
+      {
+        "name": "전국 비례대표",
+        "size": 50,
+        "method": "LIST",
+        "next": "2028-07-20",
+        "years": 6
+      }
+    ]
+  },
+  "BRA": {
+    "source": "상원은 26개 주와 연방구에서 각 3명씩 8년 임기로 직선한다. 2026년 두 자리, 2030년 한 자리. 임기 개시 2월 1일. 지역별 후보·분할투표와 최초 임기군 당적은 추정한다. https://www12.senado.leg.br/noticias/materias/2022/09/30/entenda-como-funciona-a-eleicao-para-o-senado",
+    "units": [
+      {
+        "name": "아크리",
+        "size": 2,
+        "method": "PLURALITY",
+        "next": "2027-02-01",
+        "years": 8,
+        "region": "BRA-576"
+      },
+      {
+        "name": "아크리",
+        "size": 1,
+        "method": "PLURALITY",
+        "next": "2031-02-01",
+        "years": 8,
+        "region": "BRA-576"
+      },
+      {
+        "name": "알라고아스",
+        "size": 2,
+        "method": "PLURALITY",
+        "next": "2027-02-01",
+        "years": 8,
+        "region": "BRA-623"
+      },
+      {
+        "name": "알라고아스",
+        "size": 1,
+        "method": "PLURALITY",
+        "next": "2031-02-01",
+        "years": 8,
+        "region": "BRA-623"
+      },
+      {
+        "name": "아마파",
+        "size": 2,
+        "method": "PLURALITY",
+        "next": "2027-02-01",
+        "years": 8,
+        "region": "BRA-681"
+      },
+      {
+        "name": "아마파",
+        "size": 1,
+        "method": "PLURALITY",
+        "next": "2031-02-01",
+        "years": 8,
+        "region": "BRA-681"
+      },
+      {
+        "name": "아마조나스",
+        "size": 2,
+        "method": "PLURALITY",
+        "next": "2027-02-01",
+        "years": 8,
+        "region": "BRA-592"
+      },
+      {
+        "name": "아마조나스",
+        "size": 1,
+        "method": "PLURALITY",
+        "next": "2031-02-01",
+        "years": 8,
+        "region": "BRA-592"
+      },
+      {
+        "name": "바이아",
+        "size": 2,
+        "method": "PLURALITY",
+        "next": "2027-02-01",
+        "years": 8,
+        "region": "BRA-624"
+      },
+      {
+        "name": "바이아",
+        "size": 1,
+        "method": "PLURALITY",
+        "next": "2031-02-01",
+        "years": 8,
+        "region": "BRA-624"
+      },
+      {
+        "name": "세아라",
+        "size": 2,
+        "method": "PLURALITY",
+        "next": "2027-02-01",
+        "years": 8,
+        "region": "BRA-621"
+      },
+      {
+        "name": "세아라",
+        "size": 1,
+        "method": "PLURALITY",
+        "next": "2031-02-01",
+        "years": 8,
+        "region": "BRA-621"
+      },
+      {
+        "name": "연방구",
+        "size": 2,
+        "method": "PLURALITY",
+        "next": "2027-02-01",
+        "years": 8,
+        "region": "BRA-599"
+      },
+      {
+        "name": "연방구",
+        "size": 1,
+        "method": "PLURALITY",
+        "next": "2031-02-01",
+        "years": 8,
+        "region": "BRA-599"
+      },
+      {
+        "name": "이스피리투산투",
+        "size": 2,
+        "method": "PLURALITY",
+        "next": "2027-02-01",
+        "years": 8,
+        "region": "BRA-625"
+      },
+      {
+        "name": "이스피리투산투",
+        "size": 1,
+        "method": "PLURALITY",
+        "next": "2031-02-01",
+        "years": 8,
+        "region": "BRA-625"
+      },
+      {
+        "name": "고이아스",
+        "size": 2,
+        "method": "PLURALITY",
+        "next": "2027-02-01",
+        "years": 8,
+        "region": "BRA-1294"
+      },
+      {
+        "name": "고이아스",
+        "size": 1,
+        "method": "PLURALITY",
+        "next": "2031-02-01",
+        "years": 8,
+        "region": "BRA-1294"
+      },
+      {
+        "name": "마라냥",
+        "size": 2,
+        "method": "PLURALITY",
+        "next": "2027-02-01",
+        "years": 8,
+        "region": "BRA-593"
+      },
+      {
+        "name": "마라냥",
+        "size": 1,
+        "method": "PLURALITY",
+        "next": "2031-02-01",
+        "years": 8,
+        "region": "BRA-593"
+      },
+      {
+        "name": "마투그로수",
+        "size": 2,
+        "method": "PLURALITY",
+        "next": "2027-02-01",
+        "years": 8,
+        "region": "BRA-602"
+      },
+      {
+        "name": "마투그로수",
+        "size": 1,
+        "method": "PLURALITY",
+        "next": "2031-02-01",
+        "years": 8,
+        "region": "BRA-602"
+      },
+      {
+        "name": "마투그로수두술",
+        "size": 2,
+        "method": "PLURALITY",
+        "next": "2027-02-01",
+        "years": 8,
+        "region": "BRA-600"
+      },
+      {
+        "name": "마투그로수두술",
+        "size": 1,
+        "method": "PLURALITY",
+        "next": "2031-02-01",
+        "years": 8,
+        "region": "BRA-600"
+      },
+      {
+        "name": "미나스제라이스",
+        "size": 2,
+        "method": "PLURALITY",
+        "next": "2027-02-01",
+        "years": 8,
+        "region": "BRA-601"
+      },
+      {
+        "name": "미나스제라이스",
+        "size": 1,
+        "method": "PLURALITY",
+        "next": "2031-02-01",
+        "years": 8,
+        "region": "BRA-601"
+      },
+      {
+        "name": "파라",
+        "size": 2,
+        "method": "PLURALITY",
+        "next": "2027-02-01",
+        "years": 8,
+        "region": "BRA-594"
+      },
+      {
+        "name": "파라",
+        "size": 1,
+        "method": "PLURALITY",
+        "next": "2031-02-01",
+        "years": 8,
+        "region": "BRA-594"
+      },
+      {
+        "name": "파라이바",
+        "size": 2,
+        "method": "PLURALITY",
+        "next": "2027-02-01",
+        "years": 8,
+        "region": "BRA-626"
+      },
+      {
+        "name": "파라이바",
+        "size": 1,
+        "method": "PLURALITY",
+        "next": "2031-02-01",
+        "years": 8,
+        "region": "BRA-626"
+      },
+      {
+        "name": "파라나",
+        "size": 2,
+        "method": "PLURALITY",
+        "next": "2027-02-01",
+        "years": 8,
+        "region": "BRA-613"
+      },
+      {
+        "name": "파라나",
+        "size": 1,
+        "method": "PLURALITY",
+        "next": "2031-02-01",
+        "years": 8,
+        "region": "BRA-613"
+      },
+      {
+        "name": "페르남부쿠",
+        "size": 2,
+        "method": "PLURALITY",
+        "next": "2027-02-01",
+        "years": 8,
+        "region": "BRA-1313"
+      },
+      {
+        "name": "페르남부쿠",
+        "size": 1,
+        "method": "PLURALITY",
+        "next": "2031-02-01",
+        "years": 8,
+        "region": "BRA-1313"
+      },
+      {
+        "name": "피아우이",
+        "size": 2,
+        "method": "PLURALITY",
+        "next": "2027-02-01",
+        "years": 8,
+        "region": "BRA-622"
+      },
+      {
+        "name": "피아우이",
+        "size": 1,
+        "method": "PLURALITY",
+        "next": "2031-02-01",
+        "years": 8,
+        "region": "BRA-622"
+      },
+      {
+        "name": "리우데자네이루",
+        "size": 2,
+        "method": "PLURALITY",
+        "next": "2027-02-01",
+        "years": 8,
+        "region": "BRA-627"
+      },
+      {
+        "name": "리우데자네이루",
+        "size": 1,
+        "method": "PLURALITY",
+        "next": "2031-02-01",
+        "years": 8,
+        "region": "BRA-627"
+      },
+      {
+        "name": "히우그란지두노르치",
+        "size": 2,
+        "method": "PLURALITY",
+        "next": "2027-02-01",
+        "years": 8,
+        "region": "BRA-628"
+      },
+      {
+        "name": "히우그란지두노르치",
+        "size": 1,
+        "method": "PLURALITY",
+        "next": "2031-02-01",
+        "years": 8,
+        "region": "BRA-628"
+      },
+      {
+        "name": "히우그란지두술",
+        "size": 2,
+        "method": "PLURALITY",
+        "next": "2027-02-01",
+        "years": 8,
+        "region": "BRA-612"
+      },
+      {
+        "name": "히우그란지두술",
+        "size": 1,
+        "method": "PLURALITY",
+        "next": "2031-02-01",
+        "years": 8,
+        "region": "BRA-612"
+      },
+      {
+        "name": "혼도니아",
+        "size": 2,
+        "method": "PLURALITY",
+        "next": "2027-02-01",
+        "years": 8,
+        "region": "BRA-595"
+      },
+      {
+        "name": "혼도니아",
+        "size": 1,
+        "method": "PLURALITY",
+        "next": "2031-02-01",
+        "years": 8,
+        "region": "BRA-595"
+      },
+      {
+        "name": "호라이마",
+        "size": 2,
+        "method": "PLURALITY",
+        "next": "2027-02-01",
+        "years": 8,
+        "region": "BRA-670"
+      },
+      {
+        "name": "호라이마",
+        "size": 1,
+        "method": "PLURALITY",
+        "next": "2031-02-01",
+        "years": 8,
+        "region": "BRA-670"
+      },
+      {
+        "name": "산타카타리나",
+        "size": 2,
+        "method": "PLURALITY",
+        "next": "2027-02-01",
+        "years": 8,
+        "region": "BRA-614"
+      },
+      {
+        "name": "산타카타리나",
+        "size": 1,
+        "method": "PLURALITY",
+        "next": "2031-02-01",
+        "years": 8,
+        "region": "BRA-614"
+      },
+      {
+        "name": "상파울루",
+        "size": 2,
+        "method": "PLURALITY",
+        "next": "2027-02-01",
+        "years": 8,
+        "region": "BRA-1311"
+      },
+      {
+        "name": "상파울루",
+        "size": 1,
+        "method": "PLURALITY",
+        "next": "2031-02-01",
+        "years": 8,
+        "region": "BRA-1311"
+      },
+      {
+        "name": "세르지피",
+        "size": 2,
+        "method": "PLURALITY",
+        "next": "2027-02-01",
+        "years": 8,
+        "region": "BRA-629"
+      },
+      {
+        "name": "세르지피",
+        "size": 1,
+        "method": "PLURALITY",
+        "next": "2031-02-01",
+        "years": 8,
+        "region": "BRA-629"
+      },
+      {
+        "name": "토칸칭스",
+        "size": 2,
+        "method": "PLURALITY",
+        "next": "2027-02-01",
+        "years": 8,
+        "region": "BRA-596"
+      },
+      {
+        "name": "토칸칭스",
+        "size": 1,
+        "method": "PLURALITY",
+        "next": "2031-02-01",
+        "years": 8,
+        "region": "BRA-596"
+      }
+    ]
+  },
+  "AUS": {
+    "source": "6개 주는 12명 중 6명씩 6년 임기, 새 임기는 7월 1일. 두 본토 준주의 각 2명은 하원 선거 때마다 갱신한다. 선호표 전달·후보 공천은 모형이다. https://www.aph.gov.au/About_Parliament/Senate/Powers_practice_n_procedures/Senate_Briefs/Brief01 https://www.aec.gov.au/FAQs/Elections.htm",
+    "units": [
+      {
+        "name": "웨스턴오스트레일리아",
+        "size": 6,
+        "method": "STV",
+        "next": "2025-07-01",
+        "years": 6,
+        "region": "AUS-2651"
+      },
+      {
+        "name": "웨스턴오스트레일리아",
+        "size": 6,
+        "method": "STV",
+        "next": "2028-07-01",
+        "years": 6,
+        "region": "AUS-2651"
+      },
+      {
+        "name": "뉴사우스웨일스",
+        "size": 6,
+        "method": "STV",
+        "next": "2025-07-01",
+        "years": 6,
+        "region": "AUS-2654"
+      },
+      {
+        "name": "뉴사우스웨일스",
+        "size": 6,
+        "method": "STV",
+        "next": "2028-07-01",
+        "years": 6,
+        "region": "AUS-2654"
+      },
+      {
+        "name": "사우스오스트레일리아",
+        "size": 6,
+        "method": "STV",
+        "next": "2025-07-01",
+        "years": 6,
+        "region": "AUS-2655"
+      },
+      {
+        "name": "사우스오스트레일리아",
+        "size": 6,
+        "method": "STV",
+        "next": "2028-07-01",
+        "years": 6,
+        "region": "AUS-2655"
+      },
+      {
+        "name": "빅토리아",
+        "size": 6,
+        "method": "STV",
+        "next": "2025-07-01",
+        "years": 6,
+        "region": "AUS-2656"
+      },
+      {
+        "name": "빅토리아",
+        "size": 6,
+        "method": "STV",
+        "next": "2028-07-01",
+        "years": 6,
+        "region": "AUS-2656"
+      },
+      {
+        "name": "퀸즐랜드",
+        "size": 6,
+        "method": "STV",
+        "next": "2025-07-01",
+        "years": 6,
+        "region": "AUS-2657"
+      },
+      {
+        "name": "퀸즐랜드",
+        "size": 6,
+        "method": "STV",
+        "next": "2028-07-01",
+        "years": 6,
+        "region": "AUS-2657"
+      },
+      {
+        "name": "태즈메이니아",
+        "size": 6,
+        "method": "STV",
+        "next": "2025-07-01",
+        "years": 6,
+        "region": "AUS-2660"
+      },
+      {
+        "name": "태즈메이니아",
+        "size": 6,
+        "method": "STV",
+        "next": "2028-07-01",
+        "years": 6,
+        "region": "AUS-2660"
+      },
+      {
+        "name": "노던 준",
+        "size": 2,
+        "method": "STV",
+        "lowerLinked": true,
+        "region": "AUS-2650"
+      },
+      {
+        "name": "오스트레일리아 수도 준",
+        "size": 2,
+        "method": "STV",
+        "lowerLinked": true,
+        "region": "AUS-2653"
+      }
+    ]
+  },
+  "FRA": {
+    "source": "프랑스 선거법 별표 5·6 및 상원. 데파르트망·해외 선거인단 제2군 178석과 제1군 170석이 3년마다 교대로 10월 1일 취임한다. 1~2석은 1차 유효표 과반 및 등록 선거인 4분의 1, 미달 시 당일 2차 상대다수결. 3석 이상은 최고평균식 명부비례. 개별 선거인의 투표와 후보 사퇴·표 이전은 모형이다. https://senatoriales2023.senat.fr/ https://senatoriales2026.senat.fr/ https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000006354327/ 2024-03-17 비엔 보궐의 임기는 3월 18일 시작한다. https://www.senat.fr/senateurs/news_2023-2024.html",
+    "units": [
+      {
+        "name": "앵",
+        "size": 3,
+        "method": "COLLEGE_LIST",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5262",
+        "holders": {
+          "사회·생태·공화": 1,
+          "공화당": 2
+        }
+      },
+      {
+        "name": "엔",
+        "size": 3,
+        "method": "COLLEGE_LIST",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5263",
+        "holders": {
+          "공화당": 2,
+          "독립·공화·지역": 1
+        }
+      },
+      {
+        "name": "알리에",
+        "size": 2,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5264",
+        "holders": {
+          "독립·공화·지역": 1,
+          "공화당": 1
+        }
+      },
+      {
+        "name": "알프드오트프로방스",
+        "size": 1,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5265",
+        "holders": {
+          "유럽 민주사회연합": 1
+        }
+      },
+      {
+        "name": "오트잘프",
+        "size": 1,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5304",
+        "holders": {
+          "중도연합": 1
+        }
+      },
+      {
+        "name": "알프마리팀",
+        "size": 5,
+        "method": "COLLEGE_LIST",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5266",
+        "holders": {
+          "공화당": 5
+        }
+      },
+      {
+        "name": "아르데슈",
+        "size": 2,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5267",
+        "holders": {
+          "공화당": 2
+        }
+      },
+      {
+        "name": "아르덴",
+        "size": 2,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5268",
+        "holders": {
+          "공화당": 2
+        }
+      },
+      {
+        "name": "아리에주",
+        "size": 1,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5269",
+        "holders": {
+          "사회·생태·공화": 1
+        }
+      },
+      {
+        "name": "오브",
+        "size": 2,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5270",
+        "holders": {
+          "독립·공화·지역": 1,
+          "중도연합": 1
+        }
+      },
+      {
+        "name": "오드",
+        "size": 2,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5271",
+        "holders": {
+          "사회·생태·공화": 2
+        }
+      },
+      {
+        "name": "아베롱",
+        "size": 2,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5272",
+        "holders": {
+          "공화당": 1,
+          "독립·공화·지역": 1
+        }
+      },
+      {
+        "name": "테리투아르드벨포르",
+        "size": 1,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5348",
+        "holders": {
+          "공화당": 1
+        }
+      },
+      {
+        "name": "부슈뒤론",
+        "size": 8,
+        "method": "COLLEGE_LIST",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5274",
+        "holders": {
+          "공산·공화·시민·생태": 1,
+          "생태·연대·지역": 1,
+          "공화당": 2,
+          "사회·생태·공화": 1,
+          "중도연합": 1,
+          "유럽 민주사회연합": 1,
+          "비소속": 1
+        }
+      },
+      {
+        "name": "칼바도스",
+        "size": 3,
+        "method": "COLLEGE_LIST",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5275",
+        "holders": {
+          "공화당": 1,
+          "중도연합": 1,
+          "사회·생태·공화": 1
+        }
+      },
+      {
+        "name": "캉탈",
+        "size": 2,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5276",
+        "holders": {
+          "중도연합": 1,
+          "공화당": 1
+        }
+      },
+      {
+        "name": "샤랑트",
+        "size": 2,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5277",
+        "holders": {
+          "중도연합": 1,
+          "사회·생태·공화": 1
+        }
+      },
+      {
+        "name": "샤랑트마리팀",
+        "size": 3,
+        "method": "COLLEGE_LIST",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5278",
+        "holders": {
+          "공화당": 2,
+          "사회·생태·공화": 1
+        }
+      },
+      {
+        "name": "셰르",
+        "size": 2,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5279",
+        "holders": {
+          "공화당": 2
+        }
+      },
+      {
+        "name": "코레즈",
+        "size": 2,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5280",
+        "holders": {
+          "독립·공화·지역": 1,
+          "공화당": 1
+        }
+      },
+      {
+        "name": "코르스뒤쉬드",
+        "size": 1,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5281",
+        "holders": {
+          "공화당": 1
+        }
+      },
+      {
+        "name": "오트코르스",
+        "size": 1,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5297",
+        "holders": {
+          "비소속": 1
+        }
+      },
+      {
+        "name": "코트도르",
+        "size": 3,
+        "method": "COLLEGE_LIST",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5282",
+        "holders": {
+          "공화당": 1,
+          "중도연합": 1,
+          "민주·진보·독립": 1
+        }
+      },
+      {
+        "name": "코트다르모르",
+        "size": 3,
+        "method": "COLLEGE_LIST",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5283",
+        "holders": {
+          "공화당": 1,
+          "공산·공화·시민·생태": 1,
+          "사회·생태·공화": 1
+        }
+      },
+      {
+        "name": "크뢰즈",
+        "size": 2,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5284",
+        "holders": {
+          "사회·생태·공화": 2
+        }
+      },
+      {
+        "name": "도르도뉴",
+        "size": 2,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5286",
+        "holders": {
+          "사회·생태·공화": 1,
+          "공산·공화·시민·생태": 1
+        }
+      },
+      {
+        "name": "두",
+        "size": 3,
+        "method": "COLLEGE_LIST",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5287",
+        "holders": {
+          "공화당": 1,
+          "중도연합": 2
+        }
+      },
+      {
+        "name": "드롬",
+        "size": 3,
+        "method": "COLLEGE_LIST",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5288",
+        "holders": {
+          "공화당": 1,
+          "민주·진보·독립": 1,
+          "사회·생태·공화": 1
+        }
+      },
+      {
+        "name": "외르",
+        "size": 3,
+        "method": "COLLEGE_LIST",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5290",
+        "holders": {
+          "민주·진보·독립": 1,
+          "중도연합": 1,
+          "공화당": 1
+        }
+      },
+      {
+        "name": "외르에루아르",
+        "size": 3,
+        "method": "COLLEGE_LIST",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5291",
+        "holders": {
+          "공화당": 3
+        }
+      },
+      {
+        "name": "피니스테르",
+        "size": 4,
+        "method": "COLLEGE_LIST",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5292",
+        "holders": {
+          "중도연합": 1,
+          "사회·생태·공화": 1,
+          "민주·진보·독립": 1,
+          "공화당": 1
+        }
+      },
+      {
+        "name": "가르",
+        "size": 3,
+        "method": "COLLEGE_LIST",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5293",
+        "holders": {
+          "사회·생태·공화": 1,
+          "공화당": 2
+        }
+      },
+      {
+        "name": "오트가론",
+        "size": 5,
+        "method": "COLLEGE_LIST",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5298",
+        "holders": {
+          "공화당": 2,
+          "독립·공화·지역": 1,
+          "사회·생태·공화": 2
+        }
+      },
+      {
+        "name": "제르",
+        "size": 2,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5294",
+        "holders": {
+          "중도연합": 1,
+          "사회·생태·공화": 1
+        }
+      },
+      {
+        "name": "지롱드",
+        "size": 6,
+        "method": "COLLEGE_LIST",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5295",
+        "holders": {
+          "중도연합": 1,
+          "생태·연대·지역": 1,
+          "유럽 민주사회연합": 1,
+          "사회·생태·공화": 2,
+          "공화당": 1
+        }
+      },
+      {
+        "name": "에로",
+        "size": 4,
+        "method": "COLLEGE_LIST",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5307",
+        "holders": {
+          "유럽 민주사회연합": 2,
+          "사회·생태·공화": 1,
+          "독립·공화·지역": 1
+        }
+      },
+      {
+        "name": "일에빌렌",
+        "size": 4,
+        "method": "COLLEGE_LIST",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5308",
+        "holders": {
+          "공화당": 1,
+          "중도연합": 1,
+          "사회·생태·공화": 1,
+          "생태·연대·지역": 1
+        }
+      },
+      {
+        "name": "앵드르",
+        "size": 2,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5309",
+        "holders": {
+          "공화당": 2
+        }
+      },
+      {
+        "name": "앵드르에루아르",
+        "size": 3,
+        "method": "COLLEGE_LIST",
+        "next": "2029-10-01",
+        "years": 6,
+        "region": "FRA-5310",
+        "holders": {
+          "독립·공화·지역": 1,
+          "공화당": 1,
+          "사회·생태·공화": 1
+        }
+      },
+      {
+        "name": "이제르",
+        "size": 5,
+        "method": "COLLEGE_LIST",
+        "next": "2029-10-01",
+        "years": 6,
+        "region": "FRA-5311",
+        "holders": {
+          "생태·연대·지역": 1,
+          "공화당": 3,
+          "민주·진보·독립": 1
+        }
+      },
+      {
+        "name": "쥐라",
+        "size": 2,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2029-10-01",
+        "years": 6,
+        "region": "FRA-5312",
+        "holders": {
+          "공화당": 1,
+          "중도연합": 1
+        }
+      },
+      {
+        "name": "랑드",
+        "size": 2,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2029-10-01",
+        "years": 6,
+        "region": "FRA-5313",
+        "holders": {
+          "사회·생태·공화": 2
+        }
+      },
+      {
+        "name": "루아르에셰르",
+        "size": 2,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2029-10-01",
+        "years": 6,
+        "region": "FRA-5314",
+        "holders": {
+          "독립·공화·지역": 1,
+          "중도연합": 1
+        }
+      },
+      {
+        "name": "루아르",
+        "size": 4,
+        "method": "COLLEGE_LIST",
+        "next": "2029-10-01",
+        "years": 6,
+        "region": "FRA-5315",
+        "holders": {
+          "공산·공화·시민·생태": 1,
+          "공화당": 1,
+          "독립·공화·지역": 1,
+          "사회·생태·공화": 1
+        }
+      },
+      {
+        "name": "오트루아르",
+        "size": 2,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2029-10-01",
+        "years": 6,
+        "region": "FRA-5299",
+        "holders": {
+          "중도연합": 1,
+          "공화당": 1
+        }
+      },
+      {
+        "name": "루아르아틀랑티크",
+        "size": 5,
+        "method": "COLLEGE_LIST",
+        "next": "2029-10-01",
+        "years": 6,
+        "region": "FRA-5316",
+        "holders": {
+          "사회·생태·공화": 1,
+          "생태·연대·지역": 1,
+          "공화당": 1,
+          "유럽 민주사회연합": 1,
+          "독립·공화·지역": 1
+        }
+      },
+      {
+        "name": "루아레",
+        "size": 3,
+        "method": "COLLEGE_LIST",
+        "next": "2029-10-01",
+        "years": 6,
+        "region": "FRA-5317",
+        "holders": {
+          "사회·생태·공화": 1,
+          "공화당": 2
+        }
+      },
+      {
+        "name": "로트",
+        "size": 2,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2029-10-01",
+        "years": 6,
+        "region": "FRA-5318",
+        "holders": {
+          "유럽 민주사회연합": 1,
+          "사회·생태·공화": 1
+        }
+      },
+      {
+        "name": "로트에가론",
+        "size": 2,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2029-10-01",
+        "years": 6,
+        "region": "FRA-5319",
+        "holders": {
+          "공화당": 1,
+          "유럽 민주사회연합": 1
+        }
+      },
+      {
+        "name": "로제르",
+        "size": 1,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2029-10-01",
+        "years": 6,
+        "region": "FRA-5320",
+        "holders": {
+          "유럽 민주사회연합": 1
+        }
+      },
+      {
+        "name": "멘에루아르",
+        "size": 4,
+        "method": "COLLEGE_LIST",
+        "next": "2029-10-01",
+        "years": 6,
+        "region": "FRA-5321",
+        "holders": {
+          "생태·연대·지역": 1,
+          "독립·공화·지역": 2,
+          "공화당": 1
+        }
+      },
+      {
+        "name": "망슈",
+        "size": 3,
+        "method": "COLLEGE_LIST",
+        "next": "2029-10-01",
+        "years": 6,
+        "region": "FRA-5322",
+        "holders": {
+          "공화당": 2,
+          "사회·생태·공화": 1
+        }
+      },
+      {
+        "name": "마른",
+        "size": 3,
+        "method": "COLLEGE_LIST",
+        "next": "2029-10-01",
+        "years": 6,
+        "region": "FRA-5323",
+        "holders": {
+          "공화당": 1,
+          "독립·공화·지역": 1,
+          "중도연합": 1
+        }
+      },
+      {
+        "name": "오트마른",
+        "size": 2,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2029-10-01",
+        "years": 6,
+        "region": "FRA-5300",
+        "holders": {
+          "공화당": 2
+        }
+      },
+      {
+        "name": "마옌",
+        "size": 2,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2029-10-01",
+        "years": 6,
+        "region": "FRA-5324",
+        "holders": {
+          "공화당": 1,
+          "중도연합": 1
+        }
+      },
+      {
+        "name": "뫼르트에모젤",
+        "size": 4,
+        "method": "COLLEGE_LIST",
+        "next": "2029-10-01",
+        "years": 6,
+        "region": "FRA-5325",
+        "holders": {
+          "유럽 민주사회연합": 1,
+          "공화당": 1,
+          "사회·생태·공화": 1,
+          "공산·공화·시민·생태": 1
+        }
+      },
+      {
+        "name": "뫼즈",
+        "size": 2,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2029-10-01",
+        "years": 6,
+        "region": "FRA-5326",
+        "holders": {
+          "중도연합": 2
+        }
+      },
+      {
+        "name": "모르비앙",
+        "size": 3,
+        "method": "COLLEGE_LIST",
+        "next": "2029-10-01",
+        "years": 6,
+        "region": "FRA-5327",
+        "holders": {
+          "중도연합": 1,
+          "공화당": 1,
+          "사회·생태·공화": 1
+        }
+      },
+      {
+        "name": "모젤",
+        "size": 5,
+        "method": "COLLEGE_LIST",
+        "next": "2029-10-01",
+        "years": 6,
+        "region": "FRA-5328",
+        "holders": {
+          "공화당": 2,
+          "중도연합": 2,
+          "사회·생태·공화": 1
+        }
+      },
+      {
+        "name": "니에브르",
+        "size": 2,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2029-10-01",
+        "years": 6,
+        "region": "FRA-5329",
+        "holders": {
+          "사회·생태·공화": 1,
+          "중도연합": 1
+        }
+      },
+      {
+        "name": "노르",
+        "size": 11,
+        "method": "COLLEGE_LIST",
+        "next": "2029-10-01",
+        "years": 6,
+        "region": "FRA-5330",
+        "holders": {
+          "공산·공화·시민·생태": 2,
+          "중도연합": 3,
+          "공화당": 1,
+          "비소속": 1,
+          "사회·생태·공화": 2,
+          "독립·공화·지역": 2
+        }
+      },
+      {
+        "name": "우아즈",
+        "size": 4,
+        "method": "COLLEGE_LIST",
+        "next": "2029-10-01",
+        "years": 6,
+        "region": "FRA-5331",
+        "holders": {
+          "중도연합": 1,
+          "사회·생태·공화": 1,
+          "공화당": 2
+        }
+      },
+      {
+        "name": "오른",
+        "size": 2,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2029-10-01",
+        "years": 6,
+        "region": "FRA-5332",
+        "holders": {
+          "민주·진보·독립": 1,
+          "중도연합": 1
+        }
+      },
+      {
+        "name": "파드칼레",
+        "size": 7,
+        "method": "COLLEGE_LIST",
+        "next": "2029-10-01",
+        "years": 6,
+        "region": "FRA-5334",
+        "holders": {
+          "공산·공화·시민·생태": 2,
+          "사회·생태·공화": 1,
+          "중도연합": 2,
+          "공화당": 1,
+          "비소속": 1
+        }
+      },
+      {
+        "name": "퓌드돔",
+        "size": 3,
+        "method": "COLLEGE_LIST",
+        "next": "2029-10-01",
+        "years": 6,
+        "region": "FRA-5335",
+        "holders": {
+          "공화당": 1,
+          "사회·생태·공화": 1,
+          "유럽 민주사회연합": 1
+        }
+      },
+      {
+        "name": "피레네자틀랑티크",
+        "size": 3,
+        "method": "COLLEGE_LIST",
+        "next": "2029-10-01",
+        "years": 6,
+        "region": "FRA-5336",
+        "holders": {
+          "공화당": 1,
+          "사회·생태·공화": 1,
+          "중도연합": 1
+        }
+      },
+      {
+        "name": "오트피레네",
+        "size": 2,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2029-10-01",
+        "years": 6,
+        "region": "FRA-5305",
+        "holders": {
+          "사회·생태·공화": 1,
+          "유럽 민주사회연합": 1
+        }
+      },
+      {
+        "name": "피레네오리앙탈",
+        "size": 2,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2029-10-01",
+        "years": 6,
+        "region": "FRA-5337",
+        "holders": {
+          "공화당": 2
+        }
+      },
+      {
+        "name": "바랭",
+        "size": 5,
+        "method": "COLLEGE_LIST",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5273",
+        "holders": {
+          "생태·연대·지역": 1,
+          "중도연합": 1,
+          "공화당": 3
+        }
+      },
+      {
+        "name": "오랭",
+        "size": 4,
+        "method": "COLLEGE_LIST",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5296",
+        "holders": {
+          "공화당": 2,
+          "민주·진보·독립": 2
+        }
+      },
+      {
+        "name": "론",
+        "size": 7,
+        "method": "COLLEGE_LIST",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5338",
+        "holders": {
+          "공화당": 3,
+          "사회·생태·공화": 1,
+          "생태·연대·지역": 2,
+          "유럽 민주사회연합": 1
+        }
+      },
+      {
+        "name": "오트손",
+        "size": 2,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5301",
+        "holders": {
+          "공화당": 2
+        }
+      },
+      {
+        "name": "손에루아르",
+        "size": 3,
+        "method": "COLLEGE_LIST",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5339",
+        "holders": {
+          "사회·생태·공화": 1,
+          "공화당": 2
+        }
+      },
+      {
+        "name": "사르트",
+        "size": 3,
+        "method": "COLLEGE_LIST",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5340",
+        "holders": {
+          "사회·생태·공화": 1,
+          "공화당": 2
+        }
+      },
+      {
+        "name": "사부아",
+        "size": 2,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5341",
+        "holders": {
+          "공화당": 2
+        }
+      },
+      {
+        "name": "오트사부아",
+        "size": 3,
+        "method": "COLLEGE_LIST",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5302",
+        "holders": {
+          "중도연합": 1,
+          "공화당": 2
+        }
+      },
+      {
+        "name": "센마리팀",
+        "size": 6,
+        "method": "COLLEGE_LIST",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5343",
+        "holders": {
+          "공산·공화·시민·생태": 1,
+          "공화당": 1,
+          "중도연합": 3,
+          "사회·생태·공화": 1
+        }
+      },
+      {
+        "name": "센에마른",
+        "size": 6,
+        "method": "COLLEGE_LIST",
+        "next": "2029-10-01",
+        "years": 6,
+        "region": "FRA-5342",
+        "holders": {
+          "공화당": 2,
+          "비소속": 1,
+          "사회·생태·공화": 1,
+          "공산·공화·시민·생태": 1,
+          "독립·공화·지역": 1
+        }
+      },
+      {
+        "name": "되세브르",
+        "size": 2,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5285",
+        "holders": {
+          "공화당": 2
+        }
+      },
+      {
+        "name": "솜",
+        "size": 3,
+        "method": "COLLEGE_LIST",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5345",
+        "holders": {
+          "사회·생태·공화": 1,
+          "중도연합": 1,
+          "공화당": 1
+        }
+      },
+      {
+        "name": "타른",
+        "size": 2,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5346",
+        "holders": {
+          "중도연합": 2
+        }
+      },
+      {
+        "name": "타른에가론",
+        "size": 2,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5347",
+        "holders": {
+          "공화당": 1,
+          "중도연합": 1
+        }
+      },
+      {
+        "name": "바르",
+        "size": 4,
+        "method": "COLLEGE_LIST",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5351",
+        "holders": {
+          "공화당": 3,
+          "유럽 민주사회연합": 1
+        }
+      },
+      {
+        "name": "보클뤼즈",
+        "size": 3,
+        "method": "COLLEGE_LIST",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5352",
+        "holders": {
+          "공화당": 2,
+          "사회·생태·공화": 1
+        }
+      },
+      {
+        "name": "방데",
+        "size": 3,
+        "method": "COLLEGE_LIST",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5353",
+        "holders": {
+          "중도연합": 1,
+          "공화당": 2
+        }
+      },
+      {
+        "name": "비엔",
+        "size": 2,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5354",
+        "holders": {
+          "공화당": 1
+        },
+        "byElection": "2024-03-18"
+      },
+      {
+        "name": "오트비엔",
+        "size": 2,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5303",
+        "holders": {
+          "사회·생태·공화": 2
+        }
+      },
+      {
+        "name": "보주",
+        "size": 2,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5355",
+        "holders": {
+          "공화당": 1,
+          "중도연합": 1
+        }
+      },
+      {
+        "name": "욘",
+        "size": 2,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-5356",
+        "holders": {
+          "민주·진보·독립": 1,
+          "중도연합": 1
+        }
+      },
+      {
+        "name": "과들루프",
+        "size": 3,
+        "method": "COLLEGE_LIST",
+        "next": "2029-10-01",
+        "years": 6,
+        "region": "FRA-4603",
+        "holders": {
+          "사회·생태·공화": 1,
+          "민주·진보·독립": 2
+        }
+      },
+      {
+        "name": "프랑스령 기아나",
+        "size": 2,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2026-10-01",
+        "years": 6,
+        "region": "FRA-2000",
+        "holders": {
+          "민주·진보·독립": 2
+        }
+      },
+      {
+        "name": "마르티니크",
+        "size": 2,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2029-10-01",
+        "years": 6,
+        "region": "FRA-1442",
+        "holders": {
+          "민주·진보·독립": 1,
+          "사회·생태·공화": 1
+        }
+      },
+      {
+        "name": "레위니옹",
+        "size": 4,
+        "method": "COLLEGE_LIST",
+        "next": "2029-10-01",
+        "years": 6,
+        "region": "FRA-4601",
+        "holders": {
+          "사회·생태·공화": 1,
+          "공산·공화·시민·생태": 1,
+          "민주·진보·독립": 1,
+          "공화당": 1
+        }
+      },
+      {
+        "name": "에손",
+        "size": 5,
+        "method": "COLLEGE_LIST",
+        "next": "2029-10-01",
+        "years": 6,
+        "region": "FRA-5289",
+        "holders": {
+          "독립·공화·지역": 1,
+          "중도연합": 2,
+          "공화당": 1,
+          "사회·생태·공화": 1
+        }
+      },
+      {
+        "name": "파리",
+        "size": 12,
+        "method": "COLLEGE_LIST",
+        "next": "2029-10-01",
+        "years": 6,
+        "region": "FRA-5333",
+        "holders": {
+          "공산·공화·시민·생태": 1,
+          "사회·생태·공화": 4,
+          "공화당": 4,
+          "생태·연대·지역": 3
+        }
+      },
+      {
+        "name": "오드센",
+        "size": 7,
+        "method": "COLLEGE_LIST",
+        "next": "2029-10-01",
+        "years": 6,
+        "region": "FRA-5306",
+        "holders": {
+          "공화당": 3,
+          "중도연합": 2,
+          "민주·진보·독립": 1,
+          "공산·공화·시민·생태": 1
+        }
+      },
+      {
+        "name": "센생드니",
+        "size": 6,
+        "method": "COLLEGE_LIST",
+        "next": "2029-10-01",
+        "years": 6,
+        "region": "FRA-5344",
+        "holders": {
+          "중도연합": 1,
+          "공산·공화·시민·생태": 1,
+          "유럽 민주사회연합": 1,
+          "공화당": 1,
+          "사회·생태·공화": 2
+        }
+      },
+      {
+        "name": "발드마른",
+        "size": 6,
+        "method": "COLLEGE_LIST",
+        "next": "2029-10-01",
+        "years": 6,
+        "region": "FRA-5350",
+        "holders": {
+          "공화당": 2,
+          "중도연합": 1,
+          "생태·연대·지역": 1,
+          "사회·생태·공화": 1,
+          "공산·공화·시민·생태": 1
+        }
+      },
+      {
+        "name": "발두아즈",
+        "size": 5,
+        "method": "COLLEGE_LIST",
+        "next": "2029-10-01",
+        "years": 6,
+        "region": "FRA-5349",
+        "holders": {
+          "공산·공화·시민·생태": 1,
+          "공화당": 2,
+          "중도연합": 1,
+          "사회·생태·공화": 1
+        }
+      },
+      {
+        "name": "이블린",
+        "size": 6,
+        "method": "COLLEGE_LIST",
+        "next": "2029-10-01",
+        "years": 6,
+        "region": "FRA-5357",
+        "holders": {
+          "공화당": 3,
+          "중도연합": 1,
+          "민주·진보·독립": 1,
+          "생태·연대·지역": 1
+        }
+      },
+      {
+        "name": "마요트",
+        "size": 2,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2029-10-01",
+        "years": 6,
+        "region": "FRA-4602",
+        "holders": {
+          "민주·진보·독립": 2
+        }
+      },
+      {
+        "name": "프랑스령 폴리네시아",
+        "size": 2,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2026-10-01",
+        "years": 6,
+        "holders": {
+          "민주·진보·독립": 1,
+          "중도연합": 1
+        }
+      },
+      {
+        "name": "생바르텔레미",
+        "size": 1,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2026-10-01",
+        "years": 6,
+        "holders": {
+          "공화당": 1
+        }
+      },
+      {
+        "name": "생마르탱",
+        "size": 1,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2026-10-01",
+        "years": 6,
+        "holders": {
+          "공화당": 1
+        }
+      },
+      {
+        "name": "생피에르 미클롱",
+        "size": 1,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2029-10-01",
+        "years": 6,
+        "holders": {
+          "유럽 민주사회연합": 1
+        }
+      },
+      {
+        "name": "왈리스 푸투나",
+        "size": 1,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2026-10-01",
+        "years": 6,
+        "holders": {
+          "민주·진보·독립": 1
+        }
+      },
+      {
+        "name": "누벨칼레도니",
+        "size": 2,
+        "method": "COLLEGE_MAJORITY",
+        "next": "2029-10-01",
+        "years": 6,
+        "holders": {
+          "공화당": 1,
+          "공산·공화·시민·생태": 1
+        }
+      },
+      {
+        "name": "재외 프랑스인 제1군",
+        "size": 6,
+        "method": "COLLEGE_LIST",
+        "next": "2029-10-01",
+        "years": 6,
+        "holders": {
+          "사회·생태·공화": 1,
+          "공화당": 3,
+          "생태·연대·지역": 1,
+          "중도연합": 1
+        }
+      },
+      {
+        "name": "재외 프랑스인 제2군",
+        "size": 6,
+        "method": "COLLEGE_LIST",
+        "next": "2026-10-01",
+        "years": 6,
+        "holders": {
+          "공화당": 2,
+          "중도연합": 1,
+          "민주·진보·독립": 1,
+          "사회·생태·공화": 1,
+          "생태·연대·지역": 1
+        }
+      }
+    ]
+  },
+  "POL": {
+    "source": "100개 단일선거구에서 최다득표자가 당선된다. 임기는 하원과 연동된다. 개인 후보와 상원 선거협약은 추정한다. https://www.senat.gov.pl/en/about-the-senate/",
+    "units": [
+      {
+        "name": "상원 단일선거구",
+        "size": 100,
+        "method": "PLURALITY",
+        "lowerLinked": true
+      }
+    ]
+  },
+  "ITA": {
+    "source": "상·하원 동시 선거를 모형 기본값으로 사용한다. 지역구 74·국내 비례 122·해외 4석과 종신 의원을 구분한다. 전직 대통령은 당연직 종신 의원이며, 2024-01-01 재임 중인 종신 의원 5명은 모두 대통령 지명직이다. 사퇴·서거·추가 임명은 별도 재량사건이다. https://www.senato.it/en/relations-with-citizens/senate-and-citizens/electoral-system https://www.camera.it/temiap/2022/08/03/OCD177-5672.pdf https://www.senato.it/composizione/senatori/senatori-a-vita",
+    "units": [
+      {
+        "name": "국내 단일선거구",
+        "size": 74,
+        "method": "PLURALITY",
+        "lowerLinked": true
+      },
+      {
+        "name": "국내 비례 명부",
+        "size": 122,
+        "method": "LIST",
+        "lowerLinked": true
+      },
+      {
+        "name": "재외 유럽",
+        "size": 1,
+        "method": "PLURALITY",
+        "lowerLinked": true
+      },
+      {
+        "name": "재외 남아메리카",
+        "size": 1,
+        "method": "PLURALITY",
+        "lowerLinked": true
+      },
+      {
+        "name": "재외 북·중앙아메리카",
+        "size": 1,
+        "method": "PLURALITY",
+        "lowerLinked": true
+      },
+      {
+        "name": "재외 아프리카·아시아·오세아니아·남극",
+        "size": 1,
+        "method": "PLURALITY",
+        "lowerLinked": true
+      },
+      {
+        "name": "종신 의원",
+        "size": 5,
+        "method": "LIFE"
+      }
+    ]
+  },
+  "EGY": {
+    "source": "상원법 141/2020, 84/2025 개정표 1·2. 2025-10-18 새 임기부터 27개 주 개인후보 100석, 4개 권역 절대다수 폐쇄명부 37·37·13·13석과 대통령 지명 100석이다. 후보의 선호표·명부 순번과 지명자 당적은 추정한다. https://www.elections.eg/images/pdfs/laws/Senate-2020-141.pdf.pdf https://sis.gov.eg/en/media-center/news/senate-inaugurates-1st-regular-session-of-2nd-legislative-term/",
+    "units": [
+      {
+        "name": "카이로",
+        "size": 10,
+        "method": "CANDIDATE_RUNOFF",
+        "next": "2025-10-18",
+        "years": 5,
+        "region": "EGY-1533"
+      },
+      {
+        "name": "칼리우비야",
+        "size": 5,
+        "method": "CANDIDATE_RUNOFF",
+        "next": "2025-10-18",
+        "years": 5,
+        "region": "EGY-1534"
+      },
+      {
+        "name": "다칼리야",
+        "size": 6,
+        "method": "CANDIDATE_RUNOFF",
+        "next": "2025-10-18",
+        "years": 5,
+        "region": "EGY-1537"
+      },
+      {
+        "name": "무누피아",
+        "size": 4,
+        "method": "CANDIDATE_RUNOFF",
+        "next": "2025-10-18",
+        "years": 5,
+        "region": "EGY-1532"
+      },
+      {
+        "name": "가르비야",
+        "size": 5,
+        "method": "CANDIDATE_RUNOFF",
+        "next": "2025-10-18",
+        "years": 5,
+        "region": "EGY-1530"
+      },
+      {
+        "name": "카프르엘셰이크",
+        "size": 3,
+        "method": "CANDIDATE_RUNOFF",
+        "next": "2025-10-18",
+        "years": 5,
+        "region": "EGY-1547"
+      },
+      {
+        "name": "기자",
+        "size": 8,
+        "method": "CANDIDATE_RUNOFF",
+        "next": "2025-10-18",
+        "years": 5,
+        "region": "EGY-1544"
+      },
+      {
+        "name": "파이윰",
+        "size": 4,
+        "method": "CANDIDATE_RUNOFF",
+        "next": "2025-10-18",
+        "years": 5,
+        "region": "EGY-1542"
+      },
+      {
+        "name": "베니수에프",
+        "size": 3,
+        "method": "CANDIDATE_RUNOFF",
+        "next": "2025-10-18",
+        "years": 5,
+        "region": "EGY-1546"
+      },
+      {
+        "name": "미니아",
+        "size": 5,
+        "method": "CANDIDATE_RUNOFF",
+        "next": "2025-10-18",
+        "years": 5,
+        "region": "EGY-1545"
+      },
+      {
+        "name": "아시우트",
+        "size": 5,
+        "method": "CANDIDATE_RUNOFF",
+        "next": "2025-10-18",
+        "years": 5,
+        "region": "EGY-1549"
+      },
+      {
+        "name": "알와디알자디드",
+        "size": 1,
+        "method": "CANDIDATE_RUNOFF",
+        "next": "2025-10-18",
+        "years": 5,
+        "region": "EGY-1550"
+      },
+      {
+        "name": "소하그",
+        "size": 5,
+        "method": "CANDIDATE_RUNOFF",
+        "next": "2025-10-18",
+        "years": 5,
+        "region": "EGY-1552"
+      },
+      {
+        "name": "케나",
+        "size": 3,
+        "method": "CANDIDATE_RUNOFF",
+        "next": "2025-10-18",
+        "years": 5,
+        "region": "EGY-1551"
+      },
+      {
+        "name": "룩소르",
+        "size": 2,
+        "method": "CANDIDATE_RUNOFF",
+        "next": "2025-10-18",
+        "years": 5,
+        "region": "EGY-5494"
+      },
+      {
+        "name": "아스완",
+        "size": 2,
+        "method": "CANDIDATE_RUNOFF",
+        "next": "2025-10-18",
+        "years": 5,
+        "region": "EGY-1548"
+      },
+      {
+        "name": "홍해",
+        "size": 1,
+        "method": "CANDIDATE_RUNOFF",
+        "next": "2025-10-18",
+        "years": 5,
+        "region": "EGY-1556"
+      },
+      {
+        "name": "샤르키야",
+        "size": 7,
+        "method": "CANDIDATE_RUNOFF",
+        "next": "2025-10-18",
+        "years": 5,
+        "region": "EGY-1535"
+      },
+      {
+        "name": "다미에타",
+        "size": 2,
+        "method": "CANDIDATE_RUNOFF",
+        "next": "2025-10-18",
+        "years": 5,
+        "region": "EGY-1539"
+      },
+      {
+        "name": "포트사이드",
+        "size": 1,
+        "method": "CANDIDATE_RUNOFF",
+        "next": "2025-10-18",
+        "years": 5,
+        "region": "EGY-1538"
+      },
+      {
+        "name": "이스마일리아",
+        "size": 1,
+        "method": "CANDIDATE_RUNOFF",
+        "next": "2025-10-18",
+        "years": 5,
+        "region": "EGY-1531"
+      },
+      {
+        "name": "수에즈",
+        "size": 1,
+        "method": "CANDIDATE_RUNOFF",
+        "next": "2025-10-18",
+        "years": 5,
+        "region": "EGY-1536"
+      },
+      {
+        "name": "샤말시나",
+        "size": 1,
+        "method": "CANDIDATE_RUNOFF",
+        "next": "2025-10-18",
+        "years": 5,
+        "region": "EGY-1558"
+      },
+      {
+        "name": "자누브시나",
+        "size": 1,
+        "method": "CANDIDATE_RUNOFF",
+        "next": "2025-10-18",
+        "years": 5,
+        "region": "EGY-1557"
+      },
+      {
+        "name": "알렉산드리아",
+        "size": 7,
+        "method": "CANDIDATE_RUNOFF",
+        "next": "2025-10-18",
+        "years": 5,
+        "region": "EGY-1543"
+      },
+      {
+        "name": "베헤이라",
+        "size": 6,
+        "method": "CANDIDATE_RUNOFF",
+        "next": "2025-10-18",
+        "years": 5,
+        "region": "EGY-1541"
+      },
+      {
+        "name": "마트루",
+        "size": 1,
+        "method": "CANDIDATE_RUNOFF",
+        "next": "2025-10-18",
+        "years": 5,
+        "region": "EGY-1540"
+      },
+      {
+        "name": "카이로·델타 중남부",
+        "size": 37,
+        "method": "BLOCK_LIST",
+        "next": "2025-10-18",
+        "years": 5,
+        "regions": [
+          "EGY-1533",
+          "EGY-1534",
+          "EGY-1537",
+          "EGY-1547",
+          "EGY-1530",
+          "EGY-1532"
+        ]
+      },
+      {
+        "name": "상이집트",
+        "size": 37,
+        "method": "BLOCK_LIST",
+        "next": "2025-10-18",
+        "years": 5,
+        "regions": [
+          "EGY-1544",
+          "EGY-1542",
+          "EGY-1546",
+          "EGY-1545",
+          "EGY-1549",
+          "EGY-1552",
+          "EGY-1551",
+          "EGY-5494",
+          "EGY-1548",
+          "EGY-1550",
+          "EGY-1556"
+        ]
+      },
+      {
+        "name": "동부 델타",
+        "size": 13,
+        "method": "BLOCK_LIST",
+        "next": "2025-10-18",
+        "years": 5,
+        "regions": [
+          "EGY-1538",
+          "EGY-1531",
+          "EGY-1536",
+          "EGY-1535",
+          "EGY-1539",
+          "EGY-1558",
+          "EGY-1557"
+        ]
+      },
+      {
+        "name": "서부 델타",
+        "size": 13,
+        "method": "BLOCK_LIST",
+        "next": "2025-10-18",
+        "years": 5,
+        "regions": [
+          "EGY-1543",
+          "EGY-1541",
+          "EGY-1540"
+        ]
+      },
+      {
+        "name": "대통령 지명",
+        "size": 100,
+        "method": "APPOINT",
+        "next": "2025-10-18",
+        "years": 5
+      }
+    ]
+  },
+  "ZAF": {
+    "source": "각 주 10인 대표단은 주 의회 구성에 따라 6명의 상임 대표와 4명의 특별 대표로 나뉜다. 전체 정원 90석. 주 의회 선거를 전국 총선과 같은 날로 모형화하며 특별 대표의 회의별 교체는 추정한다. https://www.parliament.gov.za/national-council-provinces",
+    "units": [
+      {
+        "name": "이스턴케이프 상임",
+        "size": 6,
+        "method": "COLLEGE",
+        "lowerLinked": true,
+        "region": "ZAF-1926"
+      },
+      {
+        "name": "이스턴케이프 특별",
+        "size": 4,
+        "method": "COLLEGE",
+        "lowerLinked": true,
+        "region": "ZAF-1926"
+      },
+      {
+        "name": "프리스테이트 상임",
+        "size": 6,
+        "method": "COLLEGE",
+        "lowerLinked": true,
+        "region": "ZAF-1206"
+      },
+      {
+        "name": "프리스테이트 특별",
+        "size": 4,
+        "method": "COLLEGE",
+        "lowerLinked": true,
+        "region": "ZAF-1206"
+      },
+      {
+        "name": "하우텡 상임",
+        "size": 6,
+        "method": "COLLEGE",
+        "lowerLinked": true,
+        "region": "ZAF-1208"
+      },
+      {
+        "name": "하우텡 특별",
+        "size": 4,
+        "method": "COLLEGE",
+        "lowerLinked": true,
+        "region": "ZAF-1208"
+      },
+      {
+        "name": "콰줄루나탈 상임",
+        "size": 6,
+        "method": "COLLEGE",
+        "lowerLinked": true,
+        "region": "ZAF-1216"
+      },
+      {
+        "name": "콰줄루나탈 특별",
+        "size": 4,
+        "method": "COLLEGE",
+        "lowerLinked": true,
+        "region": "ZAF-1216"
+      },
+      {
+        "name": "림포포 상임",
+        "size": 6,
+        "method": "COLLEGE",
+        "lowerLinked": true,
+        "region": "ZAF-1210"
+      },
+      {
+        "name": "림포포 특별",
+        "size": 4,
+        "method": "COLLEGE",
+        "lowerLinked": true,
+        "region": "ZAF-1210"
+      },
+      {
+        "name": "음푸말랑가 상임",
+        "size": 6,
+        "method": "COLLEGE",
+        "lowerLinked": true,
+        "region": "ZAF-1209"
+      },
+      {
+        "name": "음푸말랑가 특별",
+        "size": 4,
+        "method": "COLLEGE",
+        "lowerLinked": true,
+        "region": "ZAF-1209"
+      },
+      {
+        "name": "노스웨스트 상임",
+        "size": 6,
+        "method": "COLLEGE",
+        "lowerLinked": true,
+        "region": "ZAF-1201"
+      },
+      {
+        "name": "노스웨스트 특별",
+        "size": 4,
+        "method": "COLLEGE",
+        "lowerLinked": true,
+        "region": "ZAF-1201"
+      },
+      {
+        "name": "노던케이프 상임",
+        "size": 6,
+        "method": "COLLEGE",
+        "lowerLinked": true,
+        "region": "ZAF-1188"
+      },
+      {
+        "name": "노던케이프 특별",
+        "size": 4,
+        "method": "COLLEGE",
+        "lowerLinked": true,
+        "region": "ZAF-1188"
+      },
+      {
+        "name": "웨스턴케이프 상임",
+        "size": 6,
+        "method": "COLLEGE",
+        "lowerLinked": true,
+        "region": "ZAF-1189"
+      },
+      {
+        "name": "웨스턴케이프 특별",
+        "size": 4,
+        "method": "COLLEGE",
+        "lowerLinked": true,
+        "region": "ZAF-1189"
+      }
+    ]
+  },
+  "THA": {
+    "source": "헌법 경과조항에 따른 임명 250명에서 2024-07-10 선관위가 공표한 20개 직군 각 10명, 5년 임기로 전환한다. 정당 소속을 부여하지 않으며 지역·주·전국 단계의 상호선거는 결과만 집계한다. https://thailand.prd.go.th/en/content/category/detail/id/48/iid/282266 https://data.ipu.org/parliament/TH/TH-UC01/election/TH-UC01-E20240626/",
+    "units": [
+      {
+        "name": "공공행정·안보",
+        "size": 10,
+        "method": "PROFESSION",
+        "next": "2024-07-10",
+        "years": 5,
+        "initial": 13
+      },
+      {
+        "name": "법률·사법",
+        "size": 10,
+        "method": "PROFESSION",
+        "next": "2024-07-10",
+        "years": 5,
+        "initial": 13
+      },
+      {
+        "name": "교육",
+        "size": 10,
+        "method": "PROFESSION",
+        "next": "2024-07-10",
+        "years": 5,
+        "initial": 13
+      },
+      {
+        "name": "보건",
+        "size": 10,
+        "method": "PROFESSION",
+        "next": "2024-07-10",
+        "years": 5,
+        "initial": 13
+      },
+      {
+        "name": "벼농사·밭농사",
+        "size": 10,
+        "method": "PROFESSION",
+        "next": "2024-07-10",
+        "years": 5,
+        "initial": 13
+      },
+      {
+        "name": "과수·임업·축산·수산",
+        "size": 10,
+        "method": "PROFESSION",
+        "next": "2024-07-10",
+        "years": 5,
+        "initial": 13
+      },
+      {
+        "name": "노동",
+        "size": 10,
+        "method": "PROFESSION",
+        "next": "2024-07-10",
+        "years": 5,
+        "initial": 13
+      },
+      {
+        "name": "환경·에너지",
+        "size": 10,
+        "method": "PROFESSION",
+        "next": "2024-07-10",
+        "years": 5,
+        "initial": 13
+      },
+      {
+        "name": "중소기업",
+        "size": 10,
+        "method": "PROFESSION",
+        "next": "2024-07-10",
+        "years": 5,
+        "initial": 13
+      },
+      {
+        "name": "기타 산업",
+        "size": 10,
+        "method": "PROFESSION",
+        "next": "2024-07-10",
+        "years": 5,
+        "initial": 13
+      },
+      {
+        "name": "관광",
+        "size": 10,
+        "method": "PROFESSION",
+        "next": "2024-07-10",
+        "years": 5,
+        "initial": 12
+      },
+      {
+        "name": "공업",
+        "size": 10,
+        "method": "PROFESSION",
+        "next": "2024-07-10",
+        "years": 5,
+        "initial": 12
+      },
+      {
+        "name": "과학·기술",
+        "size": 10,
+        "method": "PROFESSION",
+        "next": "2024-07-10",
+        "years": 5,
+        "initial": 12
+      },
+      {
+        "name": "여성",
+        "size": 10,
+        "method": "PROFESSION",
+        "next": "2024-07-10",
+        "years": 5,
+        "initial": 12
+      },
+      {
+        "name": "고령·장애·소수민족",
+        "size": 10,
+        "method": "PROFESSION",
+        "next": "2024-07-10",
+        "years": 5,
+        "initial": 12
+      },
+      {
+        "name": "예술·문화·스포츠",
+        "size": 10,
+        "method": "PROFESSION",
+        "next": "2024-07-10",
+        "years": 5,
+        "initial": 12
+      },
+      {
+        "name": "시민사회",
+        "size": 10,
+        "method": "PROFESSION",
+        "next": "2024-07-10",
+        "years": 5,
+        "initial": 12
+      },
+      {
+        "name": "언론",
+        "size": 10,
+        "method": "PROFESSION",
+        "next": "2024-07-10",
+        "years": 5,
+        "initial": 12
+      },
+      {
+        "name": "자유직업",
+        "size": 10,
+        "method": "PROFESSION",
+        "next": "2024-07-10",
+        "years": 5,
+        "initial": 12
+      },
+      {
+        "name": "기타 직업",
+        "size": 10,
+        "method": "PROFESSION",
+        "next": "2024-07-10",
+        "years": 5,
+        "initial": 12
+      }
+    ]
+  },
+  "RWA": {
+    "source": "헌법 제80~81조. 지방 선거인단 12·대학 2·대통령 지명 8·정당협의회 지명 4. 5년 임기이고 1회 연임 가능하다. 2024-09-26에 20명 취임, 나머지 6명은 별도 임기군. 개인 연임 여부·지명 시점은 추정한다. https://www.parliament.gov.rw/senate-2/about https://nec.gov.rw/wp-content/uploads/2025/04/NEC-20-Yrs-1-95-1.pdf",
+    "units": [
+      {
+        "name": "남부 지방 선거인단",
+        "size": 3,
+        "method": "COLLEGE",
+        "next": "2024-09-26",
+        "years": 5,
+        "region": "RWA-3491"
+      },
+      {
+        "name": "서부 지방 선거인단",
+        "size": 3,
+        "method": "COLLEGE",
+        "next": "2024-09-26",
+        "years": 5,
+        "region": "RWA-3492"
+      },
+      {
+        "name": "동부 지방 선거인단",
+        "size": 3,
+        "method": "COLLEGE",
+        "next": "2024-09-26",
+        "years": 5,
+        "region": "RWA-3493"
+      },
+      {
+        "name": "북부 지방 선거인단",
+        "size": 2,
+        "method": "COLLEGE",
+        "next": "2024-09-26",
+        "years": 5,
+        "region": "RWA-3494"
+      },
+      {
+        "name": "키갈리 지방 선거인단",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2024-09-26",
+        "years": 5,
+        "region": "RWA-3495"
+      },
+      {
+        "name": "국립대학",
+        "size": 1,
+        "method": "PROFESSION",
+        "next": "2024-09-26",
+        "years": 5
+      },
+      {
+        "name": "사립대학",
+        "size": 1,
+        "method": "PROFESSION",
+        "next": "2024-09-26",
+        "years": 5
+      },
+      {
+        "name": "대통령 지명",
+        "size": 4,
+        "method": "APPOINT",
+        "next": "2024-09-26",
+        "years": 5
+      },
+      {
+        "name": "정당협의회 지명",
+        "size": 2,
+        "method": "COLLEGE",
+        "next": "2024-09-26",
+        "years": 5
+      },
+      {
+        "name": "대통령 지명",
+        "size": 4,
+        "method": "APPOINT",
+        "next": "2025-09-26",
+        "years": 5
+      },
+      {
+        "name": "정당협의회 지명",
+        "size": 2,
+        "method": "COLLEGE",
+        "next": "2025-09-26",
+        "years": 5
+      }
+    ]
+  },
+  "PAK": {
+    "source": "헌법 제59조와 ECP. 주별 23석과 수도 4석으로 96석. 2024-03-11 FATA 마지막 4석 폐지와 48석 임기 종료. 첫 37석은 4월에, 카이베르파크툰크와 지연 11석은 2025-07-21에 선출한다. 이후 반수마다 6년 임기. 주 의회/수도 하원의 선호 이전은 추정한다. https://data.ipu.org/parliament/PK/PK-UC01/election/PK-UC01-E20240402/ https://na.gov.pk/uploads/documents/63ea176f52421_610.pdf",
+    "units": [
+      {
+        "name": "구 연방 직할 부족 지역",
+        "size": 0,
+        "method": "EXPIRY",
+        "next": "2024-03-11",
+        "initial": 4
+      },
+      {
+        "name": "펀자브 일반",
+        "size": 7,
+        "method": "STV",
+        "next": "2024-04-09",
+        "years": 6,
+        "region": "PAK-1113",
+        "expiry": "2024-03-11",
+        "regular": "2030-03-12"
+      },
+      {
+        "name": "펀자브 여성",
+        "size": 2,
+        "method": "STV",
+        "next": "2024-04-09",
+        "years": 6,
+        "region": "PAK-1113",
+        "expiry": "2024-03-11",
+        "regular": "2030-03-12"
+      },
+      {
+        "name": "펀자브 전문직",
+        "size": 2,
+        "method": "STV",
+        "next": "2024-04-09",
+        "years": 6,
+        "region": "PAK-1113",
+        "expiry": "2024-03-11",
+        "regular": "2030-03-12"
+      },
+      {
+        "name": "펀자브 비무슬림",
+        "size": 1,
+        "method": "STV",
+        "next": "2024-04-09",
+        "years": 6,
+        "region": "PAK-1113",
+        "expiry": "2024-03-11",
+        "regular": "2030-03-12"
+      },
+      {
+        "name": "펀자브 일반",
+        "size": 7,
+        "method": "STV",
+        "next": "2027-03-12",
+        "years": 6,
+        "region": "PAK-1113"
+      },
+      {
+        "name": "펀자브 여성",
+        "size": 2,
+        "method": "STV",
+        "next": "2027-03-12",
+        "years": 6,
+        "region": "PAK-1113"
+      },
+      {
+        "name": "펀자브 전문직",
+        "size": 2,
+        "method": "STV",
+        "next": "2027-03-12",
+        "years": 6,
+        "region": "PAK-1113"
+      },
+      {
+        "name": "신드 일반",
+        "size": 7,
+        "method": "STV",
+        "next": "2024-04-09",
+        "years": 6,
+        "region": "PAK-1114",
+        "expiry": "2024-03-11",
+        "regular": "2030-03-12"
+      },
+      {
+        "name": "신드 여성",
+        "size": 2,
+        "method": "STV",
+        "next": "2024-04-09",
+        "years": 6,
+        "region": "PAK-1114",
+        "expiry": "2024-03-11",
+        "regular": "2030-03-12"
+      },
+      {
+        "name": "신드 전문직",
+        "size": 2,
+        "method": "STV",
+        "next": "2024-04-09",
+        "years": 6,
+        "region": "PAK-1114",
+        "expiry": "2024-03-11",
+        "regular": "2030-03-12"
+      },
+      {
+        "name": "신드 비무슬림",
+        "size": 1,
+        "method": "STV",
+        "next": "2024-04-09",
+        "years": 6,
+        "region": "PAK-1114",
+        "expiry": "2024-03-11",
+        "regular": "2030-03-12"
+      },
+      {
+        "name": "신드 일반",
+        "size": 7,
+        "method": "STV",
+        "next": "2027-03-12",
+        "years": 6,
+        "region": "PAK-1114"
+      },
+      {
+        "name": "신드 여성",
+        "size": 2,
+        "method": "STV",
+        "next": "2027-03-12",
+        "years": 6,
+        "region": "PAK-1114"
+      },
+      {
+        "name": "신드 전문직",
+        "size": 2,
+        "method": "STV",
+        "next": "2027-03-12",
+        "years": 6,
+        "region": "PAK-1114"
+      },
+      {
+        "name": "발루치스탄 일반",
+        "size": 7,
+        "method": "STV",
+        "next": "2024-04-09",
+        "years": 6,
+        "region": "PAK-1108",
+        "expiry": "2024-03-11",
+        "regular": "2030-03-12"
+      },
+      {
+        "name": "발루치스탄 여성",
+        "size": 2,
+        "method": "STV",
+        "next": "2024-04-09",
+        "years": 6,
+        "region": "PAK-1108",
+        "expiry": "2024-03-11",
+        "regular": "2030-03-12"
+      },
+      {
+        "name": "발루치스탄 전문직",
+        "size": 2,
+        "method": "STV",
+        "next": "2024-04-09",
+        "years": 6,
+        "region": "PAK-1108",
+        "expiry": "2024-03-11",
+        "regular": "2030-03-12"
+      },
+      {
+        "name": "발루치스탄 일반",
+        "size": 7,
+        "method": "STV",
+        "next": "2027-03-12",
+        "years": 6,
+        "region": "PAK-1108"
+      },
+      {
+        "name": "발루치스탄 여성",
+        "size": 2,
+        "method": "STV",
+        "next": "2027-03-12",
+        "years": 6,
+        "region": "PAK-1108"
+      },
+      {
+        "name": "발루치스탄 전문직",
+        "size": 2,
+        "method": "STV",
+        "next": "2027-03-12",
+        "years": 6,
+        "region": "PAK-1108"
+      },
+      {
+        "name": "발루치스탄 비무슬림",
+        "size": 1,
+        "method": "STV",
+        "next": "2027-03-12",
+        "years": 6,
+        "region": "PAK-1108"
+      },
+      {
+        "name": "카이베르파크툰크와 일반",
+        "size": 7,
+        "method": "STV",
+        "next": "2025-07-21",
+        "years": 6,
+        "region": "PAK-1123",
+        "expiry": "2024-03-11",
+        "regular": "2030-03-12"
+      },
+      {
+        "name": "카이베르파크툰크와 여성",
+        "size": 2,
+        "method": "STV",
+        "next": "2025-07-21",
+        "years": 6,
+        "region": "PAK-1123",
+        "expiry": "2024-03-11",
+        "regular": "2030-03-12"
+      },
+      {
+        "name": "카이베르파크툰크와 전문직",
+        "size": 2,
+        "method": "STV",
+        "next": "2025-07-21",
+        "years": 6,
+        "region": "PAK-1123",
+        "expiry": "2024-03-11",
+        "regular": "2030-03-12"
+      },
+      {
+        "name": "카이베르파크툰크와 일반",
+        "size": 7,
+        "method": "STV",
+        "next": "2027-03-12",
+        "years": 6,
+        "region": "PAK-1123"
+      },
+      {
+        "name": "카이베르파크툰크와 여성",
+        "size": 2,
+        "method": "STV",
+        "next": "2027-03-12",
+        "years": 6,
+        "region": "PAK-1123"
+      },
+      {
+        "name": "카이베르파크툰크와 전문직",
+        "size": 2,
+        "method": "STV",
+        "next": "2027-03-12",
+        "years": 6,
+        "region": "PAK-1123"
+      },
+      {
+        "name": "카이베르파크툰크와 비무슬림",
+        "size": 1,
+        "method": "STV",
+        "next": "2027-03-12",
+        "years": 6,
+        "region": "PAK-1123"
+      },
+      {
+        "name": "이슬라마바드 수도권 일반",
+        "size": 1,
+        "method": "STV",
+        "next": "2024-04-09",
+        "years": 6,
+        "region": "PAK-1110",
+        "expiry": "2024-03-11",
+        "regular": "2030-03-12"
+      },
+      {
+        "name": "이슬라마바드 수도권 전문직",
+        "size": 1,
+        "method": "STV",
+        "next": "2024-04-09",
+        "years": 6,
+        "region": "PAK-1110",
+        "expiry": "2024-03-11",
+        "regular": "2030-03-12"
+      },
+      {
+        "name": "이슬라마바드 수도권 일반",
+        "size": 1,
+        "method": "STV",
+        "next": "2027-03-12",
+        "years": 6,
+        "region": "PAK-1110"
+      },
+      {
+        "name": "이슬라마바드 수도권 여성",
+        "size": 1,
+        "method": "STV",
+        "next": "2027-03-12",
+        "years": 6,
+        "region": "PAK-1110"
+      }
+    ]
+  },
+  "DEU": {
+    "source": "기본법 제51조. 16개 주 정부가 3~6표를 일괄 행사한다. 2024년 1월 주 정부 구성·주별 정원과 다음 선거 임기군을 사용하고 이후 주 연정·내각 취임일을 추정한다. 주 정부 구성에 따라 대표단 전체를 갱신한다. https://www.gesetze-im-internet.de/englisch_gg/englisch_gg.html https://www.bundesrat.de/EN/organisation-en/stimmenverteilung-en/stimmenverteilung-en-node.html",
+    "units": [
+      {
+        "name": "노르트라인베스트팔렌",
+        "size": 6,
+        "method": "LAND",
+        "next": "2027-05-15",
+        "years": 5,
+        "region": "DEU-1572",
+        "allies": [
+          "기독민주연합",
+          "녹색당"
+        ]
+      },
+      {
+        "name": "바덴뷔르템베르크",
+        "size": 6,
+        "method": "LAND",
+        "next": "2026-03-08",
+        "years": 5,
+        "region": "DEU-1573",
+        "allies": [
+          "녹색당",
+          "기독민주연합"
+        ]
+      },
+      {
+        "name": "헤센",
+        "size": 5,
+        "method": "LAND",
+        "next": "2024-01-18",
+        "years": 5,
+        "region": "DEU-1574",
+        "allies": [
+          "기독민주연합",
+          "녹색당"
+        ]
+      },
+      {
+        "name": "브레멘",
+        "size": 3,
+        "method": "LAND",
+        "next": "2027-05-15",
+        "years": 4,
+        "region": "DEU-1575",
+        "allies": [
+          "사회민주당",
+          "녹색당",
+          "좌파당"
+        ]
+      },
+      {
+        "name": "니더작센",
+        "size": 6,
+        "method": "LAND",
+        "next": "2027-10-01",
+        "years": 5,
+        "region": "DEU-1576",
+        "allies": [
+          "사회민주당",
+          "녹색당"
+        ]
+      },
+      {
+        "name": "튀링겐",
+        "size": 4,
+        "method": "LAND",
+        "next": "2024-09-01",
+        "years": 5,
+        "region": "DEU-1577",
+        "allies": [
+          "좌파당",
+          "사회민주당",
+          "녹색당"
+        ]
+      },
+      {
+        "name": "함부르크",
+        "size": 3,
+        "method": "LAND",
+        "next": "2025-03-02",
+        "years": 5,
+        "region": "DEU-1578",
+        "allies": [
+          "사회민주당",
+          "녹색당"
+        ]
+      },
+      {
+        "name": "슐레스비히홀슈타인",
+        "size": 4,
+        "method": "LAND",
+        "next": "2027-05-01",
+        "years": 5,
+        "region": "DEU-1579",
+        "allies": [
+          "기독민주연합",
+          "녹색당"
+        ]
+      },
+      {
+        "name": "라인란트팔츠",
+        "size": 4,
+        "method": "LAND",
+        "next": "2026-03-22",
+        "years": 5,
+        "region": "DEU-1580",
+        "allies": [
+          "사회민주당",
+          "자유민주당",
+          "녹색당"
+        ]
+      },
+      {
+        "name": "자를란트",
+        "size": 3,
+        "method": "LAND",
+        "next": "2027-03-01",
+        "years": 5,
+        "region": "DEU-1581",
+        "allies": [
+          "사회민주당"
+        ]
+      },
+      {
+        "name": "바이에른",
+        "size": 6,
+        "method": "LAND",
+        "next": "2028-10-01",
+        "years": 5,
+        "region": "DEU-1591",
+        "allies": [
+          "기독사회연합",
+          "자유유권자"
+        ]
+      },
+      {
+        "name": "베를린",
+        "size": 4,
+        "method": "LAND",
+        "next": "2026-09-20",
+        "years": 5,
+        "region": "DEU-1599",
+        "allies": [
+          "기독민주연합",
+          "사회민주당"
+        ]
+      },
+      {
+        "name": "작센안할트",
+        "size": 4,
+        "method": "LAND",
+        "next": "2026-09-06",
+        "years": 5,
+        "region": "DEU-1600",
+        "allies": [
+          "기독민주연합",
+          "사회민주당",
+          "자유민주당"
+        ]
+      },
+      {
+        "name": "작센",
+        "size": 4,
+        "method": "LAND",
+        "next": "2024-09-01",
+        "years": 5,
+        "region": "DEU-1601",
+        "allies": [
+          "기독민주연합",
+          "녹색당",
+          "사회민주당"
+        ]
+      },
+      {
+        "name": "브란덴부르크",
+        "size": 4,
+        "method": "LAND",
+        "next": "2024-09-22",
+        "years": 5,
+        "region": "DEU-3487",
+        "allies": [
+          "사회민주당",
+          "기독민주연합",
+          "녹색당"
+        ]
+      },
+      {
+        "name": "메클렌부르크포어포메른",
+        "size": 3,
+        "method": "LAND",
+        "next": "2026-09-20",
+        "years": 5,
+        "region": "DEU-3488",
+        "allies": [
+          "사회민주당",
+          "좌파당"
+        ]
+      }
+    ]
+  },
+  "RUS": {
+    "source": "각 연방주체의 입법부·행정부가 각각 1명씩 위임한다. 지역 입법부 임기·행정부 수장 임기에 연동되며 연방 총선에 일괄 갱신하지 않는다. 시나리오 헌정 자료의 89개 대표단을 사용한다. 지역별 실제 임기 만료·최대 30명의 선택적 대통령 지명 및 전직 대통령 종신직은 미확인으로 남긴다. https://minjust.gov.ru/ru/documents/8011/ https://data.ipu.org/parliament/RU/RU-UC01/",
+    "units": [
+      {
+        "name": "아디게야 공화국 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2024-09-15",
+        "years": 5,
+        "region": "RUS-2279"
+      },
+      {
+        "name": "아디게야 공화국 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2025-09-15",
+        "years": 5,
+        "region": "RUS-2279"
+      },
+      {
+        "name": "알타이 공화국 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2027-09-15",
+        "years": 5,
+        "region": "RUS-2400"
+      },
+      {
+        "name": "알타이 공화국 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2028-09-15",
+        "years": 5,
+        "region": "RUS-2400"
+      },
+      {
+        "name": "바시키르 공화국 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2025-09-15",
+        "years": 5,
+        "region": "RUS-2378"
+      },
+      {
+        "name": "바시키르 공화국 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2026-09-15",
+        "years": 5,
+        "region": "RUS-2378"
+      },
+      {
+        "name": "부랴트 공화국 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2028-09-15",
+        "years": 5,
+        "region": "RUS-2606"
+      },
+      {
+        "name": "부랴트 공화국 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2024-09-15",
+        "years": 5,
+        "region": "RUS-2606"
+      },
+      {
+        "name": "다게스탄 공화국 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2026-09-15",
+        "years": 5,
+        "region": "RUS-2417"
+      },
+      {
+        "name": "다게스탄 공화국 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2027-09-15",
+        "years": 5,
+        "region": "RUS-2417"
+      },
+      {
+        "name": "인구시 공화국 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2024-09-15",
+        "years": 5,
+        "region": "RUS-2303"
+      },
+      {
+        "name": "인구시 공화국 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2025-09-15",
+        "years": 5,
+        "region": "RUS-2303"
+      },
+      {
+        "name": "카바르디노발카르 공화국 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2027-09-15",
+        "years": 5,
+        "region": "RUS-2304"
+      },
+      {
+        "name": "카바르디노발카르 공화국 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2028-09-15",
+        "years": 5,
+        "region": "RUS-2304"
+      },
+      {
+        "name": "칼미크 공화국 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2025-09-15",
+        "years": 5,
+        "region": "RUS-2390"
+      },
+      {
+        "name": "칼미크 공화국 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2026-09-15",
+        "years": 5,
+        "region": "RUS-2390"
+      },
+      {
+        "name": "카라차예보체르케스카야 공화국 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2028-09-15",
+        "years": 5,
+        "region": "RUS-2280"
+      },
+      {
+        "name": "카라차예보체르케스카야 공화국 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2024-09-15",
+        "years": 5,
+        "region": "RUS-2280"
+      },
+      {
+        "name": "카렐리야 공화국 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2026-09-15",
+        "years": 5,
+        "region": "RUS-2353"
+      },
+      {
+        "name": "카렐리야 공화국 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2027-09-15",
+        "years": 5,
+        "region": "RUS-2353"
+      },
+      {
+        "name": "코미 공화국 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2024-09-15",
+        "years": 5,
+        "region": "RUS-2383"
+      },
+      {
+        "name": "코미 공화국 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2025-09-15",
+        "years": 5,
+        "region": "RUS-2383"
+      },
+      {
+        "name": "크림 자치 공화국 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2027-09-15",
+        "years": 5,
+        "region": "RUS-283"
+      },
+      {
+        "name": "크림 자치 공화국 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2028-09-15",
+        "years": 5,
+        "region": "RUS-283"
+      },
+      {
+        "name": "마리옐 공화국 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2025-09-15",
+        "years": 5,
+        "region": "RUS-2385"
+      },
+      {
+        "name": "마리옐 공화국 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2026-09-15",
+        "years": 5,
+        "region": "RUS-2385"
+      },
+      {
+        "name": "모르도바 공화국 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2028-09-15",
+        "years": 5,
+        "region": "RUS-2372"
+      },
+      {
+        "name": "모르도바 공화국 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2024-09-15",
+        "years": 5,
+        "region": "RUS-2372"
+      },
+      {
+        "name": "사하 공화국 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2026-09-15",
+        "years": 5,
+        "region": "RUS-2612"
+      },
+      {
+        "name": "사하 공화국 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2027-09-15",
+        "years": 5,
+        "region": "RUS-2612"
+      },
+      {
+        "name": "세베로오세티야 공화국 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2024-09-15",
+        "years": 5,
+        "region": "RUS-2305"
+      },
+      {
+        "name": "세베로오세티야 공화국 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2025-09-15",
+        "years": 5,
+        "region": "RUS-2305"
+      },
+      {
+        "name": "타타르 공화국 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2027-09-15",
+        "years": 5,
+        "region": "RUS-2394"
+      },
+      {
+        "name": "타타르 공화국 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2028-09-15",
+        "years": 5,
+        "region": "RUS-2394"
+      },
+      {
+        "name": "투바 공화국 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2025-09-15",
+        "years": 5,
+        "region": "RUS-2605"
+      },
+      {
+        "name": "투바 공화국 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2026-09-15",
+        "years": 5,
+        "region": "RUS-2605"
+      },
+      {
+        "name": "우드무르트 공화국 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2028-09-15",
+        "years": 5,
+        "region": "RUS-2387"
+      },
+      {
+        "name": "우드무르트 공화국 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2024-09-15",
+        "years": 5,
+        "region": "RUS-2387"
+      },
+      {
+        "name": "하카스 공화국 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2026-09-15",
+        "years": 5,
+        "region": "RUS-2402"
+      },
+      {
+        "name": "하카스 공화국 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2027-09-15",
+        "years": 5,
+        "region": "RUS-2402"
+      },
+      {
+        "name": "체첸 공화국 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2024-09-15",
+        "years": 5,
+        "region": "RUS-2416"
+      },
+      {
+        "name": "체첸 공화국 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2025-09-15",
+        "years": 5,
+        "region": "RUS-2416"
+      },
+      {
+        "name": "추바시 공화국 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2027-09-15",
+        "years": 5,
+        "region": "RUS-2389"
+      },
+      {
+        "name": "추바시 공화국 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2028-09-15",
+        "years": 5,
+        "region": "RUS-2389"
+      },
+      {
+        "name": "알타이 공화국 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2025-09-15",
+        "years": 5,
+        "region": "RUS-2399"
+      },
+      {
+        "name": "알타이 공화국 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2026-09-15",
+        "years": 5,
+        "region": "RUS-2399"
+      },
+      {
+        "name": "자바이칼 지방 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2028-09-15",
+        "years": 5,
+        "region": "RUS-2610"
+      },
+      {
+        "name": "자바이칼 지방 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2024-09-15",
+        "years": 5,
+        "region": "RUS-2610"
+      },
+      {
+        "name": "캄차카 지방 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2026-09-15",
+        "years": 5,
+        "region": "RUS-3468"
+      },
+      {
+        "name": "캄차카 지방 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2027-09-15",
+        "years": 5,
+        "region": "RUS-3468"
+      },
+      {
+        "name": "크라스노다르 지방 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2024-09-15",
+        "years": 5,
+        "region": "RUS-2371"
+      },
+      {
+        "name": "크라스노다르 지방 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2025-09-15",
+        "years": 5,
+        "region": "RUS-2371"
+      },
+      {
+        "name": "크라스노야르스크 지방 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2027-09-15",
+        "years": 5,
+        "region": "RUS-2603"
+      },
+      {
+        "name": "크라스노야르스크 지방 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2028-09-15",
+        "years": 5,
+        "region": "RUS-2603"
+      },
+      {
+        "name": "페름 지방 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2025-09-15",
+        "years": 5,
+        "region": "RUS-3200"
+      },
+      {
+        "name": "페름 지방 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2026-09-15",
+        "years": 5,
+        "region": "RUS-3200"
+      },
+      {
+        "name": "프리모르스키 지방 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2028-09-15",
+        "years": 5,
+        "region": "RUS-2611"
+      },
+      {
+        "name": "프리모르스키 지방 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2024-09-15",
+        "years": 5,
+        "region": "RUS-2611"
+      },
+      {
+        "name": "스타브로폴 지방 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2026-09-15",
+        "years": 5,
+        "region": "RUS-2306"
+      },
+      {
+        "name": "스타브로폴 지방 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2027-09-15",
+        "years": 5,
+        "region": "RUS-2306"
+      },
+      {
+        "name": "하바롭스크 지방 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2024-09-15",
+        "years": 5,
+        "region": "RUS-2614"
+      },
+      {
+        "name": "하바롭스크 지방 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2025-09-15",
+        "years": 5,
+        "region": "RUS-2614"
+      },
+      {
+        "name": "아무르 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2027-09-15",
+        "years": 5,
+        "region": "RUS-2609"
+      },
+      {
+        "name": "아무르 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2028-09-15",
+        "years": 5,
+        "region": "RUS-2609"
+      },
+      {
+        "name": "아르한겔스크 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2025-09-15",
+        "years": 5,
+        "region": "RUS-2354"
+      },
+      {
+        "name": "아르한겔스크 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2026-09-15",
+        "years": 5,
+        "region": "RUS-2354"
+      },
+      {
+        "name": "아스트라한 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2028-09-15",
+        "years": 5,
+        "region": "RUS-2388"
+      },
+      {
+        "name": "아스트라한 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2024-09-15",
+        "years": 5,
+        "region": "RUS-2388"
+      },
+      {
+        "name": "벨고로드 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2026-09-15",
+        "years": 5,
+        "region": "RUS-2370"
+      },
+      {
+        "name": "벨고로드 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2027-09-15",
+        "years": 5,
+        "region": "RUS-2370"
+      },
+      {
+        "name": "브랸스크 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2024-09-15",
+        "years": 5,
+        "region": "RUS-2342"
+      },
+      {
+        "name": "브랸스크 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2025-09-15",
+        "years": 5,
+        "region": "RUS-2342"
+      },
+      {
+        "name": "블라디미르 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2027-09-15",
+        "years": 5,
+        "region": "RUS-2376"
+      },
+      {
+        "name": "블라디미르 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2028-09-15",
+        "years": 5,
+        "region": "RUS-2376"
+      },
+      {
+        "name": "볼고그라드 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2025-09-15",
+        "years": 5,
+        "region": "RUS-2369"
+      },
+      {
+        "name": "볼고그라드 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2026-09-15",
+        "years": 5,
+        "region": "RUS-2369"
+      },
+      {
+        "name": "볼로그다 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2028-09-15",
+        "years": 5,
+        "region": "RUS-2359"
+      },
+      {
+        "name": "볼로그다 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2024-09-15",
+        "years": 5,
+        "region": "RUS-2359"
+      },
+      {
+        "name": "보로네시 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2026-09-15",
+        "years": 5,
+        "region": "RUS-2377"
+      },
+      {
+        "name": "보로네시 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2027-09-15",
+        "years": 5,
+        "region": "RUS-2377"
+      },
+      {
+        "name": "이바노보 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2024-09-15",
+        "years": 5,
+        "region": "RUS-2355"
+      },
+      {
+        "name": "이바노보 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2025-09-15",
+        "years": 5,
+        "region": "RUS-2355"
+      },
+      {
+        "name": "이르쿠츠크 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2027-09-15",
+        "years": 5,
+        "region": "RUS-2602"
+      },
+      {
+        "name": "이르쿠츠크 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2028-09-15",
+        "years": 5,
+        "region": "RUS-2602"
+      },
+      {
+        "name": "칼리닌그라드 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2025-09-15",
+        "years": 5,
+        "region": "RUS-2324"
+      },
+      {
+        "name": "칼리닌그라드 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2026-09-15",
+        "years": 5,
+        "region": "RUS-2324"
+      },
+      {
+        "name": "칼루가 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2028-09-15",
+        "years": 5,
+        "region": "RUS-2361"
+      },
+      {
+        "name": "칼루가 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2024-09-15",
+        "years": 5,
+        "region": "RUS-2361"
+      },
+      {
+        "name": "케메로보 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2026-09-15",
+        "years": 5,
+        "region": "RUS-2401"
+      },
+      {
+        "name": "케메로보 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2027-09-15",
+        "years": 5,
+        "region": "RUS-2401"
+      },
+      {
+        "name": "키로프 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2024-09-15",
+        "years": 5,
+        "region": "RUS-2384"
+      },
+      {
+        "name": "키로프 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2025-09-15",
+        "years": 5,
+        "region": "RUS-2384"
+      },
+      {
+        "name": "코스트로마 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2027-09-15",
+        "years": 5,
+        "region": "RUS-2356"
+      },
+      {
+        "name": "코스트로마 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2028-09-15",
+        "years": 5,
+        "region": "RUS-2356"
+      },
+      {
+        "name": "쿠르간 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2025-09-15",
+        "years": 5,
+        "region": "RUS-2380"
+      },
+      {
+        "name": "쿠르간 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2026-09-15",
+        "years": 5,
+        "region": "RUS-2380"
+      },
+      {
+        "name": "쿠르스크 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2028-09-15",
+        "years": 5,
+        "region": "RUS-2362"
+      },
+      {
+        "name": "쿠르스크 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2024-09-15",
+        "years": 5,
+        "region": "RUS-2362"
+      },
+      {
+        "name": "레닌그라드 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2026-09-15",
+        "years": 5,
+        "region": "RUS-2336"
+      },
+      {
+        "name": "레닌그라드 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2027-09-15",
+        "years": 5,
+        "region": "RUS-2336"
+      },
+      {
+        "name": "리페츠크 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2024-09-15",
+        "years": 5,
+        "region": "RUS-2363"
+      },
+      {
+        "name": "리페츠크 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2025-09-15",
+        "years": 5,
+        "region": "RUS-2363"
+      },
+      {
+        "name": "마가단 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2027-09-15",
+        "years": 5,
+        "region": "RUS-2615"
+      },
+      {
+        "name": "마가단 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2028-09-15",
+        "years": 5,
+        "region": "RUS-2615"
+      },
+      {
+        "name": "모스크바 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2025-09-15",
+        "years": 5,
+        "region": "RUS-2364"
+      },
+      {
+        "name": "모스크바 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2026-09-15",
+        "years": 5,
+        "region": "RUS-2364"
+      },
+      {
+        "name": "무르만스크 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2028-09-15",
+        "years": 5,
+        "region": "RUS-2333"
+      },
+      {
+        "name": "무르만스크 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2024-09-15",
+        "years": 5,
+        "region": "RUS-2333"
+      },
+      {
+        "name": "니즈니노브고로드 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2026-09-15",
+        "years": 5,
+        "region": "RUS-2357"
+      },
+      {
+        "name": "니즈니노브고로드 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2027-09-15",
+        "years": 5,
+        "region": "RUS-2357"
+      },
+      {
+        "name": "노브고로드 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2024-09-15",
+        "years": 5,
+        "region": "RUS-2334"
+      },
+      {
+        "name": "노브고로드 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2025-09-15",
+        "years": 5,
+        "region": "RUS-2334"
+      },
+      {
+        "name": "노보시비르스크 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2027-09-15",
+        "years": 5,
+        "region": "RUS-2403"
+      },
+      {
+        "name": "노보시비르스크 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2028-09-15",
+        "years": 5,
+        "region": "RUS-2403"
+      },
+      {
+        "name": "옴스크 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2025-09-15",
+        "years": 5,
+        "region": "RUS-2397"
+      },
+      {
+        "name": "옴스크 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2026-09-15",
+        "years": 5,
+        "region": "RUS-2397"
+      },
+      {
+        "name": "오렌부르크 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2028-09-15",
+        "years": 5,
+        "region": "RUS-2391"
+      },
+      {
+        "name": "오렌부르크 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2024-09-15",
+        "years": 5,
+        "region": "RUS-2391"
+      },
+      {
+        "name": "오룔 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2026-09-15",
+        "years": 5,
+        "region": "RUS-2366"
+      },
+      {
+        "name": "오룔 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2027-09-15",
+        "years": 5,
+        "region": "RUS-2366"
+      },
+      {
+        "name": "펜자 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2024-09-15",
+        "years": 5,
+        "region": "RUS-2373"
+      },
+      {
+        "name": "펜자 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2025-09-15",
+        "years": 5,
+        "region": "RUS-2373"
+      },
+      {
+        "name": "프스코프 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2027-09-15",
+        "years": 5,
+        "region": "RUS-2335"
+      },
+      {
+        "name": "프스코프 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2028-09-15",
+        "years": 5,
+        "region": "RUS-2335"
+      },
+      {
+        "name": "로스토프 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2025-09-15",
+        "years": 5,
+        "region": "RUS-2367"
+      },
+      {
+        "name": "로스토프 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2026-09-15",
+        "years": 5,
+        "region": "RUS-2367"
+      },
+      {
+        "name": "랴잔 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2028-09-15",
+        "years": 5,
+        "region": "RUS-2374"
+      },
+      {
+        "name": "랴잔 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2024-09-15",
+        "years": 5,
+        "region": "RUS-2374"
+      },
+      {
+        "name": "사마라 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2026-09-15",
+        "years": 5,
+        "region": "RUS-2392"
+      },
+      {
+        "name": "사마라 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2027-09-15",
+        "years": 5,
+        "region": "RUS-2392"
+      },
+      {
+        "name": "사라토프 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2024-09-15",
+        "years": 5,
+        "region": "RUS-2393"
+      },
+      {
+        "name": "사라토프 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2025-09-15",
+        "years": 5,
+        "region": "RUS-2393"
+      },
+      {
+        "name": "사할린 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2027-09-15",
+        "years": 5,
+        "region": "RUS-2616"
+      },
+      {
+        "name": "사할린 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2028-09-15",
+        "years": 5,
+        "region": "RUS-2616"
+      },
+      {
+        "name": "스베르들롭스크 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2025-09-15",
+        "years": 5,
+        "region": "RUS-2386"
+      },
+      {
+        "name": "스베르들롭스크 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2026-09-15",
+        "years": 5,
+        "region": "RUS-2386"
+      },
+      {
+        "name": "스몰렌스크 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2028-09-15",
+        "years": 5,
+        "region": "RUS-2343"
+      },
+      {
+        "name": "스몰렌스크 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2024-09-15",
+        "years": 5,
+        "region": "RUS-2343"
+      },
+      {
+        "name": "탐보프 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2026-09-15",
+        "years": 5,
+        "region": "RUS-2375"
+      },
+      {
+        "name": "탐보프 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2027-09-15",
+        "years": 5,
+        "region": "RUS-2375"
+      },
+      {
+        "name": "트베리 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2024-09-15",
+        "years": 5,
+        "region": "RUS-2358"
+      },
+      {
+        "name": "트베리 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2025-09-15",
+        "years": 5,
+        "region": "RUS-2358"
+      },
+      {
+        "name": "톰스크 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2027-09-15",
+        "years": 5,
+        "region": "RUS-2167"
+      },
+      {
+        "name": "톰스크 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2028-09-15",
+        "years": 5,
+        "region": "RUS-2167"
+      },
+      {
+        "name": "툴라 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2025-09-15",
+        "years": 5,
+        "region": "RUS-2368"
+      },
+      {
+        "name": "툴라 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2026-09-15",
+        "years": 5,
+        "region": "RUS-2368"
+      },
+      {
+        "name": "튜멘 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2028-09-15",
+        "years": 5,
+        "region": "RUS-2398"
+      },
+      {
+        "name": "튜멘 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2024-09-15",
+        "years": 5,
+        "region": "RUS-2398"
+      },
+      {
+        "name": "울리야놉스크 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2026-09-15",
+        "years": 5,
+        "region": "RUS-2395"
+      },
+      {
+        "name": "울리야놉스크 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2027-09-15",
+        "years": 5,
+        "region": "RUS-2395"
+      },
+      {
+        "name": "첼랴빈스크 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2024-09-15",
+        "years": 5,
+        "region": "RUS-2379"
+      },
+      {
+        "name": "첼랴빈스크 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2025-09-15",
+        "years": 5,
+        "region": "RUS-2379"
+      },
+      {
+        "name": "야로슬라블 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2027-09-15",
+        "years": 5,
+        "region": "RUS-2360"
+      },
+      {
+        "name": "야로슬라블 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2028-09-15",
+        "years": 5,
+        "region": "RUS-2360"
+      },
+      {
+        "name": "모스크바 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2025-09-15",
+        "years": 5,
+        "region": "RUS-2365"
+      },
+      {
+        "name": "모스크바 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2026-09-15",
+        "years": 5,
+        "region": "RUS-2365"
+      },
+      {
+        "name": "상트페테르부르크 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2028-09-15",
+        "years": 5,
+        "region": "RUS-2337"
+      },
+      {
+        "name": "상트페테르부르크 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2024-09-15",
+        "years": 5,
+        "region": "RUS-2337"
+      },
+      {
+        "name": "세바스토폴 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2026-09-15",
+        "years": 5,
+        "region": "RUS-5482"
+      },
+      {
+        "name": "세바스토폴 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2027-09-15",
+        "years": 5,
+        "region": "RUS-5482"
+      },
+      {
+        "name": "유대인 자치 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2024-09-15",
+        "years": 5,
+        "region": "RUS-2613"
+      },
+      {
+        "name": "유대인 자치 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2025-09-15",
+        "years": 5,
+        "region": "RUS-2613"
+      },
+      {
+        "name": "네네츠 자치구 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2027-09-15",
+        "years": 5,
+        "region": "RUS-2381"
+      },
+      {
+        "name": "네네츠 자치구 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2028-09-15",
+        "years": 5,
+        "region": "RUS-2381"
+      },
+      {
+        "name": "한티만시 자치구 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2025-09-15",
+        "years": 5,
+        "region": "RUS-2396"
+      },
+      {
+        "name": "한티만시 자치구 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2026-09-15",
+        "years": 5,
+        "region": "RUS-2396"
+      },
+      {
+        "name": "축치 자치구 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2028-09-15",
+        "years": 5,
+        "region": "RUS-2321"
+      },
+      {
+        "name": "축치 자치구 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2024-09-15",
+        "years": 5,
+        "region": "RUS-2321"
+      },
+      {
+        "name": "야말로네네츠 자치구 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2026-09-15",
+        "years": 5,
+        "region": "RUS-2382"
+      },
+      {
+        "name": "야말로네네츠 자치구 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2027-09-15",
+        "years": 5,
+        "region": "RUS-2382"
+      },
+      {
+        "name": "도네츠크 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2024-09-15",
+        "years": 5,
+        "region": "RUS-DON"
+      },
+      {
+        "name": "도네츠크 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2025-09-15",
+        "years": 5,
+        "region": "RUS-DON"
+      },
+      {
+        "name": "루한스크 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2027-09-15",
+        "years": 5,
+        "region": "RUS-LUH"
+      },
+      {
+        "name": "루한스크 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2028-09-15",
+        "years": 5,
+        "region": "RUS-LUH"
+      },
+      {
+        "name": "자포리자 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2025-09-15",
+        "years": 5,
+        "region": "RUS-ZAP"
+      },
+      {
+        "name": "자포리자 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2026-09-15",
+        "years": 5,
+        "region": "RUS-ZAP"
+      },
+      {
+        "name": "헤르손 지역 입법부",
+        "size": 1,
+        "method": "COLLEGE",
+        "next": "2028-09-15",
+        "years": 5,
+        "region": "RUS-KHE"
+      },
+      {
+        "name": "헤르손 지역 행정부",
+        "size": 1,
+        "method": "APPOINT",
+        "next": "2024-09-15",
+        "years": 5,
+        "region": "RUS-KHE"
+      }
+    ]
+  },
+  "IND": {
+    "source": "주·연방직할지 선출 233석(주의회 의원 STV)과 대통령 지명 12석. 임기 6년. 2024 델리·시킴·15개 주 56석·자르칸드·케랄라 임기 및 주별 정원은 선관위·의회 자료다. 나머지 최초 개선일과 실제 선호표는 추정한다. https://www.eci.gov.in/term-of-the-houses/ https://eparlib.sansad.in/bitstream/123456789/3015201/1/JPI_June_2024.pdf",
+    "units": [
+      {
+        "name": "안드라프라데시 주의회",
+        "size": 3,
+        "method": "STV",
+        "next": "2024-04-03",
+        "years": 6,
+        "region": "IND-2441"
+      },
+      {
+        "name": "안드라프라데시 주의회",
+        "size": 2,
+        "method": "STV",
+        "next": "2025-04-03",
+        "years": 6,
+        "region": "IND-2441"
+      },
+      {
+        "name": "안드라프라데시 주의회",
+        "size": 2,
+        "method": "STV",
+        "next": "2026-04-03",
+        "years": 6,
+        "region": "IND-2441"
+      },
+      {
+        "name": "안드라프라데시 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2027-04-03",
+        "years": 6,
+        "region": "IND-2441"
+      },
+      {
+        "name": "안드라프라데시 주의회",
+        "size": 2,
+        "method": "STV",
+        "next": "2028-04-03",
+        "years": 6,
+        "region": "IND-2441"
+      },
+      {
+        "name": "안드라프라데시 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2029-04-03",
+        "years": 6,
+        "region": "IND-2441"
+      },
+      {
+        "name": "아루나찰프라데시 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2026-04-03",
+        "years": 6,
+        "region": "IND-3299"
+      },
+      {
+        "name": "아삼 주의회",
+        "size": 2,
+        "method": "STV",
+        "next": "2026-04-03",
+        "years": 6,
+        "region": "IND-2477"
+      },
+      {
+        "name": "아삼 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2027-04-03",
+        "years": 6,
+        "region": "IND-2477"
+      },
+      {
+        "name": "아삼 주의회",
+        "size": 2,
+        "method": "STV",
+        "next": "2028-04-03",
+        "years": 6,
+        "region": "IND-2477"
+      },
+      {
+        "name": "아삼 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2029-04-03",
+        "years": 6,
+        "region": "IND-2477"
+      },
+      {
+        "name": "아삼 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2025-04-03",
+        "years": 6,
+        "region": "IND-2477"
+      },
+      {
+        "name": "비하르 주의회",
+        "size": 6,
+        "method": "STV",
+        "next": "2024-04-03",
+        "years": 6,
+        "region": "IND-3258"
+      },
+      {
+        "name": "비하르 주의회",
+        "size": 2,
+        "method": "STV",
+        "next": "2027-04-03",
+        "years": 6,
+        "region": "IND-3258"
+      },
+      {
+        "name": "비하르 주의회",
+        "size": 4,
+        "method": "STV",
+        "next": "2028-04-03",
+        "years": 6,
+        "region": "IND-3258"
+      },
+      {
+        "name": "비하르 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2029-04-03",
+        "years": 6,
+        "region": "IND-3258"
+      },
+      {
+        "name": "비하르 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2025-04-03",
+        "years": 6,
+        "region": "IND-3258"
+      },
+      {
+        "name": "비하르 주의회",
+        "size": 2,
+        "method": "STV",
+        "next": "2026-04-03",
+        "years": 6,
+        "region": "IND-3258"
+      },
+      {
+        "name": "차티스가르 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2024-04-03",
+        "years": 6,
+        "region": "IND-3260"
+      },
+      {
+        "name": "차티스가르 주의회",
+        "size": 2,
+        "method": "STV",
+        "next": "2028-04-03",
+        "years": 6,
+        "region": "IND-3260"
+      },
+      {
+        "name": "차티스가르 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2029-04-03",
+        "years": 6,
+        "region": "IND-3260"
+      },
+      {
+        "name": "차티스가르 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2025-04-03",
+        "years": 6,
+        "region": "IND-3260"
+      },
+      {
+        "name": "델리 주의회",
+        "size": 3,
+        "method": "STV",
+        "next": "2024-01-28",
+        "years": 6,
+        "region": "IND-2428"
+      },
+      {
+        "name": "고아 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2029-04-03",
+        "years": 6,
+        "region": "IND-3265"
+      },
+      {
+        "name": "구자라트 주의회",
+        "size": 4,
+        "method": "STV",
+        "next": "2024-04-03",
+        "years": 6,
+        "region": "IND-3264"
+      },
+      {
+        "name": "구자라트 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2025-04-03",
+        "years": 6,
+        "region": "IND-3264"
+      },
+      {
+        "name": "구자라트 주의회",
+        "size": 2,
+        "method": "STV",
+        "next": "2026-04-03",
+        "years": 6,
+        "region": "IND-3264"
+      },
+      {
+        "name": "구자라트 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2027-04-03",
+        "years": 6,
+        "region": "IND-3264"
+      },
+      {
+        "name": "구자라트 주의회",
+        "size": 2,
+        "method": "STV",
+        "next": "2028-04-03",
+        "years": 6,
+        "region": "IND-3264"
+      },
+      {
+        "name": "구자라트 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2029-04-03",
+        "years": 6,
+        "region": "IND-3264"
+      },
+      {
+        "name": "하리아나 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2024-04-03",
+        "years": 6,
+        "region": "IND-2430"
+      },
+      {
+        "name": "하리아나 주의회",
+        "size": 2,
+        "method": "STV",
+        "next": "2026-04-03",
+        "years": 6,
+        "region": "IND-2430"
+      },
+      {
+        "name": "하리아나 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2027-04-03",
+        "years": 6,
+        "region": "IND-2430"
+      },
+      {
+        "name": "하리아나 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2028-04-03",
+        "years": 6,
+        "region": "IND-2430"
+      },
+      {
+        "name": "히마찰프라데시 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2024-04-03",
+        "years": 6,
+        "region": "IND-2429"
+      },
+      {
+        "name": "히마찰프라데시 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2026-04-03",
+        "years": 6,
+        "region": "IND-2429"
+      },
+      {
+        "name": "히마찰프라데시 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2027-04-03",
+        "years": 6,
+        "region": "IND-2429"
+      },
+      {
+        "name": "잠무 카슈미르 주의회",
+        "size": 4,
+        "method": "STV",
+        "next": "2025-10-24",
+        "years": 6,
+        "region": "IND-2431",
+        "vacant": true
+      },
+      {
+        "name": "자르칸드 주의회",
+        "size": 2,
+        "method": "STV",
+        "next": "2024-05-04",
+        "years": 6,
+        "region": "IND-3256"
+      },
+      {
+        "name": "자르칸드 주의회",
+        "size": 2,
+        "method": "STV",
+        "next": "2028-04-03",
+        "years": 6,
+        "region": "IND-3256"
+      },
+      {
+        "name": "자르칸드 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2029-04-03",
+        "years": 6,
+        "region": "IND-3256"
+      },
+      {
+        "name": "자르칸드 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2025-04-03",
+        "years": 6,
+        "region": "IND-3256"
+      },
+      {
+        "name": "카르나타카 주의회",
+        "size": 4,
+        "method": "STV",
+        "next": "2024-04-03",
+        "years": 6,
+        "region": "IND-2446"
+      },
+      {
+        "name": "카르나타카 주의회",
+        "size": 3,
+        "method": "STV",
+        "next": "2028-04-03",
+        "years": 6,
+        "region": "IND-2446"
+      },
+      {
+        "name": "카르나타카 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2029-04-03",
+        "years": 6,
+        "region": "IND-2446"
+      },
+      {
+        "name": "카르나타카 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2025-04-03",
+        "years": 6,
+        "region": "IND-2446"
+      },
+      {
+        "name": "카르나타카 주의회",
+        "size": 2,
+        "method": "STV",
+        "next": "2026-04-03",
+        "years": 6,
+        "region": "IND-2446"
+      },
+      {
+        "name": "카르나타카 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2027-04-03",
+        "years": 6,
+        "region": "IND-2446"
+      },
+      {
+        "name": "케랄라 주의회",
+        "size": 3,
+        "method": "STV",
+        "next": "2024-07-02",
+        "years": 6,
+        "region": "IND-2442"
+      },
+      {
+        "name": "케랄라 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2029-04-03",
+        "years": 6,
+        "region": "IND-2442"
+      },
+      {
+        "name": "케랄라 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2025-04-03",
+        "years": 6,
+        "region": "IND-2442"
+      },
+      {
+        "name": "케랄라 주의회",
+        "size": 2,
+        "method": "STV",
+        "next": "2026-04-03",
+        "years": 6,
+        "region": "IND-2442"
+      },
+      {
+        "name": "케랄라 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2027-04-03",
+        "years": 6,
+        "region": "IND-2442"
+      },
+      {
+        "name": "케랄라 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2028-04-03",
+        "years": 6,
+        "region": "IND-2442"
+      },
+      {
+        "name": "마디아프라데시 주의회",
+        "size": 5,
+        "method": "STV",
+        "next": "2024-04-03",
+        "years": 6,
+        "region": "IND-3261"
+      },
+      {
+        "name": "마디아프라데시 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2025-04-03",
+        "years": 6,
+        "region": "IND-3261"
+      },
+      {
+        "name": "마디아프라데시 주의회",
+        "size": 2,
+        "method": "STV",
+        "next": "2026-04-03",
+        "years": 6,
+        "region": "IND-3261"
+      },
+      {
+        "name": "마디아프라데시 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2027-04-03",
+        "years": 6,
+        "region": "IND-3261"
+      },
+      {
+        "name": "마디아프라데시 주의회",
+        "size": 2,
+        "method": "STV",
+        "next": "2028-04-03",
+        "years": 6,
+        "region": "IND-3261"
+      },
+      {
+        "name": "마하라슈트라 주의회",
+        "size": 6,
+        "method": "STV",
+        "next": "2024-04-03",
+        "years": 6,
+        "region": "IND-2447"
+      },
+      {
+        "name": "마하라슈트라 주의회",
+        "size": 4,
+        "method": "STV",
+        "next": "2026-04-03",
+        "years": 6,
+        "region": "IND-2447"
+      },
+      {
+        "name": "마하라슈트라 주의회",
+        "size": 2,
+        "method": "STV",
+        "next": "2027-04-03",
+        "years": 6,
+        "region": "IND-2447"
+      },
+      {
+        "name": "마하라슈트라 주의회",
+        "size": 4,
+        "method": "STV",
+        "next": "2028-04-03",
+        "years": 6,
+        "region": "IND-2447"
+      },
+      {
+        "name": "마하라슈트라 주의회",
+        "size": 2,
+        "method": "STV",
+        "next": "2029-04-03",
+        "years": 6,
+        "region": "IND-2447"
+      },
+      {
+        "name": "마하라슈트라 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2025-04-03",
+        "years": 6,
+        "region": "IND-2447"
+      },
+      {
+        "name": "마니푸르 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2026-04-03",
+        "years": 6,
+        "region": "IND-2478"
+      },
+      {
+        "name": "메갈라야 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2027-04-03",
+        "years": 6,
+        "region": "IND-2489"
+      },
+      {
+        "name": "미조람 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2028-04-03",
+        "years": 6,
+        "region": "IND-3300"
+      },
+      {
+        "name": "나갈랜드 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2028-04-03",
+        "years": 6,
+        "region": "IND-2479"
+      },
+      {
+        "name": "오디샤 주의회",
+        "size": 3,
+        "method": "STV",
+        "next": "2024-04-04",
+        "years": 6,
+        "region": "IND-2444"
+      },
+      {
+        "name": "오디샤 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2029-04-03",
+        "years": 6,
+        "region": "IND-2444"
+      },
+      {
+        "name": "오디샤 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2025-04-03",
+        "years": 6,
+        "region": "IND-2444"
+      },
+      {
+        "name": "오디샤 주의회",
+        "size": 2,
+        "method": "STV",
+        "next": "2026-04-03",
+        "years": 6,
+        "region": "IND-2444"
+      },
+      {
+        "name": "오디샤 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2027-04-03",
+        "years": 6,
+        "region": "IND-2444"
+      },
+      {
+        "name": "오디샤 주의회",
+        "size": 2,
+        "method": "STV",
+        "next": "2028-04-03",
+        "years": 6,
+        "region": "IND-2444"
+      },
+      {
+        "name": "푸두체리 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2025-04-03",
+        "years": 6,
+        "region": "IND-3262"
+      },
+      {
+        "name": "펀자브 주의회",
+        "size": 2,
+        "method": "STV",
+        "next": "2026-04-03",
+        "years": 6,
+        "region": "IND-3249"
+      },
+      {
+        "name": "펀자브 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2027-04-03",
+        "years": 6,
+        "region": "IND-3249"
+      },
+      {
+        "name": "펀자브 주의회",
+        "size": 2,
+        "method": "STV",
+        "next": "2028-04-03",
+        "years": 6,
+        "region": "IND-3249"
+      },
+      {
+        "name": "펀자브 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2029-04-03",
+        "years": 6,
+        "region": "IND-3249"
+      },
+      {
+        "name": "펀자브 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2025-04-03",
+        "years": 6,
+        "region": "IND-3249"
+      },
+      {
+        "name": "라자스탄 주의회",
+        "size": 3,
+        "method": "STV",
+        "next": "2024-04-04",
+        "years": 6,
+        "region": "IND-3250"
+      },
+      {
+        "name": "라자스탄 주의회",
+        "size": 2,
+        "method": "STV",
+        "next": "2026-04-03",
+        "years": 6,
+        "region": "IND-3250"
+      },
+      {
+        "name": "라자스탄 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2027-04-03",
+        "years": 6,
+        "region": "IND-3250"
+      },
+      {
+        "name": "라자스탄 주의회",
+        "size": 2,
+        "method": "STV",
+        "next": "2028-04-03",
+        "years": 6,
+        "region": "IND-3250"
+      },
+      {
+        "name": "라자스탄 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2029-04-03",
+        "years": 6,
+        "region": "IND-3250"
+      },
+      {
+        "name": "라자스탄 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2025-04-03",
+        "years": 6,
+        "region": "IND-3250"
+      },
+      {
+        "name": "시킴 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2024-02-24",
+        "years": 6,
+        "region": "IND-3259"
+      },
+      {
+        "name": "타밀나두 주의회",
+        "size": 6,
+        "method": "STV",
+        "next": "2028-04-03",
+        "years": 6,
+        "region": "IND-3263"
+      },
+      {
+        "name": "타밀나두 주의회",
+        "size": 3,
+        "method": "STV",
+        "next": "2029-04-03",
+        "years": 6,
+        "region": "IND-3263"
+      },
+      {
+        "name": "타밀나두 주의회",
+        "size": 3,
+        "method": "STV",
+        "next": "2025-04-03",
+        "years": 6,
+        "region": "IND-3263"
+      },
+      {
+        "name": "타밀나두 주의회",
+        "size": 4,
+        "method": "STV",
+        "next": "2026-04-03",
+        "years": 6,
+        "region": "IND-3263"
+      },
+      {
+        "name": "타밀나두 주의회",
+        "size": 2,
+        "method": "STV",
+        "next": "2027-04-03",
+        "years": 6,
+        "region": "IND-3263"
+      },
+      {
+        "name": "텔랑가나 주의회",
+        "size": 3,
+        "method": "STV",
+        "next": "2024-04-03",
+        "years": 6,
+        "region": "IND-20011"
+      },
+      {
+        "name": "텔랑가나 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2028-04-03",
+        "years": 6,
+        "region": "IND-20011"
+      },
+      {
+        "name": "텔랑가나 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2029-04-03",
+        "years": 6,
+        "region": "IND-20011"
+      },
+      {
+        "name": "텔랑가나 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2025-04-03",
+        "years": 6,
+        "region": "IND-20011"
+      },
+      {
+        "name": "텔랑가나 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2026-04-03",
+        "years": 6,
+        "region": "IND-20011"
+      },
+      {
+        "name": "트리푸라 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2029-04-03",
+        "years": 6,
+        "region": "IND-3301"
+      },
+      {
+        "name": "우타르프라데시 주의회",
+        "size": 10,
+        "method": "STV",
+        "next": "2024-04-03",
+        "years": 6,
+        "region": "IND-3253"
+      },
+      {
+        "name": "우타르프라데시 주의회",
+        "size": 3,
+        "method": "STV",
+        "next": "2025-04-03",
+        "years": 6,
+        "region": "IND-3253"
+      },
+      {
+        "name": "우타르프라데시 주의회",
+        "size": 6,
+        "method": "STV",
+        "next": "2026-04-03",
+        "years": 6,
+        "region": "IND-3253"
+      },
+      {
+        "name": "우타르프라데시 주의회",
+        "size": 3,
+        "method": "STV",
+        "next": "2027-04-03",
+        "years": 6,
+        "region": "IND-3253"
+      },
+      {
+        "name": "우타르프라데시 주의회",
+        "size": 6,
+        "method": "STV",
+        "next": "2028-04-03",
+        "years": 6,
+        "region": "IND-3253"
+      },
+      {
+        "name": "우타르프라데시 주의회",
+        "size": 3,
+        "method": "STV",
+        "next": "2029-04-03",
+        "years": 6,
+        "region": "IND-3253"
+      },
+      {
+        "name": "우타라칸드 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2024-04-03",
+        "years": 6,
+        "region": "IND-3254"
+      },
+      {
+        "name": "우타라칸드 주의회",
+        "size": 2,
+        "method": "STV",
+        "next": "2026-04-03",
+        "years": 6,
+        "region": "IND-3254"
+      },
+      {
+        "name": "서벵골 주의회",
+        "size": 5,
+        "method": "STV",
+        "next": "2024-04-03",
+        "years": 6,
+        "region": "IND-3257"
+      },
+      {
+        "name": "서벵골 주의회",
+        "size": 3,
+        "method": "STV",
+        "next": "2026-04-03",
+        "years": 6,
+        "region": "IND-3257"
+      },
+      {
+        "name": "서벵골 주의회",
+        "size": 2,
+        "method": "STV",
+        "next": "2027-04-03",
+        "years": 6,
+        "region": "IND-3257"
+      },
+      {
+        "name": "서벵골 주의회",
+        "size": 4,
+        "method": "STV",
+        "next": "2028-04-03",
+        "years": 6,
+        "region": "IND-3257"
+      },
+      {
+        "name": "서벵골 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2029-04-03",
+        "years": 6,
+        "region": "IND-3257"
+      },
+      {
+        "name": "서벵골 주의회",
+        "size": 1,
+        "method": "STV",
+        "next": "2025-04-03",
+        "years": 6,
+        "region": "IND-3257"
+      },
+      {
+        "name": "대통령 지명",
+        "size": 4,
+        "method": "APPOINT",
+        "next": "2024-07-14",
+        "years": 6
+      },
+      {
+        "name": "대통령 지명",
+        "size": 4,
+        "method": "APPOINT",
+        "next": "2026-07-14",
+        "years": 6
+      },
+      {
+        "name": "대통령 지명",
+        "size": 4,
+        "method": "APPOINT",
+        "next": "2028-07-14",
+        "years": 6
+      }
+    ]
+  },
+  "CAN": {
+    "source": "105석은 주·준주에 귀속된다. 총리의 제청을 받은 총독이 임명한다. 75세 정년이며 2024년 이전 임명된 현역의 상원 공개 정년일을 사용했다. 확인되지 않은 퇴임일과 새 상원의원 취임 나이·공석 충원일은 모형이다. https://www.canada.ca/en/campaign/independent-advisory-board-for-senate-appointments/about-the-senate.html https://sencanada.ca/umbraco/surface/SenatorsAjax/GetSenators?Lang=en&displayFor=senatorslist",
+    "units": [
+      {
+        "name": "노스웨스트 준",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2042-04-14",
+        "region": "CAN-635"
+      },
+      {
+        "name": "서스캐처원",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2027-04-16",
+        "region": "CAN-631"
+      },
+      {
+        "name": "온타리오",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2027-04-29",
+        "region": "CAN-682"
+      },
+      {
+        "name": "노바스코샤",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2030-07-04",
+        "region": "CAN-685"
+      },
+      {
+        "name": "퀘벡",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2046-07-20",
+        "region": "CAN-683"
+      },
+      {
+        "name": "서스캐처원",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2045-06-18",
+        "region": "CAN-631"
+      },
+      {
+        "name": "노바스코샤",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2028-08-01",
+        "region": "CAN-685"
+      },
+      {
+        "name": "온타리오",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2037-03-27",
+        "region": "CAN-682"
+      },
+      {
+        "name": "온타리오",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2029-04-26",
+        "region": "CAN-682"
+      },
+      {
+        "name": "온타리오",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2028-10-25",
+        "region": "CAN-682"
+      },
+      {
+        "name": "퀘벡",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2049-11-11",
+        "region": "CAN-683"
+      },
+      {
+        "name": "온타리오",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2032-12-04",
+        "region": "CAN-682"
+      },
+      {
+        "name": "온타리오",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2031-03-21",
+        "region": "CAN-682"
+      },
+      {
+        "name": "퀘벡",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2039-12-04",
+        "region": "CAN-683"
+      },
+      {
+        "name": "온타리오",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2040-05-17",
+        "region": "CAN-682"
+      },
+      {
+        "name": "뉴브런즈윅",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2031-04-27",
+        "region": "CAN-684"
+      },
+      {
+        "name": "노바스코샤",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2029-11-05",
+        "region": "CAN-685"
+      },
+      {
+        "name": "노바스코샤",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2030-11-04",
+        "region": "CAN-685"
+      },
+      {
+        "name": "퀘벡",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2029-05-01",
+        "region": "CAN-683"
+      },
+      {
+        "name": "노바스코샤",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2034-11-01",
+        "region": "CAN-685"
+      },
+      {
+        "name": "온타리오",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2033-04-23",
+        "region": "CAN-682"
+      },
+      {
+        "name": "온타리오",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2028-08-19",
+        "region": "CAN-682"
+      },
+      {
+        "name": "프린스에드워드아일랜드",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2029-07-08",
+        "region": "CAN-687"
+      },
+      {
+        "name": "유콘 준",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2035-04-08",
+        "region": "CAN-636"
+      },
+      {
+        "name": "퀘벡",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2027-04-06",
+        "region": "CAN-683"
+      },
+      {
+        "name": "프린스에드워드아일랜드",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2032-09-28",
+        "region": "CAN-687"
+      },
+      {
+        "name": "매니토바",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2031-01-07",
+        "region": "CAN-630"
+      },
+      {
+        "name": "퀘벡",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2036-06-21",
+        "region": "CAN-683"
+      },
+      {
+        "name": "퀘벡",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2036-03-14",
+        "region": "CAN-683"
+      },
+      {
+        "name": "퀘벡",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2030-05-07",
+        "region": "CAN-683"
+      },
+      {
+        "name": "브리티시컬럼비아",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2028-09-02",
+        "region": "CAN-633"
+      },
+      {
+        "name": "온타리오",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2027-08-25",
+        "region": "CAN-682"
+      },
+      {
+        "name": "퀘벡",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2043-01-10",
+        "region": "CAN-683"
+      },
+      {
+        "name": "뉴브런즈윅",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2030-01-08",
+        "region": "CAN-684"
+      },
+      {
+        "name": "서스캐처원",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2032-03-06",
+        "region": "CAN-631"
+      },
+      {
+        "name": "앨버타",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2044-02-20",
+        "region": "CAN-632"
+      },
+      {
+        "name": "퀘벡",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2037-08-14",
+        "region": "CAN-683"
+      },
+      {
+        "name": "프린스에드워드아일랜드",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2032-03-01",
+        "region": "CAN-687"
+      },
+      {
+        "name": "노바스코샤",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2030-05-04",
+        "region": "CAN-685"
+      },
+      {
+        "name": "브리티시컬럼비아",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2040-04-11",
+        "region": "CAN-633"
+      },
+      {
+        "name": "온타리오",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2043-01-28",
+        "region": "CAN-682"
+      },
+      {
+        "name": "매니토바",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2027-05-01",
+        "region": "CAN-630"
+      },
+      {
+        "name": "뉴브런즈윅",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2032-06-03",
+        "region": "CAN-684"
+      },
+      {
+        "name": "퀘벡",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2034-07-10",
+        "region": "CAN-683"
+      },
+      {
+        "name": "온타리오",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2033-10-25",
+        "region": "CAN-682"
+      },
+      {
+        "name": "온타리오",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2031-11-24",
+        "region": "CAN-682"
+      },
+      {
+        "name": "매니토바",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2043-09-09",
+        "region": "CAN-630"
+      },
+      {
+        "name": "온타리오",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2034-11-10",
+        "region": "CAN-682"
+      },
+      {
+        "name": "온타리오",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2040-06-15",
+        "region": "CAN-682"
+      },
+      {
+        "name": "퀘벡",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2044-12-15",
+        "region": "CAN-683"
+      },
+      {
+        "name": "뉴펀들랜드래브라도",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2034-02-05",
+        "region": "CAN-686"
+      },
+      {
+        "name": "뉴브런즈윅",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2029-03-02",
+        "region": "CAN-684"
+      },
+      {
+        "name": "노바스코샤",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2039-11-04",
+        "region": "CAN-685"
+      },
+      {
+        "name": "뉴브런즈윅",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2032-01-25",
+        "region": "CAN-684"
+      },
+      {
+        "name": "뉴펀들랜드래브라도",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2032-08-15",
+        "region": "CAN-686"
+      },
+      {
+        "name": "뉴브런즈윅",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2030-12-31",
+        "region": "CAN-684"
+      },
+      {
+        "name": "뉴브런즈윅",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2042-09-30",
+        "region": "CAN-684"
+      },
+      {
+        "name": "온타리오",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2036-12-04",
+        "region": "CAN-682"
+      },
+      {
+        "name": "앨버타",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2039-09-07",
+        "region": "CAN-632"
+      },
+      {
+        "name": "앨버타",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2034-05-20",
+        "region": "CAN-632"
+      },
+      {
+        "name": "앨버타",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2037-02-25",
+        "region": "CAN-632"
+      },
+      {
+        "name": "온타리오",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2033-06-20",
+        "region": "CAN-682"
+      },
+      {
+        "name": "퀘벡",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2034-12-30",
+        "region": "CAN-683"
+      },
+      {
+        "name": "뉴펀들랜드래브라도",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2037-02-28",
+        "region": "CAN-686"
+      },
+      {
+        "name": "뉴펀들랜드래브라도",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2039-01-11",
+        "region": "CAN-686"
+      },
+      {
+        "name": "브리티시컬럼비아",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2038-03-02",
+        "region": "CAN-633"
+      },
+      {
+        "name": "온타리오",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2031-12-15",
+        "region": "CAN-682"
+      },
+      {
+        "name": "온타리오",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2024-01-15",
+        "region": "CAN-682",
+        "vacant": false
+      },
+      {
+        "name": "온타리오",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2025-06-15",
+        "region": "CAN-682",
+        "vacant": false
+      },
+      {
+        "name": "온타리오",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2026-11-15",
+        "region": "CAN-682",
+        "vacant": false
+      },
+      {
+        "name": "온타리오",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2024-04-15",
+        "region": "CAN-682",
+        "vacant": false
+      },
+      {
+        "name": "온타리오",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2024-09-15",
+        "region": "CAN-682",
+        "vacant": true
+      },
+      {
+        "name": "온타리오",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2026-02-15",
+        "region": "CAN-682",
+        "vacant": false
+      },
+      {
+        "name": "퀘벡",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2024-07-15",
+        "region": "CAN-683",
+        "vacant": false
+      },
+      {
+        "name": "퀘벡",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2025-12-15",
+        "region": "CAN-683",
+        "vacant": false
+      },
+      {
+        "name": "퀘벡",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2024-05-15",
+        "region": "CAN-683",
+        "vacant": true
+      },
+      {
+        "name": "퀘벡",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2024-10-15",
+        "region": "CAN-683",
+        "vacant": false
+      },
+      {
+        "name": "퀘벡",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2025-03-15",
+        "region": "CAN-683",
+        "vacant": false
+      },
+      {
+        "name": "퀘벡",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2026-08-15",
+        "region": "CAN-683",
+        "vacant": false
+      },
+      {
+        "name": "퀘벡",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2024-01-15",
+        "region": "CAN-683",
+        "vacant": true
+      },
+      {
+        "name": "퀘벡",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2025-06-15",
+        "region": "CAN-683",
+        "vacant": false
+      },
+      {
+        "name": "퀘벡",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2026-11-15",
+        "region": "CAN-683",
+        "vacant": false
+      },
+      {
+        "name": "퀘벡",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2024-04-15",
+        "region": "CAN-683",
+        "vacant": false
+      },
+      {
+        "name": "퀘벡",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2024-09-15",
+        "region": "CAN-683",
+        "vacant": true
+      },
+      {
+        "name": "뉴브런즈윅",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2026-02-15",
+        "region": "CAN-684",
+        "vacant": false
+      },
+      {
+        "name": "뉴브런즈윅",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2024-07-15",
+        "region": "CAN-684",
+        "vacant": false
+      },
+      {
+        "name": "뉴브런즈윅",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2025-12-15",
+        "region": "CAN-684",
+        "vacant": false
+      },
+      {
+        "name": "노바스코샤",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2026-05-15",
+        "region": "CAN-685",
+        "vacant": false
+      },
+      {
+        "name": "노바스코샤",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2024-10-15",
+        "region": "CAN-685",
+        "vacant": true
+      },
+      {
+        "name": "노바스코샤",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2025-03-15",
+        "region": "CAN-685",
+        "vacant": false
+      },
+      {
+        "name": "프린스에드워드아일랜드",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2026-08-15",
+        "region": "CAN-687",
+        "vacant": false
+      },
+      {
+        "name": "뉴펀들랜드래브라도",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2024-01-15",
+        "region": "CAN-686",
+        "vacant": false
+      },
+      {
+        "name": "뉴펀들랜드래브라도",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2024-06-15",
+        "region": "CAN-686",
+        "vacant": true
+      },
+      {
+        "name": "브리티시컬럼비아",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2026-11-15",
+        "region": "CAN-633",
+        "vacant": false
+      },
+      {
+        "name": "브리티시컬럼비아",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2024-04-15",
+        "region": "CAN-633",
+        "vacant": false
+      },
+      {
+        "name": "브리티시컬럼비아",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2025-09-15",
+        "region": "CAN-633",
+        "vacant": false
+      },
+      {
+        "name": "앨버타",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2024-02-15",
+        "region": "CAN-632",
+        "vacant": true
+      },
+      {
+        "name": "앨버타",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2024-07-15",
+        "region": "CAN-632",
+        "vacant": false
+      },
+      {
+        "name": "서스캐처원",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2025-12-15",
+        "region": "CAN-631",
+        "vacant": false
+      },
+      {
+        "name": "서스캐처원",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2026-05-15",
+        "region": "CAN-631",
+        "vacant": false
+      },
+      {
+        "name": "서스캐처원",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2024-10-15",
+        "region": "CAN-631",
+        "vacant": true
+      },
+      {
+        "name": "매니토바",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2025-03-15",
+        "region": "CAN-630",
+        "vacant": false
+      },
+      {
+        "name": "매니토바",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2026-08-15",
+        "region": "CAN-630",
+        "vacant": false
+      },
+      {
+        "name": "매니토바",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2024-01-15",
+        "region": "CAN-630",
+        "vacant": false
+      },
+      {
+        "name": "누나부트 준",
+        "size": 1,
+        "method": "CANADIAN",
+        "next": "2024-06-15",
+        "region": "CAN-634",
+        "vacant": true
+      }
+    ]
+  },
+  "GBR": {
+    "source": "시나리오 개시 당시 종신 귀족·세습 의석 92·성직 귀족 26. 종신 귀족에는 고정 임기와 정원이 없으며 사직·사망, 신임 총리의 추천과 국왕의 임명을 반영한다. 세습 의석의 공석 보선, 주교 교체, 연별 임명·퇴임 인원은 추정한다. https://www.parliament.uk/about/mps-and-lords/about-lords/lords-appointment/ https://researchbriefings.files.parliament.uk/documents/CBP-10107/CBP-10107.pdf 2024년 세습 귀족 보선 중단과 2026년 4월 29일 회기 종료 시 세습 자격 만료를 반영한다. 종신 작위 수여는 종신 귀족 임명 모형에 포함한다. https://commonslibrary.parliament.uk/research-briefings/cbp-10635/",
+    "units": [
+      {
+        "name": "종신 귀족",
+        "size": 667,
+        "method": "PEER",
+        "next": "2024-06-01",
+        "years": 1
+      },
+      {
+        "name": "세습 귀족",
+        "size": 92,
+        "method": "HEREDITARY",
+        "next": "2024-06-01",
+        "expiry": "2026-04-29"
+      },
+      {
+        "name": "성직 귀족",
+        "size": 26,
+        "method": "BISHOP",
+        "next": "2024-06-01",
+        "years": 1
+      }
+    ]
+  }
+}

@@ -86,18 +86,58 @@ fun SelectionPanel(
             Text(politics.government, style = DossierType.title(14.sp), color = DossierColors.ink)
             StatRow("체제", politics.regime.label)
             StatRow("지지율 (추정)", "${politics.approval.roundToInt()}%")
+            politics.indirectPresident?.let { election ->
+                StatRow("대통령 간선", election.procedure.body)
+                election.nextBallot?.let { StatRow("다음 투표", it.toString()) }
+                election.presidentElect?.let { StatRow("대통령 당선인", "${it.name} · 취임 ${election.accession}") }
+                election.deputyBallot?.let { StatRow("부통령 간선", it.toString()) }
+                election.deputyElect?.let { StatRow("부통령 당선인", "${it.name} · 취임 ${election.deputyAccession}") }
+                election.divisions.lastOrNull()?.let { ballot ->
+                    StatRow("최근 간선 ${ballot.round}차", "${ballot.date} · ${ballot.required?.let { "가결 ${it}표" } ?: "최다 득표"}")
+                    StatRow("선거인단", "${ballot.college.sumOf { it.voters }}명 · 총 ${ballot.college.sumOf { it.votes }}표")
+                    ballot.votes.entries
+                        .sortedByDescending { it.value }
+                        .forEach { (person, count) -> StatRow(person.name, "${count}표") }
+                }
+            }
+            politics.appointments?.let { procedure ->
+                StatRow(procedure.procedure.body, procedure.procedure.label)
+                procedure.nextSession?.let { StatRow("다음 인선·신임 심의", it.toString()) }
+                procedure.decision?.let { StatRow("최근 인선·신임 결정", it) }
+            }
             politics.nextElection?.let { StatRow("다음 선거", it.toString()) }
             politics.executiveCampaign?.let { campaign ->
-                val contestants =
-                    if (campaign.firstBallot.isEmpty()) {
-                        campaign.nominations.map {
-                            it.nominee
+                val (label, contestants) =
+                    when {
+                        campaign.houseDate != null -> {
+                            "하원 선출 후보" to
+                                campaign.firstBallot
+                                    .sortedByDescending {
+                                        campaign.regionalCount?.electors?.get(it.person.id) ?: 0
+                                    }.take(3)
+                                    .map { it.person }
                         }
-                    } else {
-                        campaign.firstBallot.take(2).map { it.person }
+
+                        campaign.runoffDate != null -> {
+                            "결선 후보" to campaign.firstBallot.take(2).map { it.person }
+                        }
+
+                        campaign.primaryStandings.any { it.nextDate != null } -> {
+                            "경선 후보" to
+                                campaign.nominations.flatMap { listOfNotNull(it.nominee, it.rival) }
+                        }
+
+                        else -> {
+                            "본선 후보" to campaign.nominations.map { it.nominee }
+                        }
                     }
-                StatRow(if (campaign.runoffDate == null) "본선 후보" else "결선 후보", contestants.joinToString(" · ") { it.name })
+                StatRow(label, contestants.joinToString(" · ") { it.name })
             }
+            politics.newHouseOpens?.let { StatRow("새 의회 임기 시작", it.toString()) }
+            politics.upperHouse?.let { StatRow(it.name, "재적 ${it.filledSeats}명 · 정부 ${it.governmentSeats} · 야당 ${it.oppositionSeats}") }
+            politics.lastUpperRenewal?.let { StatRow("상원 갱신", "${it.date} · ${it.method} · ${it.renewed}석") }
+            politics.legislativeRunoff?.let { StatRow("총선 결선", "${it.nextRound} · ${it.contested}개 선거구") }
+            politics.presidentElect?.let { StatRow("취임 예정", "${it.person.name} · ${it.inauguration}") }
             politics.lastElection
                 ?.executive
                 ?.winner

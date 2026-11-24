@@ -1,0 +1,198 @@
+{
+ "KOR": {
+  "route": "MIXED",
+  "switch": "VACATE_LIST",
+  "days": 42,
+  "lastDays": 0,
+  "sourceNote": "공직선거법 제35·192·200조. 지역구 보궐, 비례대표 명부 승계. 비례 의원의 자발적 당적 변경은 의원직 상실. https://www.law.go.kr/법령/공직선거법/제200조 https://law.go.kr/lsLawLinkInfo.do?chrClsCd=010202&lsJoLnkSeq=1000237805"
+ },
+ "USA": {
+  "route": "DISTRICT",
+  "switch": "KEEP",
+  "days": 70,
+  "lastDays": 0,
+  "sourceNote": "미국 헌법 제1조 제2절 제4항. 하원은 공석을 주별 특별선거로 채운다. 70일은 주별 소집일을 하나로 묶은 모형값. https://constitution.congress.gov/browse/article-1/section-2/clause-4/"
+ },
+ "JPN": {
+  "route": "MIXED",
+  "switch": "VACATE_LIST",
+  "days": 42,
+  "lastDays": 0,
+  "sourceNote": "중의원 지역구 보궐과 비례 명부 다음 후보 승계. 공직선거법 제112·113조, 제33조의2 통일 보궐. https://laws.e-gov.go.jp/law/325AC1000000100 https://archive.ipu.org/parline-e/reports/2161.htm"
+ },
+ "DEU": {
+  "route": "LIST",
+  "switch": "KEEP",
+  "days": 42,
+  "lastDays": 0,
+  "sourceNote": "연방선거법 제48조 정당 주명부 승계, 기본법 제38조 자유 위임. 무소속·초과의석 예외는 개별 집계 자료가 필요하다. https://www.gesetze-im-internet.de/bwahlg/__48.html https://www.bundestag.de/resource/blob/189732/6e3095be7d1968201ca34bbca5c285d9/memlaw-data.pdf"
+ },
+ "GBR": {
+  "route": "DISTRICT",
+  "switch": "KEEP",
+  "days": 42,
+  "lastDays": 0,
+  "sourceNote": "하원 공석은 보궐선거. 당적 변경 시 의석 유지. https://www.parliament.uk/about/how/elections-and-voting/by-elections/ https://commonslibrary.parliament.uk/research-briefings/sn02537/"
+ },
+ "FRA": {
+  "route": "SUBSTITUTE",
+  "switch": "KEEP",
+  "days": 42,
+  "lastDays": 0,
+  "sourceNote": "선거법 LO176·178조. 사망 등 일반 결원은 선출된 대리인이 승계하며 무효 선거·특정 사직은 보궐이다. 게임은 이 규칙에서 일반 결원만 표본화한다. https://www.assemblee-nationale.fr/dyn/opendata/ETDIANR5L15B0977.html"
+ },
+ "RUS": {
+  "route": "MIXED",
+  "switch": "UNMODELLED",
+  "days": 42,
+  "lastDays": 0,
+  "sourceNote": "연방법 20-FZ 제95·96·97조. 단일 선거구 보궐, 연방 명부 후임 지정. https://www.te.gob.mx/vota_elections/thesaurus/article/24678/16240/155"
+ },
+ "UKR": {
+  "route": "MIXED",
+  "switch": "UNMODELLED",
+  "days": 42,
+  "lastDays": 0,
+  "sourceNote": "계엄 아래 지역구 보궐 유예. 2019년 선출 424명 중 199명 지역구·225명 명부. 정당별 당선유형이 없는 초기 의회는 이 비중으로 유형을 추계하며 명부 결원만 차순위 승계한다. https://zakon.rada.gov.ua/laws/show/389-19#Text https://data.ipu.org/parliament/UA/UA-LC01/election/UA-LC01-E20190721/"
+ },
+ "IND": {
+  "route": "DISTRICT",
+  "switch": "VACATE",
+  "days": 84,
+  "lastDays": 365,
+  "sourceNote": "국민대표법 제151A조. 잔여 임기 1년 이상이면 보통 6개월 내 보궐. 헌법 제10부칙의 자발적 탈당으로 의원 자격 상실이 결정된 사례를 표본화한다. https://archive.ipu.org/parline-e/reports/2145_B.htm https://legislative.gov.in/constitution-of-india/"
+ },
+ "BRA": {
+  "route": "LIST",
+  "switch": "UNMODELLED",
+  "days": 42,
+  "lastDays": 0,
+  "sourceNote": "하원 대리 의원(suplente) 승계. 선거법상 정당·연합 명부가 후속 후보를 정하며 탈당 정당사유의 개별 재판은 생략한다. https://www.tse.jus.br/legislacao/codigo-eleitoral/codigo-eleitoral-1/codigo-eleitoral-lei-nb0-4.737-de-15-de-julho-de-1965"
+ },
+ "CAN": {
+  "route": "DISTRICT",
+  "switch": "KEEP",
+  "days": 63,
+  "lastDays": 274,
+  "sourceNote": "하원 보궐 소집. 법정 정기투표일 9개월 이내에는 선거영장을 발부하지 않는다. https://elections.ca/content.aspx?dir=bkg&document=writ&lang=e&section=vot"
+ },
+ "AUS": {
+  "route": "DISTRICT",
+  "switch": "KEEP",
+  "days": 42,
+  "lastDays": 0,
+  "sourceNote": "헌법 제33조 하원 공석 선거영장. https://peo.gov.au/public/assets/documents/2023_Australian_Constitution.pdf"
+ },
+ "POL": {
+  "route": "LIST",
+  "switch": "KEEP",
+  "days": 42,
+  "lastDays": 0,
+  "sourceNote": "세임 지역명부의 같은 정당 차순위자가 승계한다. 헌법 제104조 자유 위임. https://archive.ipu.org/parline-e/reports/2255_B.htm https://www.sejm.gov.pl/prawo/konst/angielski/kon1.htm"
+ },
+ "ITA": {
+  "route": "MIXED",
+  "switch": "KEEP",
+  "days": 63,
+  "lastDays": 0,
+  "sourceNote": "단일 지역구는 보궐, 다인 명부는 같은 명부 차순위 승계. 헌법 제67조 자유 위임. https://www.camera.it/temiap/documentazione/temi/pdf/1104098.pdf https://www.senato.it/sites/default/files/media-documents/Costituzione_INGLESE_2023.pdf"
+ },
+ "FIN": {
+  "route": "LIST",
+  "switch": "KEEP",
+  "days": 42,
+  "lastDays": 0,
+  "sourceNote": "선거구 선거위원회가 같은 명부·선거연합의 후보 순위로 대리 의원을 정한다. https://archive.ipu.org/parline-e/reports/2111.htm"
+ },
+ "EST": {
+  "route": "LIST",
+  "switch": "KEEP",
+  "days": 42,
+  "lastDays": 0,
+  "sourceNote": "국회의원 지위법의 의원 대체·예비 의원 순서. https://www.riigiteataja.ee/en/akt/505022015003"
+ },
+ "LVA": {
+  "route": "LIST",
+  "switch": "KEEP",
+  "days": 42,
+  "lastDays": 0,
+  "sourceNote": "사에이마 의사규칙 제6조, 선거명부의 다음 후보가 승계한다. https://likumi.lv/ta/en/en/id/57517"
+ },
+ "LTU": {
+  "route": "MIXED",
+  "switch": "KEEP",
+  "days": 63,
+  "lastDays": 0,
+  "sourceNote": "단일선거구는 보궐, 다인선거구는 같은 명부 후보 승계. https://archive.ipu.org/parline-e/reports/2189.htm"
+ },
+ "TUR": {
+  "route": "DEFERRED",
+  "switch": "KEEP",
+  "days": 42,
+  "lastDays": 0,
+  "sourceNote": "헌법 제78조. 일반적으로 임기 30개월 후 한 번 실시. 공석 5% 이상이면 3개월 이내 보궐. 총선 전 1년 제한. 보궐일은 모형에서 결정 60일 뒤. 선거구의 의원 전원이 공석인 특별 예외는 지도 자료 범위 밖이다. https://anayasa.gov.tr/media/7963/basic_legal_texts.pdf"
+ },
+ "ISR": {
+  "route": "LIST",
+  "switch": "UNMODELLED",
+  "days": 42,
+  "lastDays": 0,
+  "sourceNote": "크네세트 기본법 제43조 같은 명부의 차순위자 승계. https://main.knesset.gov.il/EN/activity/Documents/BasicLawsPDF/BasicLawTheKnesset.pdf"
+ },
+ "IRN": {
+  "route": "DISTRICT",
+  "switch": "UNMODELLED",
+  "days": 84,
+  "lastDays": 0,
+  "sourceNote": "선거법 제4·9조. 잔여 임기 1년 초과 시 모형에서 치르는 차기 전국선거와 동시 보궐, 상대다수. 소수 종교 의석은 해당 공동체에서만 보충한다. 지방선거와 전문가회의 선거일은 미수록. https://archive.ipu.org/parline-e/reports/2149_B.htm"
+ },
+ "EGY": {
+  "route": "MIXED",
+  "switch": "UNMODELLED",
+  "days": 42,
+  "lastDays": 183,
+  "sourceNote": "헌법 제108조·하원법. 선출 지역구 보궐, 정당명부 대리 후보. 임명 의석의 별도 임명은 모형에서 분리하지 않는다. https://www.elections.eg/images/pdfs/laws/Constitution_2014-En.pdf"
+ },
+ "ZAF": {
+  "route": "LIST",
+  "switch": "VACATE",
+  "days": 42,
+  "lastDays": 0,
+  "sourceNote": "헌법 제47(3)(c)조 및 선거법 부표 1A. 정당 소속을 잃으면 명부 정당이 후임을 보충한다. https://www.gov.za/documents/constitution/constitution-republic-south-africa-1996-chapter-4-parliament-07-feb-1997 https://www.elections.org.za/content/Documents/Laws-and-regulations/Elections/Electoral-Act-73-of-1998-as-Amended/"
+ },
+ "TWN": {
+  "route": "MIXED",
+  "switch": "VACATE_LIST",
+  "days": 60,
+  "lastDays": 365,
+  "sourceNote": "공직인원선거파면법 제73조. 지역구 보궐과 전국 비례 명부 보충 및 비례대표 당적 상실. 원주민 다인 선거구 별도 요건은 지역구 자료가 필요하다. https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=D0020010"
+ },
+ "IDN": {
+  "route": "LIST",
+  "switch": "VACATE",
+  "days": 42,
+  "lastDays": 0,
+  "sourceNote": "MD3법 제239·242조. 중도 퇴임 의원은 같은 당·지역구의 차점자가 승계한다. https://www.peraturan.go.id/files/uu17-2014bt.pdf"
+ },
+ "THA": {
+  "route": "MIXED",
+  "switch": "UNMODELLED",
+  "days": 35,
+  "lastDays": 179,
+  "sourceNote": "2017 헌법 제105조. 선거구 의석은 45일 내 보궐(잔여 임기 180일 미만 제외), 비례 명부 승계. https://dfmo.audit.go.th/law/Constitution%20of%20the%20Kingdom%20of%20Thailand.pdf"
+ },
+ "RWA": {
+  "route": "LIST",
+  "switch": "VACATE",
+  "days": 42,
+  "lastDays": 0,
+  "sourceNote": "헌법 제75·76조. 명부 의원의 의석과 별도 선거인단 대표 의석을 구분하며 특별대표 궐위는 해당 범주만 보충한다. https://www.nec.gov.rw/fileadmin/user_upload/NEC/Publications/Electoral_Acts/Constitutuion_of_the_Republic_of_Rwanda-2023.pdf"
+ },
+ "PAK": {
+  "route": "DISTRICT",
+  "switch": "VACATE",
+  "days": 42,
+  "lastDays": 119,
+  "sourceNote": "헌법 제63A·224(4)(6)조. 선거구는 잔여 임기 120일 이상이면 60일 내 보궐, 유보석은 원정당 명부 승계. 자발적 이당으로 확정된 당적 이탈을 모델링한다. https://na.gov.pk/uploads/documents/63ea176f52421_610.pdf"
+ }
+}
