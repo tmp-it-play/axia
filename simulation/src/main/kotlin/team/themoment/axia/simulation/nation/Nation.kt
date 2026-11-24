@@ -58,6 +58,7 @@ data class GroupSnapshot(
 data class BudgetSnapshot(
     val taxes: List<TaxLine>,
     val revenueCompositionSource: RevenueCompositionSource,
+    val unreportedRevenueTaxes: Set<TaxKind>,
     val otherRevenue: Double,
     val spending: List<SpendingLine>,
     val revenue: Double,
@@ -513,6 +514,7 @@ class Nation internal constructor(
                 BudgetSnapshot(
                     taxes = budget.taxLines(),
                     revenueCompositionSource = budget.revenueCompositionSource,
+                    unreportedRevenueTaxes = budget.unreportedRevenueTaxes,
                     otherRevenue = budget.otherRevenue,
                     spending = budget.spendingLines(),
                     revenue = economy.monthlyRevenue * 12.0 / gdp,

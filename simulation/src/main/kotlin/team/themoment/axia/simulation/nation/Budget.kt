@@ -84,6 +84,7 @@ internal class PlayerBudget(
 ) : FiscalPolicy {
     private val budget = initial.budget
     val revenueCompositionSource = budget.revenueCompositionSource
+    val unreportedRevenueTaxes = budget.unreportedRevenueTaxes
     private val initialTaxRevenue =
         mapOf(
             TaxKind.INCOME to budget.incomeTaxShare,

@@ -17,7 +17,7 @@ import subprocess
 import xml.etree.ElementTree as ElementTree
 from pathlib import Path
 
-from local_macro import GDP_USD_2023, POPULATION, REAL_GROWTH_PERCENT, UNEMPLOYMENT_PERCENT_2023
+from local_macro import GDP_USD_2023, POPULATION, REAL_GROWTH_PERCENT, SUPPLEMENTAL_MACRO, UNEMPLOYMENT_PERCENT_2023
 from local_population import society_indicators
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -98,6 +98,10 @@ TAX_COMPONENTS = {
     "tradeTaxShare": "G115",
 }
 WDI_TAX_FIELDS = {"incomeProfitTaxShare", "consumptionTaxShare", "socialContributionShare", "tradeTaxShare"}
+TAX_KINDS = {
+    "incomeTaxShare": "INCOME", "corporateTaxShare": "CORPORATE", "consumptionTaxShare": "CONSUMPTION",
+    "socialContributionShare": "SOCIAL", "tradeTaxShare": "TARIFF",
+}
 # 일반정부가 비면 범위가 넓은 중앙정부 자료부터 일반정부 세입 구성의 대용값으로 쓴다.
 GFS_SECTORS = {
     "S13": "GFS_GENERAL",
@@ -121,7 +125,6 @@ INCOME_OVERRIDES = {"TWN": "HIC", "CYN": "UMC", "SOL": "LIC", "VAT": "HIC"}
 
 # IMF와 World Bank 모두에 없는 값. 각국 공식 통계와 국제기구 추정을 바탕으로 한 2023년 대략값.
 MANUAL = {
-    "CYN": {"inflation": 0.6},
     "SOL": {"inflation": 0.05, "unemployment": 0.2},
     "VAT": {"gdp": 0.03e9, "growth": 0.0, "inflation": 0.02, "unemployment": 0.0},
     "TWN": {"defense": 0.024},
@@ -191,7 +194,7 @@ def load_world_bank(cache_dir):
 
 
 def load_revenue_compositions(cache_dir):
-    """같은 해·출처·정부범위에서 총세입과 다섯 세목이 모두 보고된 구성만 반환한다."""
+    """같은 해·출처·정부범위의 총세입을 분모로 쓴다. 공표된 0과 미보고를 구별한다."""
     codes = ["G1", *TAX_COMPONENTS.values()]
     gfs_indicators = "+".join(f"{code}_T" for code in codes)
     gfs_sectors = "+".join(GFS_SECTORS)
@@ -211,7 +214,7 @@ def load_revenue_compositions(cache_dir):
             if not indicator.endswith(suffix):
                 continue
             code = indicator.removesuffix(suffix)
-            if code not in codes or series.get("TYPE_OF_TRANSFORMATION") != "POGDP_PT" or series.get("FREQUENCY") != "A":
+            if code not in (*codes, "G111") or series.get("TYPE_OF_TRANSFORMATION") != "POGDP_PT" or series.get("FREQUENCY") != "A":
                 continue
             if flow == "IMF.STA,GFS_SOO":
                 source = GFS_SECTORS.get(series.get("SECTOR"))
@@ -236,37 +239,68 @@ def load_revenue_compositions(cache_dir):
 
     result = {}
     for (country, source), values in observations.items():
-        if not all(code in values and math.isfinite(values[code]) and values[code] >= 0 for code in codes):
+        total = values.get("G1", 0.0)
+        components = {field: values[code] for field, code in TAX_COMPONENTS.items() if code in values}
+        if not components or total <= 0 or not all(math.isfinite(v) and v >= 0 for v in values.values()):
             continue
-        total = values["G1"]
-        if total <= 0 or sum(values[code] for code in TAX_COMPONENTS.values()) > total:
+        if sum(components.values()) > total:
             continue
-        shares = {field: round(values[code] / total, 8) for field, code in TAX_COMPONENTS.items()}
-        shares["otherRevenueShare"] = round(1 - sum(shares.values()), 8)
-        if shares["otherRevenueShare"] < 0:
-            raise ValueError(f"Rounded tax shares exceed total revenue: {country} {source}")
-        result[country, source] = shares
+        shares = {field: round(value / total, 8) for field, value in components.items()}
+        # G111에는 개인·법인으로 귀속할 수 없는 소득세(G1113)도 들어간다. 누락 세목의 상한에만 쓴다.
+        income_cap = values.get("G111", total) / total
+        result[country, source] = shares, income_cap
     return result
+
+
+def reported_tax_fields(shares):
+    fields = WDI_TAX_FIELDS.intersection(shares)
+    if {"incomeTaxShare", "corporateTaxShare"} <= shares.keys():
+        fields.add("incomeProfitTaxShare")
+    return fields
 
 
 def apply_revenue_compositions(entries, compositions):
     for entry in entries:
         country = entry["id"]
         codes = SOURCE_CODES.get(country, [country])
+        budget = entry["budget"]
+        wdi_reported = WDI_TAX_FIELDS.difference(entry["estimated"])
+        candidates = []
         for source in [*GFS_SECTORS.values(), "WORLD_UNSPECIFIED"]:
-            shares = next((compositions[code, source] for code in codes if (code, source) in compositions), None)
-            if shares is not None:
-                entry["budget"].update(shares)
-                entry["budget"]["revenueCompositionSource"] = source
-                entry["estimated"] = sorted(set(entry["estimated"]) - WDI_TAX_FIELDS)
-                break
-        else:
-            budget = entry["budget"]
+            observation = next((compositions[code, source] for code in codes if (code, source) in compositions), None)
+            if observation is not None:
+                shares, income_cap = observation
+                if wdi_reported <= reported_tax_fields(shares):
+                    candidates.append((source, shares, income_cap))
+        # 완전 보고 우선. 부분 보고 간에는 관측 세목 수, 동수라면 더 넓은 정부 범위를 따른다.
+        if not candidates:
             budget["revenueCompositionSource"] = "WDI_MODEL"
             # 소수 넷째 자리로 반올림한 WDI 구성의 합을 1로 맞춘다. 보고된 0은 그대로 둔다.
             fields = [*TAX_COMPONENTS, "otherRevenueShare"]
             largest = max(fields, key=budget.get)
             budget[largest] = round(budget[largest] + 1.0 - sum(budget[field] for field in fields), 4)
+            continue
+
+        source, shares, income_cap = max(candidates, key=lambda c: len(c[1]))
+        unreported = [field for field in TAX_COMPONENTS if field not in shares]
+        remaining = max(0.0, 1.0 - sum(shares.values()))
+        weight = sum(budget[field] for field in unreported) + budget["otherRevenueShare"]
+        modeled = {field: remaining * budget[field] / weight if weight else 0.0 for field in unreported}
+        missing_income = [field for field in ("incomeTaxShare", "corporateTaxShare") if field in modeled]
+        inferred = sum(modeled[field] for field in missing_income)
+        available = max(0.0, income_cap - shares.get("incomeTaxShare", 0.0) - shares.get("corporateTaxShare", 0.0))
+        if inferred > available:
+            for field in missing_income:
+                modeled[field] *= available / inferred
+        budget.update(shares)
+        budget.update({field: round(value, 8) for field, value in modeled.items()})
+        budget["otherRevenueShare"] = round(1 - sum(budget[field] for field in TAX_COMPONENTS), 8)
+        if budget["otherRevenueShare"] < 0:
+            raise ValueError(f"Rounded tax shares exceed total revenue: {country} {source}")
+        budget["revenueCompositionSource"] = source
+        if unreported:
+            budget["unreportedRevenueTaxes"] = [TAX_KINDS[field] for field in unreported]
+        entry["estimated"] = sorted(set(entry["estimated"]) - reported_tax_fields(shares))
 
 
 def latest(values, years):
@@ -293,6 +327,7 @@ def from_local_macro(country):
     if BASE_YEAR != 2023:
         return {}
     values = society_indicators(country)
+    values.update(SUPPLEMENTAL_MACRO.get(country, {}))
     if country in GDP_USD_2023:
         values["gdp"] = GDP_USD_2023[country]
     if country in REAL_GROWTH_PERCENT:

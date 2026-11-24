@@ -1,6 +1,6 @@
 {
  "baseYear": 2023,
- "source": "World Bank WDI (CC BY 4.0). nationalAccounts: UNSD AMA, including UN estimates (https://unstats.un.org/unsd/snaama/downloads); Taiwan DGBAS, current prices, 2023 (https://data.gov.tw/dataset/44222, https://data.gov.tw/dataset/44224); TRNC_STATS_BOP: Northern Cyprus Statistical Institute Table 1 (https://istatistik.gov.ct.tr/Portals/39/Tablo1_GSMH_2024_1.pdf), State Planning Organization (https://www.devplan.org/arsiv/programlar/OVP-2025-27.pdf), Central Bank BPM6 Table 1 (https://www.kktcmerkezbankasi.org/sites/default/files/2024%20-%C3%96demeler%20Dengesi%20Tablolar%C4%B1-Analitik%20Sunum.pdf); SOMALILAND_CSD: GDP Report 2024, Table 1, experimental estimates (https://www.govsomaliland.org/uploads/files/2025/09/2025-09-06-05-36-34-2988-1757136994.pdf). Demography: Northern Cyprus 2023 and 2024 Statistical Yearbooks B4; Taiwan Ministry of the Interior demographic statistics and life tables, fourth ICCPR/ICESCR national report and UN WPP 2024 net migration. Urbanization: UN WUP 2025, national definitions, 2023 (Taiwan and the Holy See).",
+ "source": "World Bank WDI (CC BY 4.0). nationalAccounts: UNSD AMA, including UN estimates (https://unstats.un.org/unsd/snaama/downloads); Taiwan DGBAS, current prices, 2023 (https://data.gov.tw/dataset/44222, https://data.gov.tw/dataset/44224); TRNC_STATS_BOP: Northern Cyprus Statistical Institute Table 1 (https://istatistik.gov.ct.tr/Portals/39/Tablo1_GSMH_2024_1.pdf), State Planning Organization (https://www.devplan.org/arsiv/programlar/OVP-2025-27.pdf), Central Bank BPM6 Table 1 (https://www.kktcmerkezbankasi.org/sites/default/files/2024%20-%C3%96demeler%20Dengesi%20Tablolar%C4%B1-Analitik%20Sunum.pdf); SOMALILAND_CSD: GDP Report 2024, Table 1, experimental estimates (https://www.govsomaliland.org/uploads/files/2025/09/2025-09-06-05-36-34-2988-1757136994.pdf). Demography: Northern Cyprus 2023 and 2024 Statistical Yearbooks B4; Taiwan Ministry of the Interior demographic statistics and life tables, fourth ICCPR/ICESCR national report and UN WPP 2024 net migration. Urbanization: UN WUP 2025, national definitions, 2023 (Taiwan and the Holy See). Manufacturing: UNIDO INDSTAT ISIC Rev. 3 (Congo food/beverages/tobacco 2022, Eritrea textiles/clothing 2023).",
  "countries": [
   {
    "id": "AFG",
@@ -21,7 +21,7 @@
    "servicesValueAdded": 0.46374,
    "techManufacturing": 0.08465,
    "foodManufacturing": 0.65993,
-   "textileManufacturing": 0.0848,
+   "textileManufacturing": 0.08509,
    "estimated": [
     "foodManufacturing",
     "textileManufacturing"
@@ -45,7 +45,7 @@
    "manufacturingValueAdded": 0.07401,
    "servicesValueAdded": 0.43554,
    "techManufacturing": 0.04064,
-   "foodManufacturing": 0.38579,
+   "foodManufacturing": 0.39622,
    "textileManufacturing": 0.07296,
    "estimated": [
     "foodManufacturing",
@@ -285,7 +285,7 @@
    "servicesValueAdded": 0.43793,
    "techManufacturing": 0.02789,
    "foodManufacturing": 0.65993,
-   "textileManufacturing": 0.0848,
+   "textileManufacturing": 0.08509,
    "nationalAccounts": {
     "UNSD_AMA": [
      "exportShare",
@@ -337,7 +337,7 @@
    "manufacturingValueAdded": 0.10062,
    "servicesValueAdded": 0.47722,
    "techManufacturing": 0.10678,
-   "foodManufacturing": 0.38579,
+   "foodManufacturing": 0.39622,
    "textileManufacturing": 0.07296,
    "estimated": [
     "foodManufacturing",
@@ -364,7 +364,7 @@
    "servicesValueAdded": 0.47565,
    "techManufacturing": 0.08197,
    "foodManufacturing": 0.65993,
-   "textileManufacturing": 0.0848,
+   "textileManufacturing": 0.08509,
    "estimated": [
     "foodManufacturing",
     "techManufacturing",
@@ -657,7 +657,7 @@
    "manufacturingValueAdded": 0.07852,
    "servicesValueAdded": 0.52791,
    "techManufacturing": 0.10678,
-   "foodManufacturing": 0.38579,
+   "foodManufacturing": 0.39622,
    "textileManufacturing": 0.07296,
    "estimated": [
     "armedForces",
@@ -707,7 +707,7 @@
    "servicesValueAdded": 0.40511,
    "techManufacturing": 0.09246,
    "foodManufacturing": 0.65993,
-   "textileManufacturing": 0.0848,
+   "textileManufacturing": 0.08509,
    "estimated": [
     "foodManufacturing",
     "textileManufacturing"
@@ -866,7 +866,7 @@
    "servicesValueAdded": 0.45922,
    "techManufacturing": 0.08197,
    "foodManufacturing": 0.63511,
-   "textileManufacturing": 0.0848,
+   "textileManufacturing": 0.08509,
    "estimated": [
     "techManufacturing",
     "textileManufacturing"
@@ -890,10 +890,9 @@
    "manufacturingValueAdded": 0.12853,
    "servicesValueAdded": 0.40427,
    "techManufacturing": 0.07846,
-   "foodManufacturing": 0.38579,
+   "foodManufacturing": 0.63511,
    "textileManufacturing": 0.07296,
    "estimated": [
-    "foodManufacturing",
     "textileManufacturing"
    ]
   },
@@ -937,7 +936,7 @@
    "manufacturingValueAdded": 0.08018,
    "servicesValueAdded": 0.50804,
    "techManufacturing": 0.10678,
-   "foodManufacturing": 0.38579,
+   "foodManufacturing": 0.39622,
    "textileManufacturing": 0.07296,
    "estimated": [
     "armedForces",
@@ -1316,7 +1315,7 @@
    "servicesValueAdded": 0.52457,
    "techManufacturing": 0.07929,
    "foodManufacturing": 0.65993,
-   "textileManufacturing": 0.0848,
+   "textileManufacturing": 0.14171,
    "nationalAccounts": {
     "UNSD_AMA": [
      "agricultureValueAdded",
@@ -1330,8 +1329,7 @@
    "estimated": [
     "foodManufacturing",
     "oilRents",
-    "resourceRents",
-    "textileManufacturing"
+    "resourceRents"
    ]
   },
   {
@@ -1397,7 +1395,7 @@
    "servicesValueAdded": 0.3698,
    "techManufacturing": 0.16074,
    "foodManufacturing": 0.65993,
-   "textileManufacturing": 0.0848,
+   "textileManufacturing": 0.08509,
    "estimated": [
     "foodManufacturing",
     "textileManufacturing"
@@ -1584,7 +1582,7 @@
    "manufacturingValueAdded": 0.11141,
    "servicesValueAdded": 0.43113,
    "techManufacturing": 0.10841,
-   "foodManufacturing": 0.38579,
+   "foodManufacturing": 0.39622,
    "textileManufacturing": 0.07296,
    "estimated": [
     "foodManufacturing",
@@ -1609,7 +1607,7 @@
    "manufacturingValueAdded": 0.12745,
    "servicesValueAdded": 0.37215,
    "techManufacturing": 0.10678,
-   "foodManufacturing": 0.38579,
+   "foodManufacturing": 0.39622,
    "textileManufacturing": 0.07296,
    "estimated": [
     "foodManufacturing",
@@ -1636,7 +1634,7 @@
    "servicesValueAdded": 0.55025,
    "techManufacturing": 0.03898,
    "foodManufacturing": 0.65993,
-   "textileManufacturing": 0.0848,
+   "textileManufacturing": 0.08509,
    "estimated": [
     "foodManufacturing",
     "textileManufacturing"
@@ -1661,7 +1659,7 @@
    "servicesValueAdded": 0.43603,
    "techManufacturing": 0.08197,
    "foodManufacturing": 0.56724,
-   "textileManufacturing": 0.0848,
+   "textileManufacturing": 0.08509,
    "estimated": [
     "techManufacturing",
     "textileManufacturing"
@@ -1823,7 +1821,7 @@
    "manufacturingValueAdded": 0.15207,
    "servicesValueAdded": 0.57572,
    "techManufacturing": 0.07163,
-   "foodManufacturing": 0.38579,
+   "foodManufacturing": 0.39622,
    "textileManufacturing": 0.07296,
    "estimated": [
     "foodManufacturing",
@@ -1870,7 +1868,7 @@
    "manufacturingValueAdded": 0.21652,
    "servicesValueAdded": 0.49977,
    "techManufacturing": 0.0526,
-   "foodManufacturing": 0.38579,
+   "foodManufacturing": 0.39622,
    "textileManufacturing": 0.07296,
    "estimated": [
     "foodManufacturing",
@@ -2240,7 +2238,7 @@
    "manufacturingValueAdded": 0.26333,
    "servicesValueAdded": 0.36152,
    "techManufacturing": 0.0026,
-   "foodManufacturing": 0.38579,
+   "foodManufacturing": 0.39622,
    "textileManufacturing": 0.07296,
    "estimated": [
     "foodManufacturing",
@@ -2265,7 +2263,7 @@
    "manufacturingValueAdded": 0.04808,
    "servicesValueAdded": 0.67277,
    "techManufacturing": 0.10678,
-   "foodManufacturing": 0.38579,
+   "foodManufacturing": 0.39622,
    "textileManufacturing": 0.07296,
    "estimated": [
     "armedForces",
@@ -2394,7 +2392,7 @@
    "manufacturingValueAdded": 0.09248,
    "servicesValueAdded": 0.43997,
    "techManufacturing": 0.03775,
-   "foodManufacturing": 0.38579,
+   "foodManufacturing": 0.39622,
    "textileManufacturing": 0.07296,
    "nationalAccounts": {
     "UNSD_AMA": [
@@ -2448,7 +2446,7 @@
    "servicesValueAdded": 0.4049,
    "techManufacturing": 0.08197,
    "foodManufacturing": 0.65993,
-   "textileManufacturing": 0.0848,
+   "textileManufacturing": 0.08509,
    "nationalAccounts": {
     "UNSD_AMA": [
      "exportShare",
@@ -3006,7 +3004,7 @@
    "servicesValueAdded": 0.41096,
    "techManufacturing": 0.10888,
    "foodManufacturing": 0.65993,
-   "textileManufacturing": 0.0848,
+   "textileManufacturing": 0.08509,
    "estimated": [
     "foodManufacturing",
     "textileManufacturing"
@@ -3030,7 +3028,7 @@
    "manufacturingValueAdded": 0.06504,
    "servicesValueAdded": 0.43021,
    "techManufacturing": 0.10678,
-   "foodManufacturing": 0.38579,
+   "foodManufacturing": 0.39622,
    "textileManufacturing": 0.07296,
    "estimated": [
     "foodManufacturing",
@@ -3145,7 +3143,7 @@
    "servicesValueAdded": 0.34633,
    "techManufacturing": 0.18254,
    "foodManufacturing": 0.65993,
-   "textileManufacturing": 0.0848,
+   "textileManufacturing": 0.08509,
    "estimated": [
     "foodManufacturing",
     "textileManufacturing"
@@ -3169,7 +3167,7 @@
    "manufacturingValueAdded": 0.09273,
    "servicesValueAdded": 0.51714,
    "techManufacturing": 0.33436,
-   "foodManufacturing": 0.38579,
+   "foodManufacturing": 0.39622,
    "textileManufacturing": 0.07296,
    "nationalAccounts": {
     "UNSD_AMA": [
@@ -3367,7 +3365,7 @@
    "manufacturingValueAdded": 0.13647,
    "servicesValueAdded": 0.50969,
    "techManufacturing": 0.22904,
-   "foodManufacturing": 0.38579,
+   "foodManufacturing": 0.39622,
    "textileManufacturing": 0.07296,
    "estimated": [
     "foodManufacturing",
@@ -3486,7 +3484,7 @@
    "manufacturingValueAdded": 0.0166,
    "servicesValueAdded": 0.42027,
    "techManufacturing": 0.1261,
-   "foodManufacturing": 0.38579,
+   "foodManufacturing": 0.39622,
    "textileManufacturing": 0.07296,
    "nationalAccounts": {
     "UNSD_AMA": [
@@ -3540,7 +3538,7 @@
    "servicesValueAdded": 0.30925,
    "techManufacturing": 0.08197,
    "foodManufacturing": 0.65993,
-   "textileManufacturing": 0.0848,
+   "textileManufacturing": 0.08509,
    "nationalAccounts": {
     "UNSD_AMA": [
      "agricultureValueAdded",
@@ -3755,7 +3753,7 @@
    "servicesValueAdded": 0.41388,
    "techManufacturing": 0.08197,
    "foodManufacturing": 0.65993,
-   "textileManufacturing": 0.0848,
+   "textileManufacturing": 0.08509,
    "nationalAccounts": {
     "UNSD_AMA": [
      "manufacturingValueAdded"
@@ -3786,7 +3784,7 @@
    "servicesValueAdded": 0.4276,
    "techManufacturing": 0.08197,
    "foodManufacturing": 0.65993,
-   "textileManufacturing": 0.0848,
+   "textileManufacturing": 0.08509,
    "nationalAccounts": {
     "UNSD_AMA": [
      "agricultureValueAdded",
@@ -3867,7 +3865,7 @@
    "manufacturingValueAdded": 0.10166,
    "servicesValueAdded": 0.47965,
    "techManufacturing": 0.10678,
-   "foodManufacturing": 0.38579,
+   "foodManufacturing": 0.39622,
    "textileManufacturing": 0.07296,
    "estimated": [
     "armedForces",
@@ -3895,7 +3893,7 @@
    "servicesValueAdded": 0.42162,
    "techManufacturing": 0.08197,
    "foodManufacturing": 0.65993,
-   "textileManufacturing": 0.0848,
+   "textileManufacturing": 0.08509,
    "estimated": [
     "foodManufacturing",
     "techManufacturing",
@@ -3974,7 +3972,7 @@
    "servicesValueAdded": 0.43181,
    "techManufacturing": 0.08197,
    "foodManufacturing": 0.65993,
-   "textileManufacturing": 0.0848,
+   "textileManufacturing": 0.08509,
    "nationalAccounts": {
     "SOMALILAND_CSD": [
      "exportShare",
@@ -4019,7 +4017,7 @@
    "servicesValueAdded": 0.43181,
    "techManufacturing": 0.08197,
    "foodManufacturing": 0.65993,
-   "textileManufacturing": 0.0848,
+   "textileManufacturing": 0.08509,
    "estimated": [
     "agricultureValueAdded",
     "foodManufacturing",
@@ -4070,7 +4068,7 @@
    "manufacturingValueAdded": 0.00606,
    "servicesValueAdded": 0.79481,
    "techManufacturing": 0.10678,
-   "foodManufacturing": 0.38579,
+   "foodManufacturing": 0.39622,
    "textileManufacturing": 0.07296,
    "estimated": [
     "armedForces",
@@ -4194,7 +4192,7 @@
    "manufacturingValueAdded": 0.29185,
    "servicesValueAdded": 0.51894,
    "techManufacturing": 0.02234,
-   "foodManufacturing": 0.38579,
+   "foodManufacturing": 0.39622,
    "textileManufacturing": 0.07296,
    "estimated": [
     "armedForces",
@@ -4247,7 +4245,7 @@
    "servicesValueAdded": 0.44722,
    "techManufacturing": 0.21519,
    "foodManufacturing": 0.65993,
-   "textileManufacturing": 0.0848,
+   "textileManufacturing": 0.08509,
    "nationalAccounts": {
     "UNSD_AMA": [
      "manufacturingValueAdded"
@@ -4277,7 +4275,7 @@
    "servicesValueAdded": 0.30299,
    "techManufacturing": 0.08197,
    "foodManufacturing": 0.65993,
-   "textileManufacturing": 0.0848,
+   "textileManufacturing": 0.08509,
    "estimated": [
     "foodManufacturing",
     "techManufacturing",
@@ -4348,7 +4346,7 @@
    "manufacturingValueAdded": 0.14613,
    "servicesValueAdded": 0.34708,
    "techManufacturing": 0.04306,
-   "foodManufacturing": 0.38579,
+   "foodManufacturing": 0.39622,
    "textileManufacturing": 0.07296,
    "estimated": [
     "foodManufacturing",
@@ -4404,7 +4402,7 @@
    "manufacturingValueAdded": 0.01645,
    "servicesValueAdded": 0.60999,
    "techManufacturing": 0.10678,
-   "foodManufacturing": 0.38579,
+   "foodManufacturing": 0.39622,
    "textileManufacturing": 0.07296,
    "estimated": [
     "foodManufacturing",
@@ -4631,7 +4629,7 @@
    "servicesValueAdded": 0.42513,
    "techManufacturing": 0.11067,
    "foodManufacturing": 0.65993,
-   "textileManufacturing": 0.0848,
+   "textileManufacturing": 0.08509,
    "estimated": [
     "foodManufacturing",
     "textileManufacturing"
@@ -4816,7 +4814,7 @@
    "manufacturingValueAdded": 0.15292,
    "servicesValueAdded": 0.41556,
    "techManufacturing": 0.34282,
-   "foodManufacturing": 0.38579,
+   "foodManufacturing": 0.39622,
    "textileManufacturing": 0.07296,
    "nationalAccounts": {
     "UNSD_AMA": [
@@ -4873,7 +4871,7 @@
    "manufacturingValueAdded": 0.04267,
    "servicesValueAdded": 0.57985,
    "techManufacturing": 0.10678,
-   "foodManufacturing": 0.38579,
+   "foodManufacturing": 0.39622,
    "textileManufacturing": 0.07296,
    "estimated": [
     "armedForces",
@@ -4928,7 +4926,7 @@
    "servicesValueAdded": 0.59475,
    "techManufacturing": 0.02065,
    "foodManufacturing": 0.65993,
-   "textileManufacturing": 0.0848,
+   "textileManufacturing": 0.08509,
    "nationalAccounts": {
     "UNSD_AMA": [
      "agricultureValueAdded",
@@ -5008,7 +5006,7 @@
    "manufacturingValueAdded": 0.15278,
    "servicesValueAdded": 0.49563,
    "techManufacturing": 0.09493,
-   "foodManufacturing": 0.38579,
+   "foodManufacturing": 0.39622,
    "textileManufacturing": 0.07296,
    "estimated": [
     "foodManufacturing",

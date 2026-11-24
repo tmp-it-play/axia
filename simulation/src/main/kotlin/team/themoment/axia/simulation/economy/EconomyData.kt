@@ -2,6 +2,7 @@ package team.themoment.axia.simulation.economy
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import team.themoment.axia.simulation.nation.TaxKind
 import team.themoment.axia.simulation.world.CountryKind
 import team.themoment.axia.simulation.world.World
 
@@ -42,6 +43,7 @@ data class InitialBudget(
     val tradeTaxShare: Double,
     val otherRevenueShare: Double,
     val revenueCompositionSource: RevenueCompositionSource,
+    val unreportedRevenueTaxes: Set<TaxKind> = emptySet(),
 )
 
 /** 2023년 기준 국가별 경제 초기값. 비율은 모두 소수다. */

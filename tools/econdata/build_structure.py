@@ -55,6 +55,16 @@ MANUAL = {
     "PRK": {"resourceRents": 0.08, "armedForces": 1280000},
 }
 
+# UNIDO INDSTAT, ISIC Rev. 3, 변수 20(당해가격 자국통화 부가가치), 분모 D(전체 제조업).
+# 콩고공화국 2022년 항목 15는 결합코드 15A로 16(담배)도 포함한다. 에리트레아는 2023년 17+18(섬유·의류).
+# 같은 조사연도·표 안에서 WDI와 동일한 산업 범위가 확인된 경우에만 대체한다.
+# https://stat.unido.org/unido-statistics-portal-api
+# https://stat.unido.org/portal/dataset/getDataset/INDSTAT/3
+INDSTAT_SHARES = {
+    "COG": {"foodManufacturing": 497_100_000_000 / 782_700_000_000},
+    "ERI": {"textileManufacturing": (160_815_566 + 13_365_998) / 1_229_173_540},
+}
+
 LIMITS = {
     "tradeOpenness": (0.05, 4.0),
     "exportShare": (0.01, 2.5),
@@ -115,6 +125,8 @@ def main():
                 account_fields[country].add(field)
             elif value is None and field in DEMOGRAPHY.get(country, {}):
                 merged[country][field] = DEMOGRAPHY[country][field]
+            elif value is None and field in INDSTAT_SHARES.get(country, {}):
+                merged[country][field] = INDSTAT_SHARES[country][field]
         merged[country].update(MANUAL.get(country, {}))
 
     medians = {}
@@ -162,7 +174,8 @@ def main():
             "(https://www.govsomaliland.org/uploads/files/2025/09/2025-09-06-05-36-34-2988-1757136994.pdf). "
             "Demography: Northern Cyprus 2023 and 2024 Statistical Yearbooks B4; Taiwan Ministry of the Interior "
             "demographic statistics and life tables, fourth ICCPR/ICESCR national report and UN WPP 2024 net migration. "
-            "Urbanization: UN WUP 2025, national definitions, 2023 (Taiwan and the Holy See)."
+            "Urbanization: UN WUP 2025, national definitions, 2023 (Taiwan and the Holy See). "
+            "Manufacturing: UNIDO INDSTAT ISIC Rev. 3 (Congo food/beverages/tobacco 2022, Eritrea textiles/clothing 2023)."
         ),
         "countries": entries,
     }

@@ -29,22 +29,25 @@
     "defense": 0.01828,
     "education": 0.02927,
     "health": 0.00248,
-    "incomeTaxShare": 0.1268,
-    "corporateTaxShare": 0.1268,
-    "consumptionTaxShare": 0.299,
-    "socialContributionShare": 0.0556,
-    "tradeTaxShare": 0.0999,
-    "otherRevenueShare": 0.2919,
-    "revenueCompositionSource": "WDI_MODEL"
+    "incomeTaxShare": 0.08900742,
+    "corporateTaxShare": 0.08900742,
+    "consumptionTaxShare": 0.16018598,
+    "socialContributionShare": 0.05603956,
+    "tradeTaxShare": 0.2339619,
+    "otherRevenueShare": 0.37179772,
+    "revenueCompositionSource": "WORLD_UNSPECIFIED",
+    "unreportedRevenueTaxes": [
+     "INCOME",
+     "CORPORATE",
+     "SOCIAL"
+    ]
    },
    "estimated": [
-    "consumptionTaxShare",
     "education",
     "gini",
     "incomeProfitTaxShare",
     "interest",
-    "socialContributionShare",
-    "tradeTaxShare"
+    "socialContributionShare"
    ]
   },
   {
@@ -145,7 +148,7 @@
     "selfEmployment": 0.1356,
     "elderlyShare": 0.1542,
     "childShare": 0.1225,
-    "gini": 0.323
+    "gini": 0.3235
    },
    "budget": {
     "defense": 0.01691,
@@ -306,7 +309,7 @@
     "selfEmployment": 0.1861,
     "elderlyShare": 0.1124,
     "childShare": 0.1822,
-    "gini": 0.323
+    "gini": 0.3235
    },
    "budget": {
     "defense": 0.01691,
@@ -472,13 +475,16 @@
     "defense": 0.03427,
     "education": 0.04871,
     "health": 0.0134,
-    "incomeTaxShare": 0.0792,
-    "corporateTaxShare": 0.0792,
-    "consumptionTaxShare": 0.4641,
-    "socialContributionShare": 0.0556,
-    "tradeTaxShare": 0.0999,
-    "otherRevenueShare": 0.222,
-    "revenueCompositionSource": "WDI_MODEL"
+    "incomeTaxShare": 0.07278689,
+    "corporateTaxShare": 0.12286874,
+    "consumptionTaxShare": 0.41251457,
+    "socialContributionShare": 0.06566235,
+    "tradeTaxShare": 0.06399046,
+    "otherRevenueShare": 0.26217699,
+    "revenueCompositionSource": "WORLD_UNSPECIFIED",
+    "unreportedRevenueTaxes": [
+     "SOCIAL"
+    ]
    },
    "estimated": [
     "socialContributionShare"
@@ -550,19 +556,19 @@
     "defense": 0.00758,
     "education": 0.0323,
     "health": 0.00489,
-    "incomeTaxShare": 0.1272,
-    "corporateTaxShare": 0.1272,
-    "consumptionTaxShare": 0.3338,
-    "socialContributionShare": 0.026,
-    "tradeTaxShare": 0.0733,
-    "otherRevenueShare": 0.3125,
-    "revenueCompositionSource": "WDI_MODEL"
+    "incomeTaxShare": 0.02620975,
+    "corporateTaxShare": 0.11844073,
+    "consumptionTaxShare": 0.29909614,
+    "socialContributionShare": 0.02060502,
+    "tradeTaxShare": 0.28799187,
+    "otherRevenueShare": 0.24765649,
+    "revenueCompositionSource": "WORLD_UNSPECIFIED",
+    "unreportedRevenueTaxes": [
+     "SOCIAL"
+    ]
    },
    "estimated": [
-    "consumptionTaxShare",
-    "incomeProfitTaxShare",
-    "socialContributionShare",
-    "tradeTaxShare"
+    "socialContributionShare"
    ]
   },
   {
@@ -631,13 +637,16 @@
     "defense": 0.00868,
     "education": 0.02162,
     "health": 0.00314,
-    "incomeTaxShare": 0.1288,
-    "corporateTaxShare": 0.1288,
-    "consumptionTaxShare": 0.4322,
-    "socialContributionShare": 0.026,
-    "tradeTaxShare": 0.0932,
-    "otherRevenueShare": 0.191,
-    "revenueCompositionSource": "WDI_MODEL"
+    "incomeTaxShare": 0.09076112,
+    "corporateTaxShare": 0.19988823,
+    "consumptionTaxShare": 0.47142283,
+    "socialContributionShare": 0.01674746,
+    "tradeTaxShare": 0.09815092,
+    "otherRevenueShare": 0.12302944,
+    "revenueCompositionSource": "WORLD_UNSPECIFIED",
+    "unreportedRevenueTaxes": [
+     "SOCIAL"
+    ]
    },
    "estimated": [
     "socialContributionShare"
@@ -703,7 +712,7 @@
     "selfEmployment": 0.0263,
     "elderlyShare": 0.0364,
     "childShare": 0.1899,
-    "gini": 0.323
+    "gini": 0.3235
    },
    "budget": {
     "defense": 0.03521,
@@ -744,7 +753,7 @@
     "selfEmployment": 0.1717,
     "elderlyShare": 0.115,
     "childShare": 0.1833,
-    "gini": 0.323
+    "gini": 0.3235
    },
    "budget": {
     "defense": 0.01691,
@@ -867,19 +876,22 @@
     "defense": 0.01045,
     "education": 0.04231,
     "health": 0.02699,
-    "incomeTaxShare": 0.1086,
-    "corporateTaxShare": 0.0889,
-    "consumptionTaxShare": 0.3411,
-    "socialContributionShare": 0.1491,
-    "tradeTaxShare": 0.0412,
-    "otherRevenueShare": 0.2711,
-    "revenueCompositionSource": "WDI_MODEL"
+    "incomeTaxShare": 0.05228421,
+    "corporateTaxShare": 0.04279988,
+    "consumptionTaxShare": 0.54710594,
+    "socialContributionShare": 0.07178247,
+    "tradeTaxShare": 0.15550955,
+    "otherRevenueShare": 0.13051795,
+    "revenueCompositionSource": "WORLD_UNSPECIFIED",
+    "unreportedRevenueTaxes": [
+     "INCOME",
+     "CORPORATE",
+     "SOCIAL"
+    ]
    },
    "estimated": [
-    "consumptionTaxShare",
     "incomeProfitTaxShare",
-    "socialContributionShare",
-    "tradeTaxShare"
+    "socialContributionShare"
    ]
   },
   {
@@ -910,19 +922,21 @@
     "defense": 0.01304,
     "education": 0.07894,
     "health": 0.04655,
-    "incomeTaxShare": 0.1272,
-    "corporateTaxShare": 0.1272,
-    "consumptionTaxShare": 0.3338,
-    "socialContributionShare": 0.026,
-    "tradeTaxShare": 0.0733,
-    "otherRevenueShare": 0.3125,
-    "revenueCompositionSource": "WDI_MODEL"
+    "incomeTaxShare": 0.01113739,
+    "corporateTaxShare": 0.1778472,
+    "consumptionTaxShare": 0.35747496,
+    "socialContributionShare": 0.02290783,
+    "tradeTaxShare": 0.05436343,
+    "otherRevenueShare": 0.37626919,
+    "revenueCompositionSource": "WORLD_UNSPECIFIED",
+    "unreportedRevenueTaxes": [
+     "INCOME",
+     "SOCIAL"
+    ]
    },
    "estimated": [
-    "consumptionTaxShare",
     "incomeProfitTaxShare",
-    "socialContributionShare",
-    "tradeTaxShare"
+    "socialContributionShare"
    ]
   },
   {
@@ -991,20 +1005,20 @@
     "defense": 0.01691,
     "education": 0.03775,
     "health": 0.02251,
-    "incomeTaxShare": 0.1674,
-    "corporateTaxShare": 0.0718,
-    "consumptionTaxShare": 0.2635,
-    "socialContributionShare": 0.2948,
-    "tradeTaxShare": 0.0104,
-    "otherRevenueShare": 0.1921,
-    "revenueCompositionSource": "WDI_MODEL"
+    "incomeTaxShare": 0.12171745,
+    "corporateTaxShare": 0.15458261,
+    "consumptionTaxShare": 0.42552823,
+    "socialContributionShare": 0.13777859,
+    "tradeTaxShare": 0.07061271,
+    "otherRevenueShare": 0.08978041,
+    "revenueCompositionSource": "WORLD_UNSPECIFIED",
+    "unreportedRevenueTaxes": [
+     "SOCIAL"
+    ]
    },
    "estimated": [
-    "consumptionTaxShare",
     "defense",
-    "incomeProfitTaxShare",
-    "socialContributionShare",
-    "tradeTaxShare"
+    "socialContributionShare"
    ]
   },
   {
@@ -1029,28 +1043,30 @@
     "selfEmployment": 0.0748,
     "elderlyShare": 0.0651,
     "childShare": 0.2102,
-    "gini": 0.323
+    "gini": 0.3235
    },
    "budget": {
     "defense": 0.02976,
     "education": 0.04501,
     "health": 0.02062,
-    "incomeTaxShare": 0.1674,
-    "corporateTaxShare": 0.0718,
-    "consumptionTaxShare": 0.2635,
-    "socialContributionShare": 0.2948,
-    "tradeTaxShare": 0.0104,
-    "otherRevenueShare": 0.1921,
-    "revenueCompositionSource": "WDI_MODEL"
+    "incomeTaxShare": 0.0,
+    "corporateTaxShare": 0.35348202,
+    "consumptionTaxShare": 0.00292268,
+    "socialContributionShare": 0.28248223,
+    "tradeTaxShare": 0.01663424,
+    "otherRevenueShare": 0.34447883,
+    "revenueCompositionSource": "WORLD_UNSPECIFIED",
+    "unreportedRevenueTaxes": [
+     "INCOME",
+     "SOCIAL"
+    ]
    },
    "estimated": [
-    "consumptionTaxShare",
     "education",
     "gini",
     "incomeProfitTaxShare",
     "interest",
-    "socialContributionShare",
-    "tradeTaxShare"
+    "socialContributionShare"
    ]
   },
   {
@@ -1427,13 +1443,16 @@
     "defense": 0.01119,
     "education": 0.02845,
     "health": 0.0069,
-    "incomeTaxShare": 0.1941,
-    "corporateTaxShare": 0.1941,
-    "consumptionTaxShare": 0.1955,
-    "socialContributionShare": 0.0556,
-    "tradeTaxShare": 0.0654,
-    "otherRevenueShare": 0.2953,
-    "revenueCompositionSource": "WDI_MODEL"
+    "incomeTaxShare": 0.08858469,
+    "corporateTaxShare": 0.24112927,
+    "consumptionTaxShare": 0.2354954,
+    "socialContributionShare": 0.05456228,
+    "tradeTaxShare": 0.09043986,
+    "otherRevenueShare": 0.2897885,
+    "revenueCompositionSource": "WORLD_UNSPECIFIED",
+    "unreportedRevenueTaxes": [
+     "SOCIAL"
+    ]
    },
    "estimated": [
     "socialContributionShare"
@@ -1690,7 +1709,7 @@
    "growth": 0.073,
    "potentialGrowth": 0.0382,
    "growthVolatility": 0.01645,
-   "inflation": 0.6,
+   "inflation": 0.7644,
    "unemployment": 0.051,
    "revenue": 0.27427,
    "primarySpending": 0.28777,
@@ -1708,7 +1727,7 @@
    },
    "budget": {
     "defense": 0.01323,
-    "education": 0.0406,
+    "education": 0.04146,
     "health": 0.03378,
     "incomeTaxShare": 0.1086,
     "corporateTaxShare": 0.0889,
@@ -1727,7 +1746,6 @@
     "gini",
     "health",
     "incomeProfitTaxShare",
-    "inflation",
     "interest",
     "revenue",
     "socialContributionShare",
@@ -1876,20 +1894,20 @@
     "defense": 0.01453,
     "education": 0.04018,
     "health": 0.01052,
-    "incomeTaxShare": 0.1272,
-    "corporateTaxShare": 0.1272,
-    "consumptionTaxShare": 0.3338,
-    "socialContributionShare": 0.026,
-    "tradeTaxShare": 0.0733,
-    "otherRevenueShare": 0.3125,
-    "revenueCompositionSource": "WDI_MODEL"
+    "incomeTaxShare": 0.13278807,
+    "corporateTaxShare": 0.05555776,
+    "consumptionTaxShare": 0.32846948,
+    "socialContributionShare": 0.0,
+    "tradeTaxShare": 0.09180259,
+    "otherRevenueShare": 0.3913821,
+    "revenueCompositionSource": "WORLD_UNSPECIFIED",
+    "unreportedRevenueTaxes": [
+     "TARIFF"
+    ]
    },
    "estimated": [
-    "consumptionTaxShare",
     "defense",
     "education",
-    "incomeProfitTaxShare",
-    "socialContributionShare",
     "tradeTaxShare"
    ]
   },
@@ -2043,19 +2061,19 @@
     "defense": 0.0739,
     "education": 0.0561,
     "health": 0.02309,
-    "incomeTaxShare": 0.1086,
-    "corporateTaxShare": 0.0889,
-    "consumptionTaxShare": 0.3411,
-    "socialContributionShare": 0.1491,
-    "tradeTaxShare": 0.0412,
-    "otherRevenueShare": 0.2711,
-    "revenueCompositionSource": "WDI_MODEL"
+    "incomeTaxShare": 0.08313312,
+    "corporateTaxShare": 0.04931423,
+    "consumptionTaxShare": 0.13587354,
+    "socialContributionShare": 0.24791882,
+    "tradeTaxShare": 0.03298368,
+    "otherRevenueShare": 0.45077661,
+    "revenueCompositionSource": "WORLD_UNSPECIFIED",
+    "unreportedRevenueTaxes": [
+     "SOCIAL"
+    ]
    },
    "estimated": [
-    "consumptionTaxShare",
-    "incomeProfitTaxShare",
-    "socialContributionShare",
-    "tradeTaxShare"
+    "socialContributionShare"
    ]
   },
   {
@@ -2124,20 +2142,20 @@
     "defense": 0.00809,
     "education": 0.04018,
     "health": 0.01575,
-    "incomeTaxShare": 0.1272,
-    "corporateTaxShare": 0.1272,
-    "consumptionTaxShare": 0.3338,
-    "socialContributionShare": 0.026,
-    "tradeTaxShare": 0.0733,
-    "otherRevenueShare": 0.3125,
-    "revenueCompositionSource": "WDI_MODEL"
+    "incomeTaxShare": 0.1222892,
+    "corporateTaxShare": 0.20597401,
+    "consumptionTaxShare": 0.35518846,
+    "socialContributionShare": 0.02139743,
+    "tradeTaxShare": 0.03797028,
+    "otherRevenueShare": 0.25718062,
+    "revenueCompositionSource": "WORLD_UNSPECIFIED",
+    "unreportedRevenueTaxes": [
+     "SOCIAL"
+    ]
    },
    "estimated": [
-    "consumptionTaxShare",
     "education",
-    "incomeProfitTaxShare",
-    "socialContributionShare",
-    "tradeTaxShare"
+    "socialContributionShare"
    ]
   },
   {
@@ -2444,13 +2462,16 @@
     "defense": 0.01323,
     "education": 0.11559,
     "health": 0.01833,
-    "incomeTaxShare": 0.0601,
-    "corporateTaxShare": 0.0492,
-    "consumptionTaxShare": 0.034,
-    "socialContributionShare": 0.1491,
-    "tradeTaxShare": 0.045,
-    "otherRevenueShare": 0.6626,
-    "revenueCompositionSource": "WDI_MODEL"
+    "incomeTaxShare": 0.043615,
+    "corporateTaxShare": 0.09247253,
+    "consumptionTaxShare": 0.09748103,
+    "socialContributionShare": 0.13075488,
+    "tradeTaxShare": 0.05460222,
+    "otherRevenueShare": 0.58107434,
+    "revenueCompositionSource": "WORLD_UNSPECIFIED",
+    "unreportedRevenueTaxes": [
+     "SOCIAL"
+    ]
    },
    "estimated": [
     "agricultureEmployment",
@@ -2680,19 +2701,19 @@
     "defense": 0.00601,
     "education": 0.02808,
     "health": 0.013,
-    "incomeTaxShare": 0.1268,
-    "corporateTaxShare": 0.1268,
-    "consumptionTaxShare": 0.299,
-    "socialContributionShare": 0.0556,
-    "tradeTaxShare": 0.0999,
-    "otherRevenueShare": 0.2919,
-    "revenueCompositionSource": "WDI_MODEL"
+    "incomeTaxShare": 0.05478298,
+    "corporateTaxShare": 0.08314225,
+    "consumptionTaxShare": 0.2064772,
+    "socialContributionShare": 0.08630895,
+    "tradeTaxShare": 0.11616662,
+    "otherRevenueShare": 0.453122,
+    "revenueCompositionSource": "WORLD_UNSPECIFIED",
+    "unreportedRevenueTaxes": [
+     "SOCIAL"
+    ]
    },
    "estimated": [
-    "consumptionTaxShare",
-    "incomeProfitTaxShare",
-    "socialContributionShare",
-    "tradeTaxShare"
+    "socialContributionShare"
    ]
   },
   {
@@ -2761,15 +2782,18 @@
    },
    "budget": {
     "defense": 0.01315,
-    "education": 0.0406,
+    "education": 0.04146,
     "health": 0.01129,
-    "incomeTaxShare": 0.1086,
-    "corporateTaxShare": 0.0889,
-    "consumptionTaxShare": 0.0395,
-    "socialContributionShare": 0.1491,
-    "tradeTaxShare": 0.0113,
-    "otherRevenueShare": 0.6026,
-    "revenueCompositionSource": "WDI_MODEL"
+    "incomeTaxShare": 0.03779832,
+    "corporateTaxShare": 0.40650518,
+    "consumptionTaxShare": 0.04308107,
+    "socialContributionShare": 0.0986826,
+    "tradeTaxShare": 0.0151651,
+    "otherRevenueShare": 0.39876773,
+    "revenueCompositionSource": "WORLD_UNSPECIFIED",
+    "unreportedRevenueTaxes": [
+     "SOCIAL"
+    ]
    },
    "estimated": [
     "education",
@@ -2914,7 +2938,7 @@
     "selfEmployment": 0.3257,
     "elderlyShare": 0.0648,
     "childShare": 0.2932,
-    "gini": 0.323
+    "gini": 0.3235
    },
    "budget": {
     "defense": 0.00654,
@@ -3037,19 +3061,20 @@
     "defense": 0.00059,
     "education": 0.00965,
     "health": 0.00298,
-    "incomeTaxShare": 0.1272,
-    "corporateTaxShare": 0.1272,
-    "consumptionTaxShare": 0.3338,
-    "socialContributionShare": 0.026,
-    "tradeTaxShare": 0.0733,
-    "otherRevenueShare": 0.3125,
-    "revenueCompositionSource": "WDI_MODEL"
+    "incomeTaxShare": 0.04259498,
+    "corporateTaxShare": 0.04259498,
+    "consumptionTaxShare": 0.2113422,
+    "socialContributionShare": 0.0,
+    "tradeTaxShare": 0.29424588,
+    "otherRevenueShare": 0.40922196,
+    "revenueCompositionSource": "WORLD_UNSPECIFIED",
+    "unreportedRevenueTaxes": [
+     "INCOME",
+     "CORPORATE"
+    ]
    },
    "estimated": [
-    "consumptionTaxShare",
-    "incomeProfitTaxShare",
-    "socialContributionShare",
-    "tradeTaxShare"
+    "incomeProfitTaxShare"
    ]
   },
   {
@@ -3268,7 +3293,7 @@
    },
    "budget": {
     "defense": 0.02263,
-    "education": 0.0406,
+    "education": 0.04146,
     "health": 0.02546,
     "incomeTaxShare": 0.011,
     "corporateTaxShare": 0.009,
@@ -3424,13 +3449,16 @@
     "defense": 0.01186,
     "education": 0.05655,
     "health": 0.04894,
-    "incomeTaxShare": 0.1778,
-    "corporateTaxShare": 0.1455,
-    "consumptionTaxShare": 0.4458,
-    "socialContributionShare": 0.145,
-    "tradeTaxShare": 0.0859,
+    "incomeTaxShare": 0.19488946,
+    "corporateTaxShare": 0.10030379,
+    "consumptionTaxShare": 0.42496532,
+    "socialContributionShare": 0.2079624,
+    "tradeTaxShare": 0.07187903,
     "otherRevenueShare": 0.0,
-    "revenueCompositionSource": "WDI_MODEL"
+    "revenueCompositionSource": "WORLD_UNSPECIFIED",
+    "unreportedRevenueTaxes": [
+     "SOCIAL"
+    ]
    },
    "estimated": [
     "socialContributionShare"
@@ -3728,19 +3756,22 @@
     "selfEmployment": 0.1356,
     "elderlyShare": 0.107,
     "childShare": 0.1833,
-    "gini": 0.323
+    "gini": 0.3235
    },
    "budget": {
     "defense": 0.01691,
     "education": 0.03497,
     "health": 0.03112,
-    "incomeTaxShare": 0.1085,
-    "corporateTaxShare": 0.0465,
-    "consumptionTaxShare": 0.2101,
-    "socialContributionShare": 0.2947,
-    "tradeTaxShare": 0.1295,
-    "otherRevenueShare": 0.2107,
-    "revenueCompositionSource": "WDI_MODEL"
+    "incomeTaxShare": 0.00321366,
+    "corporateTaxShare": 0.05942804,
+    "consumptionTaxShare": 0.12305593,
+    "socialContributionShare": 0.42518423,
+    "tradeTaxShare": 0.08522969,
+    "otherRevenueShare": 0.30388845,
+    "revenueCompositionSource": "WORLD_UNSPECIFIED",
+    "unreportedRevenueTaxes": [
+     "SOCIAL"
+    ]
    },
    "estimated": [
     "agricultureEmployment",
@@ -3817,7 +3848,7 @@
    },
    "budget": {
     "defense": 0.01274,
-    "education": 0.0406,
+    "education": 0.06096,
     "health": 0.03378,
     "incomeTaxShare": 0.07496901,
     "corporateTaxShare": 0.07866883,
@@ -3828,7 +3859,6 @@
     "revenueCompositionSource": "GFS_GENERAL"
    },
    "estimated": [
-    "education",
     "health"
    ]
   },
@@ -3854,26 +3884,31 @@
     "selfEmployment": 0.0293,
     "elderlyShare": 0.0295,
     "childShare": 0.186,
-    "gini": 0.323
+    "gini": 0.3235
    },
    "budget": {
     "defense": 0.0428,
     "education": 0.05026,
     "health": 0.04395,
-    "incomeTaxShare": 0.1674,
-    "corporateTaxShare": 0.0718,
-    "consumptionTaxShare": 0.2635,
-    "socialContributionShare": 0.2948,
-    "tradeTaxShare": 0.0104,
-    "otherRevenueShare": 0.1921,
-    "revenueCompositionSource": "WDI_MODEL"
+    "incomeTaxShare": 0.23625905,
+    "corporateTaxShare": 0.10133453,
+    "consumptionTaxShare": 0.37188925,
+    "socialContributionShare": 0.00471993,
+    "tradeTaxShare": 0.01467798,
+    "otherRevenueShare": 0.27111926,
+    "revenueCompositionSource": "WORLD_UNSPECIFIED",
+    "unreportedRevenueTaxes": [
+     "INCOME",
+     "CORPORATE",
+     "CONSUMPTION",
+     "TARIFF"
+    ]
    },
    "estimated": [
     "consumptionTaxShare",
     "gini",
     "incomeProfitTaxShare",
     "interest",
-    "socialContributionShare",
     "tradeTaxShare"
    ]
   },
@@ -3905,13 +3940,16 @@
     "defense": 0.01453,
     "education": 0.01234,
     "health": 0.00528,
-    "incomeTaxShare": 0.0967,
-    "corporateTaxShare": 0.0967,
-    "consumptionTaxShare": 0.5388,
-    "socialContributionShare": 0.026,
-    "tradeTaxShare": 0.0808,
-    "otherRevenueShare": 0.161,
-    "revenueCompositionSource": "WDI_MODEL"
+    "incomeTaxShare": 0.08082625,
+    "corporateTaxShare": 0.09740802,
+    "consumptionTaxShare": 0.34809136,
+    "socialContributionShare": 0.05700658,
+    "tradeTaxShare": 0.06366552,
+    "otherRevenueShare": 0.35300227,
+    "revenueCompositionSource": "WORLD_UNSPECIFIED",
+    "unreportedRevenueTaxes": [
+     "SOCIAL"
+    ]
    },
    "estimated": [
     "defense",
@@ -3984,19 +4022,22 @@
     "defense": 0.01424,
     "education": 0.02267,
     "health": 0.01301,
-    "incomeTaxShare": 0.1268,
-    "corporateTaxShare": 0.1268,
-    "consumptionTaxShare": 0.299,
-    "socialContributionShare": 0.0556,
-    "tradeTaxShare": 0.0999,
-    "otherRevenueShare": 0.2919,
-    "revenueCompositionSource": "WDI_MODEL"
+    "incomeTaxShare": 0.12656464,
+    "corporateTaxShare": 0.12656464,
+    "consumptionTaxShare": 0.07486035,
+    "socialContributionShare": 0.06584878,
+    "tradeTaxShare": 0.21323857,
+    "otherRevenueShare": 0.39292302,
+    "revenueCompositionSource": "WORLD_UNSPECIFIED",
+    "unreportedRevenueTaxes": [
+     "INCOME",
+     "CORPORATE",
+     "SOCIAL"
+    ]
    },
    "estimated": [
-    "consumptionTaxShare",
     "incomeProfitTaxShare",
-    "socialContributionShare",
-    "tradeTaxShare"
+    "socialContributionShare"
    ]
   },
   {
@@ -4025,23 +4066,26 @@
    },
    "budget": {
     "defense": 0.03572,
-    "education": 0.0406,
+    "education": 0.04146,
     "health": 0.06256,
-    "incomeTaxShare": 0.1086,
-    "corporateTaxShare": 0.0889,
-    "consumptionTaxShare": 0.3411,
-    "socialContributionShare": 0.1491,
-    "tradeTaxShare": 0.0412,
-    "otherRevenueShare": 0.2711,
-    "revenueCompositionSource": "WDI_MODEL"
+    "incomeTaxShare": 0.00846442,
+    "corporateTaxShare": 0.00692898,
+    "consumptionTaxShare": 0.42036738,
+    "socialContributionShare": 0.0,
+    "tradeTaxShare": 0.00213583,
+    "otherRevenueShare": 0.56210339,
+    "revenueCompositionSource": "WORLD_UNSPECIFIED",
+    "unreportedRevenueTaxes": [
+     "INCOME",
+     "CORPORATE",
+     "CONSUMPTION"
+    ]
    },
    "estimated": [
     "consumptionTaxShare",
     "education",
     "gini",
-    "incomeProfitTaxShare",
-    "socialContributionShare",
-    "tradeTaxShare"
+    "incomeProfitTaxShare"
    ]
   },
   {
@@ -4072,20 +4116,20 @@
     "defense": 0.01323,
     "education": 0.02742,
     "health": 0.02384,
-    "incomeTaxShare": 0.1086,
-    "corporateTaxShare": 0.0889,
-    "consumptionTaxShare": 0.3411,
-    "socialContributionShare": 0.1491,
-    "tradeTaxShare": 0.0412,
-    "otherRevenueShare": 0.2711,
-    "revenueCompositionSource": "WDI_MODEL"
+    "incomeTaxShare": 0.08746073,
+    "corporateTaxShare": 0.09119669,
+    "consumptionTaxShare": 0.38899277,
+    "socialContributionShare": 0.09041485,
+    "tradeTaxShare": 0.17753881,
+    "otherRevenueShare": 0.16439615,
+    "revenueCompositionSource": "WORLD_UNSPECIFIED",
+    "unreportedRevenueTaxes": [
+     "SOCIAL"
+    ]
    },
    "estimated": [
-    "consumptionTaxShare",
     "defense",
-    "incomeProfitTaxShare",
-    "socialContributionShare",
-    "tradeTaxShare"
+    "socialContributionShare"
    ]
   },
   {
@@ -4110,7 +4154,7 @@
     "selfEmployment": 0.1356,
     "elderlyShare": 0.2016,
     "childShare": 0.1435,
-    "gini": 0.323
+    "gini": 0.3235
    },
    "budget": {
     "defense": 0.01691,
@@ -4385,7 +4429,7 @@
     "selfEmployment": 0.1356,
     "elderlyShare": 0.3636,
     "childShare": 0.1318,
-    "gini": 0.323
+    "gini": 0.3235
    },
    "budget": {
     "defense": 0.01691,
@@ -4521,13 +4565,16 @@
     "defense": 0.01323,
     "education": 0.05167,
     "health": 0.07298,
-    "incomeTaxShare": 0.0697,
-    "corporateTaxShare": 0.057,
-    "consumptionTaxShare": 0.4226,
-    "socialContributionShare": 0.1491,
-    "tradeTaxShare": 0.177,
-    "otherRevenueShare": 0.1246,
-    "revenueCompositionSource": "WDI_MODEL"
+    "incomeTaxShare": 0.010507,
+    "corporateTaxShare": 0.1104695,
+    "consumptionTaxShare": 0.38787984,
+    "socialContributionShare": 0.21200836,
+    "tradeTaxShare": 0.101964,
+    "otherRevenueShare": 0.1771713,
+    "revenueCompositionSource": "WORLD_UNSPECIFIED",
+    "unreportedRevenueTaxes": [
+     "SOCIAL"
+    ]
    },
    "estimated": [
     "defense",
@@ -4644,7 +4691,7 @@
    },
    "budget": {
     "defense": 0.01768,
-    "education": 0.0406,
+    "education": 0.04146,
     "health": 0.04276,
     "incomeTaxShare": 0.09730027,
     "corporateTaxShare": 0.06875679,
@@ -4800,7 +4847,7 @@
    },
    "budget": {
     "defense": 0.01496,
-    "education": 0.0406,
+    "education": 0.04146,
     "health": 0.06694,
     "incomeTaxShare": 0.05245421,
     "corporateTaxShare": 0.05273272,
@@ -4918,19 +4965,19 @@
     "defense": 0.02591,
     "education": 0.04715,
     "health": 0.01484,
-    "incomeTaxShare": 0.1272,
-    "corporateTaxShare": 0.1272,
-    "consumptionTaxShare": 0.3338,
-    "socialContributionShare": 0.026,
-    "tradeTaxShare": 0.0733,
-    "otherRevenueShare": 0.3125,
-    "revenueCompositionSource": "WDI_MODEL"
+    "incomeTaxShare": 0.08771782,
+    "corporateTaxShare": 0.08977639,
+    "consumptionTaxShare": 0.26052306,
+    "socialContributionShare": 0.03542662,
+    "tradeTaxShare": 0.10075541,
+    "otherRevenueShare": 0.4258007,
+    "revenueCompositionSource": "WORLD_UNSPECIFIED",
+    "unreportedRevenueTaxes": [
+     "SOCIAL"
+    ]
    },
    "estimated": [
-    "consumptionTaxShare",
-    "incomeProfitTaxShare",
-    "socialContributionShare",
-    "tradeTaxShare"
+    "socialContributionShare"
    ]
   },
   {
@@ -5113,19 +5160,22 @@
     "defense": 0.01976,
     "education": 0.04074,
     "health": 0.00972,
-    "incomeTaxShare": 0.1268,
-    "corporateTaxShare": 0.1268,
-    "consumptionTaxShare": 0.299,
-    "socialContributionShare": 0.0556,
-    "tradeTaxShare": 0.0999,
-    "otherRevenueShare": 0.2919,
-    "revenueCompositionSource": "WDI_MODEL"
+    "incomeTaxShare": 0.11709982,
+    "corporateTaxShare": 0.11709982,
+    "consumptionTaxShare": 0.28552227,
+    "socialContributionShare": 0.05134661,
+    "tradeTaxShare": 0.15936177,
+    "otherRevenueShare": 0.26956971,
+    "revenueCompositionSource": "WORLD_UNSPECIFIED",
+    "unreportedRevenueTaxes": [
+     "INCOME",
+     "CORPORATE",
+     "SOCIAL"
+    ]
    },
    "estimated": [
-    "consumptionTaxShare",
     "incomeProfitTaxShare",
-    "socialContributionShare",
-    "tradeTaxShare"
+    "socialContributionShare"
    ]
   },
   {
@@ -5156,19 +5206,21 @@
     "defense": 0.00843,
     "education": 0.00319,
     "health": 0.00601,
-    "incomeTaxShare": 0.1272,
-    "corporateTaxShare": 0.1272,
-    "consumptionTaxShare": 0.3338,
-    "socialContributionShare": 0.026,
-    "tradeTaxShare": 0.0733,
-    "otherRevenueShare": 0.3125,
-    "revenueCompositionSource": "WDI_MODEL"
+    "incomeTaxShare": 0.03143234,
+    "corporateTaxShare": 0.17023649,
+    "consumptionTaxShare": 0.23176361,
+    "socialContributionShare": 0.03279953,
+    "tradeTaxShare": 0.01050988,
+    "otherRevenueShare": 0.52325815,
+    "revenueCompositionSource": "WORLD_UNSPECIFIED",
+    "unreportedRevenueTaxes": [
+     "INCOME",
+     "SOCIAL"
+    ]
    },
    "estimated": [
-    "consumptionTaxShare",
     "incomeProfitTaxShare",
-    "socialContributionShare",
-    "tradeTaxShare"
+    "socialContributionShare"
    ]
   },
   {
@@ -5390,7 +5442,7 @@
     "selfEmployment": 0.1884,
     "elderlyShare": 0.168,
     "childShare": 0.1837,
-    "gini": 0.323
+    "gini": 0.326
    },
    "budget": {
     "defense": 0.012,
@@ -5404,9 +5456,7 @@
     "otherRevenueShare": 0.18814332,
     "revenueCompositionSource": "GFS_GENERAL"
    },
-   "estimated": [
-    "gini"
-   ]
+   "estimated": []
   },
   {
    "id": "OMN",
@@ -5430,26 +5480,26 @@
     "selfEmployment": 0.0496,
     "elderlyShare": 0.0266,
     "childShare": 0.2523,
-    "gini": 0.323
+    "gini": 0.3235
    },
    "budget": {
     "defense": 0.05511,
     "education": 0.04383,
     "health": 0.02979,
-    "incomeTaxShare": 0.1674,
-    "corporateTaxShare": 0.0718,
-    "consumptionTaxShare": 0.2635,
-    "socialContributionShare": 0.2948,
-    "tradeTaxShare": 0.0104,
-    "otherRevenueShare": 0.1921,
-    "revenueCompositionSource": "WDI_MODEL"
+    "incomeTaxShare": 0.0,
+    "corporateTaxShare": 0.05350067,
+    "consumptionTaxShare": 0.04713495,
+    "socialContributionShare": 0.05574717,
+    "tradeTaxShare": 0.01544939,
+    "otherRevenueShare": 0.82816782,
+    "revenueCompositionSource": "WORLD_UNSPECIFIED",
+    "unreportedRevenueTaxes": [
+     "INCOME"
+    ]
    },
    "estimated": [
-    "consumptionTaxShare",
     "gini",
-    "incomeProfitTaxShare",
-    "socialContributionShare",
-    "tradeTaxShare"
+    "incomeProfitTaxShare"
    ]
   },
   {
@@ -5480,19 +5530,19 @@
     "defense": 0.02891,
     "education": 0.01947,
     "health": 0.009,
-    "incomeTaxShare": 0.1272,
-    "corporateTaxShare": 0.1272,
-    "consumptionTaxShare": 0.3338,
-    "socialContributionShare": 0.026,
-    "tradeTaxShare": 0.0733,
-    "otherRevenueShare": 0.3125,
-    "revenueCompositionSource": "WDI_MODEL"
+    "incomeTaxShare": 0.13422555,
+    "corporateTaxShare": 0.20133832,
+    "consumptionTaxShare": 0.36915146,
+    "socialContributionShare": 0.01503893,
+    "tradeTaxShare": 0.09948939,
+    "otherRevenueShare": 0.18075635,
+    "revenueCompositionSource": "WORLD_UNSPECIFIED",
+    "unreportedRevenueTaxes": [
+     "SOCIAL"
+    ]
    },
    "estimated": [
-    "consumptionTaxShare",
-    "incomeProfitTaxShare",
-    "socialContributionShare",
-    "tradeTaxShare"
+    "socialContributionShare"
    ]
   },
   {
@@ -5631,19 +5681,22 @@
     "selfEmployment": 0.0805,
     "elderlyShare": 0.1085,
     "childShare": 0.1854,
-    "gini": 0.323
+    "gini": 0.3235
    },
    "budget": {
     "defense": 0.01691,
     "education": 0.03437,
     "health": 0.06606,
-    "incomeTaxShare": 0.0616,
-    "corporateTaxShare": 0.0264,
-    "consumptionTaxShare": 0.1415,
-    "socialContributionShare": 0.2948,
-    "tradeTaxShare": 0.1234,
-    "otherRevenueShare": 0.3523,
-    "revenueCompositionSource": "WDI_MODEL"
+    "incomeTaxShare": 0.06357933,
+    "corporateTaxShare": 0.0,
+    "consumptionTaxShare": 0.20442116,
+    "socialContributionShare": 0.28688902,
+    "tradeTaxShare": 0.10226448,
+    "otherRevenueShare": 0.34284601,
+    "revenueCompositionSource": "WORLD_UNSPECIFIED",
+    "unreportedRevenueTaxes": [
+     "SOCIAL"
+    ]
    },
    "estimated": [
     "agricultureEmployment",
@@ -5888,21 +5941,24 @@
     "defense": 0.01453,
     "education": 0.05434,
     "health": 0.04447,
-    "incomeTaxShare": 0.1272,
-    "corporateTaxShare": 0.1272,
-    "consumptionTaxShare": 0.3338,
-    "socialContributionShare": 0.026,
-    "tradeTaxShare": 0.0733,
-    "otherRevenueShare": 0.3125,
-    "revenueCompositionSource": "WDI_MODEL"
+    "incomeTaxShare": 0.03177651,
+    "corporateTaxShare": 0.03177651,
+    "consumptionTaxShare": 0.45076017,
+    "socialContributionShare": 0.00953161,
+    "tradeTaxShare": 0.33188252,
+    "otherRevenueShare": 0.14427268,
+    "revenueCompositionSource": "WORLD_UNSPECIFIED",
+    "unreportedRevenueTaxes": [
+     "INCOME",
+     "CORPORATE",
+     "SOCIAL"
+    ]
    },
    "estimated": [
-    "consumptionTaxShare",
     "defense",
     "incomeProfitTaxShare",
     "interest",
     "socialContributionShare",
-    "tradeTaxShare",
     "unemployment"
    ]
   },
@@ -5934,19 +5990,21 @@
     "defense": 0.065,
     "education": 0.03234,
     "health": 0.02095,
-    "incomeTaxShare": 0.1674,
-    "corporateTaxShare": 0.0718,
-    "consumptionTaxShare": 0.2635,
-    "socialContributionShare": 0.2948,
-    "tradeTaxShare": 0.0104,
-    "otherRevenueShare": 0.1921,
-    "revenueCompositionSource": "WDI_MODEL"
+    "incomeTaxShare": 0.0,
+    "corporateTaxShare": 0.13664161,
+    "consumptionTaxShare": 0.29948399,
+    "socialContributionShare": 0.33505837,
+    "tradeTaxShare": 0.01048255,
+    "otherRevenueShare": 0.21833348,
+    "revenueCompositionSource": "WORLD_UNSPECIFIED",
+    "unreportedRevenueTaxes": [
+     "CONSUMPTION",
+     "SOCIAL"
+    ]
    },
    "estimated": [
     "consumptionTaxShare",
-    "incomeProfitTaxShare",
-    "socialContributionShare",
-    "tradeTaxShare"
+    "socialContributionShare"
    ]
   },
   {
@@ -6085,7 +6143,7 @@
     "selfEmployment": 0.0501,
     "elderlyShare": 0.0282,
     "childShare": 0.241,
-    "gini": 0.323
+    "gini": 0.3235
    },
    "budget": {
     "defense": 0.06382,
@@ -6131,20 +6189,20 @@
     "defense": 0.00925,
     "education": 0.02927,
     "health": 0.00592,
-    "incomeTaxShare": 0.1268,
-    "corporateTaxShare": 0.1268,
-    "consumptionTaxShare": 0.299,
-    "socialContributionShare": 0.0556,
-    "tradeTaxShare": 0.0999,
-    "otherRevenueShare": 0.2919,
-    "revenueCompositionSource": "WDI_MODEL"
+    "incomeTaxShare": 0.01195162,
+    "corporateTaxShare": 0.0516005,
+    "consumptionTaxShare": 0.37748007,
+    "socialContributionShare": 0.07590998,
+    "tradeTaxShare": 0.08453042,
+    "otherRevenueShare": 0.39852741,
+    "revenueCompositionSource": "WORLD_UNSPECIFIED",
+    "unreportedRevenueTaxes": [
+     "SOCIAL"
+    ]
    },
    "estimated": [
-    "consumptionTaxShare",
     "education",
-    "incomeProfitTaxShare",
-    "socialContributionShare",
-    "tradeTaxShare"
+    "socialContributionShare"
    ]
   },
   {
@@ -6247,7 +6305,7 @@
     "selfEmployment": 0.1222,
     "elderlyShare": 0.131,
     "childShare": 0.1179,
-    "gini": 0.323
+    "gini": 0.389
    },
    "budget": {
     "defense": 0.02765,
@@ -6261,9 +6319,7 @@
     "otherRevenueShare": 0.39620611,
     "revenueCompositionSource": "GFS_GENERAL"
    },
-   "estimated": [
-    "gini"
-   ]
+   "estimated": []
   },
   {
    "id": "SLB",
@@ -6403,7 +6459,7 @@
     "selfEmployment": 0.1356,
     "elderlyShare": 0.2168,
     "childShare": 0.127,
-    "gini": 0.323
+    "gini": 0.3235
    },
    "budget": {
     "defense": 0.01691,
@@ -6589,20 +6645,20 @@
     "defense": 0.01453,
     "education": 0.05029,
     "health": 0.02134,
-    "incomeTaxShare": 0.1272,
-    "corporateTaxShare": 0.1272,
-    "consumptionTaxShare": 0.3338,
-    "socialContributionShare": 0.026,
-    "tradeTaxShare": 0.0733,
-    "otherRevenueShare": 0.3125,
-    "revenueCompositionSource": "WDI_MODEL"
+    "incomeTaxShare": 0.12094775,
+    "corporateTaxShare": 0.03038335,
+    "consumptionTaxShare": 0.15039696,
+    "socialContributionShare": 0.04012151,
+    "tradeTaxShare": 0.17592074,
+    "otherRevenueShare": 0.48222969,
+    "revenueCompositionSource": "WORLD_UNSPECIFIED",
+    "unreportedRevenueTaxes": [
+     "SOCIAL"
+    ]
    },
    "estimated": [
-    "consumptionTaxShare",
     "defense",
-    "incomeProfitTaxShare",
-    "socialContributionShare",
-    "tradeTaxShare"
+    "socialContributionShare"
    ]
   },
   {
@@ -7069,19 +7125,21 @@
     "defense": 0.01323,
     "education": 0.02713,
     "health": 0.00942,
-    "incomeTaxShare": 0.1086,
-    "corporateTaxShare": 0.0889,
-    "consumptionTaxShare": 0.3411,
-    "socialContributionShare": 0.1491,
-    "tradeTaxShare": 0.0412,
-    "otherRevenueShare": 0.2711,
-    "revenueCompositionSource": "WDI_MODEL"
+    "incomeTaxShare": 0.11572104,
+    "corporateTaxShare": 0.20790085,
+    "consumptionTaxShare": 0.28704427,
+    "socialContributionShare": 0.12581204,
+    "tradeTaxShare": 0.03476496,
+    "otherRevenueShare": 0.22875684,
+    "revenueCompositionSource": "WORLD_UNSPECIFIED",
+    "unreportedRevenueTaxes": [
+     "SOCIAL",
+     "TARIFF"
+    ]
    },
    "estimated": [
-    "consumptionTaxShare",
     "defense",
     "gini",
-    "incomeProfitTaxShare",
     "interest",
     "socialContributionShare",
     "tradeTaxShare"
@@ -7115,13 +7173,16 @@
     "defense": 0.0265,
     "education": 0.05241,
     "health": 0.07458,
-    "incomeTaxShare": 0.1512,
-    "corporateTaxShare": 0.1512,
-    "consumptionTaxShare": 0.0538,
-    "socialContributionShare": 0.026,
-    "tradeTaxShare": 0.0129,
-    "otherRevenueShare": 0.6049,
-    "revenueCompositionSource": "WDI_MODEL"
+    "incomeTaxShare": 0.03760984,
+    "corporateTaxShare": 0.01151315,
+    "consumptionTaxShare": 0.08802971,
+    "socialContributionShare": 0.0339438,
+    "tradeTaxShare": 0.03931848,
+    "otherRevenueShare": 0.78958502,
+    "revenueCompositionSource": "WORLD_UNSPECIFIED",
+    "unreportedRevenueTaxes": [
+     "SOCIAL"
+    ]
    },
    "estimated": [
     "socialContributionShare"
@@ -7189,7 +7250,7 @@
     "selfEmployment": 0.2563,
     "elderlyShare": 0.1185,
     "childShare": 0.1803,
-    "gini": 0.323
+    "gini": 0.3235
    },
    "budget": {
     "defense": 0.00959,
@@ -7235,19 +7296,19 @@
     "defense": 0.02505,
     "education": 0.06734,
     "health": 0.04319,
-    "incomeTaxShare": 0.1272,
-    "corporateTaxShare": 0.1272,
-    "consumptionTaxShare": 0.3338,
-    "socialContributionShare": 0.026,
-    "tradeTaxShare": 0.0733,
-    "otherRevenueShare": 0.3125,
-    "revenueCompositionSource": "WDI_MODEL"
+    "incomeTaxShare": 0.26306909,
+    "corporateTaxShare": 0.10764403,
+    "consumptionTaxShare": 0.46660087,
+    "socialContributionShare": 0.00921062,
+    "tradeTaxShare": 0.04277078,
+    "otherRevenueShare": 0.11070461,
+    "revenueCompositionSource": "WORLD_UNSPECIFIED",
+    "unreportedRevenueTaxes": [
+     "SOCIAL"
+    ]
    },
    "estimated": [
-    "consumptionTaxShare",
-    "incomeProfitTaxShare",
-    "socialContributionShare",
-    "tradeTaxShare"
+    "socialContributionShare"
    ]
   },
   {
@@ -7356,7 +7417,7 @@
     "selfEmployment": 0.1927,
     "elderlyShare": 0.1835,
     "childShare": 0.1193,
-    "gini": 0.323
+    "gini": 0.272
    },
    "budget": {
     "defense": 0.024,
@@ -7374,7 +7435,6 @@
     "consumptionTaxShare",
     "defense",
     "education",
-    "gini",
     "health",
     "incomeProfitTaxShare",
     "interest",
@@ -7634,7 +7694,7 @@
     "selfEmployment": 0.1356,
     "elderlyShare": 0.1834,
     "childShare": 0.1597,
-    "gini": 0.323
+    "gini": 0.3235
    },
    "budget": {
     "defense": 0.01691,
@@ -7792,19 +7852,19 @@
     "defense": 0.01834,
     "education": 0.02887,
     "health": 0.02021,
-    "incomeTaxShare": 0.1086,
-    "corporateTaxShare": 0.0889,
-    "consumptionTaxShare": 0.3411,
-    "socialContributionShare": 0.1491,
-    "tradeTaxShare": 0.0412,
-    "otherRevenueShare": 0.2711,
-    "revenueCompositionSource": "WDI_MODEL"
+    "incomeTaxShare": 0.09005471,
+    "corporateTaxShare": 0.20774395,
+    "consumptionTaxShare": 0.35484862,
+    "socialContributionShare": 0.10546242,
+    "tradeTaxShare": 0.05013402,
+    "otherRevenueShare": 0.19175628,
+    "revenueCompositionSource": "WORLD_UNSPECIFIED",
+    "unreportedRevenueTaxes": [
+     "SOCIAL"
+    ]
    },
    "estimated": [
-    "consumptionTaxShare",
-    "incomeProfitTaxShare",
-    "socialContributionShare",
-    "tradeTaxShare"
+    "socialContributionShare"
    ]
   },
   {
@@ -7915,22 +7975,24 @@
     "defense": 0.01424,
     "education": 0.02927,
     "health": 0.00819,
-    "incomeTaxShare": 0.1268,
-    "corporateTaxShare": 0.1268,
-    "consumptionTaxShare": 0.299,
-    "socialContributionShare": 0.0556,
-    "tradeTaxShare": 0.0999,
-    "otherRevenueShare": 0.2919,
-    "revenueCompositionSource": "WDI_MODEL"
+    "incomeTaxShare": 0.21137919,
+    "corporateTaxShare": 0.10889231,
+    "consumptionTaxShare": 0.26154899,
+    "socialContributionShare": 0.04863587,
+    "tradeTaxShare": 0.11420534,
+    "otherRevenueShare": 0.2553383,
+    "revenueCompositionSource": "WORLD_UNSPECIFIED",
+    "unreportedRevenueTaxes": [
+     "CONSUMPTION",
+     "SOCIAL"
+    ]
    },
    "estimated": [
     "consumptionTaxShare",
     "debt",
     "defense",
     "education",
-    "incomeProfitTaxShare",
-    "socialContributionShare",
-    "tradeTaxShare"
+    "socialContributionShare"
    ]
   },
   {
@@ -8037,19 +8099,19 @@
     "defense": 0.0021,
     "education": 0.00385,
     "health": 0.00947,
-    "incomeTaxShare": 0.1272,
-    "corporateTaxShare": 0.1272,
-    "consumptionTaxShare": 0.3338,
-    "socialContributionShare": 0.026,
-    "tradeTaxShare": 0.0733,
-    "otherRevenueShare": 0.3125,
-    "revenueCompositionSource": "WDI_MODEL"
+    "incomeTaxShare": 0.18756088,
+    "corporateTaxShare": 0.11141256,
+    "consumptionTaxShare": 0.52064625,
+    "socialContributionShare": 0.00730621,
+    "tradeTaxShare": 0.08525907,
+    "otherRevenueShare": 0.08781503,
+    "revenueCompositionSource": "WORLD_UNSPECIFIED",
+    "unreportedRevenueTaxes": [
+     "SOCIAL"
+    ]
    },
    "estimated": [
-    "consumptionTaxShare",
-    "incomeProfitTaxShare",
-    "socialContributionShare",
-    "tradeTaxShare"
+    "socialContributionShare"
    ]
   }
  ]

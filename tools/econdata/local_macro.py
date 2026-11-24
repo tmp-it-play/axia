@@ -52,3 +52,26 @@ POPULATION = {
 # 민간 경제활동인구 156,199명 중 실업자 7,988명. 성별·연령 전체 공표 실업률(%).
 # https://istatistik.gov.ct.tr/Portals/39/HIA_BULTEN_2023_merged_1.pdf
 UNEMPLOYMENT_PERCENT_2023 = {"CYN": 5.1}
+
+# 북키프로스 통계연감 2023 P5(2015=100 기준 12월 지수), P7(전년 12월 대비 매월 상승률, %).
+# 두 해 각각 12개월의 소비자물가 평균을 복원하여 연평균 상승률을 구한다.
+# https://istatistik.gov.ct.tr/Portals/39/ISTATISTIK_YILLIGI_2023_1.pdf
+CYN_CPI_DECEMBER_BASE = {
+    2022: (316.93, [5.48, 12.98, 27.73, 34.20, 43.10, 56.76, 64.93, 70.38, 75.64, 81.64, 86.14, 94.51]),
+    2023: (616.46, [2.62, 7.39, 9.65, 15.46, 19.64, 33.32, 46.53, 58.46, 63.64, 66.78, 74.16, 83.63]),
+}
+CYN_CPI_MEAN = {year: base * sum(1 + rate / 100 for rate in months) / 12 for year, (base, months) in CYN_CPI_DECEMBER_BASE.items()}
+
+# 지니계수. 대만은 2023년 전체 가구의 1인당 가처분소득, 싱가포르는 취업자 없는 가구를 포함한
+# 거주 가구의 1인당 시장소득에 정부이전과 조세를 반영한 수치(Key Household Income Trends 2025, 그림 10).
+# 뉴질랜드는 OECD IDD의 2022년 균등화 가처분소득(전 연령; 2023년 관측 없음).
+# https://www.fia.gov.tw/eng/singlehtml/96?cntId=a9d4a6ac784e40dca92d419ce20b5ea9
+# https://assets.app.optical.gov.sg/singstat/production/published/assets/b0eafa31-0ac6-4684-b2cd-4a264ce8d820.pdf
+# https://sdmx.oecd.org/public/rest/v1/data/OECD.WISE.INE,DSD_WISE_IDD@DF_IDD,1.0/NZL.A.INC_DISP_GINI..._T.METH2012.D_CUR.?startPeriod=2022&endPeriod=2023
+# 코소보 교육지출은 IMF GFS COFOG의 2023년 일반정부(S13) 현금 기준 실적, GDP 대비 %.
+# https://api.imf.org/external/sdmx/2.1/data/IMF.STA,GFS_COFOG/KOS.S13.G2MF.GF09_T.POGDP_PT.A?startPeriod=2023&endPeriod=2023
+SUPPLEMENTAL_MACRO = {
+    "CYN": {"inflation": round(CYN_CPI_MEAN[2023] / CYN_CPI_MEAN[2022] - 1, 4)},
+    "KOS": {"education": 6.096462646873514 / 100},
+    "TWN": {"gini": 0.272}, "SGP": {"gini": 0.389}, "NZL": {"gini": 0.326},
+}

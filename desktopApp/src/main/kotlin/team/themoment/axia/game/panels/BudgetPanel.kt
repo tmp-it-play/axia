@@ -91,6 +91,10 @@ fun BudgetPanel(
             RevenueCompositionSource.WDI_MODEL -> "세계은행 세입 지표와 소득그룹별 추정치를 사용했습니다. 개인소득세와 법인세는 소득그룹별 비율로 나눴습니다."
         },
     )
+    if (budget.unreportedRevenueTaxes.isNotEmpty()) {
+        val missing = budget.unreportedRevenueTaxes.joinToString("·") { it.label }
+        Hint("원표에서 빠진 세목($missing)과 기타 세입은 보고된 세목을 제외하고 남은 금액에서 추정했습니다.")
+    }
     Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
         budget.taxes.forEach { line ->
             val proposed = proposed(line.kind, line.targetRate)
@@ -191,7 +195,7 @@ internal fun DraftControls(
             "변경안 발의 · ${politics.draft.size}건",
             selected = true,
             enabled =
-                politics.draft.isNotEmpty() && !politics.legislatureDissolved,
+                politics.draft.isNotEmpty() && !politics.governmentBillsSuspended,
             onClick = onIntroduce,
         )
         if (politics.draft.isNotEmpty()) PaperTag("심의 근거", onClick = onViewBill)
