@@ -329,6 +329,62 @@
    ],
    "sourceNote": "2023년 말 유로 사용 20개국(크로아티아 2023-01 가입). 예금금리 4.00%. https://data.bis.org/topics/CBPOL",
    "currency": "유로"
+  },
+  {
+   "id": "XOF",
+   "name": "서아프리카 중앙은행(BCEAO)",
+   "currency": "서아프리카 CFA 프랑",
+   "exchangeAnchor": "EUR",
+   "policyRate": 0.035,
+   "inflationTarget": 0.02,
+   "credibility": 0.7,
+   "members": [
+    "BEN",
+    "BFA",
+    "CIV",
+    "GNB",
+    "MLI",
+    "NER",
+    "SEN",
+    "TGO"
+   ],
+   "sourceNote": "최소 유동성 공급 입찰금리 3.50%(2023-12-06 결정, 12-16 시행). UMOA 8개국이 공동 발행하며 유로에 고정한다. 중기 물가 목표 2±1%, 신뢰도는 게임 가정. https://www.bceao.int/sites/default/files/2024-12/BCEAO_2023_Annual_Report.pdf https://www.bceao.int/fr/etats-membres"
+  },
+  {
+   "id": "XAF",
+   "name": "중앙아프리카 국가은행(BEAC)",
+   "currency": "중앙아프리카 CFA 프랑",
+   "exchangeAnchor": "EUR",
+   "policyRate": 0.05,
+   "inflationTarget": 0.03,
+   "credibility": 0.7,
+   "members": [
+    "CAF",
+    "CMR",
+    "COG",
+    "GAB",
+    "GNQ",
+    "TCD"
+   ],
+   "sourceNote": "6개국 공동 입찰금리(TIAO), 2023-12-31 5.00%. 유로에 고정한다. 물가안정 참고 상한 3%를 게임의 기준점으로 사용하며 신뢰도는 게임 가정. https://www.beac.int/wp-content/uploads/2024/08/RAPPORT-ANNUEL-BEAC-2023-08-08-24_compressed.pdf https://www.beac.int/faqs/"
+  },
+  {
+   "id": "XCD",
+   "name": "동카리브 중앙은행(ECCB)",
+   "currency": "동카리브 달러",
+   "exchangeAnchor": "USA",
+   "policyRate": 0.03,
+   "inflationTarget": 0.02,
+   "credibility": 0.7,
+   "members": [
+    "ATG",
+    "DMA",
+    "GRD",
+    "KNA",
+    "LCA",
+    "VCT"
+   ],
+   "sourceNote": "2023-11-24 단기 할인율을 2%에서 3%로 인상 결정(장기 4.5%). EC$2.70/US$1 고정. 가입 영역 8곳 중 게임 경제를 가진 독립국 6곳. 모형 물가 기준점 2%는 달러 앵커의 목표로 대체했고 신뢰도는 게임 가정. https://cdn.eccb-centralbank.org/documents/2024-01-18-10-55-17-Communique-of-the-106th-Meeting-of-the-Monetary-Council.pdf https://cdn.eccb-centralbank.org/documents/2025-06-30-17-35-31-ECCB-2024-2025-Annual-Report-Revised.pdf"
   }
  ],
  "pegs": [
@@ -363,23 +419,9 @@
     "AND",
     "MCO",
     "SMR",
-    "VAT",
-    "BEN",
-    "BFA",
-    "CIV",
-    "GNB",
-    "MLI",
-    "NER",
-    "SEN",
-    "TGO",
-    "CMR",
-    "CAF",
-    "TCD",
-    "COG",
-    "GNQ",
-    "GAB"
+    "VAT"
    ],
-   "sourceNote": "유로 고정(덴마크, 불가리아, 보스니아, CFA 프랑 국가) 또는 유로 일방 사용국. IMF AREAER 환율제도 분류 기준.",
+   "sourceNote": "유로 고정(덴마크, 불가리아, 보스니아) 또는 유로 일방 사용국. IMF AREAER 환율제도 분류 기준.",
    "currency": "유로"
   }
  ],
@@ -407,6 +449,167 @@
    "ROU": 0.07,
    "SRB": 0.065,
    "SWE": 0.04
+  }
+ },
+ "nationalPolicyRates": {
+  "period": "2023-12",
+  "rates": {
+   "ALB": {
+    "policyRate": 0.0325,
+    "sourceNote": "기준금리(2023-12-20 동결). https://www.bankofalbania.org/Press/Press_Releases/Monetary_Policy_Decisions_37102.html"
+   },
+   "ARE": {
+    "policyRate": 0.054,
+    "sourceNote": "익일물 예금기구 기준금리(2023-12-13 동결). https://centralbank.ae/media/pnhftk2y/cbuae-maintains-the-base-rate-at-5-40-_en.pdf"
+   },
+   "ARM": {
+    "policyRate": 0.0925,
+    "sourceNote": "재융자 금리(2023-12-12 결정). https://www.cba.am/Storage/EN/publications/DVQ/Inflation_Report_2023Q4_eng.pdf"
+   },
+   "AZE": {
+    "policyRate": 0.08,
+    "sourceNote": "재융자 금리(2023-12-20 결정). https://www.cbar.az/press-release-4443/faiz-dhlizinin-parametrlri-haqqinda?language=en"
+   },
+   "BDI": {
+    "policyRate": 0.1,
+    "sourceNote": "기준금리(2023년 12월 도입). https://www.brb.bi/sites/default/files/2025-03/Rapport%20de%20politique%20mon%C3%A9taire%20%20du%204%C3%A8me%20trimeststre%202023.pdf"
+   },
+   "BGD": {
+    "policyRate": 0.0775,
+    "sourceNote": "정책금리(2023년 11월 인상, 2024년 1월 다음 인상). https://www.bb.org.bd/pub/halfyearly/monetaryprev/mpr_2024_25.pdf"
+   },
+   "BHR": {
+    "policyRate": 0.0625,
+    "sourceNote": "1주 예금기구 금리(2023년 연차보고서, 마지막 변경 7월). https://www.cbb.gov.bh/wp-content/uploads/2024/03/CBB-Annual-Report-2023-EnglishCBB-Finacial.pdf"
+   },
+   "BHS": {
+    "policyRate": 0.04,
+    "sourceNote": "은행 할인율(2023년 4분기 경제보고서). https://cdn.centralbankbahamas.com/documents/2024-02-29-12-16-18-Quarterly-Economic-Review-December-2023.pdf"
+   },
+   "BWA": {
+    "policyRate": 0.024,
+    "sourceNote": "통화정책금리(2023-12-29 일별 통계). https://www.bankofbotswana.bw/content/interest-rates?field_interest_rate_date_value%5Bmin%5D=2023-12-29&field_interest_rate_date_value%5Bmax%5D=2023-12-29"
+   },
+   "COD": {
+    "policyRate": 0.25,
+    "sourceNote": "기준금리(2023년 연차보고서, 마지막 변경 8월). https://www.bcc.cd/sites/default/files/publications/rapport_annuel_2023_1.pdf"
+   },
+   "CRI": {
+    "policyRate": 0.06,
+    "sourceNote": "통화정책금리(2023-12-20 결정, 12-21 시행). https://www.bccr.fi.cr/content/dam/bccr/publicaciones/memoria-anual/memoria-anual-2023.pdf"
+   },
+   "DOM": {
+    "policyRate": 0.07,
+    "sourceNote": "통화정책금리(2023년 연말 경제보고서). https://cdn.bancentral.gov.do/documents/publicaciones-economicas/informe-de-la-economia-dominicana/documents/infeco_definitivo2023-12.pdf"
+   },
+   "FJI": {
+    "policyRate": 0.0025,
+    "sourceNote": "익일물 정책금리(2023-12-07 동결). https://www.rbf.gov.fj/press-release-no-25-rbf-maintains-accommodative-monetary-policy-stance/"
+   },
+   "GEO": {
+    "policyRate": 0.095,
+    "sourceNote": "재융자 금리(2023-12-20 결정). https://nbg.gov.ge/en/media/news/the-national-bank-of-georgia-has-reduced-its-monetary-policy-rate-by-0-5-percentage-points"
+   },
+   "GHA": {
+    "policyRate": 0.3,
+    "sourceNote": "통화정책금리(2023-11-27 동결, 다음 결정 2024-01-29). https://www.bog.gov.gh/monetary-policy/policy-rate-trends/"
+   },
+   "GMB": {
+    "policyRate": 0.17,
+    "sourceNote": "통화정책금리(2023-11-30 동결). https://www.cbg.gm/downloads-file/f36cda5b-8f97-11ee-8725-02e599c15748"
+   },
+   "GTM": {
+    "policyRate": 0.05,
+    "sourceNote": "통화정책 기준금리(2023년 말 통계). https://banguat.gob.gt/sites/default/files/banguat/Publica/guatemala_en_cifras_2025.pdf"
+   },
+   "JAM": {
+    "policyRate": 0.07,
+    "sourceNote": "익일물 예치 정책금리(2023-12-19 동결). https://boj.org.jm/monetary-policy-press-release-december-2023/"
+   },
+   "JOR": {
+    "policyRate": 0.075,
+    "sourceNote": "주요 정책금리(2023-07-30 시행, 다음 변경 2024-09-22). https://cbj.gov.jo/en/Pages/Maininterestrates"
+   },
+   "KAZ": {
+    "policyRate": 0.1575,
+    "sourceNote": "기본금리(2023년 12월 말 통계). https://nationalbank.kz/file/download/121231"
+   },
+   "KEN": {
+    "policyRate": 0.125,
+    "sourceNote": "중앙은행 금리(2023-12-05 결정). https://www.centralbank.go.ke/press/"
+   },
+   "KGZ": {
+    "policyRate": 0.13,
+    "sourceNote": "기준금리(2023-11-27 결정, 11-28 시행). https://www.nbkr.kg/newsout.jsp?item=31&lang=ENG&material=117201"
+   },
+   "LKA": {
+    "policyRate": 0.09,
+    "sourceNote": "예치기구 금리(SDFR). 2023년 11월 결정 뒤 2024년 1월 동결. 같은 기간 대출기구 금리는 10%. https://www.cbsl.gov.lk/sites/default/files/cbslweb_documents/press/pr/press_20240123_Monetary_Policy_Review_No_1_2024_e_Ge643v.pdf"
+   },
+   "MDA": {
+    "policyRate": 0.0475,
+    "sourceNote": "주요 단기 통화운영 기본금리(2023-12-14 동결). https://www.bnm.md/en/content/monetary-policy-decision-14122023"
+   },
+   "MNG": {
+    "policyRate": 0.13,
+    "sourceNote": "정책금리(2023-12-14 동결). https://www.mongolbank.mn/en/r/5704"
+   },
+   "MOZ": {
+    "policyRate": 0.1725,
+    "sourceNote": "은행간시장 통화정책금리(MIMO, 2023년 12월). https://www.bancomoc.mz/media/1jzlhdq0/prime-rate-and-credit-spread-december-2023.pdf"
+   },
+   "MUS": {
+    "policyRate": 0.045,
+    "sourceNote": "기준금리(Key Rate, 2023-11-28 동결). https://www.bom.mu/monetary-policy/interest-rate-decisions/monetary-policy-committee-bank-mauritius-keeps-key-rate-unchanged"
+   },
+   "NGA": {
+    "policyRate": 0.1875,
+    "sourceNote": "통화정책금리(2023년 7월 인상, 다음 변경 2024년 2월). https://www.cbn.gov.ng/MonetaryPolicy/decisions.html"
+   },
+   "NPL": {
+    "policyRate": 0.055,
+    "sourceNote": "통화정책금리(2023년 12월 제1분기 정책 점검에 따른 인하). 같은 시점 은행금리는 7%. https://www.nrb.org.np/contents/uploads/2024/08/Monetary-Policy-in-English-for-2024-25.pdf"
+   },
+   "OMN": {
+    "policyRate": 0.06,
+    "sourceNote": "중앙은행 레포 금리(2023년 12월 통계). https://cbo.gov.om/sites/assets/Documents/English/Publications/AnnualReports/Annual%20Report%202023%20ENG.pdf"
+   },
+   "PNG": {
+    "policyRate": 0.025,
+    "sourceNote": "키나 기구 금리(2023년 12월 동결). https://www.bankpng.gov.pg/kina-facility-rates"
+   },
+   "PRY": {
+    "policyRate": 0.0675,
+    "sourceNote": "통화정책금리(2023-12-20 결정). https://www.bcp.gov.py/documents/20117/0/Comunicado%2BCPM%2BDiciembre%2B2023%281%29.pdf/33268381-42e7-bd3b-c438-1e3b567f7e0a?t=1739972715877"
+   },
+   "QAT": {
+    "policyRate": 0.0625,
+    "sourceNote": "대출 정책금리(QCBLR, 2023-12-13 동결). 같은 결정의 예금금리는 5.75%, 레포 금리는 6%. https://qna.org.qa/en/news/news-details?date=13%2F12%2F2023&id=0078-qcb-maintains-current-interest-rates"
+   },
+   "SLE": {
+    "policyRate": 0.2225,
+    "sourceNote": "통화정책금리(2023년 말 금융안정보고서). https://bsl.gov.sl/2023%20FINANCIAL%20STABILITY%20REPROT-FINAL.pdf"
+   },
+   "TTO": {
+    "policyRate": 0.035,
+    "sourceNote": "레포 금리(2023-12-29 동결). https://www.central-bank.org.tt/cbtt_storage/pdf/monetary-policy-announcement-december-2023.pdf"
+   },
+   "TUN": {
+    "policyRate": 0.08,
+    "sourceNote": "기준금리(2023년 12월 통계). https://www.bct.gov.tn/bct/siteprod/documents/bsf228_fr.pdf"
+   },
+   "URY": {
+    "policyRate": 0.09,
+    "sourceNote": "통화정책금리(2023-12-29 인하, 4분기 금융시스템 보고서의 연말값). https://www.bcu.gub.uy/Servicios-Financieros-SSF/Reportes%20del%20Sistema%20Financiero/RSF_IV_23.pdf"
+   },
+   "UZB": {
+    "policyRate": 0.14,
+    "sourceNote": "통화정책금리(2023-12-14 동결). https://cbu.uz/en/monetary-policy/publications/press-releases/1532686/"
+   },
+   "ZMB": {
+    "policyRate": 0.11,
+    "sourceNote": "통화정책금리(2023-11-22 시행). https://www.boz.zm/sites/default/files/2026-01/May_2025_Monetary_Policy_Report_0.pdf"
+   }
   }
  }
 }

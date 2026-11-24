@@ -1,7 +1,8 @@
 """2023년 12월 말 BIS 관측치로 central_banks.json의 보완 금리 표를 재생성한다.
 
 python3 tools/econdata/build_policy_rates.py [--cache-dir DIR]
-국가별로 이미 선택한 정책수단(예: 중국 역레포)과 유로권 공통 금리는 유지한다.
+국가별 결정문에서 선택한 정책수단과 통화동맹의 공동 금리는 central_banks.json에서 관리한다.
+이 생성기는 그 밖의 국가에 BIS의 마지막 영업일 관측치를 보완한다.
 """
 import argparse
 import csv
@@ -39,7 +40,10 @@ def main():
     raw = download(API, args.cache_dir / f"bis-cbpol-{PERIOD}.csv" if args.cache_dir else None)
     path = WORLD_DIR / "central_banks.json"
     banks = json.loads(path.read_text(encoding="utf-8"))
-    covered = set(banks["banks"]) | {member for union in banks["unions"] for member in union["members"]}
+    published = banks["nationalPolicyRates"]
+    if published["period"] != PERIOD:
+        raise ValueError("National and BIS policy rates must describe the same month")
+    covered = set(banks["banks"]) | set(published["rates"]) | {member for union in banks["unions"] for member in union["members"]}
     rates = {}
     for row in csv.DictReader(io.StringIO(raw.decode("utf-8-sig"))):
         area = row["REF_AREA"]

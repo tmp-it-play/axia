@@ -8,6 +8,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import team.themoment.axia.format.formatCompactDollars
@@ -36,6 +39,7 @@ import team.themoment.axia.ui.dossier.LineChart
 import team.themoment.axia.ui.dossier.PaperTag
 import team.themoment.axia.ui.dossier.SectionTitle
 import team.themoment.axia.ui.dossier.StatRow
+import java.net.URI
 import java.time.LocalDate
 import kotlin.math.ceil
 import kotlin.math.roundToInt
@@ -132,6 +136,7 @@ private fun MonetarySection(
     StatRow("통화 체제", monetary.framework.label + monetary.anchorCurrency?.let { " · $it" }.orEmpty())
     StatRow("금리 결정", decisionMaker(monetary))
     StatRow("기준금리", formatRate(monetary.policyRate), note = indicators.note(POLICY_RATE_FIELD))
+    OpeningPolicyRate(monetary)
     if (monetary.quantitativeEasing) StatRow("자산 매입", "금리 하한 · 양적완화 중")
     StatRow("물가 목표", formatPercent(monetary.inflationTarget))
     StatRow("실질금리 (기준금리 − 기대 물가)", formatRate(monetary.realRate, signed = true))
@@ -231,6 +236,39 @@ private fun decisionMaker(monetary: MonetaryPolicy): String =
         MonetaryFramework.CURRENCY_PEG -> "기준 통화를 따름"
         MonetaryFramework.GOVERNMENT_DIRECTED -> "정부"
     }
+
+/** 시작 시점의 수단·근거를 현재 게임 금리와 구분해 보여 준다. */
+@Composable
+internal fun OpeningPolicyRate(monetary: MonetaryPolicy) {
+    var open by remember(monetary.initialRateSourceNote) { mutableStateOf(false) }
+    PaperTag("시작 금리 근거", selected = open, onClick = { open = !open })
+    if (open) {
+        StatRow("2024년 1월 1일", formatRate(monetary.initialRate), note = if (monetary.estimated) "추정" else null)
+        monetary.unionBank?.let { StatRow("공동 금리 결정", it) }
+        monetary.unionExchangeAnchor?.let { StatRow("공동 통화의 환율 고정 대상", it) }
+        val note = monetary.initialRateSourceNote
+        Hint(note.substringBefore("https://").trimEnd())
+        val sources = note.split(' ').filter { it.startsWith("https://") }
+        if (sources.isNotEmpty()) {
+            Text(
+                buildAnnotatedString {
+                    sources.forEachIndexed { index, url ->
+                        if (index > 0) append(" · ")
+                        val label =
+                            if (monetary.unionBank != null && sources.size == 2) {
+                                if (index == 0) "금리 원자료" else "통화동맹 자료"
+                            } else {
+                                URI(url).host
+                            }
+                        withLink(LinkAnnotation.Url(url)) { append(label) }
+                    }
+                },
+                style = DossierType.number(12.sp),
+                color = DossierColors.stamp,
+            )
+        }
+    }
+}
 
 private fun stanceColor(stance: MonetaryStance) =
     when (stance) {

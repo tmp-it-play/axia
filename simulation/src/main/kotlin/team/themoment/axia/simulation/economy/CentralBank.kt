@@ -29,6 +29,8 @@ data class MonetaryPolicy(
     val independent: Boolean,
     val credibility: Double,
     val policyRate: Double,
+    val initialRate: Double,
+    val initialRateSourceNote: String,
     /** 금리 하한에 닿아 자산을 매입하고 있는지. */
     val quantitativeEasing: Boolean,
     /** 플레이어가 지시해 적용 중인 금리. 없으면 정부 지시 준칙으로 자동 결정한다. */
@@ -46,6 +48,8 @@ data class MonetaryPolicy(
     val unionBank: String?,
     /** 통화동맹이면 공동 통화, 고정환율이면 환율을 묶은 통화. */
     val anchorCurrency: String?,
+    /** 공동 통화 자체가 외부 통화에 고정됐을 때의 기준 통화 이름. */
+    val unionExchangeAnchor: String?,
     /** 플레이어가 기준금리를 직접 정할 수 있는지. */
     val directable: Boolean,
     val governor: GovernorSnapshot,
@@ -86,6 +90,8 @@ internal data class MonetaryUnionEntry(
     val id: String,
     val name: String,
     val currency: String,
+    /** 공동 통화의 대외 환율을 고정하는 기준 통화. 금리는 자체 중앙은행이 결정한다. */
+    val exchangeAnchor: String? = null,
     val policyRate: Double,
     val inflationTarget: Double,
     val credibility: Double,
@@ -102,12 +108,22 @@ internal data class PegEntry(
     val sourceNote: String,
 )
 
+@Serializable
+internal data class PublishedRate(
+    val policyRate: Double,
+    val sourceNote: String,
+) {
+    init {
+        require(sourceNote.isNotBlank())
+    }
+}
+
 /** 중앙은행 초기값. 데이터에 없는 나라는 물가안정목표제로 보고 시작 금리와 신뢰도를 추정한다. */
 class CentralBankData private constructor(
     internal val banks: Map<String, CentralBankEntry>,
     internal val unions: List<MonetaryUnionEntry>,
     internal val pegs: List<PegEntry>,
-    internal val observedRates: Map<String, Double>,
+    internal val observedRates: Map<String, PublishedRate>,
 ) {
     companion object {
         private const val DEFAULT_DATA = "/world/central_banks.json"
@@ -120,7 +136,14 @@ class CentralBankData private constructor(
             val known = economy.countries.keys
             val unionIds = file.unions.map { it.id }.toSet()
             require(file.banks.keys.all(known::contains)) { "Unknown central bank country" }
-            file.unions.forEach { union -> require(union.members.all(known::contains)) { "Unknown member in ${union.id}" } }
+            require(unionIds.size == file.unions.size)
+            file.unions.forEach { union ->
+                require(union.members.isNotEmpty() && union.members.all(known::contains)) { "Invalid members in ${union.id}" }
+                union.exchangeAnchor?.let { anchor ->
+                    require(anchor != union.id && file.pegs.any { it.anchor == anchor }) { "Unknown exchange anchor for ${union.id}" }
+                }
+                require(union.policyRate in RateSetter.MIN_POLICY_RATE..RateSetter.MAX_POLICY_RATE && union.sourceNote.isNotBlank())
+            }
             file.pegs.forEach { peg ->
                 require(peg.anchor in known || peg.anchor in unionIds) { "Unknown peg anchor ${peg.anchor}" }
                 require(peg.members.all(known::contains)) { "Unknown member in peg to ${peg.anchor}" }
@@ -151,11 +174,16 @@ class CentralBankData private constructor(
             }
             val observations = file.bisPolicyRates
             require(observations.period == "2023-12" && observations.source.isNotBlank() && observations.rates.isNotEmpty())
-            observations.rates.forEach { (id, rate) ->
+            val national = file.nationalPolicyRates
+            require(national.period == observations.period)
+            require(national.rates.keys.none(observations.rates::containsKey)) { "Duplicate supplementary rate" }
+            val bisNote = "BIS 정책금리 통계, ${observations.period} 마지막 영업일. ${observations.source}"
+            val observedRates = observations.rates.mapValues { PublishedRate(it.value, bisNote) } + national.rates
+            observedRates.forEach { (id, observation) ->
                 require(id in known && id !in file.banks && id !in unionMembers) { "Unexpected supplementary rate for $id" }
-                require(rate in RateSetter.MIN_POLICY_RATE..RateSetter.MAX_POLICY_RATE) { "Invalid policy rate for $id" }
+                require(observation.policyRate in RateSetter.MIN_POLICY_RATE..RateSetter.MAX_POLICY_RATE) { "Invalid policy rate for $id" }
             }
-            return CentralBankData(file.banks, file.unions, file.pegs, observations.rates)
+            return CentralBankData(file.banks, file.unions, file.pegs, observedRates)
         }
     }
 
@@ -167,11 +195,18 @@ class CentralBankData private constructor(
     )
 
     @Serializable
+    private data class NationalPolicyRates(
+        val period: String,
+        val rates: Map<String, PublishedRate>,
+    )
+
+    @Serializable
     private data class CentralBankFile(
         val banks: Map<String, CentralBankEntry>,
         val unions: List<MonetaryUnionEntry>,
         val pegs: List<PegEntry>,
         val bisPolicyRates: PolicyRateObservations,
+        val nationalPolicyRates: NationalPolicyRates,
     )
 }
 
@@ -195,7 +230,7 @@ internal data class MonetaryConditions(
      * 고정환율 국가는 기준 통화권의 지난달 물가다.
      */
     val expectationAnchor: Double,
-    /** 고정환율 국가가 묶인 기준 통화권("USA", "EUR"). 변동환율·통화동맹이면 null. */
+    /** 고정환율 국가 또는 통화동맹이 묶인 기준 통화권("USA", "EUR"). 변동환율이면 null. */
     val pegAnchor: String? = null,
 )
 
@@ -278,6 +313,7 @@ internal class CentralBank(
     private val baseCredibility: Double,
     val setter: RateSetter,
     val estimated: Boolean,
+    val initialRateSourceNote: String,
     val unionId: String?,
     pegAnchor: String?,
     val pegSpread: Double,
@@ -438,6 +474,7 @@ internal class MonetarySystem(
     private val unionOf = data.unions.flatMap { union -> union.members.map { it to union.id } }.toMap()
     private val pegOf = data.pegs.flatMap { peg -> peg.members.map { it to peg.anchor } }.toMap()
     private val pegCurrency = data.pegs.flatMap { peg -> peg.members.map { it to peg.currency } }.toMap()
+    private val anchorNames = data.pegs.associate { it.anchor to it.currency }
 
     /** 기준 통화권의 지난달 물가. 통화동맹은 회원국 GDP 가중 평균이다. */
     private val anchorInflation = mutableMapOf<String, Double>()
@@ -446,12 +483,13 @@ internal class MonetarySystem(
         initial.associate { economy ->
             val entry = data.banks[economy.id]
             val unionId = unionOf[economy.id]
-            val anchor = pegOf[economy.id]
             val union = unionId?.let(unions::getValue)
+            val anchor = union?.exchangeAnchor ?: pegOf[economy.id]
             val target =
                 entry?.inflationTarget ?: union?.inflationTarget ?: anchor?.let { anchorTarget(it, data) }
                     ?: estimatedTarget(economy.inflation)
-            val observedRate = entry?.policyRate ?: union?.policyRate ?: data.observedRates[economy.id]
+            val publication = data.observedRates[economy.id]
+            val observedRate = entry?.policyRate ?: union?.policyRate ?: publication?.policyRate
             val rate = observedRate ?: anchor?.let { anchorRate(it, data) } ?: estimatedRate(economy.inflation)
             val framework =
                 when {
@@ -463,15 +501,18 @@ internal class MonetarySystem(
                 CentralBank(
                     countryId = economy.id,
                     leadership = unionId?.let(unionGovernors::getValue) ?: BankLeadership(economy.id, start, seed),
-                    name = entry?.name,
+                    name = entry?.name ?: union?.name,
                     framework = framework,
                     independent = entry?.independent ?: true,
                     baseCredibility = entry?.credibility ?: union?.credibility ?: estimatedCredibility(economy.society.incomeGroup),
                     setter = RateSetter(rate, economy.inflation, target),
                     estimated = entry?.estimated ?: (observedRate == null),
+                    initialRateSourceNote =
+                        entry?.sourceNote ?: union?.sourceNote ?: publication?.sourceNote
+                            ?: if (anchor != null) "기준 통화의 시작 금리로 추정." else "시작 물가상승률에 1%p를 더하고 모형 상·하한을 적용한 추정.",
                     unionId = unionId,
                     pegAnchor = anchor,
-                    pegSpread = if (anchor == null) 0.0 else rate - anchorRate(anchor, data),
+                    pegSpread = if (anchor == null || union != null) 0.0 else rate - anchorRate(anchor, data),
                 )
         }
 
@@ -481,7 +522,8 @@ internal class MonetarySystem(
             val members = initial.filter { it.id in union.members }
             anchorInflation[union.id] = members.sumOf { it.inflation * it.gdp } / members.sumOf { it.gdp }
         }
-        pegOf.values.filter { it in banks }.forEach { id -> anchorInflation[id] = initial.single { it.id == id }.inflation }
+        val exchangeAnchors = pegOf.values.toSet() + data.unions.mapNotNull { it.exchangeAnchor }
+        exchangeAnchors.filter { it in banks }.forEach { id -> anchorInflation[id] = initial.single { it.id == id }.inflation }
     }
 
     /** 지난달 물가와 산출 갭으로 이번 달 금리를 정한다. */
@@ -579,6 +621,8 @@ internal class MonetarySystem(
             independent = bank.independent,
             credibility = bank.credibility,
             policyRate = setter.rate,
+            initialRate = bank.initialRate,
+            initialRateSourceNote = bank.initialRateSourceNote,
             quantitativeEasing = setter.quantitativeEasing,
             directedRate = bank.directedRate,
             directiveMonths = bank.directiveMonths,
@@ -588,6 +632,7 @@ internal class MonetarySystem(
             estimated = bank.estimated,
             unionBank = bank.unionId?.let { unions.getValue(it).name },
             anchorCurrency = bank.unionId?.let { unions.getValue(it).currency } ?: bank.pegAnchor?.let { pegCurrency[countryId] },
+            unionExchangeAnchor = bank.unionId?.let { unions.getValue(it).exchangeAnchor }?.let(anchorNames::getValue),
             directable = bank.countryId == playerCountryId && bank.framework == MonetaryFramework.GOVERNMENT_DIRECTED,
         )
     }
