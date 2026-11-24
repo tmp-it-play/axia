@@ -16,15 +16,14 @@ import java.time.LocalDate
 enum class CampaignScenario(
     val label: String,
     val description: String,
+    private val adjustEconomy: ((InitialEconomy) -> InitialEconomy)? = null,
 ) {
     HISTORICAL("실제 세계", "2024년 1월 1일의 국가별 경제와 제도에서 시작합니다."),
-    DEBT_ACCORD("가상역사 · 채무 경감 협정", "2023년 말 다자 협정으로 부채가 GDP의 100%를 넘은 국가의 국채 원금이 25% 줄어든 세계입니다."),
     ;
 
-    fun startingEconomy(country: InitialEconomy): InitialEconomy =
-        if (this == DEBT_ACCORD && country.debt > 1.0) country.copy(debt = country.debt * 0.75) else country
+    fun startingEconomy(country: InitialEconomy): InitialEconomy = adjustEconomy?.invoke(country) ?: country
 
-    internal fun economy(data: EconomyData): EconomyData = if (this == HISTORICAL) data else data.mapInitial(::startingEconomy)
+    internal fun economy(data: EconomyData): EconomyData = adjustEconomy?.let(data::mapInitial) ?: data
 }
 
 @Serializable

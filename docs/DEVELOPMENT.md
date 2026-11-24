@@ -84,6 +84,7 @@ Mac에서 처음 설치할 때는 DMG 안의 Axia를 응용 프로그램 폴더�
 
 ## 기능 확장
 
+- 새 시작 시나리오는 `CampaignScenario`에 등록한다. 국가별 시작 경제를 바꿀 때는 `adjustEconomy`를 지정하면 국가 선택 화면과 캠페인 시작·재개에 같은 값이 적용된다. 등록한 시나리오가 둘 이상이면 새 게임 화면에 선택지가 나타난다.
 - 공통 정책 구조에 맞는 국가 사업은 `national_programs.json`과 `NationalProgramModule`을 사용한다. 독자 규칙이 필요하면 `CountryModule`을 구현해 `CountryModules.specialized`와 `create`에 등록한다. 고유 정책과 집단별 반응은 `CountryPolicyItem`에 정의한다.
 - 사건은 `events.json`에 추가한다. 새 조건 변수는 `EventContext.VARIABLES`에 등록하고 `Nation.eventValues` 또는 `Simulation.sharedEventValues`에서 값을 제공한다.
 - 새 정책 종류는 `PolicyItem`과 이를 처리하는 심의·성향·화면 분기에 연결한다. 화면에 값을 추가할 때는 해당 `*Snapshot`에서 `GameScreen`을 거쳐 패널로 전달한다. 지역별 지도 색은 `MapMode.regionColor`에서 결정한다.
