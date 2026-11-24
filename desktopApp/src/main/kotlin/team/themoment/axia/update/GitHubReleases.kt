@@ -16,7 +16,7 @@ import java.util.HexFormat
 private val LATEST_RELEASE_URI = URI("https://api.github.com/repos/tmp-it-play/axia/releases/latest")
 private val REQUEST_TIMEOUT = Duration.ofSeconds(30)
 
-/** 공개된 릴리즈에 올라간 Windows 설치 패키지. */
+/** 공개된 릴리즈에서 실행 중인 배포판에 맞춰 선택한 설치 패키지. */
 data class ReleaseInstaller(
     val version: AppVersion,
     val fileName: String,
@@ -36,10 +36,10 @@ class GitHubReleases(
             .build()
 
     /**
-     * 최신 공개 릴리즈의 MSI. 공개된 릴리즈가 하나도 없으면 null.
+     * 최신 공개 릴리즈의 플랫폼별 설치 파일. 릴리즈 또는 해당 플랫폼의 파일이 없으면 null.
      * GitHub는 드래프트와 프리릴리즈를 `latest`에서 제외하므로, 드래프트는 직접 공개해야 배포된다.
      */
-    fun latestInstaller(): ReleaseInstaller? {
+    fun latestInstaller(platform: InstallerPlatform): ReleaseInstaller? {
         val request =
             HttpRequest
                 .newBuilder(LATEST_RELEASE_URI)
@@ -54,16 +54,26 @@ class GitHubReleases(
         check(response.statusCode() == 200) { "릴리즈 정보를 가져오지 못했습니다 (HTTP ${response.statusCode()})" }
         val release = JSON.decodeFromString<ReleaseResponse>(response.body())
         val version = checkNotNull(AppVersion.parse(release.tagName)) { "릴리즈 태그 형식이 올바르지 않습니다: ${release.tagName}" }
+        val fileName = "Axia-$version${platform.packageSuffix}"
         val asset =
-            checkNotNull(release.assets.singleOrNull { it.name.endsWith(".msi", ignoreCase = true) }) {
-                "릴리즈 ${release.tagName}에 MSI 설치 패키지가 하나만 있어야 합니다"
+            if (platform == InstallerPlatform.WINDOWS_X64) {
+                release.assets.singleOrNull { it.name.endsWith(".msi", ignoreCase = true) }
+            } else {
+                release.assets.singleOrNull { it.name == fileName }
+            } ?: return null
+        check(asset.size > 0) { "설치 패키지의 크기가 올바르지 않습니다: $fileName" }
+        val sha256 =
+            asset.digest?.let { digest ->
+                check(SHA256.matches(digest)) { "설치 패키지의 SHA-256 형식이 올바르지 않습니다: $fileName" }
+                digest.substringAfter(':')
             }
+        check(platform == InstallerPlatform.WINDOWS_X64 || sha256 != null) { "DMG의 SHA-256이 제공되지 않았습니다: $fileName" }
         return ReleaseInstaller(
             version = version,
-            fileName = asset.name,
+            fileName = fileName,
             downloadUri = URI(asset.downloadUrl),
             size = asset.size,
-            sha256 = asset.digest?.removePrefix("sha256:"),
+            sha256 = sha256,
         )
     }
 
@@ -90,9 +100,10 @@ class GitHubReleases(
                 while (true) {
                     val read = input.read(buffer)
                     if (read < 0) break
+                    received += read
+                    check(received <= installer.size) { "설치 패키지가 공표된 크기를 초과합니다" }
                     output.write(buffer, 0, read)
                     digest.update(buffer, 0, read)
-                    received += read
                     onProgress(received.toFloat() / installer.size)
                 }
             }
@@ -106,6 +117,7 @@ class GitHubReleases(
 
     private companion object {
         val JSON = Json { ignoreUnknownKeys = true }
+        val SHA256 = Regex("sha256:[a-fA-F0-9]{64}")
     }
 }
 

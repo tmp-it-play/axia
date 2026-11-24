@@ -61,7 +61,7 @@ internal fun AxiaApp(
             val updateState by it.state.collectAsState()
             UpdateNotice(
                 state = updateState,
-                onInstall = { installer -> it.install(installer, onInstallerLaunched) },
+                onInstall = { installer -> it.install(installer, campaigns::saveBeforeUpdate, onInstallerLaunched) },
                 onDismiss = it::dismiss,
                 modifier = Modifier.align(Alignment.TopCenter).padding(top = 64.dp),
             )

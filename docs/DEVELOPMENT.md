@@ -13,7 +13,11 @@
 | 앱 실행 | `./gradlew :desktopApp:run` |
 | 시뮬레이션 컴파일 | `./gradlew :simulation:compileKotlin` |
 
-`vMAJOR.MINOR.PATCH` 형식의 태그를 푸시하면 [릴리스 워크플로](../.github/workflows/release.yml)가 실행된다.
+`vMAJOR.MINOR.PATCH` 태그를 푸시하면 설치 파일을 첨부한 릴리스 초안이 생성된다. 이를 정식 릴리스로 공개하면 설치된 앱이 다음 실행 때 새 버전을 확인한다. [릴리스 워크플로](../.github/workflows/release.yml)
+
+Windows는 MSI를 사용한다. macOS에서는 공개 릴리스에 실행 중인 앱과 같은 아키텍처의 DMG가 있을 때 업데이트를 안내한다. 파일 이름은 Apple Silicon용 `Axia-버전-macos-arm64.dmg`, Intel용 `Axia-버전-macos-x64.dmg`다.
+
+Mac에서 처음 설치할 때는 DMG 안의 Axia를 응용 프로그램 폴더에 복사한 뒤 실행한다. macOS용 v1.4.0 및 그 이전 설치판은 자동 업데이트를 지원하는 버전을 한 번 직접 설치해야 한다. 그다음부터는 게임에서 **업데이트**를 누르면 새 버전을 내려받고 진행 중인 캠페인을 자동 저장한 뒤 앱을 교체하고 다시 실행한다.
 
 ## 코드 위치
 

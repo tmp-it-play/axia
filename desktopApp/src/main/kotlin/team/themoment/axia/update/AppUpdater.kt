@@ -3,14 +3,18 @@ package team.themoment.axia.update
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.nio.file.Files
+import java.nio.file.NoSuchFileException
 import java.nio.file.Path
 import java.util.Base64
+import java.util.UUID
 import kotlin.io.path.ExperimentalPathApi
 import kotlin.io.path.deleteRecursively
 import kotlin.io.path.readText
@@ -31,21 +35,20 @@ sealed interface UpdateState {
         val installer: ReleaseInstaller,
         val reason: String,
     ) : UpdateState
+
+    data object Installing : UpdateState
 }
 
-/**
- * 최신 공개 릴리즈를 확인하고, 사용자가 동의하면 MSI를 내려받아 화면 없이 설치한다.
- *
- * 실행 중인 앱의 파일은 교체할 수 없으므로, 창 없는 PowerShell 프로세스가 이 앱의 종료를 기다렸다가
- * `msiexec /qn`으로 설치(같은 upgradeUuid의 이전 버전은 MSI가 제거)하고 앱을 다시 실행한다.
- * 설치에 실패하면 [workDir]에 종료 코드와 로그를 남기고, 다시 실행된 앱이 이를 알린다.
- */
+/** 설치 환경에 맞는 공개 릴리스를 확인하고, 사용자가 선택하면 저장 후 설치 도우미에 넘긴다. */
 class AppUpdater(
     private val installation: Installation,
     private val scope: CoroutineScope,
 ) {
     private val releases = GitHubReleases(userAgent = "Axia/${installation.version}")
-    private val workDir = Path.of(System.getProperty("java.io.tmpdir"), "axia-update")
+    private val workDir =
+        Path
+            .of(System.getProperty("java.io.tmpdir"), "axia-update")
+            .resolve(UUID.nameUUIDFromBytes(installation.launcher.toString().toByteArray()).toString())
     private val failureMarker = workDir.resolve("failed")
     private val installLog = workDir.resolve("install.log")
     private val mutableState = MutableStateFlow<UpdateState>(UpdateState.None)
@@ -56,7 +59,7 @@ class AppUpdater(
         scope.launch(Dispatchers.IO) {
             val installer =
                 try {
-                    releases.latestInstaller()
+                    releases.latestInstaller(installation.platform)
                 } catch (e: CancellationException) {
                     throw e
                 } catch (e: Exception) {
@@ -64,12 +67,13 @@ class AppUpdater(
                     return@launch
                 }
             if (installer == null || installer.version <= installation.version) return@launch
-            val previousExitCode = consumeFailureMarker()
+            val failure = consumeFailureMarker()
             mutableState.value =
-                if (previousExitCode == null) {
+                if (failure == null) {
                     UpdateState.Available(installer)
                 } else {
-                    UpdateState.Failed(installer, "설치에 실패했습니다 (msiexec 종료 코드 $previousExitCode). 로그: $installLog")
+                    val reason = if (installation.platform == InstallerPlatform.WINDOWS_X64) "msiexec 종료 코드 $failure" else failure
+                    UpdateState.Failed(installer, "$reason · 로그: $installLog")
                 }
         }
     }
@@ -79,22 +83,17 @@ class AppUpdater(
     }
 
     /** 설치 패키지를 내려받아 설치 프로세스를 띄운 뒤 [onInstallerLaunched]를 호출한다. 호출자는 즉시 앱을 종료해야 한다. */
-    @OptIn(ExperimentalPathApi::class)
     fun install(
         installer: ReleaseInstaller,
+        saveBeforeRestart: suspend () -> Unit,
         onInstallerLaunched: () -> Unit,
     ) {
         scope.launch {
+            if (mutableState.value !is UpdateState.Available && mutableState.value !is UpdateState.Failed) return@launch
             mutableState.value = UpdateState.Downloading(installer, progress = 0f)
             try {
                 withContext(Dispatchers.IO) {
-                    workDir.deleteRecursively()
-                    Files.createDirectories(workDir)
-                    val msi = workDir.resolve(installer.fileName)
-                    releases.download(installer, msi) { progress ->
-                        mutableState.value = UpdateState.Downloading(installer, progress)
-                    }
-                    launchInstaller(msi)
+                    downloadAndLaunch(installer, saveBeforeRestart)
                 }
             } catch (e: CancellationException) {
                 throw e
@@ -106,25 +105,60 @@ class AppUpdater(
         }
     }
 
-    private fun consumeFailureMarker(): String? {
-        if (!Files.exists(failureMarker)) return null
-        val exitCode = failureMarker.readText().trim()
-        Files.delete(failureMarker)
-        return exitCode
+    @OptIn(ExperimentalPathApi::class)
+    private suspend fun downloadAndLaunch(
+        installer: ReleaseInstaller,
+        saveBeforeRestart: suspend () -> Unit,
+    ) {
+        Files.createDirectories(workDir)
+        val attempt = Files.createTempDirectory(workDir, "download-")
+        var handedOff = false
+        try {
+            val file = attempt.resolve(installer.fileName)
+            val context = currentCoroutineContext()
+            releases.download(installer, file) { progress ->
+                context.ensureActive()
+                mutableState.value = UpdateState.Downloading(installer, progress)
+            }
+            withContext(Dispatchers.Main) {
+                mutableState.value = UpdateState.Installing
+                saveBeforeRestart()
+            }
+            when (installation.platform) {
+                InstallerPlatform.WINDOWS_X64 -> {
+                    launchWindowsInstaller(file)
+                }
+
+                InstallerPlatform.MACOS_ARM64, InstallerPlatform.MACOS_X64 -> {
+                    MacInstaller.launch(installation, file, installer.version, failureMarker, installLog)
+                }
+            }
+            handedOff = true
+        } finally {
+            if (!handedOff) attempt.deleteRecursively()
+        }
     }
 
-    private fun launchInstaller(msi: Path) {
+    private fun consumeFailureMarker(): String? =
+        try {
+            val failure = failureMarker.readText().trim()
+            Files.delete(failureMarker)
+            failure
+        } catch (_: NoSuchFileException) {
+            null
+        }
+
+    private fun launchWindowsInstaller(msi: Path) {
         val msiexecArguments = "/i \"$msi\" /qn /norestart /l*v \"$installLog\""
         val script =
             """
             Wait-Process -Id ${ProcessHandle.current().pid()} -ErrorAction SilentlyContinue
             ${'$'}msiexec = [System.Diagnostics.Process]::Start('msiexec.exe', ${powerShellLiteral(msiexecArguments)})
             ${'$'}msiexec.WaitForExit()
-            if (${'$'}msiexec.ExitCode -eq 0 -or ${'$'}msiexec.ExitCode -eq 3010) {
-                Remove-Item -LiteralPath ${powerShellLiteral(workDir.toString())} -Recurse -Force
-            } else {
+            if (${'$'}msiexec.ExitCode -ne 0 -and ${'$'}msiexec.ExitCode -ne 3010) {
                 Set-Content -LiteralPath ${powerShellLiteral(failureMarker.toString())} -Value ${'$'}msiexec.ExitCode
             }
+            Remove-Item -LiteralPath ${powerShellLiteral(msi.parent.toString())} -Recurse -Force
             Start-Process -FilePath ${powerShellLiteral(installation.launcher.toString())}
             """.trimIndent()
         val encoded = Base64.getEncoder().encodeToString(script.toByteArray(Charsets.UTF_16LE))

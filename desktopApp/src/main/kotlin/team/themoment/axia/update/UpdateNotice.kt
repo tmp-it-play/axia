@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -54,6 +55,15 @@ fun UpdateNotice(
                 LinearProgressIndicator(progress = { state.progress }, modifier = Modifier.fillMaxWidth())
                 Text(text = "${(state.progress * 100).roundToInt()}%", style = MaterialTheme.typography.bodySmall)
             }
+        }
+
+        UpdateState.Installing -> {
+            AlertDialog(
+                onDismissRequest = {},
+                confirmButton = {},
+                title = { Text("업데이트 준비 중") },
+                text = { Text("진행 중인 캠페인을 저장한 뒤 게임을 다시 시작합니다.") },
+            )
         }
 
         is UpdateState.Failed -> {

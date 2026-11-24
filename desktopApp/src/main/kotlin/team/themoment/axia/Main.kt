@@ -32,6 +32,7 @@ import team.themoment.axia.simulation.world.WorldLoader
 import team.themoment.axia.theme.AxiaTheme
 import team.themoment.axia.update.AppUpdater
 import team.themoment.axia.update.Installation
+import team.themoment.axia.update.UpdateState
 import java.awt.Dimension
 
 private val SPEED_KEYS = listOf(Key.One, Key.Two, Key.Three, Key.Four, Key.Five).zip(GameSpeed.all).toMap()
@@ -54,7 +55,7 @@ fun main() {
             exitApplication()
         }
         Window(
-            onCloseRequest = { campaigns.exit(exit) },
+            onCloseRequest = { if (updater?.state?.value != UpdateState.Installing) campaigns.exit(exit) },
             title = "Axia",
             icon = painterResource(Res.drawable.logo),
             state = rememberWindowState(width = 1440.dp, height = 900.dp),
@@ -72,7 +73,7 @@ fun main() {
                     mapModel = mapModel,
                     campaigns = campaigns,
                     updater = updater,
-                    onInstallerLaunched = { campaigns.exit(exit) },
+                    onInstallerLaunched = exit,
                     onDiscardAndExit = exit,
                 )
             }

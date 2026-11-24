@@ -3,11 +3,13 @@ package team.themoment.axia
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import team.themoment.axia.simulation.Simulation
@@ -74,6 +76,12 @@ internal class Campaigns(
     }
 
     fun leave() = operation("캠페인 자동저장 중") { saveAndClose() }
+
+    suspend fun saveBeforeUpdate() {
+        snapshotFlow { busy }.first { it == null }
+        val current = runner ?: return
+        write(CampaignSlot.AUTO, current.checkpoint(pause = true))
+    }
 
     fun exit(onExit: () -> Unit) {
         if (runner == null) {
