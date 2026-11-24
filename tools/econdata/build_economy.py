@@ -4,8 +4,8 @@
     python3 tools/econdata/build_economy.py [--cache-dir <원본 응답 저장 폴더>]
 
 기준 연도는 2023년이다. 세입 구성은 IMF GFS(정부범위별), WoRLD, WDI 순으로 찾는다.
-다른 항목은 IMF WEO, World Bank 순으로 값을 찾고, 둘 다 없으면 같은 소득 그룹의 중앙값으로
-채운 뒤 estimated 목록에 기록한다. 두 출처 모두에 없는 국가는 MANUAL 표의 대략적인 값을 쓴다.
+다른 항목은 IMF WEO, World Bank와 보완 기관 통계 순으로 찾는다. 이후 MANUAL 표 또는
+같은 소득 그룹의 중앙값으로 보충한 값은 estimated 목록에 기록한다.
 다운로드는 시스템 인증서를 쓰는 curl로 한다.
 """
 
@@ -16,6 +16,9 @@ import statistics
 import subprocess
 import xml.etree.ElementTree as ElementTree
 from pathlib import Path
+
+from local_macro import GDP_USD_2023, POPULATION, REAL_GROWTH_PERCENT, UNEMPLOYMENT_PERCENT_2023
+from local_population import society_indicators
 
 ROOT = Path(__file__).resolve().parents[2]
 WORLD = ROOT / "simulation/src/main/resources/world/world.json"
@@ -118,11 +121,10 @@ INCOME_OVERRIDES = {"TWN": "HIC", "CYN": "UMC", "SOL": "LIC", "VAT": "HIC"}
 
 # IMF와 World Bank 모두에 없는 값. 각국 공식 통계와 국제기구 추정을 바탕으로 한 2023년 대략값.
 MANUAL = {
-    "CYN": {"gdp": 4.5e9, "growth": 0.04, "population": 0.39e6, "inflation": 0.6, "unemployment": 0.07},
-    "SOL": {"gdp": 3.4e9, "growth": 0.03, "population": 5.7e6, "inflation": 0.05, "unemployment": 0.2},
-    "VAT": {"gdp": 0.03e9, "growth": 0.0, "population": 800, "inflation": 0.02, "unemployment": 0.0},
-    "TWN": {"agricultureEmployment": 0.045, "industryEmployment": 0.355, "servicesEmployment": 0.6, "selfEmployment": 0.17, "defense": 0.024},
-    "PRK": {"gdp": 30e9},
+    "CYN": {"inflation": 0.6},
+    "SOL": {"inflation": 0.05, "unemployment": 0.2},
+    "VAT": {"gdp": 0.03e9, "growth": 0.0, "inflation": 0.02, "unemployment": 0.0},
+    "TWN": {"defense": 0.024},
     "ERI": {"gdp": 2.3e9},
 }
 
@@ -287,6 +289,26 @@ def history_stats(history):
     )
 
 
+def from_local_macro(country):
+    if BASE_YEAR != 2023:
+        return {}
+    values = society_indicators(country)
+    if country in GDP_USD_2023:
+        values["gdp"] = GDP_USD_2023[country]
+    if country in REAL_GROWTH_PERCENT:
+        history = REAL_GROWTH_PERCENT[country]
+        values["growth"] = pct(history[BASE_YEAR])
+        values["potentialGrowth"], values["growthVolatility"] = history_stats(history)
+    population = POPULATION.get(country, {})
+    if BASE_YEAR in population:
+        values["population"] = population[BASE_YEAR]
+        if BASE_YEAR - 1 in population:
+            values["populationGrowth"] = population[BASE_YEAR] / population[BASE_YEAR - 1] - 1
+    if country in UNEMPLOYMENT_PERCENT_2023:
+        values["unemployment"] = pct(UNEMPLOYMENT_PERCENT_2023[country])
+    return values
+
+
 def from_imf(codes, series):
     def pick(key):
         for code in codes:
@@ -406,7 +428,12 @@ def main():
     merged, sources, groups = {}, {}, {}
     for country in states:
         codes = SOURCE_CODES.get(country, [country])
-        candidates = [("imf", from_imf(codes, imf)), ("wb", from_world_bank(codes, world_bank)), ("manual", MANUAL.get(country, {}))]
+        candidates = [
+            ("imf", from_imf(codes, imf)),
+            ("wb", from_world_bank(codes, world_bank)),
+            ("institutional", from_local_macro(country)),
+            ("manual", MANUAL.get(country, {})),
+        ]
         merged[country], sources[country] = {}, {}
         for field in FIELDS:
             for source, values in candidates:

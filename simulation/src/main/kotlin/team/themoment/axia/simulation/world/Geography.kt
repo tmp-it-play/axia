@@ -19,7 +19,7 @@ data class CountryGeography(
     val neighbors: List<String>,
 )
 
-/** 국가 구조 초기값(structure.json, World Bank). 비율은 소수다. */
+/** 국가 구조 초기값(structure.json, World Bank·유엔·국가별 통계). 비율은 소수다. */
 @Serializable
 data class CountryStructure(
     val id: String,
@@ -39,10 +39,12 @@ data class CountryStructure(
     val industryValueAdded: Double,
     val manufacturingValueAdded: Double,
     val servicesValueAdded: Double,
-    /** 제조업 부가가치 중 중고위 기술, 식품·음료·담배, 섬유·의복 비중. */
+    /** 제조업 부가가치 중 중고위 기술, 식품·음료·담배, 섬유·의복·가죽 비중. */
     val techManufacturing: Double,
     val foodManufacturing: Double,
     val textileManufacturing: Double,
+    /** WDI 결측을 2023년 국민계정·국제수지로 보완한 지표. 출처 코드별로 지표명을 기록한다. */
+    val nationalAccounts: Map<String, Set<String>> = emptyMap(),
     val estimated: Set<String>,
 )
 

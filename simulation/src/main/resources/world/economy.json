@@ -142,7 +142,7 @@
     "agricultureEmployment": 0.0314,
     "industryEmployment": 0.2232,
     "servicesEmployment": 0.7455,
-    "selfEmployment": 0.1349,
+    "selfEmployment": 0.1356,
     "elderlyShare": 0.1542,
     "childShare": 0.1225,
     "gini": 0.323
@@ -293,7 +293,7 @@
    "potentialGrowth": 0.03519,
    "growthVolatility": 0.03816,
    "inflation": 0.05067,
-   "unemployment": 0.04075,
+   "unemployment": 0.0537,
    "revenue": 0.16695,
    "primarySpending": 0.16243,
    "debt": 0.74534,
@@ -303,7 +303,7 @@
     "agricultureEmployment": 0.0314,
     "industryEmployment": 0.2232,
     "servicesEmployment": 0.7455,
-    "selfEmployment": 0.1349,
+    "selfEmployment": 0.1861,
     "elderlyShare": 0.1124,
     "childShare": 0.1822,
     "gini": 0.323
@@ -325,9 +325,7 @@
     "defense",
     "gini",
     "industryEmployment",
-    "selfEmployment",
-    "servicesEmployment",
-    "unemployment"
+    "servicesEmployment"
    ]
   },
   {
@@ -1686,26 +1684,26 @@
   },
   {
    "id": "CYN",
-   "population": 390000,
-   "populationGrowth": 0.00675,
-   "gdp": 4500000000,
-   "growth": 0.04,
-   "potentialGrowth": 0.03243,
-   "growthVolatility": 0.02169,
+   "population": 469481,
+   "populationGrowth": 0.03068,
+   "gdp": 5556700000,
+   "growth": 0.073,
+   "potentialGrowth": 0.0382,
+   "growthVolatility": 0.01645,
    "inflation": 0.6,
-   "unemployment": 0.07,
+   "unemployment": 0.051,
    "revenue": 0.27427,
    "primarySpending": 0.28777,
    "debt": 0.53618,
    "interestRate": 0.03166,
    "society": {
     "incomeGroup": "UMC",
-    "agricultureEmployment": 0.1667,
-    "industryEmployment": 0.2169,
-    "servicesEmployment": 0.6164,
-    "selfEmployment": 0.3249,
-    "elderlyShare": 0.08,
-    "childShare": 0.2361,
+    "agricultureEmployment": 0.0298,
+    "industryEmployment": 0.2094,
+    "servicesEmployment": 0.7609,
+    "selfEmployment": 0.1549,
+    "elderlyShare": 0.0888,
+    "childShare": 0.1347,
     "gini": 0.38
    },
    "budget": {
@@ -1721,32 +1719,19 @@
     "revenueCompositionSource": "WDI_MODEL"
    },
    "estimated": [
-    "agricultureEmployment",
-    "childShare",
     "consumptionTaxShare",
     "debt",
     "defense",
     "education",
-    "elderlyShare",
     "expense",
-    "gdp",
     "gini",
-    "growth",
-    "growthVolatility",
     "health",
     "incomeProfitTaxShare",
-    "industryEmployment",
     "inflation",
     "interest",
-    "population",
-    "populationGrowth",
-    "potentialGrowth",
     "revenue",
-    "selfEmployment",
-    "servicesEmployment",
     "socialContributionShare",
-    "tradeTaxShare",
-    "unemployment"
+    "tradeTaxShare"
    ]
   },
   {
@@ -1917,17 +1902,17 @@
    "potentialGrowth": 0.03156,
    "growthVolatility": 0.03519,
    "inflation": 0.04208,
-   "unemployment": 0.065,
+   "unemployment": 0.06232,
    "revenue": 0.60306,
    "primarySpending": 0.62276,
    "debt": 1.01258,
    "interestRate": 0.02524,
    "society": {
     "incomeGroup": "UMC",
-    "agricultureEmployment": 0.1667,
-    "industryEmployment": 0.2169,
-    "servicesEmployment": 0.6164,
-    "selfEmployment": 0.3249,
+    "agricultureEmployment": 0.1513,
+    "industryEmployment": 0.2173,
+    "servicesEmployment": 0.6314,
+    "selfEmployment": 0.3192,
     "elderlyShare": 0.1274,
     "childShare": 0.1811,
     "gini": 0.38
@@ -2160,7 +2145,7 @@
    "population": 3470390,
    "populationGrowth": 0.01772,
    "gdp": 1981857000,
-   "growth": 0.04587,
+   "growth": 0.04409,
    "potentialGrowth": 0.03836,
    "growthVolatility": 0.05,
    "inflation": 0.09978,
@@ -2440,17 +2425,17 @@
    "potentialGrowth": 0.0163,
    "growthVolatility": 0.02653,
    "inflation": 0.06215,
-   "unemployment": 0.065,
+   "unemployment": 0.06232,
    "revenue": 0.61388,
    "primarySpending": 0.63019,
    "debt": 0.12762,
    "interestRate": 0.0151,
    "society": {
     "incomeGroup": "UMC",
-    "agricultureEmployment": 0.1667,
-    "industryEmployment": 0.2169,
-    "servicesEmployment": 0.6164,
-    "selfEmployment": 0.3249,
+    "agricultureEmployment": 0.1513,
+    "industryEmployment": 0.2173,
+    "servicesEmployment": 0.6314,
+    "selfEmployment": 0.3192,
     "elderlyShare": 0.0573,
     "childShare": 0.3213,
     "gini": 0.401
@@ -2838,17 +2823,17 @@
    "potentialGrowth": 0.044,
    "growthVolatility": 0.02745,
    "inflation": 0.02715,
-   "unemployment": 0.065,
+   "unemployment": 0.0634,
    "revenue": 0.36607,
    "primarySpending": 0.27188,
    "debt": 0.74549,
    "interestRate": 0.01983,
    "society": {
     "incomeGroup": "UMC",
-    "agricultureEmployment": 0.1667,
-    "industryEmployment": 0.2169,
-    "servicesEmployment": 0.6164,
-    "selfEmployment": 0.3249,
+    "agricultureEmployment": 0.0733,
+    "industryEmployment": 0.1363,
+    "servicesEmployment": 0.7903,
+    "selfEmployment": 0.2293,
     "elderlyShare": 0.1187,
     "childShare": 0.1985,
     "gini": 0.438
@@ -2866,12 +2851,7 @@
     "revenueCompositionSource": "WORLD_UNSPECIFIED"
    },
    "estimated": [
-    "agricultureEmployment",
-    "defense",
-    "industryEmployment",
-    "selfEmployment",
-    "servicesEmployment",
-    "unemployment"
+    "defense"
    ]
   },
   {
@@ -3695,17 +3675,17 @@
    "potentialGrowth": 0.03614,
    "growthVolatility": 0.02991,
    "inflation": 0.09289,
-   "unemployment": 0.05141,
+   "unemployment": 0.02786,
    "revenue": 0.7,
    "primarySpending": 0.8,
    "debt": 0.11306,
    "interestRate": 0.014,
    "society": {
     "incomeGroup": "LMC",
-    "agricultureEmployment": 0.3653,
-    "industryEmployment": 0.1755,
-    "servicesEmployment": 0.4592,
-    "selfEmployment": 0.6507,
+    "agricultureEmployment": 0.2418,
+    "industryEmployment": 0.1488,
+    "servicesEmployment": 0.6095,
+    "selfEmployment": 0.4384,
     "elderlyShare": 0.0412,
     "childShare": 0.3493,
     "gini": 0.247
@@ -3723,12 +3703,7 @@
     "revenueCompositionSource": "GFS_GENERAL"
    },
    "estimated": [
-    "agricultureEmployment",
-    "defense",
-    "industryEmployment",
-    "selfEmployment",
-    "servicesEmployment",
-    "unemployment"
+    "defense"
    ]
   },
   {
@@ -3750,7 +3725,7 @@
     "agricultureEmployment": 0.0314,
     "industryEmployment": 0.2232,
     "servicesEmployment": 0.7455,
-    "selfEmployment": 0.1349,
+    "selfEmployment": 0.1356,
     "elderlyShare": 0.107,
     "childShare": 0.1833,
     "gini": 0.323
@@ -3832,10 +3807,10 @@
    "interestRate": 0.02142,
    "society": {
     "incomeGroup": "UMC",
-    "agricultureEmployment": 0.1667,
-    "industryEmployment": 0.2169,
-    "servicesEmployment": 0.6164,
-    "selfEmployment": 0.3249,
+    "agricultureEmployment": 0.041,
+    "industryEmployment": 0.2429,
+    "servicesEmployment": 0.716,
+    "selfEmployment": 0.2352,
     "elderlyShare": 0.0964,
     "childShare": 0.2129,
     "gini": 0.383
@@ -3853,12 +3828,8 @@
     "revenueCompositionSource": "GFS_GENERAL"
    },
    "estimated": [
-    "agricultureEmployment",
     "education",
-    "health",
-    "industryEmployment",
-    "selfEmployment",
-    "servicesEmployment"
+    "health"
    ]
   },
   {
@@ -4136,7 +4107,7 @@
     "agricultureEmployment": 0.0314,
     "industryEmployment": 0.2232,
     "servicesEmployment": 0.7455,
-    "selfEmployment": 0.1349,
+    "selfEmployment": 0.1356,
     "elderlyShare": 0.2016,
     "childShare": 0.1435,
     "gini": 0.323
@@ -4411,7 +4382,7 @@
     "agricultureEmployment": 0.0314,
     "industryEmployment": 0.2232,
     "servicesEmployment": 0.7455,
-    "selfEmployment": 0.1349,
+    "selfEmployment": 0.1356,
     "elderlyShare": 0.3636,
     "childShare": 0.1318,
     "gini": 0.323
@@ -4610,17 +4581,17 @@
    "potentialGrowth": 0.03043,
    "growthVolatility": 0.03462,
    "inflation": 0.07533,
-   "unemployment": 0.065,
+   "unemployment": 0.06232,
    "revenue": 0.7,
    "primarySpending": 0.7017,
    "debt": 0.17154,
    "interestRate": 0.0115,
    "society": {
     "incomeGroup": "UMC",
-    "agricultureEmployment": 0.1667,
-    "industryEmployment": 0.2169,
-    "servicesEmployment": 0.6164,
-    "selfEmployment": 0.3249,
+    "agricultureEmployment": 0.1513,
+    "industryEmployment": 0.2173,
+    "servicesEmployment": 0.6314,
+    "selfEmployment": 0.3192,
     "elderlyShare": 0.0438,
     "childShare": 0.3471,
     "gini": 0.355
@@ -5371,7 +5342,7 @@
     "agricultureEmployment": 0.0314,
     "industryEmployment": 0.2232,
     "servicesEmployment": 0.7455,
-    "selfEmployment": 0.1349,
+    "selfEmployment": 0.1356,
     "elderlyShare": 0.0268,
     "childShare": 0.3818,
     "gini": 0.324
@@ -5647,7 +5618,7 @@
    "potentialGrowth": 0.00774,
    "growthVolatility": 0.03533,
    "inflation": 0.12412,
-   "unemployment": 0.04075,
+   "unemployment": 0.02091,
    "revenue": 0.47285,
    "primarySpending": 0.51368,
    "debt": 0.71199,
@@ -5657,7 +5628,7 @@
     "agricultureEmployment": 0.0314,
     "industryEmployment": 0.2232,
     "servicesEmployment": 0.7455,
-    "selfEmployment": 0.1349,
+    "selfEmployment": 0.0805,
     "elderlyShare": 0.1085,
     "childShare": 0.1854,
     "gini": 0.323
@@ -5679,10 +5650,8 @@
     "defense",
     "gini",
     "industryEmployment",
-    "selfEmployment",
     "servicesEmployment",
-    "socialContributionShare",
-    "unemployment"
+    "socialContributionShare"
    ]
   },
   {
@@ -5767,10 +5736,10 @@
    "id": "PRK",
    "population": 26418204,
    "populationGrowth": 0.00339,
-   "gdp": 30000000000,
-   "growth": 0.04587,
-   "potentialGrowth": 0.04078,
-   "growthVolatility": 0.03046,
+   "gdp": 16446632290,
+   "growth": 0.031,
+   "potentialGrowth": -0.0035,
+   "growthVolatility": 0.02245,
    "inflation": 0.09978,
    "unemployment": 0.03463,
    "revenue": 0.15637,
@@ -5805,15 +5774,11 @@
     "defense",
     "education",
     "expense",
-    "gdp",
     "gini",
-    "growth",
-    "growthVolatility",
     "health",
     "incomeProfitTaxShare",
     "inflation",
     "interest",
-    "potentialGrowth",
     "revenue",
     "socialContributionShare",
     "tradeTaxShare"
@@ -5904,7 +5869,7 @@
    "potentialGrowth": 0.01391,
    "growthVolatility": 0.03179,
    "inflation": 0.05872,
-   "unemployment": 0.05141,
+   "unemployment": 0.05076,
    "revenue": 0.27897,
    "primarySpending": 0.27079,
    "debt": 0.46455,
@@ -6435,7 +6400,7 @@
     "agricultureEmployment": 0.0314,
     "industryEmployment": 0.2232,
     "servicesEmployment": 0.7455,
-    "selfEmployment": 0.1349,
+    "selfEmployment": 0.1356,
     "elderlyShare": 0.2168,
     "childShare": 0.127,
     "gini": 0.323
@@ -6463,12 +6428,12 @@
   },
   {
    "id": "SOL",
-   "population": 5700000,
-   "populationGrowth": 0.02765,
-   "gdp": 3400000000,
-   "growth": 0.03,
-   "potentialGrowth": 0.04078,
-   "growthVolatility": 0.03046,
+   "population": 4549458,
+   "populationGrowth": 0.0293,
+   "gdp": 3977000000,
+   "growth": 0.033,
+   "potentialGrowth": 0.021,
+   "growthVolatility": 0.02229,
    "inflation": 0.05,
    "unemployment": 0.2,
    "revenue": 0.15637,
@@ -6481,8 +6446,8 @@
     "industryEmployment": 0.0983,
     "servicesEmployment": 0.3071,
     "selfEmployment": 0.8095,
-    "elderlyShare": 0.0291,
-    "childShare": 0.4123,
+    "elderlyShare": 0.0163,
+    "childShare": 0.4451,
     "gini": 0.374
    },
    "budget": {
@@ -6499,25 +6464,17 @@
    },
    "estimated": [
     "agricultureEmployment",
-    "childShare",
     "consumptionTaxShare",
     "debt",
     "defense",
     "education",
-    "elderlyShare",
     "expense",
-    "gdp",
     "gini",
-    "growth",
-    "growthVolatility",
     "health",
     "incomeProfitTaxShare",
     "industryEmployment",
     "inflation",
     "interest",
-    "population",
-    "populationGrowth",
-    "potentialGrowth",
     "revenue",
     "selfEmployment",
     "servicesEmployment",
@@ -6859,7 +6816,7 @@
     "agricultureEmployment": 0.0314,
     "industryEmployment": 0.2232,
     "servicesEmployment": 0.7455,
-    "selfEmployment": 0.1349,
+    "selfEmployment": 0.1818,
     "elderlyShare": 0.0833,
     "childShare": 0.2014,
     "gini": 0.321
@@ -6879,7 +6836,6 @@
    "estimated": [
     "agricultureEmployment",
     "industryEmployment",
-    "selfEmployment",
     "servicesEmployment"
    ]
   },
@@ -6888,7 +6844,7 @@
    "population": 23594623,
    "populationGrowth": 0.04919,
    "gdp": 23737634644,
-   "growth": 0.04587,
+   "growth": 0.04409,
    "potentialGrowth": -0.00723,
    "growthVolatility": 0.05,
    "inflation": 0.13418,
@@ -7341,17 +7297,17 @@
    "potentialGrowth": 0.06189,
    "growthVolatility": 0.04704,
    "inflation": 0.06952,
-   "unemployment": 0.065,
+   "unemployment": 0.06232,
    "revenue": 0.7,
    "primarySpending": 0.8,
    "debt": 0.05798,
    "interestRate": 0.03435,
    "society": {
     "incomeGroup": "UMC",
-    "agricultureEmployment": 0.1667,
-    "industryEmployment": 0.2169,
-    "servicesEmployment": 0.6164,
-    "selfEmployment": 0.3249,
+    "agricultureEmployment": 0.1513,
+    "industryEmployment": 0.2173,
+    "servicesEmployment": 0.6314,
+    "selfEmployment": 0.3192,
     "elderlyShare": 0.0628,
     "childShare": 0.326,
     "gini": 0.391
@@ -7394,12 +7350,12 @@
    "interestRate": 0.02357,
    "society": {
     "incomeGroup": "HIC",
-    "agricultureEmployment": 0.045,
-    "industryEmployment": 0.355,
-    "servicesEmployment": 0.6,
-    "selfEmployment": 0.17,
-    "elderlyShare": 0.1819,
-    "childShare": 0.1601,
+    "agricultureEmployment": 0.0442,
+    "industryEmployment": 0.3508,
+    "servicesEmployment": 0.605,
+    "selfEmployment": 0.1927,
+    "elderlyShare": 0.1835,
+    "childShare": 0.1193,
     "gini": 0.323
    },
    "budget": {
@@ -7415,19 +7371,13 @@
     "revenueCompositionSource": "WDI_MODEL"
    },
    "estimated": [
-    "agricultureEmployment",
-    "childShare",
     "consumptionTaxShare",
     "defense",
     "education",
-    "elderlyShare",
     "gini",
     "health",
     "incomeProfitTaxShare",
-    "industryEmployment",
     "interest",
-    "selfEmployment",
-    "servicesEmployment",
     "socialContributionShare",
     "tradeTaxShare"
    ]
@@ -7664,7 +7614,7 @@
   },
   {
    "id": "VAT",
-   "population": 800,
+   "population": 764,
    "populationGrowth": 0.01009,
    "gdp": 30000000,
    "growth": 0.0,
@@ -7681,9 +7631,9 @@
     "agricultureEmployment": 0.0314,
     "industryEmployment": 0.2232,
     "servicesEmployment": 0.7455,
-    "selfEmployment": 0.1349,
-    "elderlyShare": 0.1819,
-    "childShare": 0.1601,
+    "selfEmployment": 0.1356,
+    "elderlyShare": 0.1834,
+    "childShare": 0.1597,
     "gini": 0.323
    },
    "budget": {
@@ -7716,7 +7666,6 @@
     "industryEmployment",
     "inflation",
     "interest",
-    "population",
     "populationGrowth",
     "potentialGrowth",
     "revenue",
