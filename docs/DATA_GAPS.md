@@ -6,11 +6,12 @@
 
 | 항목 | 남은 결측과 현재 대체값 | 보완에 필요한 자료 |
 |---|---|---|
-| 거시·재정·사회 | 89개국의 320개 국가·지표 조합에 중앙값·수동값 등을 쓴다. GDP와 인구증가율에 게임 대체값을 쓰는 곳은 바티칸이다. 시작 인구에는 199개 경제 모두 공표된 인구 통계를 쓴다. 부채가 낮아 역산이 불안정한 실효이율도 추정에 포함한다. | 같은 통계 범위의 국민계정, 결산, 인구와 원자료의 기준연도. [경제 생성기](../tools/econdata/build_economy.py) |
+| 거시·재정·사회 | 86개국의 293개 국가·지표 조합에 중앙값·수동값 등을 쓴다. GDP와 인구증가율에 게임 대체값을 쓰는 곳은 바티칸이다. 시작 인구에는 199개 경제 모두 공표된 인구 통계를 쓴다. 부채가 낮아 역산이 불안정한 실효이율도 추정에 포함한다. | 같은 통계 범위의 국민계정, 결산, 인구와 원자료의 기준연도. [경제 생성기](../tools/econdata/build_economy.py) |
 | 세입 구성 | 일반정부의 다섯 세목을 같은 자료로 확보하지 못한 나라는 112개국이다. 26개국은 중앙정부, 63개국은 정부 범위가 명시되지 않은 IMF WoRLD를 쓴다. 이 중 40개국은 공표된 세목을 보존하고 미보고 세목에만 잔액을 배분한다. 23개국은 WDI·소득군별 배분을 쓴다. 사회보험료 비중에 결측 표시가 있는 나라는 50개국이다. | 같은 연도·범위의 총세입과 개인소득세·법인세·상품서비스세·무역세·사회보험료. IMF의 사회보장기여금(G121) 밖의 사회기여금(G122)은 기타로 분류하며 WDI 사회기여금의 범위는 더 넓다. [IMF GFS](https://data.imf.org/en/Datasets/GFS_SOO) · [IMF WoRLD](https://www.imf.org/en/topics/fiscal-policies/world-revenue-longitudinal-database) |
 | 금 제외 준비자산 | 25개국은 수입 대금 3개월분, 미얀마는 관측 월이 확인되지 않는 WDI 연간 값을 쓴다. | 국가별 2023년 말 달러 환산 잔액. 준비자산의 통화별 구성과 중앙은행 간 스와프도 미수록이다. 국제투자대조표는 같은 보고 기간의 금을 빼거나 금 외 구성 항목을 합산한다. [IMF 국제유동성](https://data.imf.org/en/Datasets/IL) · [IMF 국제투자대조표](https://data.imf.org/en/Datasets/IIP) · [WDI](https://data.worldbank.org/indicator/FI.RES.XGLD.CD) |
 | 통화정책 | 122개국은 자국 중앙은행이나 통화동맹 발권기관의 금리로 시작한다. 15개국은 기준 통화 금리를, 62개국은 모형 추정치를 쓴다. | 같은 정책수단의 2023년 말 금리·물가 목표·환율제도. 113개국은 통화 체제를 모형으로 지정하며, 그중 53개국에는 공표 금리가 있다. [국가별 공표 자료](../simulation/src/main/resources/world/central_banks.json) · [BIS 정책금리](https://data.bis.org/topics/CBPOL) |
-| 산업·고용·인구 구조 | 92개국의 300개 국가·지표 조합에 추정값을 쓴다. 섬유·식품·기술 제조 비중의 결측은 각각 86·81·49개국이다. 대만에는 병력·자원 지대·기술 제조 비중 추정이 남아 있다. 병력·순이동은 결측 시 번들에 0을 저장한다. | 제조업 세분류, 산업연관표, 직업별 고용·소득, 인구이동. 건설·광업·서비스업 세분 및 직업별 조세 부담에도 모형 배분을 쓴다. [구조 자료 생성기](../tools/econdata/build_structure.py) |
+| 산업·고용·인구 구조 | 82개국의 272개 국가·지표 조합에 추정값을 쓴다. 섬유·식품·기술 제조 비중의 결측은 각각 74·71·45개국이다. 대만에는 병력·자원 지대·기술 제조 비중 추정이 남아 있다. 병력·순이동은 결측 시 번들에 0을 저장한다. | 제조업 세분류, 산업연관표, 직업별 고용·소득, 인구이동. 건설·광업·서비스업 세분 및 직업별 조세 부담에도 모형 배분을 쓴다. [구조 자료 생성기](../tools/econdata/build_structure.py) |
+| 개인송금 | 2023년 WDI 수취액은 167개국, 지급액은 171개국에 있다. 결측은 같은 정의의 2023년 국제수지, 2019~2022년 WDI, 2021년 KNOMAD 국가 합계 순으로 보완한다. 양자 금액은 송금국·수취국 추계가 맞는 범위에서 배정하고 나머지는 상대 미배정으로 표시한다. | 양자 월별 관측, 비공식 송금 및 미보고 국가의 총액. [세계은행 수취](https://data.worldbank.org/indicator/BX.TRF.PWKR.CD.DT) · [세계은행 지급](https://data.worldbank.org/indicator/BM.TRF.PWKR.CD.DT) · [KNOMAD 양자 추계](https://data360files.worldbank.org/data360-data/data/WB_KNOMAD/WB_KNOMAD_BRE.csv) |
 | 교역·부가가치 | 199개 경제 중 바티칸만 상품·서비스 수출 비중과 교역 개방도를 추정한다. 소말리아·소말릴란드·바티칸은 농업·산업·제조업·서비스 부가가치가, 모나코는 농업 부가가치가 비어 있다. | 소말리아 생산계정은 소말릴란드를 분리할 수 있어야 한다. 유엔 자료에는 유엔 자체 추계가 포함된다. 소말릴란드의 실험적 지출계정은 교역 비중에 적용했다. [유엔 국민계정](https://unstats.un.org/unsd/snaama/downloads) · [소말릴란드 통계청](https://www.govsomaliland.org/uploads/files/2025/09/2025-09-06-05-36-34-2988-1757136994.pdf) |
 | 지역 인구·경제 | 32개 플레이 국가의 1,497개 구역 중 918곳의 인구 지분을 도시 인구·면적으로 추정한다. 그중 487곳에는 지도상의 도시 인구 표본도 없다. 미국 23곳과 프랑스 20곳은 해당 국가의 공식 지역 인구표 범위 밖이다. 지역 도시화율은 베트남 63개 성·시에만 공표 도시 인구를 적용하고, 나머지 1,434곳은 모형으로 배분한다. 지역별 생산·고용·실업·소득도 추정한다. | 지도 구역과 일치하는 지역 인구·연령·고용, 통근권과 범죄 신고 통계. 한국은 외국인을 제외한 2023년 말 주민등록인구, 미국은 2023년 7월 추계, 캐나다·유럽은 2024년 1월 1일 기준이다. 인도네시아는 2023년 6월 38개 주 추계를 지도 33구역으로 합산한다. 베트남은 2025년 통합 전 경계의 2023년 연평균, 일본·태국은 외국인을 포함한 등록인구, 브라질은 2023년 7월 1일 인구추계, 이집트는 2024년 1월 1일 인구추계다. [국가별 원표·기준일](../simulation/src/main/resources/world/region_population.json) · [구역 코드 대응표](../tools/geodata/region_population_codes.csv) |
 
@@ -20,7 +21,7 @@
 
 북한의 2023년 명목 GDP는 유엔 회계환율(달러당 110북한원)로 환산한 유엔 추계다. 실질성장률은 한국의 가격과 부가가치율로 추계한 한국은행 계열을 쓴다. 북키프로스 인구는 7월 1일 추계다. 소말릴란드 인구는 2014년 조사에서 연 2.93% 증가를 가정한 정부 전망이며, GDP는 통계청의 실험적 국민계정이다. 세 나라의 잠재성장률과 변동성은 각 연도 실질성장률로 계산한다. [유엔 북한 국민계정](https://unstats.un.org/unsd/snaama/CountryProfile?ccode=408) · [한국은행 추계](https://www.bok.or.kr/portal/bbs/B0000501/view.do?menuNo=201264&nttId=10086115) · [국가별 거시 원표와 시계열](../tools/econdata/local_macro.py)
 
-코소보 교육비는 IMF 일반정부 현금기준 결산을 쓴다. 불평등 지표는 대만·싱가포르의 2023년 가처분소득과 뉴질랜드의 2022년 OECD 자료를 반영하며 조사 단위가 다르다. 콩고공화국 식품 제조업 비중은 2022년, 에리트레아 섬유·의류 비중은 2023년 UNIDO 조사에서 계산한다. [국가별 원표와 통계 정의](../tools/econdata/local_macro.py) · [제조업 분류와 분모](../tools/econdata/build_structure.py)
+코소보 교육비는 IMF 일반정부 현금기준 결산을 쓴다. 불평등 지표는 대만·싱가포르의 2023년 가처분소득과 뉴질랜드의 2022년 OECD 자료를 반영하며 조사 단위가 다르다. 콩고공화국 식품 제조업 비중은 2022년, 에리트레아 섬유·의류·가죽 비중은 2023년 UNIDO 조사에서 계산한다. 바하마의 2013년 가계 소비 지니계수와 각국 소득 지니계수는 조사 연도와 측정 대상이 다르다. ADB와 OECD의 국제산업연관표는 국가 간 분류를 맞춘 기관 추계를 포함한다. [국가별 원표와 통계 정의](../tools/econdata/local_macro.py) · [가계·노동 조사와 교육비](../tools/econdata/national_surveys.py) · [제조업 분류와 분모](../tools/econdata/structure_supplements.py)
 
 ## 상품과 교역
 
@@ -44,11 +45,11 @@
 | 불신임 후 정부 구성 | 러시아의 석 달 이내 재표결과 총리 승인, 르완다의 발의·숙려·내각 교체를 포함한다. 의원 개인의 출석·서명·이탈, 연정 합의와 국가원수 재량의 보정에는 표결·조각 기록이 필요하다. [국가별 절차와 법적 근거](../simulation/src/main/resources/world/constitutions.json) |
 | 파키스탄 | 2018년 7월 270개 지역구의 후보별 잠정 개표에 10월 2개 지역구 선관위 개표서를 더한 53,420,071표를 사용한다. 2023년 획정된 266개 지역구에도 당시 선거구와 경계가 다른 곳은 전신 지역의 수치를 배분한다. 우편투표·재검표, 관보 공고일과 무소속의 입당 선택, 선거 전 개별 후보의 제휴·직업별 지지율은 남은 자료 차이다. [선거구 대응표](../tools/electiondata/pakistan_constituencies.csv) · [후보별 원자료와 집계](../tools/electiondata/build_pakistan.py) |
 | 유권자·조직·인물 | 노조 조직률은 PRK IRN SAU, 종교 중요도는 CHN GBR PRK AUS FIN IRN TWN에서 추정한다. 종교 조사는 2009년, 노조 통계는 연도가 서로 다르다. 정당별 지지층·경선 및 결선 지지 이전, 조직 회원 비율·정부 태도, 지도자별 취임일, 실제 연정 협약·내각 인선 자료가 필요하다. 비예산 규제 다수는 소득군 추정, 쿠데타 이력은 THA PAK EGY TUR만 수록한다. [성향 자료](../simulation/src/main/resources/world/society_identities.json) |
-| 은퇴와 직업 | 65세 이상을 은퇴층으로 간주한다. 실제 퇴직 연령·고령 취업·조기 은퇴·연금 수급자와 지역별 직업 이동 자료가 필요하다. 세대별 성향과 직업 전환은 모형 계수다. |
+| 은퇴와 직업 | 32개 플레이 국가의 연령대별 경제활동참가율은 28개국의 2023년 조사, 3개국의 2023년 ILO 추정, 우크라이나의 2021년 관측을 쓴다. EU 8개국에서 50~64세 비취업 노령연금 수급자를 은퇴층에 반영한다. 다른 국가의 조기 은퇴, 65세 이상 연금 수급 여부와 직업 분포, 지역별 직업 이동은 추정이 남는다. [연령대별 원자료 생성기](../tools/econdata/build_age_activity.py) |
 
 ## 정책·사건의 모형 가정
 
-- **재정·기업.** 채권자별 초기 국채 비중, 민간 자본 유출입, IMF 대출 조건, 기업 진입·퇴출은 추정이다. 채권자·통화·만기별 잔액, 국부펀드와 월별 국제수지가 필요하다. 동티모르처럼 석유기금 인출로 충당한 적자는 게임에서 부채로 잡힐 수 있다.
+- **재정·기업.** 채권자별 초기 국채 비중, 민간 자본 유출입, IMF 대출 조건, 기업 진입·퇴출은 추정이다. 채권자·통화·만기별 잔액, 국부펀드와 월별 국제수지, 배당·재투자수익·민간 이자 등 투자소득의 국가별 수취·지급액이 필요하다. 개인송금의 가구별 배분과 월별 계절성도 추정 범위 밖이다. 동티모르처럼 석유기금 인출로 충당한 적자는 게임에서 부채로 잡힐 수 있다.
 - **국가·지역 정책.** 영국·캐나다·호주의 주택 정책에는 실제 지방별 인허가·착공·준공과 집행액, 브라질 곡물 보조에는 지역·품종별 최저가격·산지가격과 경매 낙찰 물량이 필요하다. 지역 사업 단가, AI 정당의 예산 성향·발의 주기, 국가별 정책 효과는 게임 가정이다. [주택 제도별 출처](../simulation/src/main/resources/world/housing_programs.json) · [Conab 2023년 집행보고서](https://arquivosportal.conab.gov.br/api/public/dl/mCCRPnym/arquivos/auditoria/Relatorio-de-Gestao-2023.pdf) · [국가별 정책 근거와 가정](COUNTRY_MODULES.md)
 - **지도·외교·피란.** 단순화한 형상에서 작은 섬·해협·인접 관계가 달라질 수 있다. 외교 관계와 제재 강도, 점령 비율·분쟁 긴장은 추정이며 가자와 서안 C구역을 구분하지 않는다. 운송 충격은 공통 계수를 쓰며 항구별 처리량·환적 자료가 없다. 기존 피란민과 전쟁 피해 자산은 시작 재고가 없어 게임 중 발생분부터 집계한다. [외교 자료](../simulation/src/main/resources/world/diplomacy.json) · [분쟁 자료](../simulation/src/main/resources/world/military.json)
 - **사건·장기 추세.** 32개국에 국가별 재난 노출 추정치가 있고 나머지는 공통 위험을 쓴다. 사건 확률·손실과 선택지 효과, 기후·배출·기술 경로의 보정에는 국가별 발생률과 장기 시계열이 필요하다. [사건 자료](../simulation/src/main/resources/world/events.json)
@@ -58,24 +59,24 @@
 거시·재정·사회 및 구조 표는 번들의 `estimated` 필드를 집계한다. 같은 국가 집합은 한 행으로 묶었다. 기관이 공표한 추계나 시계열로 계산한 값에도 통계상 불확실성이 있다. 세입 자료의 정부 범위는 `budget.revenueCompositionSource`, 부분 보고에서 추정한 세목은 `budget.unreportedRevenueTaxes`로 조회한다. 수동 대체와 중앙값 추정은 같은 표시를 쓰며 상한·대체 연도만 적용한 값에는 표시가 없을 수 있다.
 
 <details>
-<summary>거시·재정·사회 초기값 · 199개국 중 89개국에 추정 항목</summary>
+<summary>거시·재정·사회 초기값 · 199개국 중 86개국에 추정 항목</summary>
 
 | 항목과 원본 키 | 국가 수 | 해당 국가 코드 |
 |---|---:|---|
 | 사회보험료 (`socialContributionShare`) | 50 | AFG, BDI, BEN, BGD, BHR, BLZ, BOL, BRB, BRN, BWA, COD, COG, CUB, CYN, DZA, EGY, ERI, FSM, GMB, GNQ, JAM, KNA, LAO, LBR, LCA, MCO, MDV, MHL, MLI, MRT, NER, NGA, PAK, PLW, PRK, PSX, QAT, SDN, SOL, STP, SYR, TKM, TLS, TUN, TWN, VAT, VEN, VNM, YEM, ZWE |
 | 국방비 (`defense`) | 43 | AND, ARE, ATG, BHS, BRB, BTN, COM, CUB, CYN, DJI, DMA, ERI, FSM, GRD, KIR, KNA, LAO, LCA, LIE, MCO, MDV, MHL, NRU, PLW, PRK, PSX, SLB, SMR, SOL, STP, SUR, SYR, TKM, TON, TUV, TWN, UZB, VAT, VCT, VEN, VUT, WSM, YEM |
-| 지니계수 (`gini`) | 31 | AFG, AND, ATG, AZE, BHR, BHS, BRN, CUB, CYN, DMA, ERI, GUY, KHM, KNA, KWT, LBY, LIE, MCO, OMN, PLW, PNG, PRK, SAU, SMR, SOL, SOM, TKM, TTO, VAT, VCT, VEN |
-| 교육비 (`education`) | 23 | AFG, BRN, CYN, DJI, EGY, ERI, GNB, GNQ, GUY, IRQ, LBY, LIE, MKD, MNE, PRK, SDN, SDS, SOL, SYR, TWN, VAT, VEN, YEM |
+| 지니계수 (`gini`) | 26 | AFG, ATG, AZE, BHR, BRN, CUB, DMA, ERI, GUY, KNA, KWT, LBY, MCO, OMN, PLW, PNG, PRK, SAU, SMR, SOL, SOM, TKM, TTO, VAT, VCT, VEN |
 | 소득·이익세 (`incomeProfitTaxShare`) | 22 | AFG, BLZ, BOL, BRN, CUB, CYN, ERI, HTI, KWT, LBR, LBY, MCO, NER, NGA, OMN, PRK, PSX, SOL, SYR, TWN, VAT, VEN |
-| 농업 고용 (`agricultureEmployment`) · 산업 고용 (`industryEmployment`) · 서비스 고용 (`servicesEmployment`) | 15 | AND, ATG, DMA, FSM, KNA, LIE, MCO, MHL, NRU, PLW, SMR, SOL, SYC, TUV, VAT |
+| 교육비 (`education`) | 19 | AFG, BRN, CYN, DJI, EGY, ERI, GNB, GNQ, GUY, IRQ, LBY, PRK, SDN, SDS, SOL, SYR, VAT, VEN, YEM |
 | 이자 (`interest`) | 15 | AFG, BRN, CUB, CYN, KWT, LIE, MCO, PRK, PSX, SOL, SYR, TKM, TUV, TWN, VAT |
 | 소비세 (`consumptionTaxShare`) | 14 | CUB, CYN, ERI, KWT, LBY, MCO, PRK, QAT, SOL, SYR, TWN, VAT, VEN, YEM |
 | 무역세 (`tradeTaxShare`) | 13 | CUB, CYN, DJI, ERI, KWT, MCO, PRK, SOL, SYR, TKM, TWN, VAT, VEN |
-| 자영업 (`selfEmployment`) | 12 | AND, DMA, FSM, KNA, LIE, MCO, MHL, NRU, SMR, SOL, TUV, VAT |
-| 실업률 (`unemployment`) | 10 | DMA, FSM, KNA, MCO, MHL, NRU, PSX, SOL, TUV, VAT |
+| 농업 고용 (`agricultureEmployment`) · 산업 고용 (`industryEmployment`) · 서비스 고용 (`servicesEmployment`) | 12 | AND, ATG, DMA, FSM, KNA, MCO, NRU, SMR, SOL, SYC, TUV, VAT |
 | 부채 (`debt`) | 9 | CUB, CYN, MCO, PRK, SOL, SYR, VAT, VEN, YEM |
+| 자영업 (`selfEmployment`) | 8 | DMA, FSM, KNA, LIE, MCO, SMR, SOL, VAT |
 | 지출 (`expense`) · 세입 (`revenue`) | 7 | CUB, CYN, MCO, PRK, SOL, SYR, VAT |
 | 보건비 (`health`) | 6 | CYN, KOS, PRK, SOL, TWN, VAT |
+| 실업률 (`unemployment`) | 5 | DMA, FSM, MCO, SOL, VAT |
 | 물가 (`inflation`) | 4 | ERI, PRK, SOL, VAT |
 | 성장률 (`growth`) | 3 | ERI, SYR, VAT |
 | 아동 비중 (`childShare`) · 고령 비중 (`elderlyShare`) · GDP (`gdp`) · 성장 변동성 (`growthVolatility`) · 잠재성장 (`potentialGrowth`) · 인구증가율 (`populationGrowth`) | 1 | VAT |
@@ -97,6 +98,24 @@
 </details>
 
 <details>
+<summary>개인송금 기준액의 보완 자료와 결측 국가</summary>
+
+2023년 WDI를 우선한다. 다음 표는 그 밖의 자료를 쓴 국가와 결측 국가다. 자료가 없는 방향은 월 합계에서 제외한다. KNOMAD 경로를 배정할 수 없는 지역과 수취·지급 통계 차이는 상대 미배정액에 포함된다. [국제수지 보완 원표](../tools/econdata/remittance_supplements.py)
+
+| 처리 방식 | 국가 수 | 국가 코드 |
+|---|---:|---|
+| 수취 · 2023년 공표 국제수지 | 7 | CAF, COG, GAB, GNQ, TCD, TGO, TWN |
+| 수취 · 2019~2022년 WDI | 4 | AFG, MMR, NZL, VUT |
+| 수취 · 2021년 KNOMAD 추계 | 3 | SOM, TKM, VNM |
+| 수취 · 자료 없음 | 18 | ARE, BHR, BRB, BRN, CUB, CYN, ERI, FSM, IRN, LBY, LIE, MCO, PRK, SGP, SOL, SYR, VAT, YEM |
+| 지급 · 2023년 공표 국제수지 | 7 | CAF, COG, GAB, GNQ, TCD, TGO, TWN |
+| 지급 · 2019~2022년 WDI | 3 | AFG, MMR, VUT |
+| 지급 · 2021년 KNOMAD 추계 | 15 | BRB, BRN, CUB, ERI, FSM, IRN, LIE, MCO, PRK, SGP, SOM, SYR, TKM, VNM, YEM |
+| 지급 · 자료 없음 | 3 | CYN, SOL, VAT |
+
+</details>
+
+<details>
 <summary>곡물 수요·금 제외 준비자산·시작 기준금리의 대체 범위</summary>
 
 | 처리 방식 | 국가 수 | 국가 코드 |
@@ -110,15 +129,15 @@
 </details>
 
 <details>
-<summary>구조 지표 · 199개국 중 92개국에 추정 항목</summary>
+<summary>구조 지표 · 199개국 중 82개국에 추정 항목</summary>
 
 | 항목과 원본 키 | 국가 수 | 해당 국가 코드 |
 |---|---:|---|
-| 섬유 제조 (`textileManufacturing`) | 86 | AFG, AGO, AND, ATG, BDI, BEN, BFA, BHR, BHS, BLZ, BRB, BRN, BTN, CAF, CMR, COD, COG, COM, CUB, CYN, DJI, DMA, DOM, DZA, ETH, FSM, GAB, GHA, GIN, GMB, GNB, GNQ, GRD, GTM, GUY, HND, HTI, JAM, KHM, KIR, KNA, LAO, LBR, LBY, LCA, LIE, MCO, MDV, MHL, MOZ, MRT, NER, NGA, NRU, PAK, PLW, PNG, PRK, SDN, SDS, SLB, SLE, SLV, SMR, SOL, SOM, STP, SUR, SWZ, SYC, SYR, TCD, TJK, TKM, TLS, TON, TTO, TUV, UGA, VAT, VCT, VEN, VUT, WSM, YEM, ZWE |
-| 식품 제조 (`foodManufacturing`) | 81 | AFG, AGO, AND, ATG, BDI, BEN, BFA, BHR, BHS, BLZ, BRB, BRN, BTN, CAF, COM, CUB, CYN, DMA, DOM, DZA, ERI, ETH, FSM, GAB, GHA, GIN, GMB, GNQ, GRD, GTM, GUY, HND, HTI, JAM, KHM, KIR, KNA, LAO, LBR, LBY, LCA, LIE, MCO, MDV, MOZ, MRT, NER, NGA, NRU, PAK, PLW, PNG, PRK, SDN, SDS, SLB, SLE, SLV, SMR, SOL, SOM, STP, SUR, SWZ, SYC, SYR, TCD, TJK, TKM, TLS, TON, TTO, TUV, UGA, VAT, VCT, VEN, VUT, WSM, YEM, ZWE |
-| 기술 제조 (`techManufacturing`) | 49 | AND, ATG, BEN, BFA, BTN, COD, COM, CYN, DJI, DMA, DOM, FSM, GIN, GNB, GNQ, GRD, GUY, KIR, KNA, KOS, LBR, LIE, LSO, MCO, MHL, MLI, MRT, NRU, PLW, PRK, SDN, SDS, SLB, SLE, SMR, SOL, SOM, STP, SYC, TCD, TGO, TKM, TLS, TUV, TWN, VAT, VCT, VUT, WSM |
+| 섬유 제조 (`textileManufacturing`) | 74 | AFG, AND, ATG, BDI, BEN, BFA, BHR, BHS, BLZ, BRB, CAF, COG, COM, CUB, CYN, DJI, DMA, DOM, DZA, ETH, FSM, GAB, GHA, GIN, GMB, GNB, GNQ, GRD, GTM, GUY, HND, HTI, JAM, KIR, KNA, LBR, LBY, LCA, LIE, MCO, MHL, MOZ, MRT, NER, NRU, PLW, PNG, PRK, SDN, SDS, SLB, SLE, SLV, SMR, SOL, SOM, SUR, SWZ, SYC, SYR, TCD, TKM, TLS, TON, TTO, TUV, UGA, VAT, VCT, VEN, VUT, WSM, YEM, ZWE |
+| 식품 제조 (`foodManufacturing`) | 71 | AFG, AND, ATG, BDI, BEN, BFA, BHR, BHS, BLZ, BRB, CAF, COM, CUB, CYN, DMA, DOM, DZA, ERI, ETH, FSM, GAB, GHA, GIN, GMB, GNQ, GRD, GTM, GUY, HND, HTI, JAM, KIR, KNA, LBR, LBY, LCA, LIE, MCO, MOZ, MRT, NER, NRU, PLW, PNG, PRK, SDN, SDS, SLB, SLE, SLV, SMR, SOL, SOM, SUR, SWZ, SYC, SYR, TCD, TKM, TLS, TON, TTO, TUV, UGA, VAT, VCT, VEN, VUT, WSM, YEM, ZWE |
+| 기술 제조 (`techManufacturing`) | 45 | AND, ATG, BEN, BFA, BTN, COD, COM, CYN, DJI, DMA, DOM, FSM, GIN, GNB, GNQ, GRD, GUY, KIR, KNA, LBR, LIE, LSO, MCO, MHL, MRT, NRU, PLW, PRK, SDN, SDS, SLB, SLE, SMR, SOL, SOM, STP, SYC, TCD, TLS, TUV, TWN, VAT, VCT, VUT, WSM |
 | 병력 (`armedForces`) | 30 | AND, BTN, COM, CYN, DMA, FSM, GRD, KIR, KNA, KOS, LCA, LIE, MCO, MDV, MHL, NRU, PLW, PRK, SLB, SMR, SOL, STP, SWZ, TON, TUV, TWN, VAT, VCT, VUT, WSM |
-| 석유 지대 (`oilRents`) | 17 | AND, CYN, ERI, FSM, LIE, MCO, MHL, PLW, PRK, SDS, SMR, SOL, TUV, TWN, VAT, VEN, YEM |
+| 석유 지대 (`oilRents`) | 15 | AND, CYN, FSM, LIE, MCO, MHL, PLW, SDS, SMR, SOL, TUV, TWN, VAT, VEN, YEM |
 | 자원 지대 (`resourceRents`) | 9 | CYN, ERI, PRK, SDS, SOL, TWN, VAT, VEN, YEM |
 | 농업 부가가치 (`agricultureValueAdded`) | 4 | MCO, SOL, SOM, VAT |
 | 순이동 (`netMigration`) | 3 | CYN, SOL, VAT |

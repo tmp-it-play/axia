@@ -45,8 +45,10 @@
 | `world.json`, `map/world-map.bin` | `tools/mapdata/build_map.py --ne-dir <폴더>`에 Natural Earth의 admin 0·1 GeoJSON을 전달 |
 | `geography.json` | `tools/geodata/build_geography.py`가 번들의 지도 형상과 세계 정의를 읽음 |
 | `regions.json`, `region_population.json` | `tools/geodata/build_regions.py`, `build_region_population.py`. 공식 행정구역 코드 대응은 같은 폴더의 `region_population_codes.csv`, 태국·이집트·인도네시아 PDF 원표 발췌는 `region_population_pdf_extracts.csv`, 베트남 통계연감 표 21·24의 2023년 성·시별 총인구·도시인구는 `vietnam_population_2023.csv` |
-| `economy.json` | `tools/econdata/build_economy.py`. 북키프로스·북한·소말릴란드의 GDP·성장률, 북키프로스의 노동력조사와 바티칸 등 인구 보완 계열은 `local_macro.py`. 연령·취업·실업 원표는 `local_population.py` |
-| `structure.json` | `tools/econdata/build_structure.py`가 WDI와 유엔·대만 국민계정을 결합. 북키프로스·소말릴란드 원표 발췌는 같은 폴더의 `local_accounts.py`, 인구동태·도시화율 보완 자료는 `local_population.py` |
+| `economy.json` | `tools/econdata/build_economy.py`. 북키프로스·북한·소말릴란드의 GDP·성장률, 북키프로스의 노동력조사와 바티칸 등 인구 보완 계열은 `local_macro.py`. 연령·취업·실업 원표는 `local_population.py`, 가계·노동 조사와 교육 결산 보완값은 `national_surveys.py` |
+| `structure.json` | `tools/econdata/build_structure.py`가 WDI와 유엔·대만 국민계정을 결합. 북키프로스·소말릴란드 원표 발췌는 같은 폴더의 `local_accounts.py`, 인구동태·도시화율 보완 자료는 `local_population.py`, 제조 세분류·자원 지대 원표는 `structure_supplements.py` |
+| `age_activity.json` | `tools/econdata/build_age_activity.py`가 ILOSTAT와 대만 인력자원조사의 연령대별 경제활동참가율, Eurostat 2023년 노령연금 수급자 조사를 결합 |
+| `remittances.json` | `tools/econdata/build_remittances.py`가 WDI 국가별 송금 총액, `remittance_supplements.py`의 중앙은행 국제수지 원표, KNOMAD 양자 추계를 결합. 수취·지급별 연도와 출처를 보존 |
 | `reserve_assets.json`, `commodities.json` | `tools/econdata/build_reserve_assets.py`, `build_commodities.py` |
 | `grain_harvest.json`, `grain_harvest_asap.json` | 지정 국가의 달력은 직접 편집. JRC 국가 단위 수확기와 FAO 작물 물량은 `tools/econdata/build_grain_harvest.py`로 결합 |
 | `central_banks.json` | 국가별 발표 금리·출처와 통화동맹을 직접 편집. BIS 보완 금리는 `tools/econdata/build_policy_rates.py`로 갱신 |
@@ -68,7 +70,7 @@
 |---|---|
 | 진행·저장 | 동일한 날짜에 여러 명령을 내린 뒤 새 프로세스에서 저장을 재생한다. 로드 직후와 추가 진행 뒤 경제·국가·정치·세계 스냅숏이 원래 플레이와 일치해야 한다. |
 | 경제·재정 | 첫날의 다섯 세목과 기타 세입의 합이 총세입과 일치해야 한다. 장기 실행에서 지표의 유한성과 상한 고착을 확인한다. 채무 감면은 합의 시점에 한 번 반영하고 채권자별 잔액·손실의 합을 국채 장부와 대조한다. |
-| 교역·외환 | 세계 수출 합계와 수입 합계를 대조한다. 국가별 상품은 기초 재고 + 생산 + 수입 = 기말 재고 + 소비 + 수출이다. IMF 자금 인출은 준비자산과 대출 원금을 같은 금액만큼 늘린다. |
+| 교역·외환 | 세계 수출 합계와 수입 합계, 상대 미배정분을 제외한 양자 송금 수취와 지급을 각각 대조한다. 경제 원조는 공여국의 기초지출과 수원국의 세외수입에 12개월간 같은 달러액이 잡히고 만료·재약정 뒤에도 한 번씩만 결제돼야 한다. 국가별 상품은 기초 재고 + 생산 + 수입 = 기말 재고 + 소비 + 수출이다. IMF 자금 인출은 준비자산과 대출 원금을 같은 금액만큼 늘린다. |
 | 지역·영토 | 지역 GDP·경제활동인구 비중은 각각 합이 1이어야 한다. 지역 실업률을 경제활동인구로 가중해 전국 실업률과 대조한다. 영토 이관 전후 양국 인구·실질 GDP의 합을 확인한다. |
 | 정책·선거 | 정책의 법안 통과·집행·결산 시점, 국가별 시차와 지급액을 대조한다. 선거 후 정당별 의석 합계와 의회 정원, 선거인·대의원·유보석 합계, 개원·총리 선출·대통령 취임 전후의 재임자와 진행 중인 법안을 대조한다. 같은 나라를 플레이어와 AI로 각각 검증한다. |
 
