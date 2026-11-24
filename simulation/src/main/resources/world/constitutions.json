@@ -620,7 +620,7 @@
      "name": "민주당",
      "seats": 37,
      "role": "OPPOSITION",
-     "alignWith": "민주당 주도 중도좌파연합"
+     "alignWith": "민주당"
     },
     {
      "name": "동맹",
@@ -670,7 +670,7 @@
    "procedure": "PARLIAMENTARY",
    "majority": "VOTES_CAST",
    "consultationDays": 10,
-   "electionDays": 42,
+   "electionDays": 56,
    "sourceNote": "헌법 제88·92·94조. 대통령이 총리를 지명하고 내각은 양원에서 신임을 받아야 한다. 해산 전 양원 의장 협의. 대통령 임기 마지막 6개월에는 의회 임기 마지막 6개월과 겹칠 때만 해산한다. 마타렐라 2기 취임 2022-02-03. https://www.quirinale.it/allegati_statici/ebookapp/20220203_insediamento.pdf https://www.senato.it/sites/default/files/media-documents/Costituzione_INGLESE_2023.pdf"
   },
   "sourceNote": "완전 양원제. 2024년 1월 상원 우파 연합 116석. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",
@@ -740,7 +740,7 @@
    "procedure": "PARLIAMENTARY",
    "majority": "MEMBERS",
    "consultationDays": 14,
-   "electionDays": 42,
+   "electionDays": 84,
    "sourceNote": "헌법 제58·92·101조. 총리 불신임 시 정부 사임. 직접적 정부 불신임 시 내각 요청으로 대통령이 조기 총선을 공고할 수 있으며 대통령 임기 마지막 6개월 또는 조기 총선 뒤 6개월 이내에는 불가. https://e-seimas.lrs.lt/portal/legalActPrint/lt?category=TAD&documentId=TAIS.275302"
   },
   "sourceNote": "단원제. 대통령 연속 2선 제한. 사법 견제 지수는 V-Dem v2x_jucon 2023(Our World in Data 경유, v16).",

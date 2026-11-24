@@ -25,12 +25,14 @@ import team.themoment.axia.simulation.politics.ElectionResult
 import team.themoment.axia.simulation.politics.ElectionSchedule
 import team.themoment.axia.simulation.politics.FiscalBill
 import team.themoment.axia.simulation.politics.Legislature
+import team.themoment.axia.simulation.politics.ListRegistration
 import team.themoment.axia.simulation.politics.PartyRole
 import team.themoment.axia.simulation.politics.PolicyChange
 import team.themoment.axia.simulation.politics.PoliticsSnapshot
 import team.themoment.axia.simulation.politics.Replacement
 import team.themoment.axia.simulation.politics.RollCall
 import team.themoment.axia.simulation.politics.SeatProjection
+import team.themoment.axia.simulation.text.josa
 import team.themoment.axia.theme.DossierColors
 import team.themoment.axia.theme.DossierType
 import team.themoment.axia.ui.dossier.PaperTag
@@ -59,6 +61,7 @@ fun PoliticsPanel(
     onRenamePerson: (Int, String) -> Unit,
     onRenameParty: (Int, String) -> Unit,
     onOppositionVeto: (Boolean) -> Unit,
+    onChooseElectionList: (String?) -> Unit,
 ) {
     val profile = politics.profile
     SectionTitle("현 정부")
@@ -74,7 +77,7 @@ fun PoliticsPanel(
         Hint("${openingContest.chamberName} 해산으로 과도 내각이 심의합니다. 총선 후에는 새 의회가 법안을 표결합니다.")
     }
     chamber?.let { ChamberComposition(it, politics.takenPartyNames, onRenameParty) }
-    ElectionSection(politics, today, onCallEarlyElection)
+    ElectionSection(politics, today, onCallEarlyElection, onChooseElectionList)
     if (chamber != null && politics.schedule.legislative != null && profile.elections.coalitionNegotiations &&
         chamber.groups.any { it.role == PartyRole.LEAD }
     ) {
@@ -251,7 +254,7 @@ private fun ChamberComposition(
     SectionTitle("${chamber.name} · ${chamber.filledSeats}석")
     if (chamber.vacancies.isNotEmpty() || chamber.unassignedVacancies > 0) {
         StatRow("공석", "${chamber.vacancies.size + chamber.unassignedVacancies}석")
-        if (chamber.unassignedVacancies > 0) StatRow("기초 자료상 보충 일정 미상", "${chamber.unassignedVacancies}석")
+        if (chamber.unassignedVacancies > 0) StatRow("충원 예정이 없는 의석", "${chamber.unassignedVacancies}석")
         chamber.vacancies.forEach { seat ->
             val party = chamber.groups.find { (it.foundation?.originalName ?: it.name) == seat.partyKey }?.name
             StatRow(
@@ -439,6 +442,7 @@ private fun ElectionSection(
     politics: PoliticsSnapshot,
     today: LocalDate,
     onCallEarlyElection: () -> Unit,
+    onChooseElectionList: (String?) -> Unit,
 ) {
     val schedule = politics.schedule
     val suspended = schedule.suspended
@@ -459,8 +463,43 @@ private fun ElectionSection(
             schedule.executive?.let { date -> StatRow("다음 ${schedule.executiveBallotLabel}", "$date · ${dDay(today, date)}") }
         }
     }
+    politics.listFilingOptions?.let { options ->
+        SectionTitle("총선 후보 명부")
+        StatRow("등록 마감", options.deadline.toString())
+        StatRow(options.lead, options.choice?.ifEmpty { "독자 등록" } ?: "자동 공천")
+        var choosing by remember(options.deadline) { mutableStateOf(false) }
+        PaperTag(if (choosing) "선택 접기" else "명부 등록 방식 선택", onClick = { choosing = !choosing })
+        if (choosing) {
+            Hint("등록 마감일에 명부를 확정합니다. 그 전까지 공천 방식을 바꿀 수 있습니다.")
+            PaperTag("자동 공천", selected = options.choice == null, onClick = { onChooseElectionList(null) })
+            PaperTag("독자 등록", selected = options.choice == "", onClick = { onChooseElectionList("") })
+            options.partners.forEach { partner ->
+                val label = if (politics.profile.id == "KOR") "비례 위성정당 공천" else "${partner.josa("과", "와")} 공동 등록"
+                PaperTag(label, selected = options.choice == partner, onClick = { onChooseElectionList(partner) })
+            }
+        }
+    }
+    politics.listRegistration?.let { RegisteredLists(it, politics.profile.id == "KOR") }
     politics.newHouseOpens?.let { StatRow("새 의회 임기 시작", it.toString()) }
-    politics.legislativeRunoff?.let { StatRow("총선 1차 확정 ${it.settled}석", "${it.contested}개 선거구 · ${it.nextRound} 결선") }
+    politics.legislativeRunoff?.let { runoff ->
+        StatRow("총선 1차 확정 ${runoff.settled}석", "${runoff.contested}개 선거구 · ${runoff.nextRound} 결선")
+        if (runoff.listSeats.isNotEmpty()) {
+            var show by remember(runoff.firstRound) { mutableStateOf(false) }
+            PaperTag("1차 명부·지역구 개표", selected = show, onClick = { show = !show })
+            if (show) {
+                runoff.listSeats.filterValues { it > 0 }.forEach { (party, seats) -> StatRow(party, "전국 명부 ${seats}석") }
+                runoff.districtBallots.forEach { (district, parties) ->
+                    val status =
+                        when (parties.size) {
+                            0 -> "재선거 예정"
+                            1 -> "${parties.first()} 당선"
+                            else -> "${parties.joinToString(" · ")} 결선"
+                        }
+                    StatRow(district, status)
+                }
+            }
+        }
+    }
     politics.presidentElect?.let { StatRow("대통령 당선인", "${it.person.name} · ${it.inauguration} 취임") }
     politics.executiveCampaign?.let { campaign ->
         when {
@@ -498,10 +537,15 @@ private fun ElectionSection(
             }
         }
     }
+    politics.seimasResolution?.let { StatRow("세이마스 · ${it.date}", it.report) }
     if (schedule.canCallEarly) {
         Text(
             if (politics.profile.id == "PAK") {
                 "국민의회를 해산해 6주 뒤 총선을 치릅니다. 심의 중인 법안은 해산과 함께 폐기되며 과도 총리 선정 절차가 시작됩니다."
+            } else if (politics.profile.id == "ITA") {
+                "해산 후 8주가 지난 첫 일요일에 투표합니다. 선거연합은 투표 42일 전에 등록을 마감합니다."
+            } else if (politics.profile.id == "LTU") {
+                "조기 총선 결의는 141명 중 85명 이상이 찬성해야 합니다. 가결되면 3개월 안에 투표하며, 현 의회는 새 의원이 선서하는 날까지 직무를 수행합니다."
             } else if (politics.profile.id == "FRA") {
                 "해산 후 20~40일 안에 첫 일요일 투표를 치르고, 1차에서 결정되지 않은 선거구는 다음 주에 결선을 치릅니다."
             } else {
@@ -510,7 +554,7 @@ private fun ElectionSection(
             style = DossierType.number(12.sp),
             color = DossierColors.inkMuted,
         )
-        PaperTag("조기 총선 소집", onClick = onCallEarlyElection)
+        PaperTag(if (politics.profile.id == "LTU") "조기 총선 결의 표결" else "조기 총선 소집", onClick = onCallEarlyElection)
     }
     politics.projection?.let {
         Projection(
@@ -519,7 +563,29 @@ private fun ElectionSection(
                 ?.pakistanAssembly == true,
         )
     }
-    politics.lastElection?.let { LastElection(it) }
+    politics.lastElection?.let { LastElection(it, politics.profile.id == "KOR") }
+}
+
+@Composable
+private fun RegisteredLists(
+    registration: ListRegistration,
+    showCandidateCounts: Boolean,
+) {
+    var expanded by remember(registration.election) { mutableStateOf(false) }
+    StatRow("총선 명부 등록", "${registration.filed} · ${registration.lists.size}건")
+    PaperTag(if (expanded) "등록 명부 접기" else "등록 명부 보기", selected = expanded, onClick = { expanded = !expanded })
+    if (expanded) {
+        registration.lists.forEach { slate ->
+            val parties =
+                when {
+                    slate.members != listOf(slate.name) -> slate.members.joinToString(" · ")
+                    slate.joint -> "다른 정당 소속 후보를 포함한 공동명부"
+                    else -> "독자 등록"
+                }
+            val details = if (showCandidateCounts) "후보 ${slate.candidateOrder.size}명 · $parties" else parties
+            StatRow(slate.name, details)
+        }
+    }
 }
 
 @Composable
@@ -542,7 +608,10 @@ private fun Projection(
 }
 
 @Composable
-private fun LastElection(result: ElectionResult) {
+private fun LastElection(
+    result: ElectionResult,
+    showCandidateCounts: Boolean,
+) {
     var expanded by remember(result) { mutableStateOf(false) }
     SectionTitle("최근 선거 · ${result.date}${if (result.early) " (조기 총선)" else ""}")
     Stamp(
@@ -597,6 +666,7 @@ private fun LastElection(result: ElectionResult) {
             }
         }
     }
+    result.listRegistration?.let { RegisteredLists(it, showCandidateCounts) }
     result.pakistanReturn?.let { filing ->
         StatRow("관보 공고 · 입당 마감", "${filing.gazette} · ${filing.deadline}")
         StatRow(
@@ -627,6 +697,15 @@ private fun LastElection(result: ElectionResult) {
     result.coalitionReport?.let { StatRow("우선 교섭 결과", it) }
     if (result.billLapsed) {
         Text("총선으로 심의가 종료되어 재정안이 초안으로 돌아갔습니다.", style = DossierType.number(12.sp), color = DossierColors.stamp)
+    }
+    if (result.listVoteShares.isNotEmpty()) {
+        var showVotes by remember(result) { mutableStateOf(false) }
+        PaperTag("비례대표 정당 득표율", selected = showVotes, onClick = { showVotes = !showVotes })
+        if (showVotes) {
+            result.listVoteShares.entries.sortedByDescending { it.value }.forEach { (name, share) ->
+                StatRow(name, formatPercent(share))
+            }
+        }
     }
     if (result.listSeats.isNotEmpty()) {
         var showLists by remember(result) { mutableStateOf(false) }
@@ -676,7 +755,8 @@ private fun LastElection(result: ElectionResult) {
         (if (expanded) ranked else ranked.take(PROJECTION_PREVIEW)).forEach { row ->
             val before = row.seatsBefore
             val seats = if (before == null) "${row.seatsAfter}석" else "$before→${row.seatsAfter}석 (${seatChange(before, row.seatsAfter)})"
-            StatRow(row.name, "득표 ${formatPercent(row.voteShare)} · $seats")
+            val label = if (result.listVoteShares.isEmpty()) "득표" else "정당 지지"
+            StatRow(row.name, "$label ${formatPercent(row.voteShare)} · $seats")
         }
         if (ranked.size > PROJECTION_PREVIEW) {
             PaperTag(if (expanded) "접기" else "전체 결과 보기", onClick = { expanded = !expanded })

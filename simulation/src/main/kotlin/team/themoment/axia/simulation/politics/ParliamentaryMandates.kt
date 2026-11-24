@@ -33,6 +33,7 @@ data class SeatVacancy(
     val region: String? = null,
     val regionId: String? = null,
     val districtIndex: Int? = null,
+    val listName: String? = null,
 )
 
 internal enum class MandateRoute { DISTRICT, LIST, MIXED, SUBSTITUTE, DEFERRED }
@@ -128,13 +129,21 @@ internal class ParliamentaryMandates private constructor(
                 null
             }
         val region = known?.let { (row, i) -> row.constituencies.getOrNull(i) ?: "${row.regionName} ${i + 1}구" }
+        val list =
+            if (!reserved && !district && chamber.rankedLists.isNotEmpty()) {
+                val position = seat - old.reservedSeats - districtCount
+                chamber.rankedLists.flatMap { row -> List(row.seated.count { it == old.name }) { row } }[position]
+            } else {
+                null
+            }
         val move = changeParty && rule.switch != PartySwitch.VACATE && (rule.switch != PartySwitch.VACATE_LIST || district)
         if (move) {
             val party =
                 chamber.groups.filter { it.name != old.name && it.role == PartyRole.OPPOSITION && it.votingSeats > 0 }.minByOrNull {
                     ideologicalDistance(it.identity, old.identity)
                 } ?: return null
-            val change = transfer(chamber, old, party, district, reserved)
+            val next = chamber.moveListSeat(list, old.name, party.name)
+            val change = transfer(next, old, party, district, reserved)
             return change.copy(districts = districts.replaceHolder(known?.first?.regionId, known?.second, party.name))
         }
         val method =
@@ -151,9 +160,14 @@ internal class ParliamentaryMandates private constructor(
                 else -> Replacement.LIST
             }
         val due = replacementDate(method, date, general)
-        val vacancy = SeatVacancy(old.modelName, method, due, district, reserved, region, known?.first?.regionId, known?.second)
+        val vacancy = SeatVacancy(old.modelName, method, due, district, reserved, region, known?.first?.regionId, known?.second, list?.name)
         val remaining = chamber.groups.map { if (it == old) it.minusMember(district, reserved) else it }
-        val next = chamber.copy(groups = remaining, filledSeats = chamber.filledSeats - 1, vacancies = chamber.vacancies + vacancy)
+        val next =
+            chamber.moveListSeat(list, old.name, null).copy(
+                groups = remaining,
+                filledSeats = chamber.filledSeats - 1,
+                vacancies = chamber.vacancies + vacancy,
+            )
         val cause =
             if (changeParty) {
                 "당적 이탈에 따른 의원직 상실"
@@ -167,6 +181,16 @@ internal class ParliamentaryMandates private constructor(
             listOf("${old.name} ${cause}로 한 석이 비었다. ${due?.let { "${method.label} 예정일 $it." } ?: "보충 일정을 유보한다."}"),
             districts.replaceHolder(known?.first?.regionId, known?.second, ""),
         )
+    }
+
+    private fun Legislature.moveListSeat(
+        list: RankedMandateList?,
+        former: String,
+        successor: String?,
+    ): Legislature {
+        if (list == null) return this
+        val members = list.seated - former
+        return copy(rankedLists = rankedLists.map { if (it == list) it.copy(seated = members + listOfNotNull(successor)) else it })
     }
 
     private fun initialDistricts(
@@ -239,6 +263,12 @@ internal class ParliamentaryMandates private constructor(
         general: LocalDate?,
     ): LocalDate? {
         if (method == Replacement.DEFERRED || method == Replacement.NATIONAL_POLL || method == Replacement.COMMUNITY_POLL) return null
+        if (id == "KOR" && method == Replacement.LIST) {
+            val year = date.year + Math.floorMod(2024 - date.year, 4)
+            val may = LocalDate.of(year, 5, 29)
+            val termEnd = if (date > may) may.plusYears(4) else may
+            if (date >= termEnd.minusDays(120)) return null
+        }
         if (method !=
             Replacement.DISTRICT
         ) {
@@ -296,6 +326,8 @@ internal class ParliamentaryMandates private constructor(
         val votes = if (due.any { it.method == Replacement.DISTRICT || it.method == Replacement.NATIONAL_POLL }) shares() else emptyMap()
         var roster = districts
         var groups = chamber.groups
+        var lists = chamber.rankedLists
+        var exhausted = 0
         val news = mutableListOf<String>()
         for (vacancy in due) {
             val former = groups.find { it.modelName == vacancy.partyKey }
@@ -308,7 +340,24 @@ internal class ParliamentaryMandates private constructor(
                     null
                 }
             val incoming =
-                if (preferential != null) {
+                if (vacancy.listName != null) {
+                    val original = lists.single { it.name == vacancy.listName }
+                    val successorList =
+                        if (id == "LTU" && original.remaining.isEmpty()) lists.firstOrNull { it.remaining.isNotEmpty() } else original
+                    val next = successorList?.remaining?.firstOrNull()
+                    if (successorList == null || next == null) {
+                        exhausted++
+                        news += "${original.name} 명부의 승계 가능 후보가 없어 한 석을 공석으로 유지한다."
+                        continue
+                    }
+                    val updated = successorList.copy(seated = successorList.seated + next, remaining = successorList.remaining.drop(1))
+                    lists = lists.map { if (it == successorList) updated else it }
+                    if (successorList != original) {
+                        val index = lists.indexOf(updated)
+                        lists = lists.drop(index + 1) + lists.take(index + 1)
+                    }
+                    groups.find { it.name == next } ?: successorList.nominees.single { it.name == next }.also { groups = groups + it }
+                } else if (preferential != null) {
                     groups.find { it.name == preferential }
                         ?: ParliamentaryGroup(preferential, 0, PartyRole.OPPOSITION, districtMandates = 0).also { groups = groups + it }
                 } else if (vacancy.method == Replacement.DISTRICT || vacancy.method == Replacement.NATIONAL_POLL) {
@@ -343,7 +392,9 @@ internal class ParliamentaryMandates private constructor(
         return MandateChange(
             chamber.copy(
                 groups = groups,
-                filledSeats = chamber.filledSeats + due.size,
+                filledSeats = chamber.filledSeats + due.size - exhausted,
+                unassignedVacancies = chamber.unassignedVacancies + exhausted,
+                rankedLists = lists,
                 vacancies =
                     chamber.vacancies - due.toSet(),
             ),

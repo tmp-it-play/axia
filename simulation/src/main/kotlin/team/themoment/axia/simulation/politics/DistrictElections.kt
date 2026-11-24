@@ -28,6 +28,11 @@ internal class DistrictElectorate(
     fun iranianCount(shares: Map<String, Double>) =
         IranianAssembly.count(MixedVotes(shares, regions, roles, nationalApproval, modelNames), nationalApproval)
 
+    fun lithuanianCount(
+        shares: Map<String, Double>,
+        registration: ListRegistration?,
+    ) = LithuanianSeimas.count(MixedVotes(shares, regions, roles, nationalApproval, modelNames), registration)
+
     fun australianHouse(shares: Map<String, Double>) =
         AustralianHouse.elect(MixedVotes(shares, regions, roles, nationalApproval, modelNames))
 
@@ -39,7 +44,8 @@ internal class DistrictElectorate(
     fun mixedMember(
         shares: Map<String, Double>,
         system: MixedSystem,
-    ): LegislativeSeats = MixedMemberElections.elect(system, MixedVotes(shares, regions, roles, nationalApproval, modelNames))
+        registration: ListRegistration?,
+    ): LegislativeSeats = MixedMemberElections.elect(system, MixedVotes(shares, regions, roles, nationalApproval, modelNames), registration)
 
     fun frenchAssembly(shares: Map<String, Double>) = FrenchAssembly.count(shares, regions, roles, nationalApproval, modelNames)
 

@@ -105,6 +105,7 @@ fun SelectionPanel(
                 procedure.nextSession?.let { StatRow("다음 인선·신임 심의", it.toString()) }
                 procedure.decision?.let { StatRow("최근 인선·신임 결정", it) }
             }
+            politics.listRegistration?.let { StatRow("총선 명부 등록", "${it.filed} · ${it.lists.size}건") }
             politics.nextElection?.let { StatRow("다음 선거", it.toString()) }
             politics.executiveCampaign?.let { campaign ->
                 val (label, contestants) =

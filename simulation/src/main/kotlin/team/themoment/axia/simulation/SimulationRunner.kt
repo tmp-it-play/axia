@@ -117,6 +117,8 @@ class SimulationRunner(
 
     fun callEarlyElection() = perform(CampaignAction.EarlyElection)
 
+    fun chooseElectionList(partner: String?) = perform(CampaignAction.ChooseElectionList(partner))
+
     fun preferCoalitionPartner(party: String?) = perform(CampaignAction.PreferCoalition(party))
 
     fun appointGovernor(mandate: GovernorMandate) = perform(CampaignAction.AppointGovernor(mandate))
@@ -272,7 +274,7 @@ class SimulationRunner(
                 when (action) {
                     is CampaignAction.EditBudget, is CampaignAction.NegotiateBudget, CampaignAction.ClearBudget,
                     CampaignAction.ReviseBudget, CampaignAction.IntroduceBudget, CampaignAction.EarlyElection,
-                    is CampaignAction.SetOppositionVeto, is CampaignAction.PreferCoalition,
+                    is CampaignAction.SetOppositionVeto, is CampaignAction.PreferCoalition, is CampaignAction.ChooseElectionList,
                         -> {
                             // 예산 초안과 표결 상태는 아래 publish()가 갱신한다.
                         }

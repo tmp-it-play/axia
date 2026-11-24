@@ -37,6 +37,8 @@ data class ElectionResult(
     val senate: List<SenateReturn> = emptyList(),
     val pakistanReturn: PakistanReturn? = null,
     val listSeats: Map<String, Map<String, Int>> = emptyMap(),
+    val listVoteShares: Map<String, Double> = emptyMap(),
+    val listRegistration: ListRegistration? = null,
 ) {
     val governmentChanged: Boolean get() = governmentBefore != governmentAfter
 }
@@ -55,6 +57,8 @@ internal data class LegislativeSeats(
     val districts: List<DistrictResult> = emptyList(),
     val districtMandates: Map<String, Int> = emptyMap(),
     val listSeats: Map<String, Map<String, Int>> = emptyMap(),
+    val listVoteShares: Map<String, Double> = emptyMap(),
+    val rankedLists: List<RankedMandateList> = emptyList(),
 ) {
     fun total(name: String): Int = direct.getValue(name) + reserved.getOrDefault(name, 0)
 }
@@ -185,6 +189,7 @@ internal object ElectionModel {
         shares: Map<String, Double>,
         rule: LegislativeElectionRule,
         electorate: DistrictElectorate? = null,
+        registration: ListRegistration? = null,
     ): LegislativeSeats {
         rule.pluralityMap?.let { return electorate?.plurality(it, shares) ?: PluralityDistricts.elect(it, MixedVotes(shares)) }
         if (rule.iranianAssembly) {
@@ -200,7 +205,9 @@ internal object ElectionModel {
         ) {
             return electorate?.proportional(shares, rule) ?: ProportionalElections.elect(rule, MixedVotes(shares))
         }
-        rule.mixedSystem?.let { return electorate?.mixedMember(shares, it) ?: MixedMemberElections.elect(it, MixedVotes(shares)) }
+        rule.mixedSystem?.let {
+            return electorate?.mixedMember(shares, it, registration) ?: MixedMemberElections.elect(it, MixedVotes(shares), registration)
+        }
         if (rule.frenchAssembly) return (electorate?.frenchAssembly(shares) ?: FrenchAssembly.count(shares)).seats
         if (rule.pakistanAssembly) {
             val opening = requireNotNull(rule.openingContest)

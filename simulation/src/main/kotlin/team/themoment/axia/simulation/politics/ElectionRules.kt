@@ -97,6 +97,32 @@ data class LegislativeElectionRule(
     }
 }
 
+internal fun earlyHousePoll(
+    country: String,
+    date: LocalDate,
+    days: Int,
+): LocalDate =
+    when (country) {
+        "FRA" -> {
+            FrenchAssembly.earlyElection(date)
+        }
+
+        "ITA" -> {
+            date.plusDays(days.toLong()).with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY))
+        }
+
+        "LTU" -> {
+            minOf(
+                date.plusDays(days.toLong()).with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY)),
+                date.plusMonths(3).with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY)),
+            )
+        }
+
+        else -> {
+            date.plusDays(days.toLong())
+        }
+    }
+
 private fun calendarPoll(
     year: Int,
     month: Int,
@@ -152,6 +178,7 @@ internal fun newHouseTerm(
         "KOR" -> LocalDate.of(poll.year, 5, 30)
         "IDN" -> LocalDate.of(poll.year, 10, 1)
         "IRN" -> maxOf(poll, LocalDate.of(poll.year, 5, 27))
+        "LTU" -> if (poll == LocalDate.of(2024, 10, 27)) LocalDate.of(2024, 11, 14) else poll.plusWeeks(2)
         "TWN" -> if (early || poll.monthValue != 1) poll.plusDays(10) else LocalDate.of(poll.year, 2, 1)
         else -> poll
     }

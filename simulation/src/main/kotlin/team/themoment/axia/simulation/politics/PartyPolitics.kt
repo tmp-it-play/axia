@@ -63,7 +63,7 @@ internal class EmergingParties(
 
     fun snapshot(): List<NewParty> = parties.toList()
 
-    fun clear() = parties.clear()
+    fun clear(filingDeadline: LocalDate? = null) = parties.removeAll { filingDeadline == null || it.founded <= filingDeadline }
 
     fun advance(
         date: LocalDate,
@@ -105,14 +105,23 @@ internal class EmergingParties(
         return founded
     }
 
-    fun voteShares(existing: Map<String, Double>): Map<String, Double> {
-        if (parties.isEmpty()) return existing
-        val fresh = parties.associate { it.name to it.support }
+    fun voteShares(
+        existing: Map<String, Double>,
+        filingDeadline: LocalDate? = null,
+    ): Map<String, Double> {
+        val eligible = eligible(filingDeadline)
+        if (eligible.isEmpty()) return existing
+        val fresh = eligible.associate { it.name to it.support }
         val remaining = 1.0 - fresh.values.sum()
         return existing.mapValues { it.value * remaining } + fresh
     }
 
-    fun contenders() = parties.map { ParliamentaryGroup(it.name, 1, PartyRole.OPPOSITION, foundation = it.foundation) }
+    private fun eligible(deadline: LocalDate?) = if (deadline == null) parties else parties.filter { it.founded <= deadline }
+
+    fun contenders(filingDeadline: LocalDate? = null) =
+        eligible(filingDeadline).map {
+            ParliamentaryGroup(it.name, 1, PartyRole.OPPOSITION, foundation = it.foundation)
+        }
 
     fun takenNames(
         chamber: Legislature?,

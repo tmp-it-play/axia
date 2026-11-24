@@ -74,6 +74,14 @@ sealed interface CampaignAction {
     }
 
     @Serializable
+    @SerialName("election.list")
+    data class ChooseElectionList(
+        val partner: String?,
+    ) : CampaignAction {
+        override fun applyTo(simulation: Simulation) = simulation.chooseElectionList(partner)
+    }
+
+    @Serializable
     @SerialName("election.coalition")
     data class PreferCoalition(
         val party: String?,

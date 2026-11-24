@@ -584,6 +584,8 @@ class Simulation(
     /** 조건을 만족하면 6주 뒤 조기 총선을 치른다. */
     fun callEarlyElection() = politics.callEarlyElection(date)
 
+    fun chooseElectionList(partner: String?) = politics.chooseElectionList(partner)
+
     fun preferCoalitionPartner(party: String?) = politics.preferCoalitionPartner(party)
 
     fun editBudgetDraft(

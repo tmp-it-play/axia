@@ -24,6 +24,8 @@ data class LegislativeRunoff(
     val nextRound: LocalDate,
     val settled: Int,
     val contested: Int,
+    val listSeats: Map<String, Int> = emptyMap(),
+    val districtBallots: Map<String, List<String>> = emptyMap(),
 )
 
 /** 2022년 선거구별 등록자·유효표·정치 계열별 득표. 같은 계열의 정당은 지역별 공동후보를 추정한다. */

@@ -4,7 +4,7 @@
   "switch": "VACATE_LIST",
   "days": 42,
   "lastDays": 0,
-  "sourceNote": "공직선거법 제35·192·200조. 지역구 보궐, 비례대표 명부 승계. 비례 의원의 자발적 당적 변경은 의원직 상실. https://www.law.go.kr/법령/공직선거법/제200조 https://law.go.kr/lsLawLinkInfo.do?chrClsCd=010202&lsJoLnkSeq=1000237805"
+  "sourceNote": "공직선거법 제35·192·200조. 지역구 보궐, 비례대표 명부 승계. 비례 의원의 자발적 당적 변경은 의원직 상실. 궐원 시 선거 당시 명부의 차순위로 10일 안에 승계자를 정하고, 임기 만료 전 120일 이내이면 승계하지 않는다. 시나리오에서는 통지 뒤 3일에 결정한다. https://www.law.go.kr/법령/공직선거법/제200조 https://law.go.kr/lsLawLinkInfo.do?chrClsCd=010202&lsJoLnkSeq=1000237805"
  },
  "USA": {
   "route": "DISTRICT",
@@ -123,7 +123,7 @@
   "switch": "KEEP",
   "days": 63,
   "lastDays": 0,
-  "sourceNote": "단일선거구는 보궐, 다인선거구는 같은 명부 후보 승계. https://archive.ipu.org/parline-e/reports/2189.htm"
+  "sourceNote": "단일선거구는 보궐, 다인선거구는 선호표 확정 명부 차순위가 승계한다. 명부가 소진되면 선거 뒤 고정한 잔여의석 순서에서 다른 명부로 넘긴다. https://e-seimas.lrs.lt/portal/legalActPrint/lt?category=TAD&documentId=28a7cbf395fb11ef955ff95815eb5ce5 https://archive.ipu.org/parline-e/reports/2189.htm"
  },
  "TUR": {
   "route": "DEFERRED",

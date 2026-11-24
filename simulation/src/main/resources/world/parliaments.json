@@ -278,7 +278,7 @@
     }
   },
   "ITA": {
-    "sourceNote": "2022-09-25 총선. IPU Parline https://data.ipu.org/parliament/IT/IT-LC01/election/IT-LC01-E20220925/ IPU 중도우파 공동 명부 237석을 네 연정 참여 명부로 분할. 나머지 연합은 선거 단위. https://researchbriefings.files.parliament.uk/documents/CBP-9629/CBP-9629.pdf",
+    "sourceNote": "2022-09-25 총선. IPU Parline https://data.ipu.org/parliament/IT/IT-LC01/election/IT-LC01-E20220925/ 중도우파 237석과 중도좌파 소속 4개 전국 명부의 84석은 각 명부에 귀속한다. 발레다오스타의 1석은 지역·해외 명부에 포함한다. https://researchbriefings.files.parliament.uk/documents/CBP-9629/CBP-9629.pdf",
     "chamber": {
       "name": "하원",
       "filledSeats": 400,
@@ -287,7 +287,10 @@
         { "name": "동맹", "seats": 66, "role": "COALITION" },
         { "name": "전진 이탈리아", "seats": 45, "role": "COALITION" },
         { "name": "우리 온건파", "seats": 7, "role": "COALITION" },
-        { "name": "민주당 주도 중도좌파연합", "seats": 84, "role": "OPPOSITION", "constituency": "WORKERS" },
+        { "name": "민주당", "seats": 69, "role": "OPPOSITION", "constituency": "WORKERS" },
+        { "name": "녹색좌파연합", "seats": 12, "role": "OPPOSITION" },
+        { "name": "더 많은 유럽", "seats": 2, "role": "OPPOSITION" },
+        { "name": "시민참여", "seats": 1, "role": "OPPOSITION" },
         { "name": "오성운동", "seats": 52, "role": "OPPOSITION" },
         { "name": "행동당·생동하는 이탈리아", "seats": 21, "role": "OPPOSITION" },
         { "name": "남티롤인민당 연합", "seats": 3, "role": "OTHER" },
@@ -346,7 +349,7 @@
     }
   },
   "LTU": {
-    "sourceNote": "2020-10-11~2020-10-25 총선. IPU Parline https://data.ipu.org/parliament/LT/LT-LC01/election/LT-LC01-E20201011/ 시모니테 3당 연정. https://www.lrs.lt/sip/portal.show?p_k=2&p_t=290147",
+    "sourceNote": "2020-10-11~2020-10-25 총선. IPU Parline https://data.ipu.org/parliament/LT/LT-LC01/election/LT-LC01-E20201011/ 시모니테 3당 연정. https://www.lrs.lt/sip/portal.show?p_k=2&p_t=290147 2024년 평화연합에 참가한 원외 2개 정당은 의석 0으로 기재한다. https://pre-prod.vrk.lt/lt/2024-m-spalio-13-d-lietuvos-respublikos-seimo-rinkimai/kandidatu-sarasu-igarsintos-rinkimu-0",
     "chamber": {
       "name": "국회",
       "filledSeats": 141,
@@ -359,6 +362,8 @@
         { "name": "노동당", "seats": 10, "role": "OPPOSITION" },
         { "name": "폴란드인 선거행동", "seats": 3, "role": "OPPOSITION" },
         { "name": "사회민주노동당", "seats": 3, "role": "OPPOSITION" },
+        { "name": "리투아니아 기독교민주당", "seats": 0, "role": "OPPOSITION" },
+        { "name": "사모기티아당", "seats": 0, "role": "OPPOSITION" },
         { "name": "자유와 정의", "seats": 1, "role": "OTHER" },
         { "name": "녹색당", "seats": 1, "role": "OTHER" },
         { "name": "무소속", "seats": 4, "role": "OTHER" }

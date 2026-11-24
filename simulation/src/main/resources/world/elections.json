@@ -16,7 +16,7 @@
       "title": "대통령",
       "partyPrimary": true
     },
-    "sourceNote": "제22대 총선 2024-04-10, 대통령 정기 선거 2027-03-03. 시·도별 254개 지역구와 준연동 46석. 정당투표 3% 또는 지역구 5석을 충족한 정당에 공직선거법 제189조를 적용한다. 위성정당의 별도 창당·공천은 모형화하지 않았다. https://law.go.kr/lsLinkCommonInfo.do?chrClsCd=010202&lsJoLnkSeq=1022658205 정기 의원 임기는 5월 30일, 2024년 시나리오 대통령 임기는 5월 10일에 시작한다. 다음 정기선거일은 공직선거법 제34조의 임기만료 전 기준 수요일이다. 민속절과 임시공휴일에 따른 이동은 추계에서 제외했다. https://www.law.go.kr/법령/공직선거법/제34조 대통령 당선인 유고 시 헌법 제68조 제2항의 60일 이내 선거와 제71조의 권한대행을 적용한다. https://www.law.go.kr/법령/대한민국헌법/제68조"
+    "sourceNote": "제22대 총선 2024-04-10, 대통령 정기 선거 2027-03-03. 시·도별 254개 지역구와 준연동 46석. 정당투표 3% 또는 지역구 5석을 충족한 정당에 공직선거법 제189조를 적용한다. 2024년 시나리오에서는 투표 19일 전 등록을 마감한다. 비례 명부 38개와 후보 정원·공동 추천을 korean_lists.json에 수록하며, 위성정당과 모당의 지역구 당선자를 별도로 집계한다. https://law.go.kr/lsLinkCommonInfo.do?chrClsCd=010202&lsJoLnkSeq=1022658205 정기 의원 임기는 5월 30일, 2024년 시나리오 대통령 임기는 5월 10일에 시작한다. 다음 정기선거일은 공직선거법 제34조의 임기만료 전 기준 수요일이다. 민속절과 임시공휴일에 따른 이동은 추계에서 제외했다. https://www.law.go.kr/법령/공직선거법/제34조 대통령 당선인 유고 시 헌법 제68조 제2항의 60일 이내 선거와 제71조의 권한대행을 적용한다. https://www.law.go.kr/법령/대한민국헌법/제68조"
   },
   "USA": {
     "system": "PRESIDENTIAL",
@@ -208,7 +208,7 @@
       "earlyDissolution": true,
       "mixedSystem": "ITA"
     },
-    "sourceNote": "2022-10-13 개원한 의회의 임기 만료 뒤 70일 안 정기 총선. 국내 지역구 147석은 공동후보도 경쟁한다. 국내 비례 245석은 3% 정당·10% 연합 기준으로 배분한다. 재외 4개 권역은 유럽 3·남미 2·북중미 2·나머지 1석이다. https://temi.camera.it/leg19/temi/elezioni-e-referendum https://www.camera.it/temiap/2022/08/03/OCD177-5672.pdf"
+    "sourceNote": "2022-10-13 개원한 의회의 임기 만료 뒤 70일 안 정기 총선. 2024년 시나리오의 하원 선거법에 따라 정당은 선거 44~42일 전 명부 간 상호 연결을 신고하고, 국내 지역구 147석에 각 연합이 공동후보를 낸다. 국내 비례 245석은 3% 정당·10% 연합 기준으로 배분하며 연합의 1% 미만 명부는 합산에서 제외한다. 보호 언어 명부는 해당 지역 20% 득표 또는 지역구 4분의 1 당선 예외를 적용한다. 하원 선거위원회의 2022년 전국 명부 유효표 28,102,222표와 트렌티노알토아디제 505,551표를 반영했다. 발레다오스타 지역 후보의 지역구 모의 지지는 2022년 최다 득표 지역명부의 20,763표에서 출발한다. https://www.regione.vda.it/amministrazione/Elezioni/Dati_e_risultati/elezioni/VotiLista_i.aspx?idele=168 공천 지분과 향후 협약은 모의한다. https://documenti.camera.it/leg19/resoconti/commissioni/bollettini/pdf/2025/06/24/leg.19.bol0518.data20250624.com16.pdf 재외 4개 권역은 유럽 3·남미 2·북중미 2·나머지 1석이다. https://temi.camera.it/leg19/temi/elezioni-e-referendum https://www.camera.it/temiap/2022/08/03/OCD177-5672.pdf"
   },
   "FIN": {
     "system": "PARLIAMENTARY",
@@ -260,7 +260,7 @@
       "seats": 141,
       "constituencySeats": 71,
       "electoralSystem": "MIXED",
-      "earlyDissolution": false,
+      "earlyDissolution": true,
       "mixedSystem": "LTU"
     },
     "executive": {
@@ -269,7 +269,7 @@
       "title": "대통령",
       "runoffDays": 14
     },
-    "sourceNote": "2024-10-13 총선 1차와 2024-05-12 대선 1차. 재외 선거구를 포함한 71개 실명 지역구에서 과반·결선을 처리한다. 전국 70석은 5% 봉쇄조항과 유효표 60% 이상 대표 조건의 잉여 배분이다. https://www.e-tar.lt/portal/lt/legalActPrint?documentId=921dd780904011eea5a28c81c82193a8 https://www.e-tar.lt/portal/lt/legalActPrint?documentId=418f26f0082b11edb4cae1b158f98ea5"
+    "sourceNote": "2024-10-13 총선 1차와 2024-05-12 대선 1차. 재외 선거구를 포함한 71개 지역구는 투표자 과반이면서 등록 유권자 5분의 1 이상 득표해야 1차 당선이다. 전국 명부와 1차 확정 지역구는 유지하고 미결 지역구는 2주 뒤 결선한다. 2024년 새 의회는 11월 14일 개원했다. 국회 자진해산에는 헌법 제58조의 재적 5분의 3 표결이 필요하다. https://lrkt.lt/en/about-the-court/legal-information/the-constitution/192 https://e-seimas.lrs.lt/rs/legalact/TAD/28a7cbf395fb11ef955ff95815eb5ce5/ https://www.lrs.lt/sip/portal.show?p_k=2&p_r=35403&p_t=290049 전국 70석은 단일 명부 5%·공동명부 7% 기준과 60% 대표 조건으로 배분한다. 신고는 선거 83~65일 전이다. 봉쇄선은 무효표 포함 투표자 기준, 배분은 자격 명부 유효표의 올림 쿼터 기준이다. 모의 투표 규모는 2020년 1,175,026명과 유효표 1,133,561표를 쓴다. https://www.osce.org/files/f/documents/b/8/480886.pdf 2024년 10월은 선관위의 3당 평화연합 신고와 농민녹색연합의 공동명부 간주 결정을 적용한다. https://e-seimas.lrs.lt/rs/lasupplement/TAD/ba0c2d3099e711ef955ff95815eb5ce5/bb44110599e711ef955ff95815eb5ce5/format/ISO_PDF/ 가상 공천 순번·개인 우선표·이후의 선거연합 교섭은 모의한다. https://pre-prod.vrk.lt/lt/2024-m-spalio-13-d-lietuvos-respublikos-seimo-rinkimai/partijos-teikiami-pareiskiniai-dokumentai https://pre-prod.vrk.lt/lt/2024-m-spalio-13-d-lietuvos-respublikos-seimo-rinkimai/kandidatu-sarasu-igarsintos-rinkimu-0 https://www.e-tar.lt/portal/lt/legalActPrint?documentId=921dd780904011eea5a28c81c82193a8 https://www.e-tar.lt/portal/lt/legalActPrint?documentId=418f26f0082b11edb4cae1b158f98ea5"
   },
   "TUR": {
     "system": "PRESIDENTIAL",

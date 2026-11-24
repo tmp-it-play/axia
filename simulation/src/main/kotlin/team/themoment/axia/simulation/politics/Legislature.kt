@@ -70,6 +70,7 @@ data class Legislature(
     private val absoluteMajority: Int? = null,
     val vacancies: List<SeatVacancy> = emptyList(),
     val unassignedVacancies: Int = 0,
+    val rankedLists: List<RankedMandateList> = emptyList(),
 ) {
     @Transient
     val votingSeats: Int = groups.sumOf { it.votingSeats }
@@ -86,8 +87,26 @@ data class Legislature(
     internal fun withGroups(newGroups: List<ParliamentaryGroup>): Legislature =
         copy(groups = newGroups, filledSeats = newGroups.sumOf { it.seats })
 
-    internal fun withNewTerm(newGroups: List<ParliamentaryGroup>): Legislature =
-        copy(groups = newGroups, filledSeats = newGroups.sumOf { it.seats }, vacancies = emptyList(), unassignedVacancies = 0)
+    internal fun renamed(change: PartyRename): Legislature =
+        copy(
+            groups = groups.map(change::group),
+            // 선거 당시 명부의 이름은 궐원 뒤에도 승계 명부를 가리키는 식별자다.
+            rankedLists = rankedLists.map { it.renamed(change).copy(name = it.name) },
+        )
+
+    internal fun withNewTerm(
+        newGroups: List<ParliamentaryGroup>,
+        unassigned: Int = 0,
+        vacancies: List<SeatVacancy> = emptyList(),
+        rankedLists: List<RankedMandateList> = emptyList(),
+    ): Legislature =
+        copy(
+            groups = newGroups,
+            filledSeats = newGroups.sumOf { it.seats },
+            vacancies = vacancies,
+            unassignedVacancies = unassigned,
+            rankedLists = rankedLists,
+        )
 
     internal fun forecast(
         policyScore: Double,

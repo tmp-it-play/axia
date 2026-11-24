@@ -156,6 +156,9 @@ data class PoliticsSnapshot(
     val executiveCampaign: ExecutiveCampaign? = null,
     val presidentElect: PresidentElect? = null,
     val legislativeRunoff: LegislativeRunoff? = null,
+    val listRegistration: ListRegistration? = null,
+    val listFilingOptions: ListFilingOptions? = null,
+    val seimasResolution: SeimasResolution? = null,
     val newHouseOpens: LocalDate? = null,
     val coalitionPreference: CoalitionPreference? = null,
 )
@@ -187,8 +190,10 @@ internal class Politics(
     private var incomingHouse: Pair<LocalDate, Legislature>? = null
     private var lastDistricts: List<DistrictResult> = emptyList()
     private var lastListSeats = emptyMap<String, Map<String, Int>>()
+    private var lastListVoteShares = emptyMap<String, Double>()
     private var lastDistrictVote: Map<String, Double> =
         when (profile.id) {
+            "ITA" -> JointListNominations.italianBaseline
             "DEU" -> GermanBundestag.listBaseline
             "GBR" -> PluralityDistricts.baseline(PluralityMap.GBR)
             "CAN" -> PluralityDistricts.baseline(PluralityMap.CAN_2013)
@@ -213,11 +218,19 @@ internal class Politics(
     private var rebelGovernment: String? = null
     val hasInterimGovernment: Boolean get() = rebelGovernment != null || juntaSince != null
 
+    private var seimasResolution: SeimasResolution? = null
+    private var lithuanianCount: LithuanianSeimas.Count? = null
     private var iranianCount: IranianAssembly.Count? = null
     private var frenchCount: FrenchAssembly.Count? = null
     private var legislativeRunoff: LegislativeRunoff? = null
     private val frenchAssemblyDissolved: Boolean get() =
         rules.legislature?.frenchAssembly == true && (legislativeRunoff != null || earlyCalled)
+    private val listFiling = ListFiling.forSystem(rules.legislature?.mixedSystem)
+    private val firstPollingDay get() = legislativeRunoff?.firstRound ?: nextLegislative
+    private val filingDeadline get() = listFiling?.deadline(firstPollingDay)
+
+    private fun listContenders() = electoralParties(legislature?.groups.orEmpty()) + newParties.contenders(filingDeadline)
+
     private var nextLegislative: LocalDate? = rules.legislature?.next
     private var nextExecutive: LocalDate? = rules.executive?.next
     private val executiveElection = ExecutiveElection(profile.id, leadership, profile.regime, constitution.executiveTermLimit, random)
@@ -387,6 +400,7 @@ internal class Politics(
         juntaSince = date
         newParties.clear()
         legislature = null
+        listFiling?.finish()
         nextLegislative = null
         nextExecutive = null
         executiveElection.cancel()
@@ -394,6 +408,7 @@ internal class Politics(
         outgoingDistricts = null
         frenchCount = null
         iranianCount = null
+        lithuanianCount = null
         legislativeRunoff = null
         coalitionPreference = null
         projection = null
@@ -410,6 +425,7 @@ internal class Politics(
         rebelGovernment = rebels
         juntaSince = null
         legislature = null
+        listFiling?.finish()
         nextLegislative = null
         nextExecutive = null
         executiveElection.cancel()
@@ -417,6 +433,7 @@ internal class Politics(
         outgoingDistricts = null
         frenchCount = null
         iranianCount = null
+        lithuanianCount = null
         legislativeRunoff = null
         coalitionPreference = null
         earlyCalled = false
@@ -441,8 +458,22 @@ internal class Politics(
         }
     }
 
+    fun chooseElectionList(partner: String?) {
+        val filing = listFiling ?: return
+        val options = filing.options(firstPollingDay, listContenders()) ?: return
+        if (sittingDate >= options.deadline) return
+        filing.choose(options, partner)
+        projection = project()
+    }
+
     private fun takenPartyNames(): Set<String> =
         newParties.takenNames(legislature, executiveElection) + lastDistrictVote.keys +
+            (if (profile.id == "KOR") KoreanListNominations.protectedNames else emptySet()) +
+            listFiling
+                ?.filed(firstPollingDay)
+                ?.lists
+                .orEmpty()
+                .map { it.name } +
             constitution.upperHouse
                 ?.groups
                 .orEmpty()
@@ -459,7 +490,8 @@ internal class Politics(
     ) {
         val chamber = legislature ?: return
         val change = newParties.rename(id, name, chamber, takenPartyNames()) ?: return
-        legislature = chamber.withGroups(chamber.groups.map(change::group))
+        legislature = chamber.renamed(change)
+        listFiling?.rename(change)
         executiveElection.renameParty(change)
         senate?.renameParty(change)
         upperRenewals?.renameParty(change)
@@ -471,7 +503,9 @@ internal class Politics(
         indirectPresident?.renameParty(change)
         frenchCount = frenchCount?.renamed(change)
         iranianCount = iranianCount?.renamed(change)
-        incomingHouse = incomingHouse?.let { (whenSeated, chamber) -> whenSeated to chamber.withGroups(chamber.groups.map(change::group)) }
+        lithuanianCount = lithuanianCount?.renamed(change)
+        legislativeRunoff?.firstRound?.let { first -> lithuanianCount?.let { legislativeRunoff = it.runoff(first) } }
+        incomingHouse = incomingHouse?.let { (whenSeated, chamber) -> whenSeated to chamber.renamed(change) }
         negotiatingWith = negotiatingWith?.let(change::label)
         coalitionPreference = coalitionPreference?.let { CoalitionPreference(change.label(it.formateur), change.label(it.partner)) }
         lastDistrictVote = lastDistrictVote.mapKeys { change.label(it.key) }
@@ -489,23 +523,40 @@ internal class Politics(
         val rule = rules.legislature ?: return false
         val next = nextLegislative ?: return false
         val last = lastLegislative ?: return false
+        if (profile.id == "LTU") {
+            val poll = earlyHousePoll(profile.id, date, requireNotNull(constitution.confidence?.electionDays))
+            return rule.earlyDissolution && !earlyCalled && incomingHouse == null && legislativeRunoff == null &&
+                seimasResolution?.date != date && next > poll
+        }
         if (profile.id == "PAK") {
             return !earlyCalled && confidence?.caretaker != true && leadership.current().leader.title == "총리" && date < next
         }
+        if (profile.id == "ITA" && confidence?.italianDissolutionAllowed(date, leadership.current().headOfState, next) != true) return false
         return rule.earlyDissolution && confidence?.caretaker != true && !earlyCalled && date >= last.plusYears(1) &&
             next > date.plusMonths(6)
     }
 
     fun callEarlyElection(date: LocalDate) {
         if (!canCallEarlyElection(date)) return
+        if (profile.id == "LTU") {
+            val chamber = requireNotNull(legislature)
+            val resolution = LithuanianSeimas.resolution(chamber, approval, date)
+            seimasResolution = resolution
+            news += CountryNews(chamber.name, resolution.report, major = true)
+            if (!resolution.vote.passes) return
+        }
         val poll =
-            if (rules.legislature?.frenchAssembly ==
-                true
-            ) {
-                FrenchAssembly.earlyElection(date)
-            } else {
-                date.plusWeeks(EARLY_ELECTION_WEEKS)
-            }
+            earlyHousePoll(
+                profile.id,
+                date,
+                if (profile.id in
+                    setOf("ITA", "LTU")
+                ) {
+                    requireNotNull(constitution.confidence?.electionDays)
+                } else {
+                    42
+                },
+            )
         if (profile.id == "CAN") canadianElectionMap = PluralityDistricts.canadaOrder(date)
         val dissolution = legislature?.let { confidence?.dissolveOnAdvice(it, date, poll) }
         if (dissolution != null) {
@@ -600,8 +651,26 @@ internal class Politics(
         nextExecutive = executiveElection.scheduledPoll(nextExecutive)
         val nominated = executiveElection.prepare(date, nextExecutive, rules.executive, legislature?.groups.orEmpty(), approval)
         if (nominated && rules.executive?.partyPrimary == true) news += CountryNews("선거", "당내 경선이 끝나 본선 후보가 확정됐다.", major = false)
+        val registered = listFiling?.advance(date, firstPollingDay, ::listContenders)
+        if (registered != null) {
+            news += CountryNews("총선", "후보 명부 ${registered.lists.size}건의 등록이 확정됐다.", major = false)
+            projection = project()
+        }
         var legislativeDue = nextLegislative?.let { it <= date } == true
         var firstRoundNews: String? = null
+        rules.legislature?.takeIf { it.mixedSystem == MixedSystem.LTU && legislativeDue && lithuanianCount == null }?.let {
+            val chamber = requireNotNull(legislature)
+            val votes = newParties.voteShares(voteShares(chamber.groups) { random.nextGaussian() * VOTE_NOISE }, filingDeadline)
+            val round = districtElectorate().lithuanianCount(votes, listFiling?.filed(firstPollingDay))
+            lithuanianCount = round
+            round.runoff(date)?.let { runoff ->
+                legislativeRunoff = runoff
+                nextLegislative = runoff.nextRound
+                legislativeDue = false
+                projection = project()
+                firstRoundNews = "전국 명부와 지역구에서 ${runoff.settled}석이 확정됐다. ${runoff.contested}개 선거구는 ${runoff.nextRound}에 결선 투표한다."
+            }
+        }
         rules.legislature?.takeIf { it.iranianAssembly && legislativeDue && iranianCount == null }?.let { rule ->
             val chamber = requireNotNull(legislature)
             val round =
@@ -690,17 +759,20 @@ internal class Politics(
         if (!legislativeDue && !executiveDue) return inauguration != null || firstRoundNews != null
         val before = snapshotGovernment()
         val wasEarly = earlyCalled
+        val registeredLists = listFiling?.filed(firstPollingDay)?.takeIf { legislativeDue }
         var parties: List<PartyResult>? = null
         var lapsed = false
         if (legislativeDue) {
             lapsed = (newHouseTerm(profile.id, date, earlyCalled) == date && dissolveForElection()) || billLapsedOnDissolution
             billLapsedOnDissolution = false
             parties = electLegislature(date)
+            listFiling?.finish()
             renewUpper(date, true)
             val firstPollingDate = legislativeRunoff?.firstRound ?: date
             legislativeRunoff = null
             frenchCount = null
             iranianCount = null
+            lithuanianCount = null
             if (wasEarly) confidence?.recordDissolutionElection(date)
             val rule = requireNotNull(rules.legislature)
             lastLegislative = date
@@ -739,6 +811,8 @@ internal class Politics(
                 if (legislativeDue) lastDistricts else emptyList(),
                 if (legislativeDue) coalitionPreference?.let(::coalitionReport) else null,
                 listSeats = if (legislativeDue) lastListSeats else emptyMap(),
+                listVoteShares = if (legislativeDue) lastListVoteShares else emptyMap(),
+                listRegistration = registeredLists,
                 senate = if (legislativeDue) senate?.lastElection.orEmpty() else emptyList(),
                 pakistanReturn = if (legislativeDue) pakistanReturns?.begin(date, lastDistricts, requireNotNull(legislature)) else null,
             )
@@ -824,24 +898,42 @@ internal class Politics(
             return result.parties
         }
         val shares =
-            iranianCount?.vote ?: frenchCount?.vote
-                ?: newParties.voteShares(voteShares(chamber.groups) { random.nextGaussian() * VOTE_NOISE })
+            lithuanianCount?.vote ?: iranianCount?.vote ?: frenchCount?.vote
+                ?: newParties.voteShares(voteShares(chamber.groups) { random.nextGaussian() * VOTE_NOISE }, filingDeadline)
         val seats =
-            iranianCount?.result(approval, chamber.groups.find { it.role == PartyRole.LEAD }?.name, random.nextInt())
+            lithuanianCount?.result(
+                if (legislativeRunoff ==
+                    null
+                ) {
+                    0
+                } else {
+                    random.nextInt()
+                },
+                chamber.groups.find { it.role == PartyRole.LEAD }?.name,
+                approval,
+            )
+                ?: iranianCount?.result(approval, chamber.groups.find { it.role == PartyRole.LEAD }?.name, random.nextInt())
                 ?: frenchCount?.let { if (legislativeRunoff == null) it.seats else it.secondBallot(approval, regions, random.nextInt()) }
-                ?: ElectionModel.legislativeSeats(shares, rule, districtElectorate())
+                ?: ElectionModel.legislativeSeats(shares, rule, districtElectorate(), listFiling?.filed(firstPollingDay))
         val startOfTerm = newHouseTerm(profile.id, date, earlyCalled)
         if (startOfTerm > date) outgoingDistricts = lastDistricts
         lastListSeats = seats.listSeats
+        lastListVoteShares = seats.listVoteShares
         lastDistricts = seats.districts
         lastDistrictVote = if (lastDistricts.isNotEmpty() || rule.proportionalSystem != null) shares else emptyMap()
-        val contenders = electoralParties(chamber.groups) + newParties.contenders()
+        val contenders = listContenders()
         senate?.elect(date, shares, contenders, executiveElection.governingParty, regions, approval)
         val previousRoles = contenders.associate { it.name to it.role }
-        newParties.clear()
-        val reseated = chamber.withNewTerm(ElectionModel.reseat(contenders, seats))
+        newParties.clear(filingDeadline)
+        val reseated =
+            chamber.withNewTerm(
+                ElectionModel.reseat(contenders, seats),
+                unassigned = if (rule.mixedSystem == MixedSystem.KOR) rule.seats - seats.direct.values.sum() else 0,
+                vacancies = lithuanianCount?.vacancies(date).orEmpty(),
+                rankedLists = seats.rankedLists.map { it.withNominees(contenders) },
+            )
         val governed =
-            if (confidence?.caretaker == true) {
+            if (lithuanianCount != null || confidence?.caretaker == true) {
                 reseated
             } else {
                 ElectionModel.afterLegislativeElection(
@@ -855,7 +947,9 @@ internal class Politics(
         val leadBefore = previousRoles.entries.firstOrNull { it.value == PartyRole.LEAD }?.key
         val leadAfter = governed.groups.firstOrNull { it.role == PartyRole.LEAD }?.name
         if (startOfTerm > date) incomingHouse = startOfTerm to governed else legislature = governed
-        if (leadAfter != null && rules.system != GovernmentSystem.PRESIDENTIAL && confidence?.caretaker != true) {
+        if (leadAfter != null && rules.system != GovernmentSystem.PRESIDENTIAL && confidence?.caretaker != true &&
+            lithuanianCount == null
+        ) {
             leadership.onGovernmentFormed(leadAfter, date, reelected = leadAfter == leadBefore)
         }
         return contenders.map { party ->
@@ -886,6 +980,7 @@ internal class Politics(
         rules.legislature?.pluralityMap?.let { PluralityDistricts.contenders(it, parties) }
             ?: when (profile.id) {
                 "IRN" -> IranianAssembly.contenders(parties)
+                "KOR" -> KoreanListNominations.contenders(parties, firstPollingDay?.takeIf { sittingDate >= it.minusDays(19) })
                 "AUS" -> AustralianHouse.contenders(parties)
                 else -> parties
             }
@@ -902,7 +997,14 @@ internal class Politics(
             satisfaction = groups.associate { it.group to it.satisfaction },
             identityMood = opinion.identities,
             identityShares = opinion.identityShares,
-            lastVote = lastDistrictVote,
+            lastVote =
+                if (profile.id ==
+                    "KOR"
+                ) {
+                    KoreanListNominations.campaignVote(firstPollingDay, sittingDate, lastDistrictVote)
+                } else {
+                    lastDistrictVote
+                },
             noise = noise,
         )
 
@@ -914,9 +1016,16 @@ internal class Politics(
             val result = ElectionModel.openingElection(rule, profile.regime, districtElectorate()) { 0.0 }
             return result.parties.map { SeatProjection(it.name, null, it.seatsAfter, it.voteShare) }
         }
-        val shares = newParties.voteShares(voteShares(chamber.groups) { 0.0 })
-        val seats = ElectionModel.legislativeSeats(shares, rule, districtElectorate())
-        return (electoralParties(chamber.groups) + newParties.contenders()).map {
+        val shares = lithuanianCount?.vote ?: newParties.voteShares(voteShares(chamber.groups) { 0.0 }, filingDeadline)
+        val contenders = listContenders()
+        val filing =
+            if (profile.id == "KOR" && firstPollingDay == LocalDate.of(2024, 4, 10)) {
+                listFiling?.filed(firstPollingDay)
+            } else {
+                listFiling?.forecast(firstPollingDay, contenders)
+            }
+        val seats = lithuanianCount?.result() ?: ElectionModel.legislativeSeats(shares, rule, districtElectorate(), filing)
+        return contenders.map {
             val prior = chamber.groups.firstOrNull { group -> group.name == it.name }
             val current = (if (rule.pakistanAssembly) prior?.directSeats else prior?.seats) ?: 0
             SeatProjection(it.name, current, seats.total(it.name), shares.getValue(it.name))
@@ -1161,7 +1270,7 @@ internal class Politics(
             }
         if (decision.successor) newGovernment()
         decision.election?.let { poll ->
-            billLapsedOnDissolution = dissolveForElection()
+            if (profile.id != "LTU") billLapsedOnDissolution = dissolveForElection()
             if (profile.id == "CAN") canadianElectionMap = PluralityDistricts.canadaOrder(date)
             nextLegislative = poll
             earlyCalled = decision.early
@@ -1273,6 +1382,9 @@ internal class Politics(
             executiveCampaign = executiveElection.campaign,
             presidentElect = executiveElection.presidentElect,
             legislativeRunoff = legislativeRunoff,
+            listRegistration = listFiling?.filed(firstPollingDay),
+            listFilingOptions = listFiling?.options(firstPollingDay, listContenders()),
+            seimasResolution = seimasResolution,
             newHouseOpens = incomingHouse?.first,
             coalitionPreference = coalitionPreference,
             constitution =
@@ -1433,7 +1545,6 @@ internal class Politics(
     }
 }
 
-private const val EARLY_ELECTION_WEEKS = 6L
 private const val FINAL_REVIEW_DAYS = 21L
 private const val COURT_MIN_DAYS = 60L
 private const val COURT_EXTRA_DAYS = 120L

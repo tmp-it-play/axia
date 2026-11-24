@@ -181,6 +181,7 @@ fun GameScreen(
                                     today = clock.date,
                                     onCallEarlyElection = runner::callEarlyElection,
                                     onCoalitionPartner = runner::preferCoalitionPartner,
+                                    onChooseElectionList = runner::chooseElectionList,
                                     onOppositionVeto = runner::setOppositionVeto,
                                     onBudget = { panel = GamePanel.BUDGET },
                                     onNegotiate = runner::negotiateBudgetWith,

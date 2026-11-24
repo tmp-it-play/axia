@@ -86,7 +86,18 @@ internal class GovernmentConfidence(
 
     val governmentBillsSuspended: Boolean get() = routineBusiness || legislationSuspended
 
-    val legislationSuspended: Boolean get() = dissolved || pakistan?.awaitingElectionOfPremier == true
+    val legislationSuspended: Boolean get() = (dissolved && country != "LTU") || pakistan?.awaitingElectionOfPremier == true
+
+    fun italianDissolutionAllowed(
+        date: LocalDate,
+        president: Person,
+        nextLegislative: LocalDate?,
+    ): Boolean {
+        // 2024 시나리오 첫 대통령은 2022-02-03 취임, 이후 새 인물은 실제 게임 취임일부터 계산한다.
+        var end = (if (president.generated) president.since else LocalDate.of(2022, 2, 3)).plusYears(7)
+        while (end <= date) end = end.plusYears(7)
+        return date < end.minusMonths(6) || nextLegislative?.let { it.minusMonths(6) <= end } == true
+    }
 
     fun dissolveOnAdvice(
         chamber: Legislature,
@@ -166,6 +177,10 @@ internal class GovernmentConfidence(
             dissolved = false
             nextBallot = pakistan.next
             return decision
+        }
+        if (country == "LTU" && legislativeDue) {
+            val formation = afterCaretakerElection(chamber, date)
+            return formation.copy(news = listOf("새 세이마스 개원으로 내각이 대통령에게 권한을 반납했다. 의회가 새 정부에 신임을 부여할 때까지 현 내각이 직무를 수행한다."))
         }
         if (legislativeDue && caretaker) return afterCaretakerElection(chamber, date)
         if (rule.procedure != ConfidenceProcedure.PRESIDENT_APPOINTS || !presidentChanged) return null
@@ -357,10 +372,7 @@ internal class GovernmentConfidence(
                 }
 
                 "ITA" -> {
-                    // 2024 시나리오 첫 대통령은 2022-02-03 취임, 이후 새 인물은 실제 게임 취임일부터 계산한다.
-                    var end = (if (president.generated) president.since else LocalDate.of(2022, 2, 3)).plusYears(7)
-                    while (end <= date) end = end.plusYears(7)
-                    date < end.minusMonths(6) || nextLegislative?.let { it.minusMonths(6) < end } == true
+                    italianDissolutionAllowed(date, president, nextLegislative)
                 }
 
                 "EGY" -> {
@@ -551,14 +563,7 @@ internal class GovernmentConfidence(
         date: LocalDate,
         regular: LocalDate,
     ): ConfidenceDecision {
-        val earlyPoll =
-            if (country ==
-                "FRA"
-            ) {
-                FrenchAssembly.earlyElection(date)
-            } else {
-                date.plusDays(requireNotNull(rule.electionDays).toLong())
-            }
+        val earlyPoll = earlyHousePoll(country, date, requireNotNull(rule.electionDays))
         val election = minOf(earlyPoll, regular)
         nextBallot = null
         if (election == regular && country != "ZAF" && country != "EGY" && country != "PAK") {
