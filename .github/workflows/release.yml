@@ -38,10 +38,6 @@ jobs:
             runner: macos-15
             task: packageDmg
             format: dmg
-          - platform: macos-x64
-            runner: macos-15-intel
-            task: packageDmg
-            format: dmg
     defaults:
       run:
         shell: bash
