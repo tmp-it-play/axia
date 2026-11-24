@@ -11,7 +11,12 @@ internal data class EarlyPension(
     val nonEmployedOfAgeBand: Double,
     val year: Int,
     val source: String,
-)
+    val fromAge: Int = 50,
+) {
+    init {
+        require(fromAge in 50..64)
+    }
+}
 
 /** 조사 연령 안에서 수급이 확인된 비율. 수급 범위를 구간으로만 식별하면 [rate]는 하한이다. */
 @Serializable
@@ -46,9 +51,13 @@ internal data class AgeActivity(
     val earlyPension: EarlyPension? = null,
     val olderPension: OlderPensionCoverage? = null,
 ) {
-    // 50~64세 비취업 수급자 비율에 맞춰 15개 생일에 같은 수의 사람이 은퇴층으로 이동한다고 가정한다.
-    // 50세의 누적 비율은 1단위, 64세는 15단위이므로 15개 연령의 평균은 8단위다.
-    fun earlyRetiredAt(age: Int): Double = (earlyPension?.nonEmployedOfAgeBand ?: 0.0) * (age - 49).coerceIn(0, 15) / 8.0
+    // 수급 가능 구간 안에서 생일마다 같은 수가 은퇴한다고 가정한다. 1~n의 평균은 (n+1)/2이다.
+    fun earlyRetiredAt(age: Int): Double {
+        val pension = earlyPension ?: return 0.0
+        val years = 65 - pension.fromAge
+        val elapsed = (age - pension.fromAge + 1).coerceIn(0, years)
+        return pension.nonEmployedOfAgeBand * elapsed / ((years + 1) / 2.0)
+    }
 
     /** 해당 생일 직전까지 직업 집단에 남은 사람 중 은퇴층으로 들어갈 비율. */
     fun retirementProbability(age: Int): Double {

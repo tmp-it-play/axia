@@ -66,15 +66,18 @@ fun SocietyPanel(nation: NationSnapshot) {
         "${formatPercent(demography.workingAgeParticipation)} · ${formatPercent(demography.olderParticipation)}",
         note = "${demography.participationYear}년 $participationSource",
     )
+    val earlyPensionAges = "${demography.earlyPensionFromAge ?: 50}~64세"
     StatRow(
-        "50~64세 노령연금 수급자",
+        "$earlyPensionAges 노령연금 수급자",
         demography.earlyPensionOfWorkingAge?.let { formatPercent(it) } ?: "자료 없음",
         note = demography.earlyPensionSource?.let { "15~64세 인구 대비 · $it" } ?: "조기 수급자는 수요 추정에서 제외",
     )
     val pension = demography.olderPension
     if (pension != null) {
         val ages = pension.throughAge?.let { "65~${it}세" } ?: "65세 이상"
-        val coverage = pension.upperRate?.let { "${formatPercent(pension.rate)}~${formatPercent(it)}" } ?: formatPercent(pension.rate)
+        val lower = formatPercent(pension.rate)
+        val upper = pension.upperRate?.let { formatPercent(it) }
+        val coverage = if (upper == null || upper == lower) lower else "$lower~$upper"
         StatRow("$ages 연금 수급률", coverage, note = "${pension.year}년 ${pension.source}")
         pension.rangeNote?.let { Hint(it) }
         pension.throughAge?.let { Hint("${it + 1}세 이상은 수급 통계가 없어 해당 인구 전원을 수요에 포함합니다.") }
@@ -109,7 +112,7 @@ fun SocietyPanel(nation: NationSnapshot) {
                                 if (demography.earlyPensionOfWorkingAge == null) {
                                     "65세 이상 비경제활동인구"
                                 } else {
-                                    "65세 이상 비경제활동인구와 50~64세 비취업 노령연금 수급자"
+                                    "65세 이상 비경제활동인구와 $earlyPensionAges 비취업 노령연금 수급자"
                                 }
                             Text(scope, style = DossierType.number(11.sp), color = DossierColors.inkMuted)
                         } else {

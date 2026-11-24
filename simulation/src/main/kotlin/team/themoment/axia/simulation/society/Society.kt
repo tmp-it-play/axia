@@ -249,10 +249,12 @@ internal class Electorate(
 
     private fun initialMiddleAge(earlyRetired: Boolean): Int {
         if (earlyRetired) {
-            // 균등한 은퇴 유입을 가정하므로 각 연령의 은퇴 표본 수는 1~15에 비례한다.
-            val draw = random.nextInt(120)
-            val year = (1..15).first { draw < it * (it + 1) / 2 }
-            return (49 + year) * 12 + random.nextInt(12)
+            // 수급 시작 나이부터 일정하게 은퇴자가 유입돼 나이별 표본 수는 1, 2, …에 비례한다.
+            val firstAge = checkNotNull(profile.activity.earlyPension).fromAge
+            val years = SENIOR_AGE / 12 - firstAge
+            val draw = random.nextInt(years * (years + 1) / 2)
+            val year = (1..years).first { draw < it * (it + 1) / 2 }
+            return (firstAge + year - 1) * 12 + random.nextInt(12)
         }
         var age: Int
         do {
