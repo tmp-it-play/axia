@@ -42,7 +42,7 @@ import team.themoment.axia.simulation.nation.InstitutionItem
 import team.themoment.axia.simulation.world.World
 import team.themoment.axia.ui.dossier.DossierPanel
 
-/** 게임 화면. 상단 띠, 왼쪽 폴더 탭, 지도, 지도 위에 펼치는 서류철 패널. */
+/** 상단 계기판과 왼쪽 버튼으로 조작하고 지도 위에 서류철 패널을 펼친다. */
 @Composable
 fun GameScreen(
     world: World,

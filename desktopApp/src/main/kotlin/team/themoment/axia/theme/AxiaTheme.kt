@@ -16,7 +16,8 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import org.jetbrains.compose.resources.Font
 import team.themoment.axia.resources.Res
-import team.themoment.axia.resources.nanum_myeongjo_extrabold
+import team.themoment.axia.resources.axia_ribbon_bold
+import team.themoment.axia.resources.axia_ribbon_regular
 import team.themoment.axia.resources.pretendard_variable
 
 /** 서류철 UI의 색. 책상 위에 놓인 마닐라 폴더와 종이, 잉크, 도장. */
@@ -40,32 +41,37 @@ object DossierColors {
     val metal = Color(0xFF8A8F94)
 }
 
-private val LocalTitleFont = staticCompositionLocalOf<FontFamily> { FontFamily.Serif }
-private val LocalBodyFont = staticCompositionLocalOf<FontFamily> { FontFamily.SansSerif }
+private val LocalDossierFont = staticCompositionLocalOf<FontFamily> { FontFamily.SansSerif }
+private val LocalMapFont = staticCompositionLocalOf<FontFamily> { FontFamily.SansSerif }
 
-/** 제목은 나눔명조, 본문과 지도 국가명은 Pretendard, 숫자는 Pretendard 고정폭 숫자(tnum). */
+/** 문서와 계기판은 캠페인의 서체를 따르고, 지도 국명은 별도의 지도용 고딕을 쓴다. */
 object DossierType {
-    val titleFont: FontFamily
-        @Composable @ReadOnlyComposable
-        get() = LocalTitleFont.current
-
     @Composable
     @ReadOnlyComposable
-    fun title(size: TextUnit = 16.sp): TextStyle =
-        TextStyle(fontFamily = LocalTitleFont.current, fontWeight = FontWeight.ExtraBold, fontSize = size)
+    fun title(
+        size: TextUnit = 16.sp,
+        weight: FontWeight = FontWeight.ExtraBold,
+    ): TextStyle = TextStyle(fontFamily = LocalDossierFont.current, fontWeight = weight, fontSize = size)
 
     /** 지도 국가명. HOI4 지도 글꼴(RGFX White Map Font)처럼 굵은 고딕. */
     @Composable
     @ReadOnlyComposable
     fun mapLabel(size: TextUnit): TextStyle =
-        TextStyle(fontFamily = LocalBodyFont.current, fontWeight = FontWeight.ExtraBold, fontSize = size)
+        TextStyle(fontFamily = LocalMapFont.current, fontWeight = FontWeight.ExtraBold, fontSize = size)
 
     @Composable
     @ReadOnlyComposable
     fun number(
         size: TextUnit = 14.sp,
         weight: FontWeight = FontWeight.Medium,
-    ): TextStyle = TextStyle(fontFamily = LocalBodyFont.current, fontWeight = weight, fontSize = size, fontFeatureSettings = "tnum")
+    ): TextStyle =
+        TextStyle(
+            fontFamily = LocalDossierFont.current,
+            fontWeight = weight,
+            fontSize = size,
+            lineHeight = size * 1.3f,
+            fontFeatureSettings = "tnum",
+        )
 }
 
 private val dossierColorScheme =
@@ -92,10 +98,20 @@ private val dossierColorScheme =
 @Composable
 fun AxiaTheme(content: @Composable () -> Unit) {
     val pretendard = rememberPretendard()
-    val myeongjo = FontFamily(Font(resource = Res.font.nanum_myeongjo_extrabold, weight = FontWeight.ExtraBold))
     val typography = remember(pretendard) { Typography().withFontFamily(pretendard) }
     MaterialTheme(colorScheme = dossierColorScheme, typography = typography) {
-        CompositionLocalProvider(LocalTitleFont provides myeongjo, LocalBodyFont provides pretendard, content = content)
+        CompositionLocalProvider(LocalDossierFont provides pretendard, LocalMapFont provides pretendard, content = content)
+    }
+}
+
+@Composable
+internal fun CampaignTypography(content: @Composable () -> Unit) {
+    val regular = Font(Res.font.axia_ribbon_regular, FontWeight.Normal)
+    val bold = Font(Res.font.axia_ribbon_bold, FontWeight.Bold)
+    val typewriter = remember(regular, bold) { FontFamily(regular, bold) }
+    val typography = remember(typewriter) { Typography().withFontFamily(typewriter) }
+    MaterialTheme(typography = typography) {
+        CompositionLocalProvider(LocalDossierFont provides typewriter, content = content)
     }
 }
 

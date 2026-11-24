@@ -2,22 +2,15 @@ package team.themoment.axia.game.panels
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import team.themoment.axia.game.satisfactionColor
 import team.themoment.axia.simulation.economy.EconomyIndicators
 import team.themoment.axia.simulation.nation.NationSnapshot
 import team.themoment.axia.theme.DossierColors
 import team.themoment.axia.theme.DossierType
 import team.themoment.axia.ui.dossier.SectionTitle
-import team.themoment.axia.ui.dossier.Stamp
 import team.themoment.axia.ui.dossier.StatRow
 import kotlin.math.roundToInt
 
@@ -27,12 +20,9 @@ fun OverviewPanel(
     nation: NationSnapshot,
     indicators: EconomyIndicators,
 ) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        Text(text = countryName, style = DossierType.title(22.sp), color = DossierColors.ink)
-        Spacer(Modifier.width(12.dp))
-        Stamp(text = "지지율 ${nation.approval.roundToInt()}%", color = satisfactionColor(nation.approval))
-    }
+    Text(text = countryName, style = DossierType.title(22.sp), color = DossierColors.ink)
     SectionTitle("핵심 지표")
+    StatRow("정부 지지율", "${nation.approval.roundToInt()}%")
     KeyIndicatorRows(indicators)
     if (nation.special.indicators.isNotEmpty()) {
         SectionTitle("국가 특수 상황")

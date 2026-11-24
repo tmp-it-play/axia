@@ -1,6 +1,5 @@
 package team.themoment.axia.ui.dossier
 
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -14,7 +13,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
@@ -22,24 +23,32 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.scale
+import androidx.compose.ui.graphics.drawscope.translate
+import androidx.compose.ui.input.pointer.PointerIcon
+import androidx.compose.ui.input.pointer.pointerHoverIcon
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import team.themoment.axia.theme.DossierColors
 import team.themoment.axia.theme.DossierType
 
-private val TAB_SHAPE = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp)
-private val FOLDER_SHAPE = RoundedCornerShape(topEnd = 6.dp, bottomStart = 6.dp, bottomEnd = 6.dp)
+private val TabShape = CutCornerShape(topStart = 3.dp, topEnd = 12.dp)
+private val CoverShape = RoundedCornerShape(3.dp)
+private val Fold = 15.dp
+private val SheetShape = CutCornerShape(topEnd = Fold)
 
-/**
- * 탭 라벨이 달린 마닐라 폴더 안에 클립으로 고정한 종이 한 장.
- * [scrollable]이면 높이가 정해진 자리에서 종이 내용을 스크롤한다.
- */
+/** 접힌 속지와 클립을 감싼 서류철. 색인과 닫기 버튼은 내용이 스크롤돼도 제자리에 남는다. */
 @Composable
 fun DossierPanel(
     title: String,
@@ -50,89 +59,116 @@ fun DossierPanel(
 ) {
     Column(modifier = modifier) {
         Row(
-            modifier =
-                Modifier
-                    .padding(start = 14.dp)
-                    .background(DossierColors.folder, TAB_SHAPE)
-                    .padding(horizontal = 14.dp, vertical = 6.dp),
-            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth().padding(start = 8.dp, end = 8.dp),
+            verticalAlignment = Alignment.Bottom,
         ) {
-            Text(text = title, style = DossierType.title(15.sp), color = DossierColors.ink)
+            Box(Modifier.weight(1f)) {
+                Text(
+                    text = title,
+                    modifier =
+                        Modifier
+                            .widthIn(min = 96.dp)
+                            .clip(TabShape)
+                            .folderTexture()
+                            .padding(start = 14.dp, end = 24.dp, top = 8.dp, bottom = 4.dp),
+                    style = DossierType.title(15.sp),
+                    color = DossierColors.ink,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+            if (onClose != null) {
+                Text(
+                    text = "닫기",
+                    modifier =
+                        Modifier
+                            .clip(CutCornerShape(topStart = 8.dp, topEnd = 2.dp))
+                            .folderTexture()
+                            .pointerHoverIcon(PointerIcon.Hand)
+                            .clickable(role = Role.Button, onClick = onClose)
+                            .padding(horizontal = 13.dp, vertical = 6.dp),
+                    style = DossierType.number(12.sp),
+                    color = DossierColors.ink,
+                )
+            }
         }
         Box(
             modifier =
                 Modifier
                     .fillMaxWidth()
                     .then(if (scrollable) Modifier.weight(1f, fill = false) else Modifier)
-                    .shadow(8.dp, FOLDER_SHAPE)
-                    .background(DossierColors.folder, FOLDER_SHAPE)
-                    .border(1.dp, DossierColors.folderEdge.copy(alpha = 0.5f), FOLDER_SHAPE)
-                    .padding(8.dp),
+                    .shadow(7.dp, CoverShape)
+                    .folderTexture()
+                    .border(1.dp, DossierColors.folderEdge.copy(alpha = 0.72f), CoverShape),
         ) {
-            Column(
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .background(DossierColors.paper)
-                        .border(1.dp, DossierColors.paperLine)
-                        .ruledPaper()
-                        .then(if (scrollable) Modifier.verticalScroll(key(title) { rememberScrollState() }) else Modifier)
-                        .padding(start = 16.dp, end = 16.dp, top = 18.dp, bottom = 16.dp),
-                content = content,
-            )
-            PaperClip(Modifier.align(Alignment.TopEnd).offset(x = (-28).dp, y = (-18).dp))
-            if (onClose != null) {
-                Text(
-                    text = "닫기",
-                    style = DossierType.title(12.sp),
-                    color = DossierColors.inkMuted,
+            Box(Modifier.fillMaxWidth().padding(start = 13.dp, top = 9.dp, end = 13.dp, bottom = 13.dp)) {
+                Spacer(Modifier.matchParentSize().offset(3.dp, 4.dp).background(DossierColors.folderShade, SheetShape))
+                Spacer(Modifier.matchParentSize().offset(1.dp, 2.dp).background(DossierColors.paperShade, SheetShape))
+                Column(
                     modifier =
                         Modifier
-                            .align(Alignment.TopEnd)
-                            .offset(x = (-56).dp, y = 4.dp)
-                            .clickable(onClick = onClose)
-                            // 스크롤한 내용이 아래로 지나갈 때 글자가 겹치지 않도록 종이를 덧댄다.
-                            .background(DossierColors.paper)
-                            .padding(horizontal = 6.dp, vertical = 2.dp),
+                            .fillMaxWidth()
+                            .shadow(2.dp, SheetShape)
+                            .paperTexture()
+                            .foldedCorner()
+                            .padding(start = 16.dp, end = 14.dp, top = 24.dp, bottom = 12.dp)
+                            .then(if (scrollable) Modifier.verticalScroll(key(title) { rememberScrollState() }) else Modifier),
+                    content = content,
                 )
             }
+            PaperClip(Modifier.align(Alignment.TopStart).offset(x = 27.dp, y = 2.dp).rotate(-8f))
         }
     }
 }
 
-/** 타자기 문서처럼 옅은 가로줄을 긋는다. */
-private fun Modifier.ruledPaper(): Modifier =
-    drawBehind {
-        val spacing = 26.dp.toPx()
-        var y = spacing
-        while (y < size.height) {
-            drawLine(DossierColors.paperLine.copy(alpha = 0.45f), Offset(0f, y), Offset(size.width, y), strokeWidth = 1f)
-            y += spacing
+private fun Modifier.foldedCorner(): Modifier =
+    drawWithCache {
+        val edge = Fold.toPx()
+        val x = size.width - edge
+        val flap =
+            Path().apply {
+                moveTo(x, 0f)
+                lineTo(size.width, edge)
+                lineTo(x, edge)
+                close()
+            }
+        onDrawBehind {
+            drawPath(flap, DossierColors.paperLine)
+            drawLine(DossierColors.folderEdge.copy(alpha = 0.65f), Offset(x, 0f), Offset(x, edge), 1.dp.toPx())
+            drawLine(DossierColors.folderEdge.copy(alpha = 0.48f), Offset(x, edge), Offset(size.width, edge), 1.dp.toPx())
         }
     }
 
 @Composable
-fun PaperClip(modifier: Modifier = Modifier) {
-    Canvas(modifier.size(width = 16.dp, height = 40.dp)) {
-        val stroke = Stroke(width = 2.dp.toPx())
-        val inset = 3.dp.toPx()
-        drawRoundRect(
-            color = DossierColors.metal,
-            size = Size(size.width, size.height),
-            cornerRadius = CornerRadius(size.width / 2f),
-            style = stroke,
-        )
-        drawRoundRect(
-            color = DossierColors.metal,
-            topLeft = Offset(inset, inset * 2f),
-            size = Size(size.width - inset * 2f, size.height * 0.62f),
-            cornerRadius = CornerRadius(size.width / 2f),
-            style = stroke,
-        )
-    }
+private fun PaperClip(modifier: Modifier) {
+    Spacer(
+        modifier.size(width = 15.dp, height = 29.dp).drawWithCache {
+            val wire =
+                Path().apply {
+                    moveTo(2f, 11f)
+                    lineTo(2f, 5f)
+                    cubicTo(2f, -0.2f, 13f, -0.2f, 13f, 5.5f)
+                    lineTo(13f, 22f)
+                    cubicTo(13f, 28f, 4.5f, 29f, 4.5f, 22.5f)
+                    lineTo(4.5f, 9f)
+                    cubicTo(4.5f, 5.6f, 10f, 5.6f, 10f, 9f)
+                    lineTo(10f, 20f)
+                }
+            val shadowStroke = Stroke(width = 2.7f, cap = StrokeCap.Round)
+            val wireStroke = Stroke(width = 2f, cap = StrokeCap.Round)
+            val shine = Stroke(width = 0.72f, cap = StrokeCap.Round)
+            onDrawBehind {
+                scale(size.width / 15f, pivot = Offset.Zero) {
+                    translate(0.8f, 1f) { drawPath(wire, Color.Black.copy(alpha = 0.22f), style = shadowStroke) }
+                    drawPath(wire, Color(0xFF5B5749), style = wireStroke)
+                    translate(-0.28f, -0.22f) { drawPath(wire, Color(0xFFE1D9BD), style = shine) }
+                }
+            }
+        },
+    )
 }
 
-/** 패널 안 구획 제목. 명조 제목 아래 가는 잉크 줄. */
+/** 구획 제목과 양식의 구분선. */
 @Composable
 fun SectionTitle(
     text: String,

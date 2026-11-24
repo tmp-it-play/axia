@@ -1,76 +1,86 @@
 package team.themoment.axia.game
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import team.themoment.axia.theme.DossierColors
 import team.themoment.axia.theme.DossierType
+import team.themoment.axia.ui.console.ConsoleBrass
+import team.themoment.axia.ui.console.ConsoleKey
+import team.themoment.axia.ui.console.consoleFrame
+import team.themoment.axia.ui.dossier.steelTexture
 
 enum class GamePanel(
     val label: String,
+    internal val symbol: ConsoleSymbol,
 ) {
-    OVERVIEW("개요"),
-    ECONOMY("경제"),
-    BUDGET("재정"),
-    POLICY("정책"),
-    POLITICS("정치"),
-    ORGANIZATIONS("조직"),
-    SOCIETY("사회"),
-    DIPLOMACY("외교"),
-    MILITARY("군사"),
-    SITUATION("상황"),
-    STATISTICS("통계"),
+    OVERVIEW("개요", ConsoleSymbol.FOLDER),
+    ECONOMY("경제", ConsoleSymbol.FACTORY),
+    BUDGET("재정", ConsoleSymbol.VAULT),
+    POLICY("정책", ConsoleSymbol.DECREE),
+    POLITICS("정치", ConsoleSymbol.ASSEMBLY),
+    ORGANIZATIONS("조직", ConsoleSymbol.HIERARCHY),
+    SOCIETY("사회", ConsoleSymbol.CITIZENS),
+    DIPLOMACY("외교", ConsoleSymbol.GLOBE),
+    MILITARY("군사", ConsoleSymbol.SHIELD),
+    SITUATION("상황", ConsoleSymbol.FIELD_RADIO),
+    STATISTICS("통계", ConsoleSymbol.CHART),
 }
 
-/** 왼쪽 가장자리의 폴더 색인 탭. 선택된 탭은 마닐라 폴더 색으로 튀어나온다. */
+/** 강철 버튼 열. 작은 창에서는 모든 버튼에 도달할 수 있도록 세로로 스크롤한다. */
 @Composable
 fun SideTabs(
     selected: GamePanel?,
     onSelect: (GamePanel) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier =
-            modifier
-                .width(64.dp)
-                .fillMaxHeight()
-                .background(DossierColors.desk)
-                .padding(top = 12.dp),
-        verticalArrangement = Arrangement.spacedBy(6.dp),
+    BoxWithConstraints(
+        modifier
+            .width(102.dp)
+            .fillMaxHeight()
+            .steelTexture()
+            .consoleFrame(),
     ) {
-        GamePanel.entries.forEach { panel ->
-            val isSelected = panel == selected
-            Box(
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(start = if (isSelected) 6.dp else 12.dp)
-                        .height(44.dp)
-                        .background(
-                            if (isSelected) DossierColors.folder else DossierColors.deskRaised,
-                            RoundedCornerShape(topStart = 6.dp, bottomStart = 6.dp),
-                        ).clickable { onSelect(panel) },
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(
-                    text = panel.label,
-                    style = DossierType.title(14.sp),
-                    color = if (isSelected) DossierColors.ink else DossierColors.deskText,
-                )
+        val gap = 4.dp
+        val buttonHeight = ((maxHeight - 24.dp - gap * (GamePanel.entries.size - 1)) / GamePanel.entries.size).coerceIn(40.dp, 52.dp)
+        Column(
+            modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState()).padding(horizontal = 6.dp, vertical = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(gap),
+        ) {
+            GamePanel.entries.forEach { panel ->
+                ConsoleKey(
+                    onClick = { onSelect(panel) },
+                    active = panel == selected,
+                    modifier = Modifier.fillMaxWidth().height(buttonHeight),
+                ) { ink ->
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(start = 9.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        ConsoleGlyph(
+                            panel.symbol,
+                            Modifier.size(26.dp),
+                            color = if (panel == selected) ConsoleBrass else panel.symbol.metal,
+                        )
+                        Spacer(Modifier.width(6.dp))
+                        Text(panel.label, color = ink, style = DossierType.title(14.sp), maxLines = 1)
+                    }
+                }
             }
         }
     }

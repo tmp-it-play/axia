@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -60,7 +61,7 @@ fun StatRow(
     valueColor: Color = DossierColors.ink,
     note: String? = null,
 ) {
-    Row(modifier = modifier.fillMaxWidth(), verticalAlignment = Alignment.Bottom) {
+    Row(modifier = modifier.fillMaxWidth().heightIn(min = 19.dp), verticalAlignment = Alignment.CenterVertically) {
         Text(text = label, style = DossierType.number(13.sp, weight = FontWeight.Normal), color = DossierColors.inkMuted)
         DottedLeader(Modifier.weight(1f).padding(horizontal = 6.dp, vertical = 4.dp))
         if (note != null) {
