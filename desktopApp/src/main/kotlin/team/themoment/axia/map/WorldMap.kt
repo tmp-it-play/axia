@@ -13,10 +13,10 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.withTransform
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.input.pointer.pointerInput
@@ -36,19 +36,12 @@ import kotlin.math.floor
 private const val REGION_BORDER_MIN_SIZE_DP = 34f
 private const val SCROLL_ZOOM_SPEED = 0.12f
 
-/** 국가명 글자 크기 한계(dp). 이보다 작아야 하면 그리지 않는다. */
-private const val LABEL_MIN_SIZE_DP = 10f
-private const val LABEL_MAX_SIZE_DP = 44f
-private const val LABEL_BASE_SIZE_SP = 20f
-private const val LABEL_THICKNESS_FILL = 0.6f
-private const val LABEL_LENGTH_FILL = 0.92f
-private const val LABEL_SPREAD_FILL = 0.85f
-
-/** 글자 사이를 벌릴 수 있는 최대 간격(글자 크기 대비). HOI4처럼 긴 국토에서는 글자를 넓게 펼친다. */
-private const val LABEL_MAX_TRACKING = 1.1f
-private const val LABEL_OUTLINE_DP = 1.2f
-private const val LABEL_SHADOW_OFFSET_DP = 1.2f
-private const val LABEL_SHADOW_BLUR_DP = 3.5f
+/** 기준 글꼴은 한 번만 측정한다. 실제 글자 높이와 간격은 지도 좌표로 정한다. */
+private const val LABEL_BASE_SIZE_SP = 32
+private const val LABEL_THICKNESS_FILL = 0.60f
+private const val LABEL_LENGTH_FILL = 0.82f
+private const val LABEL_SPREAD_FILL = 0.84f
+private const val LABEL_MAX_TRACKING = 1.5f
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -67,7 +60,9 @@ fun WorldMap(
     val currentOnRegionClick by rememberUpdatedState(onRegionClick)
     val textMeasurer = rememberTextMeasurer()
     val labelStyle = DossierType.mapLabel(LABEL_BASE_SIZE_SP.sp)
-    val labelLayouts = remember(model, labelStyle, textMeasurer) { LabelLayouts(textMeasurer, labelStyle) }
+    val curves = remember(model, regionOwners) { model.labelsFor(regionOwners) }
+    val lettering = remember(curves, labelStyle, textMeasurer) { layoutLabels(curves, textMeasurer, labelStyle) }
+    val fills = remember(model) { model.countryFills.associateBy(CountryFill::countryId) }
     Canvas(
         modifier =
             modifier
@@ -92,7 +87,9 @@ fun WorldMap(
             copies.forEach { shift ->
                 drawWorldCopy(model, viewport, shift, fillColor, selectedRegionId, regionOverlay, regionOwners, borders)
             }
-            drawLabels(model, viewport, copies, labelLayouts)
+            copies.forEach { shift ->
+                drawLabels(viewport, shift, lettering) { id -> fillColor(fills.getValue(id)) }
+            }
         }
     }
 }
@@ -177,98 +174,70 @@ private fun DrawScope.drawBorderTiles(
     }
 }
 
-/**
- * 국가 이름을 국토 모양을 따라 휜 곡선 위에 한 글자씩 그린다(HOI4 방식). 글자 크기는 국토 두께와 곡선 길이에 맞추고,
- * 공간이 남으면 글자 사이를 벌린다. 넓은 나라부터 배치하고 이미 배치된 이름과 겹치면 생략한다.
- * RGFX White Map Font처럼 옅은 흰 글자에 부드러운 그림자를 깔고, 밝은 바탕에서도 읽히도록 아주 옅은 외곽선을 더한다.
- */
+/** 위치·방향·크기를 투영 좌표로 저장해 국명도 국경과 같은 배율로 움직인다. */
+private class MapLetter(
+    val glyph: TextLayoutResult,
+    val center: Offset,
+    val angle: Float,
+)
+
+private class MapLettering(
+    val country: CountryLabel,
+    val scale: Float,
+    val letters: List<MapLetter>,
+)
+
+private fun layoutLabels(
+    labels: List<CountryLabel>,
+    measurer: TextMeasurer,
+    style: TextStyle,
+): List<MapLettering> {
+    val glyphCache = mutableMapOf<Char, TextLayoutResult>()
+    return labels.map { country ->
+        val glyphs = country.name.map { glyphCache.getOrPut(it) { measurer.measure(it.toString(), style) } }
+        val naturalWidth = glyphs.sumOf { it.size.width }
+        val height = glyphs.maxOf { it.size.height }
+        val letterHeight = minOf(country.thickness * LABEL_THICKNESS_FILL, country.maxGlyphHeight)
+        val scale = minOf(letterHeight / height, country.length * LABEL_LENGTH_FILL / naturalWidth)
+        val gaps = (glyphs.size - 1).coerceAtLeast(1)
+        val spread = country.length * LABEL_SPREAD_FILL - naturalWidth * scale
+        val tracking = (spread / gaps).coerceIn(0f, height * scale * LABEL_MAX_TRACKING)
+        var cursor = (country.length - naturalWidth * scale - tracking * (glyphs.size - 1)) / 2f
+        val letters =
+            glyphs.map { glyph ->
+                val width = glyph.size.width * scale
+                val (point, radians) = country.placeAt(cursor + width / 2f)
+                cursor += width + tracking
+                MapLetter(glyph, point, Math.toDegrees(radians.toDouble()).toFloat())
+            }
+        MapLettering(country, scale, letters)
+    }
+}
+
 private fun DrawScope.drawLabels(
-    model: WorldMapModel,
     viewport: MapViewport,
-    copies: List<Float>,
-    layouts: LabelLayouts,
+    shift: Float,
+    lettering: List<MapLettering>,
+    countryColor: (String) -> Color,
 ) {
     val zoom = viewport.zoom
-    val placed = mutableListOf<Rect>()
-    val screen = Rect(0f, 0f, size.width, size.height)
-    val outline = LABEL_OUTLINE_DP * density
-    val shadowOffset = LABEL_SHADOW_OFFSET_DP * density
-    val shadowBlur = LABEL_SHADOW_BLUR_DP * density
-    model.labels.forEach { label ->
-        val glyphs = layouts.glyphs(label)
-        if (glyphs.isEmpty()) return@forEach
-        val naturalWidth = glyphs.sumOf { it.size.width.toDouble() }.toFloat()
-        val glyphHeight = glyphs.maxOf { it.size.height }.toFloat()
-        val lengthPx = label.length * zoom
-        val scale =
-            minOf(
-                label.thickness * zoom * LABEL_THICKNESS_FILL / glyphHeight,
-                lengthPx * LABEL_LENGTH_FILL / naturalWidth,
-                LABEL_MAX_SIZE_DP * density / glyphHeight,
-            )
-        if (scale * glyphHeight < LABEL_MIN_SIZE_DP * density) return@forEach
-        val textWidth = naturalWidth * scale
-        val gaps = (glyphs.size - 1).coerceAtLeast(1)
-        val tracking =
-            if (glyphs.size >
-                1
-            ) {
-                ((lengthPx * LABEL_SPREAD_FILL - textWidth) / gaps).coerceIn(0f, glyphHeight * scale * LABEL_MAX_TRACKING)
-            } else {
-                0f
-            }
-        val totalWidth = textWidth + tracking * (glyphs.size - 1)
-        copies.forEach { shift ->
-            val origin = Offset(size.width / 2f - (viewport.center.x - shift) * zoom, size.height / 2f - viewport.center.y * zoom)
-            val screenBounds =
-                Rect(
-                    origin.x + label.bounds.left * zoom,
-                    origin.y + label.bounds.top * zoom,
-                    origin.x + label.bounds.right * zoom,
-                    origin.y + label.bounds.bottom * zoom,
-                )
-            if (!screenBounds.overlaps(screen)) return@forEach
-            val placements = mutableListOf<Pair<Offset, Float>>()
-            var cursor = (lengthPx - totalWidth) / 2f
-            glyphs.forEach { glyph ->
-                val advance = glyph.size.width * scale
-                val (point, angle) = label.placeAt((cursor + advance / 2f) / zoom)
-                placements += Offset(origin.x + point.x * zoom, origin.y + point.y * zoom) to angle
-                cursor += advance + tracking
-            }
-            val half = glyphHeight * scale / 2f
-            val footprint =
-                Rect(
-                    placements.minOf { it.first.x } - half,
-                    placements.minOf { it.first.y } - half,
-                    placements.maxOf { it.first.x } + half,
-                    placements.maxOf { it.first.y } + half,
-                )
-            if (placed.any(footprint::overlaps)) return@forEach
-            placed += footprint
-            glyphs.zip(placements).forEach { (glyph, placement) ->
+    val area = viewport.visibleArea.translate(-shift, 0f)
+    withTransform({
+        translate(left = size.width / 2f - (viewport.center.x - shift) * zoom, top = size.height / 2f - viewport.center.y * zoom)
+        scale(zoom, zoom, pivot = Offset.Zero)
+    }) {
+        lettering.forEach { label ->
+            if (!label.country.bounds.overlaps(area)) return@forEach
+            val ink = if (countryColor(label.country.countryId).luminance() > 0.22f) MapPalette.labelInk else MapPalette.labelLight
+            label.letters.forEach { letter ->
                 withTransform({
-                    translate(left = placement.first.x, top = placement.first.y)
-                    rotate(degrees = Math.toDegrees(placement.second.toDouble()).toFloat(), pivot = Offset.Zero)
-                    scale(scale, scale, pivot = Offset.Zero)
+                    translate(letter.center.x, letter.center.y)
+                    rotate(letter.angle, pivot = Offset.Zero)
+                    scale(label.scale, label.scale, pivot = Offset.Zero)
                 }) {
-                    val topLeft = Offset(-glyph.size.width / 2f, -glyph.size.height / 2f)
-                    val shadow = Shadow(MapPalette.labelShadow, Offset(shadowOffset / scale, shadowOffset / scale), shadowBlur / scale)
-                    drawText(glyph, color = MapPalette.labelOutline, topLeft = topLeft, drawStyle = Stroke(width = outline / scale))
-                    drawText(glyph, color = MapPalette.label, topLeft = topLeft, shadow = shadow)
+                    drawText(letter.glyph, color = ink, topLeft = Offset(-letter.glyph.size.width / 2f, -letter.glyph.size.height / 2f))
                 }
             }
         }
     }
-}
-
-/** 국가명을 글자 단위로 측정해 둔다. 곡선 위에 한 글자씩 배치하기 위함이다. */
-private class LabelLayouts(
-    private val measurer: TextMeasurer,
-    private val style: TextStyle,
-) {
-    private val cache = mutableMapOf<Char, TextLayoutResult>()
-
-    fun glyphs(label: CountryLabel): List<TextLayoutResult> =
-        label.name.filterNot(Char::isWhitespace).map { char -> cache.getOrPut(char) { measurer.measure(char.toString(), style) } }
 }

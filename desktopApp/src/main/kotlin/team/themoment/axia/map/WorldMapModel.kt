@@ -35,6 +35,7 @@ class CountryLabel(
     val countryId: String,
     val name: String,
     curve: CountryLabelCurve,
+    val maxGlyphHeight: Float,
 ) {
     private val start = if (curve.start.x <= curve.end.x) curve.start else curve.end
     private val end = if (curve.start.x <= curve.end.x) curve.end else curve.start
@@ -103,11 +104,31 @@ class WorldMapModel(
         }
     }
 
-    val labels: List<CountryLabel> =
-        geometry.countries.values
-            .filter { it.id in world.countries }
-            .map { CountryLabel(it.id, world.country(it.id).name, it.labelCurve) }
-            .sortedByDescending { it.length * it.thickness }
+    private val initialLabels by lazy {
+        regionsByCountry.mapValues { (owner, shapes) -> fitLabel(owner, shapes, geometry.countries.getValue(owner).labelCurve) }
+    }
+
+    /** 바뀐 소유권이 있는 나라만 다시 맞춘다. 줌과 화면 위치는 표기 배치에 관여하지 않는다. */
+    fun labelsFor(owners: Map<String, String>): List<CountryLabel> {
+        if (owners.isEmpty()) return initialLabels.values.filterNotNull()
+        val changed = owners.entries.flatMap { (region, owner) -> listOf(countryOf(region), owner) }.toSet()
+        val current = regions.groupBy { owners[it.id] ?: countryOf(it.id) }
+        return current.mapNotNull { (owner, shapes) ->
+            if (owner in changed) fitLabel(owner, shapes, null) else initialLabels[owner]
+        }
+    }
+
+    private fun fitLabel(
+        owner: String,
+        shapes: List<RegionShape>,
+        original: CountryLabelCurve?,
+    ): CountryLabel? {
+        val mainland = shapes.filter { world.region(it.id).territoryId == null }.ifEmpty { shapes }
+        val name = world.country(owner).name
+        val curve = fitTerritoryCurve(mainland, original, name.count { !it.isWhitespace() }) ?: return null
+        val area = abs(mainland.sumOf { shape -> shape.rings.sumOf(::signedArea) })
+        return CountryLabel(owner, name, curve, sqrt(area).toFloat() * 0.28f)
+    }
 
     class PoliticalBorders(
         val countries: List<BorderTile>,

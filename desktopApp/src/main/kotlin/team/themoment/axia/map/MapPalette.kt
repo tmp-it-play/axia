@@ -26,9 +26,8 @@ object MapPalette {
     val selectedCountry = Color(0x2EFFFFFF)
     val selectedRegion = Color(0x40FFFFFF)
     val selectedOutline = Color(0xFFFFF2C0)
-    val label = Color(0xFFEDEDEA)
-    val labelOutline = Color(0x55101010)
-    val labelShadow = Color(0xB0000000)
+    val labelInk = Color(0xFF33372F)
+    val labelLight = Color(0xFFF4EFDC)
 
     /** 클수록 부유함. */
     val wealth =
