@@ -49,6 +49,7 @@ internal class CountryEconomy(
             (structure.tradeOpenness - structure.exportShare).coerceAtLeast(0.0),
             ReserveAssets.of(id),
             RemittanceData.countries.getValue(id),
+            InvestmentIncomeData.countries.getValue(id),
         )
     var reconstructionShare = 0.0
 

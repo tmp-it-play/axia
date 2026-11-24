@@ -24,10 +24,12 @@ import team.themoment.axia.simulation.economy.EconomyIndicators
 import team.themoment.axia.simulation.economy.EconomySeries
 import team.themoment.axia.simulation.economy.ExternalAccountSnapshot
 import team.themoment.axia.simulation.economy.GovernorMandate
+import team.themoment.axia.simulation.economy.InvestmentIncomeSnapshot
 import team.themoment.axia.simulation.economy.MonetaryFramework
 import team.themoment.axia.simulation.economy.MonetaryPolicy
 import team.themoment.axia.simulation.economy.MonetaryStance
 import team.themoment.axia.simulation.economy.POLICY_RATE_FIELD
+import team.themoment.axia.simulation.economy.RemittanceSource
 import team.themoment.axia.simulation.economy.SectorLine
 import team.themoment.axia.simulation.economy.TradeSnapshot
 import team.themoment.axia.simulation.nation.InstitutionItem
@@ -78,6 +80,14 @@ fun EconomyPanel(
         val received = externalAccount.openingReceived?.let { formatCompactDollars(transfers.received) } ?: "자료 없음"
         val paid = externalAccount.openingPaid?.let { formatCompactDollars(transfers.paid) } ?: "자료 없음"
         StatRow("월 개인송금 수취 · 지급", "$received · $paid")
+        val coverage =
+            listOf("수취" to externalAccount.openingReceived, "지급" to externalAccount.openingPaid).mapNotNull { (label, benchmark) ->
+                benchmark?.source?.takeIf { it.partial }?.let { "$label ${it.label}" }
+            }
+        if (coverage.isNotEmpty()) Hint(coverage.joinToString(" · "))
+        val investment = externalAccount.investmentIncome
+        StatRow("월 투자소득 수취 · 지급", incomePair(investment.received?.total, investment.paid?.total))
+        if (externalAccount.imfInterest > 0.0) StatRow("월 IMF 차입 이자", formatCompactDollars(externalAccount.imfInterest))
         if (externalAccount.netGrants != 0.0) {
             val label = if (externalAccount.netGrants > 0.0) "월 경제 원조 수취" else "월 경제 원조 지급"
             StatRow(label, formatCompactDollars(kotlin.math.abs(externalAccount.netGrants)))
@@ -96,8 +106,12 @@ fun EconomyPanel(
             val paid = externalAccount.openingPaid?.let { formatCompactDollars(transfers.unallocatedPaid) } ?: "자료 없음"
             StatRow("상대 미배정 수취 · 지급", "$received · $paid")
         }
+        if (externalAccount.openingReceived?.source == RemittanceSource.BOP_MINIMUM) {
+            Hint("수취와 지급은 모두 하한입니다. 두 기준액의 차이는 기준연도 공표 순액과 같습니다.")
+        }
         Hint("양자 송금은 KNOMAD의 2021년 경로 비중으로 추정합니다. 양국 총액과 맞추고 남은 금액도 경상수지에 포함합니다.")
     }
+    InvestmentIncomeDetails(countryId, externalAccount.investmentIncome, externalAccount.settled)
     StatRow("준비자산 (금 제외)", formatCompactDollars(externalAccount.reserves))
     StatRow("시작 잔액 근거", externalAccount.openingReserveSource?.label ?: "추정 · 시작 월 수입액의 3배")
     externalAccount.importCover?.let { StatRow("수입 대금 충당 기간", "%.1f개월".format(java.util.Locale.KOREA, it)) }
@@ -141,6 +155,40 @@ fun EconomyPanel(
     LineChart(history[EconomySeries.UNEMPLOYMENT], history.start, percentFormat)
     SectionTitle("GDP")
     LineChart(history[EconomySeries.GDP], history.start, dollarFormat)
+}
+
+private fun incomePair(
+    received: Double?,
+    paid: Double?,
+): String = "${received?.let(::formatCompactDollars) ?: "미보고"} · ${paid?.let(::formatCompactDollars) ?: "미보고"}"
+
+@Composable
+private fun InvestmentIncomeDetails(
+    countryId: String,
+    income: InvestmentIncomeSnapshot,
+    settled: Boolean,
+) {
+    var expanded by remember(countryId) { mutableStateOf(false) }
+    PaperTag(if (expanded) "투자소득 내역 접기" else "투자소득 내역", onClick = { expanded = !expanded })
+    if (!expanded) return
+    for ((label, base) in listOf("투자소득 연간 수취 기준액" to income.opening.received, "투자소득 연간 지급 기준액" to income.opening.paid)) {
+        StatRow(label, base?.let { "${formatCompactDollars(it.total.toDouble())} · ${it.year}년 ${it.source.label}" } ?: "자료 없음 · 결산 미포함")
+    }
+    if (settled) {
+        if (income.received != null && income.paid != null) {
+            StatRow("월 투자소득 순수취", formatCompactDollars(income.net))
+        }
+        StatRow("월 배당 수취 · 지급", incomePair(income.received?.dividends, income.paid?.dividends))
+        StatRow("월 투자이자 수취 · 지급", incomePair(income.received?.interest, income.paid?.interest))
+        StatRow("월 재투자수익 수취 · 지급", incomePair(income.received?.reinvested, income.paid?.reinvested))
+        StatRow("월 기타·미분류 수취 · 지급", incomePair(income.received?.other, income.paid?.other))
+        if (income.received?.reinvested != null || income.paid?.reinvested != null) {
+            StatRow("재투자 금융계정 대응액 (순유입)", formatCompactDollars(income.reinvestmentFinancing))
+        }
+        Hint(
+            "배당·이자·재투자수익에는 원표에서 식별한 금액을 표시합니다. 배당에는 펀드 분배금과 준법인 소득인출이 포함됩니다. 기타·미분류는 세 항목을 뺀 잔액입니다. 재투자수익은 경상수지와 금융계정에 함께 기록되어 외환보유액을 바꾸지 않습니다.",
+        )
+    }
 }
 
 @Composable

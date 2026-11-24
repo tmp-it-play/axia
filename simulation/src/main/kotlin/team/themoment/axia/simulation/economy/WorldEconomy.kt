@@ -57,6 +57,7 @@ class WorldEconomy internal constructor(
     private val reserveCurrencyIssuer = countriesById.getValue(RESERVE_CURRENCY_ISSUER)
     private val trade = TradeNetwork(countries, data, startMonth)
     private val remittances = RemittanceNetwork(countries)
+    private val investmentIncome = WorldInvestmentIncome(countries)
     internal val currencyNotices = mutableListOf<Pair<String, CurrencyNotice>>()
     private val histories = countries.associate { country -> country.id to EconomySeries.entries.associateWith { MonthlySeries() } }
 
@@ -77,6 +78,7 @@ class WorldEconomy internal constructor(
         val dollarInflation = reserveCurrencyIssuer.inflation
         val external = trade.advanceMonth(international, period)
         val transfers = remittances.settle()
+        val investment = investmentIncome.settle()
         monetary.decide(countriesById, period.plusMonths(1))
         val us = monetary.conditions(RESERVE_CURRENCY_ISSUER)
         val usRealRate = us.effectiveRate - reserveCurrencyIssuer.expectedInflation
@@ -95,6 +97,7 @@ class WorldEconomy internal constructor(
                 payments.closeMonth(
                     flows,
                     transfers[i],
+                    investment[i],
                     grant,
                     country.dollarGdp,
                     country.debtRatio,

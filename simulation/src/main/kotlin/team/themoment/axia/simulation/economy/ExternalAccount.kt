@@ -8,6 +8,8 @@ data class ExternalAccountSnapshot(
     val exports: Double,
     val imports: Double,
     val currentAccount: Double,
+    val investmentIncome: InvestmentIncomeSnapshot,
+    val imfInterest: Double,
     val remittances: MonthlyRemittances,
     val openingReceived: RemittanceBenchmark?,
     val openingPaid: RemittanceBenchmark?,
@@ -88,12 +90,15 @@ internal class ExternalAccount(
     importShare: Double,
     opening: InitialReserveAssets?,
     private val openingRemittances: OpeningRemittances,
+    openingInvestment: InvestmentIncomeBenchmarks,
 ) {
     private val openingImports = initialGdp * importShare / 12
     private var settled = false
     private var imports = 0.0
     private var exports = 0.0
     private var current = 0.0
+    private var investment = InvestmentIncomeSnapshot(openingInvestment)
+    private var imfInterest = 0.0
     private var remittances = MonthlyRemittances()
     private var netGrants = 0.0
     private val openingReserveSource = opening?.source
@@ -128,6 +133,7 @@ internal class ExternalAccount(
     fun closeMonth(
         external: ExternalConditions,
         transfers: MonthlyRemittances,
+        income: InvestmentIncomeSnapshot,
         grant: Double,
         gdp: Double,
         debtRatio: Double,
@@ -138,18 +144,21 @@ internal class ExternalAccount(
         settled = true
         exports = external.exports
         imports = external.imports
-        val interest = credit * 0.03 / 12
+        imfInterest = credit * 0.03 / 12
+        investment = income
         remittances = transfers
-        val operatingBalance = exports - imports + transfers.received - transfers.paid
+        val operatingBalance = exports - imports + transfers.received - transfers.paid + income.net
         netGrants = grant
-        current = operatingBalance + grant - interest
+        current = operatingBalance + grant - imfInterest
         // 통상의 경상적자는 민간 자본이 대부분 조달한다. 고물가·부채와 경기 충격은 자본 유출을 일으킨다.
         val flight =
             (inflation - 0.08).coerceIn(0.0, 0.5) * 0.15 +
                 (debtRatio - 0.9).coerceIn(0.0, 1.5) * 0.025 + (-external.gapShock).coerceIn(0.0, 0.10)
-        val privateFlow = -operatingBalance * 0.94 - gdp * flight / 12.0 + (3 * imports - reserves) * 0.07
-        val balance = current + privateFlow
-        val intervention = if (defendsPeg) balance else balance * 0.3 - interest * 0.7
+        // 재투자수익에는 같은 금액의 금융 거래가 대응하므로 외화 결제가 필요한 수지에서 차감한다.
+        val cashOperatingBalance = operatingBalance + income.reinvestmentFinancing
+        val privateFlow = -cashOperatingBalance * 0.94 - gdp * flight / 12.0 + (3 * imports - reserves) * 0.07
+        val balance = current + income.reinvestmentFinancing + privateFlow
+        val intervention = if (defendsPeg) balance else balance * 0.3 - imfInterest * 0.7
         reserves += intervention
         if (reserves < 0.0) {
             // 수입 대금을 전부 이연해도 모자라는 외화는 별도의 단기 대외신용으로 조달한다.
@@ -183,6 +192,8 @@ internal class ExternalAccount(
             exports,
             imports,
             current,
+            investment,
+            imfInterest,
             remittances,
             openingRemittances.received,
             openingRemittances.paid,
