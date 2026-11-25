@@ -55,6 +55,8 @@ fun DossierPanel(
     modifier: Modifier = Modifier,
     onClose: (() -> Unit)? = null,
     scrollable: Boolean = false,
+    scrollKey: Any? = title,
+    index: (@Composable () -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     Column(modifier = modifier) {
@@ -111,10 +113,15 @@ fun DossierPanel(
                             .shadow(2.dp, SheetShape)
                             .paperTexture()
                             .foldedCorner()
-                            .padding(start = 16.dp, end = 14.dp, top = 24.dp, bottom = 12.dp)
-                            .then(if (scrollable) Modifier.verticalScroll(key(title) { rememberScrollState() }) else Modifier),
-                    content = content,
-                )
+                            .padding(start = 16.dp, end = 14.dp, top = 24.dp, bottom = 12.dp),
+                ) {
+                    index?.invoke()
+                    val scroll = if (scrollable) key(title, scrollKey) { rememberScrollState() } else null
+                    Column(
+                        modifier = if (scroll != null) Modifier.fillMaxWidth().verticalScroll(scroll) else Modifier.fillMaxWidth(),
+                        content = content,
+                    )
+                }
             }
             PaperClip(Modifier.align(Alignment.TopStart).offset(x = 27.dp, y = 2.dp).rotate(-8f))
         }

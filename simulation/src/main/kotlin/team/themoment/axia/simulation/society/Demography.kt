@@ -22,7 +22,7 @@ data class DemographySnapshot(
     /** 조사한 65세 미만 수급자를 15~64세 전체 인구로 나눈 비율. */
     val earlyPensionOfWorkingAge: Double?,
     val earlyPensionFromAge: Int?,
-    val earlyPensionSource: String?,
+    val earlyPensionYear: Int?,
     val olderPension: OlderPensionCoverage?,
     /** 전체 인구 대비 이번 달 추정 연금 수요 인구. */
     val pensionDemandShare: Double,
@@ -143,7 +143,7 @@ internal class Demography(
             participationModeled = activity.series == "EAP_2WAP_SEX_AGE_RT",
             earlyPensionOfWorkingAge = activity.earlyPension?.recipientsOfWorkingAge,
             earlyPensionFromAge = activity.earlyPension?.fromAge,
-            earlyPensionSource = activity.earlyPension?.let { "${it.year}년 ${it.source}" },
+            earlyPensionYear = activity.earlyPension?.year,
             olderPension = activity.olderPension,
             pensionDemandShare = pensionDemand,
             urbanShare = urbanShare,

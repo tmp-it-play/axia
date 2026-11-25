@@ -1,22 +1,25 @@
 package team.themoment.axia.game.panels
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.text.LinkAnnotation
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.withLink
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import team.themoment.axia.format.formatCompactDollars
 import team.themoment.axia.format.formatPercent
 import team.themoment.axia.format.formatRate
-import team.themoment.axia.game.note
+import team.themoment.axia.game.EconomyPage
 import team.themoment.axia.simulation.economy.BankPressure
 import team.themoment.axia.simulation.economy.Company
 import team.themoment.axia.simulation.economy.CountryHistory
@@ -28,8 +31,6 @@ import team.themoment.axia.simulation.economy.InvestmentIncomeSnapshot
 import team.themoment.axia.simulation.economy.MonetaryFramework
 import team.themoment.axia.simulation.economy.MonetaryPolicy
 import team.themoment.axia.simulation.economy.MonetaryStance
-import team.themoment.axia.simulation.economy.POLICY_RATE_FIELD
-import team.themoment.axia.simulation.economy.RemittanceSource
 import team.themoment.axia.simulation.economy.SectorLine
 import team.themoment.axia.simulation.economy.TradeSnapshot
 import team.themoment.axia.simulation.nation.InstitutionItem
@@ -41,13 +42,13 @@ import team.themoment.axia.ui.dossier.LineChart
 import team.themoment.axia.ui.dossier.PaperTag
 import team.themoment.axia.ui.dossier.SectionTitle
 import team.themoment.axia.ui.dossier.StatRow
-import java.net.URI
 import java.time.LocalDate
 import kotlin.math.ceil
 import kotlin.math.roundToInt
 
 @Composable
-fun EconomyPanel(
+internal fun EconomyPanel(
+    page: EconomyPage,
     countryId: String,
     countryName: (String) -> String,
     indicators: EconomyIndicators,
@@ -66,35 +67,73 @@ fun EconomyPanel(
     onAppointGovernor: (GovernorMandate) -> Unit,
     onPressureBank: (BankPressure) -> Unit,
     onDirectRate: (Double) -> Unit,
-    onDraftIndependence: (Double) -> Unit,
+    onOpenIndependence: () -> Unit,
     onViewBill: () -> Unit,
 ) {
-    SectionTitle("현재 지표")
-    KeyIndicatorRows(indicators)
-    MonetarySection(countryName(countryId), indicators, history, monetary, politics, onDirectRate, onDraftIndependence, onViewBill)
-    GovernorSection(monetary, politicalCapital, onAppointGovernor, onPressureBank)
-    SectionTitle("대외 거래와 외환")
+    when (page) {
+        EconomyPage.INDICATORS -> {
+            PanelColumns(
+                left = {
+                    LedgerHeading("주요 경제 지표")
+                    KeyIndicatorRows(indicators)
+                },
+                right = { EconomicTrends(history) },
+            )
+        }
+
+        EconomyPage.MONETARY -> {
+            PanelColumns(
+                left = {
+                    MonetarySection(
+                        countryName(countryId),
+                        history,
+                        monetary,
+                        politics,
+                        onDirectRate,
+                        onOpenIndependence,
+                        onViewBill,
+                    )
+                },
+                right = { GovernorSection(monetary, politicalCapital, onAppointGovernor, onPressureBank) },
+            )
+        }
+
+        EconomyPage.EXTERNAL -> {
+            PanelColumns(
+                left = { ExternalAccounts(countryId, externalAccount) },
+                right = { ForeignReserves(externalAccount, onRequestImf) },
+            )
+        }
+
+        EconomyPage.INDUSTRY -> {
+            PanelColumns(
+                left = { IndustrySection(sectors, companies, closures, onRenameCompany) },
+                right = {
+                    CommoditySection(countryId, trade.commodities, date, indicators.supportedGrainTonnes, pageHeading = true, countryName)
+                },
+            )
+        }
+    }
+}
+
+@Composable
+private fun ExternalAccounts(
+    countryId: String,
+    externalAccount: ExternalAccountSnapshot,
+) {
+    LedgerHeading("경상수지")
     if (externalAccount.settled) {
         StatRow("월 수출 · 수입", "${formatCompactDollars(externalAccount.exports)} · ${formatCompactDollars(externalAccount.imports)}")
         val transfers = externalAccount.remittances
-        val received = externalAccount.openingReceived?.let { formatCompactDollars(transfers.received) } ?: "자료 없음"
-        val paid = externalAccount.openingPaid?.let { formatCompactDollars(transfers.paid) } ?: "자료 없음"
-        StatRow("월 개인송금 수취 · 지급", "$received · $paid")
-        val coverage =
-            listOf("수취" to externalAccount.openingReceived, "지급" to externalAccount.openingPaid).mapNotNull { (label, benchmark) ->
-                benchmark?.source?.takeIf { it.partial }?.let { "$label ${it.label}" }
-            }
-        if (coverage.isNotEmpty()) Hint(coverage.joinToString(" · "))
+        StatRow(
+            "월 개인송금 수취 · 지급",
+            dollarPair(externalAccount.openingReceived?.let { transfers.received }, externalAccount.openingPaid?.let { transfers.paid }),
+        )
         val investment = externalAccount.investmentIncome
         if (investment.netOnly != null) {
             StatRow("월 투자소득 순수취", formatCompactDollars(investment.net))
         } else {
-            StatRow("월 투자소득 수취 · 지급", incomePair(investment.received?.total, investment.paid?.total))
-        }
-        val opening = investment.opening
-        val pastYears = listOfNotNull(opening.received?.year, opening.paid?.year, opening.netOnly?.year).filter { it < 2023 }
-        if (pastYears.isNotEmpty()) {
-            Hint("${pastYears.distinct().sorted().joinToString("·")}년 명목 달러액을 시작 기준으로 사용합니다.")
+            StatRow("월 투자소득 수취 · 지급", dollarPair(investment.received?.total, investment.paid?.total))
         }
         if (externalAccount.imfInterest > 0.0) StatRow("월 IMF 차입 이자", formatCompactDollars(externalAccount.imfInterest))
         if (externalAccount.netGrants != 0.0) {
@@ -102,27 +141,33 @@ fun EconomyPanel(
             StatRow(label, formatCompactDollars(kotlin.math.abs(externalAccount.netGrants)))
         }
         StatRow("월 경상수지", formatCompactDollars(externalAccount.currentAccount))
+    } else {
+        Hint("첫 월 결산 후 수출입과 경상수지가 표시됩니다.")
     }
     var showRemittances by remember(countryId) { mutableStateOf(false) }
-    PaperTag(if (showRemittances) "송금 내역 접기" else "송금 산정 근거", onClick = { showRemittances = !showRemittances })
+    PaperTag(if (showRemittances) "송금 내역 접기" else "송금 내역", onClick = { showRemittances = !showRemittances })
     if (showRemittances) {
         for ((label, benchmark) in listOf("연간 수취 기준액" to externalAccount.openingReceived, "연간 지급 기준액" to externalAccount.openingPaid)) {
-            StatRow(label, benchmark?.let { "${formatCompactDollars(it.usd.toDouble())} · ${it.label}" } ?: "자료 없음 · 결산 미포함")
+            StatRow(label, benchmark?.let { "${formatCompactDollars(it.usd.toDouble())} · ${it.year}년" } ?: "—")
         }
         if (externalAccount.settled) {
             val transfers = externalAccount.remittances
-            val received = externalAccount.openingReceived?.let { formatCompactDollars(transfers.unallocatedReceived) } ?: "자료 없음"
-            val paid = externalAccount.openingPaid?.let { formatCompactDollars(transfers.unallocatedPaid) } ?: "자료 없음"
-            StatRow("상대 미배정 수취 · 지급", "$received · $paid")
+            val received = externalAccount.openingReceived?.let { transfers.unallocatedReceived }
+            val paid = externalAccount.openingPaid?.let { transfers.unallocatedPaid }
+            StatRow("상대 미배정 수취 · 지급", dollarPair(received, paid))
         }
-        if (externalAccount.openingReceived?.source == RemittanceSource.BOP_MINIMUM) {
-            Hint("수취와 지급은 모두 하한입니다. 두 기준액의 차이는 기준연도 공표 순액과 같습니다.")
-        }
-        Hint("양국이 확인된 송금은 해당 지급국의 경제 규모에 연동합니다. 나머지는 KNOMAD의 2021년 경로 비중을 적용할 수 있는 범위에서 배정하며, 상대 미배정액도 경상수지에 포함합니다.")
+        Hint("국가 간 송금액은 지급국의 경제 규모에 따라 달라집니다. 거래 상대가 정해지지 않은 송금도 경상수지에 포함됩니다.")
     }
     InvestmentIncomeDetails(countryId, externalAccount.investmentIncome, externalAccount.settled)
+}
+
+@Composable
+private fun ForeignReserves(
+    externalAccount: ExternalAccountSnapshot,
+    onRequestImf: () -> Unit,
+) {
+    LedgerHeading("외환보유액과 차입")
     StatRow("준비자산 (금 제외)", formatCompactDollars(externalAccount.reserves))
-    StatRow("시작 잔액 근거", externalAccount.openingReserveSource?.label ?: "추정 · 시작 월 수입액의 3배")
     externalAccount.importCover?.let { StatRow("수입 대금 충당 기간", "%.1f개월".format(java.util.Locale.KOREA, it)) }
     if (externalAccount.pegFailed) Hint("외환보유액 부족으로 고정환율 방어가 종료됐습니다.")
     if (externalAccount.tradeArrears > 0.0) StatRow("미결제 수입 대금", formatCompactDollars(externalAccount.tradeArrears))
@@ -135,6 +180,27 @@ fun EconomyPanel(
         Hint("외화를 즉시 차입합니다. 다음 달부터 연 3% 이자와 36개월 분할 원금을 보유액에서 지급합니다.")
         PaperTag("IMF 긴급 대출 신청", onClick = onRequestImf)
     }
+}
+
+@Composable
+private fun IndustrySection(
+    sectors: List<SectorLine>,
+    companies: List<Company>,
+    closures: Int,
+    onRenameCompany: (Int, String) -> Unit,
+) {
+    LedgerHeading("산업 구조")
+    SectorRow("산업 부문", "부가가치 비중", "성장률", "고용 비중", header = true)
+    sectors.sortedByDescending { it.share }.forEach { line ->
+        SectorRow(
+            line.sector.label,
+            formatPercent(line.share),
+            formatPercent(line.growth, signed = true),
+            formatPercent(line.employment),
+            growthColor = if (line.growth < 0.0) DossierColors.negative else DossierColors.ink,
+        )
+    }
+    Hint("성장률은 실질 부가가치의 전년 대비 증가율입니다.")
     SectionTitle("기업")
     StatRow("생성 기업 · 누적 폐업", "${companies.size}곳 · ${closures}곳")
     var showCompanies by remember { mutableStateOf(false) }
@@ -146,30 +212,31 @@ fun EconomyPanel(
             RenameControl(company.id, company.name) { onRenameCompany(company.id, it) }
         }
     }
-    SectionTitle("산업 구조 (부가가치 · 성장 · 고용)")
-    sectors.sortedByDescending { it.share }.forEach { line ->
-        StatRow(
-            line.sector.label,
-            "${formatPercent(line.share)} · ${formatPercent(line.growth, signed = true)} · 고용 ${formatPercent(line.employment)}",
-            valueColor = if (line.growth < -0.02) DossierColors.negative else DossierColors.ink,
-        )
-    }
-    Hint("부가가치 비중은 World Bank 2023년 구성에서 나눈 추정입니다. 성장률은 실질 부가가치의 전년 대비 증가율입니다.")
-    CommoditySection(countryId, trade.commodities, date, indicators.supportedGrainTonnes, countryName)
-    SectionTitle("경제성장률")
-    LineChart(history[EconomySeries.GROWTH], history.start, signedPercentFormat, zeroLine = true)
-    SectionTitle("물가상승률")
-    LineChart(history[EconomySeries.INFLATION], history.start, percentFormat)
-    SectionTitle("실업률")
-    LineChart(history[EconomySeries.UNEMPLOYMENT], history.start, percentFormat)
-    SectionTitle("GDP")
-    LineChart(history[EconomySeries.GDP], history.start, dollarFormat)
 }
 
-private fun incomePair(
+@Composable
+private fun SectorRow(
+    sector: String,
+    share: String,
+    growth: String,
+    jobs: String,
+    header: Boolean = false,
+    growthColor: Color = DossierColors.ink,
+) {
+    val style = if (header) DossierType.title(12.sp) else DossierType.number(14.sp)
+    val ink = if (header) DossierColors.blueInk else DossierColors.ink
+    Row(Modifier.fillMaxWidth().padding(vertical = 5.dp), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+        Text(sector, Modifier.weight(1.35f), style = style, color = ink)
+        Text(share, Modifier.weight(1.1f), textAlign = TextAlign.End, style = style, color = ink)
+        Text(growth, Modifier.weight(1f), textAlign = TextAlign.End, style = style, color = if (header) ink else growthColor)
+        Text(jobs, Modifier.weight(1f), textAlign = TextAlign.End, style = style, color = ink)
+    }
+}
+
+private fun dollarPair(
     received: Double?,
     paid: Double?,
-): String = "${received?.let(::formatCompactDollars) ?: "미보고"} · ${paid?.let(::formatCompactDollars) ?: "미보고"}"
+): String = "${received?.let(::formatCompactDollars) ?: "—"} · ${paid?.let(::formatCompactDollars) ?: "—"}"
 
 @Composable
 private fun InvestmentIncomeDetails(
@@ -181,12 +248,8 @@ private fun InvestmentIncomeDetails(
     PaperTag(if (expanded) "투자소득 내역 접기" else "투자소득 내역", onClick = { expanded = !expanded })
     if (!expanded) return
     income.opening.netOnly?.let { base ->
-        StatRow(
-            "투자소득 연간 순수취 기준액",
-            "${formatCompactDollars(base.total.toDouble())} · ${base.year}년 ${base.source.label}",
-            note = if (base.year < 2023) "과거 명목액 대용" else null,
-        )
-        Hint("수취와 지급을 나눈 총액은 미보고입니다. 공표 순액을 세계 달러 GDP 변화에 연동합니다.")
+        StatRow("투자소득 연간 순수취 기준액", "${formatCompactDollars(base.total.toDouble())} · ${base.year}년")
+        Hint("순수취액은 세계 달러 GDP 변화에 연동됩니다.")
         base.interest?.let { StatRow("연간 투자이자 순수취 기준액", formatCompactDollars(it.toDouble())) }
         income.netOnly?.let { monthly ->
             monthly.interest?.let { StatRow("월 투자이자 순수취", formatCompactDollars(it)) }
@@ -201,25 +264,21 @@ private fun InvestmentIncomeDetails(
         return
     }
     for ((label, base) in listOf("투자소득 연간 수취 기준액" to income.opening.received, "투자소득 연간 지급 기준액" to income.opening.paid)) {
-        StatRow(
-            label,
-            base?.let { "${formatCompactDollars(it.total.toDouble())} · ${it.year}년 ${it.source.label}" } ?: "자료 없음 · 결산 미포함",
-            note = if (base != null && base.year < 2023) "과거 명목액 대용" else null,
-        )
+        StatRow(label, base?.let { "${formatCompactDollars(it.total.toDouble())} · ${it.year}년" } ?: "—")
     }
     if (settled) {
         if (income.received != null && income.paid != null) {
             StatRow("월 투자소득 순수취", formatCompactDollars(income.net))
         }
-        StatRow("월 배당 수취 · 지급", incomePair(income.received?.dividends, income.paid?.dividends))
-        StatRow("월 투자이자 수취 · 지급", incomePair(income.received?.interest, income.paid?.interest))
-        StatRow("월 재투자수익 수취 · 지급", incomePair(income.received?.reinvested, income.paid?.reinvested))
-        StatRow("월 기타·미분류 수취 · 지급", incomePair(income.received?.other, income.paid?.other))
+        StatRow("월 배당 수취 · 지급", dollarPair(income.received?.dividends, income.paid?.dividends))
+        StatRow("월 투자이자 수취 · 지급", dollarPair(income.received?.interest, income.paid?.interest))
+        StatRow("월 재투자수익 수취 · 지급", dollarPair(income.received?.reinvested, income.paid?.reinvested))
+        StatRow("월 기타·미분류 수취 · 지급", dollarPair(income.received?.other, income.paid?.other))
         if (income.received?.reinvested != null || income.paid?.reinvested != null) {
             StatRow("재투자 금융계정 대응액 (순유입)", formatCompactDollars(income.reinvestmentFinancing))
         }
         Hint(
-            "배당·이자·재투자수익에는 원표에서 식별한 금액을 표시합니다. 배당에는 펀드 분배금과 준법인 소득인출이 포함됩니다. 기타·미분류는 세 항목을 뺀 잔액입니다. 재투자수익은 경상수지와 금융계정에 함께 기록되어 외환보유액을 바꾸지 않습니다.",
+            "배당에는 펀드 분배금과 준법인 소득인출이 포함됩니다. 기타·미분류는 배당·이자·재투자수익을 뺀 잔액입니다. 재투자수익은 경상수지와 금융계정에 함께 기록되어 외환보유액을 바꾸지 않습니다.",
         )
     }
 }
@@ -227,19 +286,17 @@ private fun InvestmentIncomeDetails(
 @Composable
 private fun MonetarySection(
     countryName: String,
-    indicators: EconomyIndicators,
     history: CountryHistory,
     monetary: MonetaryPolicy,
     politics: PoliticsSnapshot,
     onDirectRate: (Double) -> Unit,
-    onDraftIndependence: (Double) -> Unit,
+    onOpenIndependence: () -> Unit,
     onViewBill: () -> Unit,
 ) {
-    SectionTitle("통화정책")
+    LedgerHeading("통화정책")
     StatRow("중앙은행", monetary.bankName ?: "$countryName 중앙은행")
     StatRow("통화 체제", monetary.framework.label + monetary.anchorCurrency?.let { " · $it" }.orEmpty())
-    StatRow("금리 결정", decisionMaker(monetary))
-    StatRow("기준금리", formatRate(monetary.policyRate), note = indicators.note(POLICY_RATE_FIELD))
+    StatRow("기준금리", formatRate(monetary.policyRate))
     OpeningPolicyRate(monetary)
     if (monetary.quantitativeEasing) StatRow("자산 매입", "금리 하한 · 양적완화 중")
     StatRow("물가 목표", formatPercent(monetary.inflationTarget))
@@ -249,7 +306,6 @@ private fun MonetarySection(
     LineChart(history[EconomySeries.POLICY_RATE], history.start, rateFormat)
 
     val pending = politics.pending
-    val drafted = politics.draft[InstitutionItem.CENTRAL_BANK_INDEPENDENCE]
     val proposedInBill = pending?.changes?.any { it.item == InstitutionItem.CENTRAL_BANK_INDEPENDENCE } == true
     when (monetary.framework) {
         MonetaryFramework.MONETARY_UNION -> {
@@ -262,15 +318,6 @@ private fun MonetarySection(
 
         MonetaryFramework.INFLATION_TARGETING -> {
             Hint("독립 중앙은행이 물가와 경기를 보고 금리를 정합니다. 정부가 금리를 정하려면 독립성을 없애는 법안을 통과시켜야 하며, 통과되면 통화 신뢰가 무너집니다.")
-            IndependenceDraft(
-                label = "독립성 박탈",
-                target = 0.0,
-                drafted = drafted != null,
-                proposedInBill = proposedInBill,
-                editable = pending == null,
-                onDraft = onDraftIndependence,
-                onViewBill = onViewBill,
-            )
         }
 
         MonetaryFramework.GOVERNMENT_DIRECTED -> {
@@ -292,44 +339,12 @@ private fun MonetarySection(
                 )
                 Hint("지시한 금리는 다음 달 1일부터 12개월 동안 유지되고, 그 뒤에는 정부 지시 준칙으로 자동 결정됩니다. 금리를 물가보다 낮게 묶어 두면 경기는 살지만 물가가 스스로 오르기 시작합니다.")
             }
-            IndependenceDraft(
-                label = "중앙은행 독립",
-                target = 1.0,
-                drafted = drafted != null,
-                proposedInBill = proposedInBill,
-                editable = pending == null,
-                onDraft = onDraftIndependence,
-                onViewBill = onViewBill,
-            )
         }
     }
-}
-
-@Composable
-private fun IndependenceDraft(
-    label: String,
-    target: Double,
-    drafted: Boolean,
-    proposedInBill: Boolean,
-    editable: Boolean,
-    onDraft: (Double) -> Unit,
-    onViewBill: () -> Unit,
-) {
-    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        when {
-            proposedInBill -> {
-                PaperTag("$label 법안 심의 중", selected = true, onClick = onViewBill)
-            }
-
-            drafted -> {
-                PaperTag("$label · 초안에 포함됨", selected = true, onClick = onViewBill)
-                PaperTag("초안에서 빼기", onClick = { onDraft(1.0 - target) })
-            }
-
-            else -> {
-                PaperTag("$label 법안 초안에 추가", enabled = editable, onClick = { onDraft(target) })
-            }
-        }
+    if (proposedInBill) {
+        PaperTag("중앙은행법 심의 보기", onClick = onViewBill)
+    } else if (pending == null && monetary.framework.adjustableIndependence) {
+        PaperTag("중앙은행 독립성 입안", onClick = onOpenIndependence)
     }
 }
 
@@ -341,37 +356,11 @@ private fun decisionMaker(monetary: MonetaryPolicy): String =
         MonetaryFramework.GOVERNMENT_DIRECTED -> "정부"
     }
 
-/** 시작 시점의 수단·근거를 현재 게임 금리와 구분해 보여 준다. */
 @Composable
 internal fun OpeningPolicyRate(monetary: MonetaryPolicy) {
-    var open by remember(monetary.initialRateSourceNote) { mutableStateOf(false) }
-    PaperTag("시작 금리 근거", selected = open, onClick = { open = !open })
-    if (open) {
-        StatRow("2024년 1월 1일", formatRate(monetary.initialRate), note = if (monetary.estimated) "추정" else null)
-        monetary.unionBank?.let { StatRow("공동 금리 결정", it) }
-        monetary.unionExchangeAnchor?.let { StatRow("공동 통화의 환율 고정 대상", it) }
-        val note = monetary.initialRateSourceNote
-        Hint(note.substringBefore("https://").trimEnd())
-        val sources = note.split(' ').filter { it.startsWith("https://") }
-        if (sources.isNotEmpty()) {
-            Text(
-                buildAnnotatedString {
-                    sources.forEachIndexed { index, url ->
-                        if (index > 0) append(" · ")
-                        val label =
-                            if (monetary.unionBank != null && sources.size == 2) {
-                                if (index == 0) "금리 원자료" else "통화동맹 자료"
-                            } else {
-                                URI(url).host
-                            }
-                        withLink(LinkAnnotation.Url(url)) { append(label) }
-                    }
-                },
-                style = DossierType.number(12.sp),
-                color = DossierColors.stamp,
-            )
-        }
-    }
+    StatRow("시작 기준금리 (2024년 1월 1일)", formatRate(monetary.initialRate))
+    StatRow("금리 결정", decisionMaker(monetary))
+    monetary.unionExchangeAnchor?.let { StatRow("공동 통화의 환율 고정 대상", it) }
 }
 
 private fun stanceColor(stance: MonetaryStance) =
@@ -394,7 +383,7 @@ private fun GovernorSection(
     onPressure: (BankPressure) -> Unit,
 ) {
     val governor = monetary.governor
-    SectionTitle(if (monetary.unionBank == null) "중앙은행 총재" else "공동 중앙은행 총재")
+    LedgerHeading(if (monetary.unionBank == null) "중앙은행 총재" else "공동 중앙은행 총재")
     StatRow(governor.name, "${governor.mandate.label} · 임기 ${governor.termEnds}까지")
     governor.pressure?.let { StatRow("정부 의견", "${it.label} · ${governor.pressureMonths}개월 남음") }
     if (monetary.unionBank != null) {
@@ -409,7 +398,7 @@ private fun GovernorSection(
     }
     if (monetary.framework != MonetaryFramework.CURRENCY_PEG) {
         Hint("정부 의견은 세 차례의 월간 금리 결정에 영향을 주며 중앙은행 신뢰도가 낮아집니다. 독립 총재는 요구를 일부만 반영합니다.")
-        Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
             BankPressure.entries.forEach { direction ->
                 PaperTag(
                     "${direction.label} · ${governor.pressureCost.toInt()}",

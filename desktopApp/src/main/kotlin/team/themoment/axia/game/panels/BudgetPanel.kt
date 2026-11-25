@@ -1,53 +1,154 @@
 package team.themoment.axia.game.panels
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import team.themoment.axia.format.formatCompactDollars
 import team.themoment.axia.format.formatPercent
+import team.themoment.axia.game.BudgetPage
 import team.themoment.axia.simulation.economy.Creditor
 import team.themoment.axia.simulation.economy.DebtPhase
 import team.themoment.axia.simulation.economy.DebtPlan
 import team.themoment.axia.simulation.economy.DebtWorkoutSnapshot
-import team.themoment.axia.simulation.economy.RevenueCompositionSource
 import team.themoment.axia.simulation.nation.BudgetItem
 import team.themoment.axia.simulation.nation.BudgetSnapshot
 import team.themoment.axia.simulation.politics.PoliticsSnapshot
 import team.themoment.axia.theme.DossierColors
 import team.themoment.axia.theme.DossierType
-import team.themoment.axia.ui.dossier.DossierSlider
+import team.themoment.axia.ui.dossier.DossierLinkRow
 import team.themoment.axia.ui.dossier.PaperTag
 import team.themoment.axia.ui.dossier.SectionTitle
 import team.themoment.axia.ui.dossier.StatRow
 
 @Composable
-fun BudgetPanel(
+internal fun BudgetPanel(
     budget: BudgetSnapshot,
     politics: PoliticsSnapshot,
-    onEdit: (BudgetItem, Double) -> Unit,
-    onClear: () -> Unit,
-    onIntroduce: () -> Unit,
+    page: BudgetPage,
+    onEdit: (BudgetItem?) -> Unit,
+    onReview: () -> Unit,
     onViewBill: () -> Unit,
 ) {
+    val pending = politics.pending
+    Column(Modifier.fillMaxSize()) {
+        if (page != BudgetPage.DEBT) {
+            if (pending != null) {
+                DossierLinkRow("심의 중인 법안", pending.stage.label, onViewBill)
+            } else if (politics.draft.isNotEmpty()) {
+                DossierLinkRow("초안 검토", "변경 ${politics.draft.size}건", onReview)
+            }
+        }
+        when (page) {
+            BudgetPage.ACCOUNTS -> {
+                PanelColumns(
+                    left = {
+                        LedgerHeading("세입")
+                        BudgetAmount(budget.revenue, budget.gdp)
+                        SectionTitle("세목별 실효세율 · 연간 세입")
+                        budget.taxes.forEach { line ->
+                            val detail = "${formatPercent(line.rate)} · ${formatCompactDollars(line.revenue * budget.gdp)}"
+                            DossierLinkRow(line.kind.label, detail) { if (pending == null) onEdit(line.kind) else onViewBill() }
+                        }
+                        StatRow("기타 세입", formatCompactDollars(budget.otherRevenue * budget.gdp))
+                        val transfers = budget.revenue - budget.otherRevenue - budget.taxes.sumOf { it.revenue }
+                        if (transfers * budget.gdp >= 1.0) StatRow("이전 수입", formatCompactDollars(transfers * budget.gdp))
+                    },
+                    right = {
+                        LedgerHeading("세출")
+                        BudgetAmount(budget.primarySpending + budget.interest, budget.gdp)
+                        SectionTitle("분야별 GDP 비중 · 연간 지출")
+                        budget.spending.forEach { line ->
+                            val detail = "${formatPercent(line.level)} · ${formatCompactDollars(line.level * budget.gdp)}"
+                            DossierLinkRow(line.kind.label, detail) { if (pending == null) onEdit(line.kind) else onViewBill() }
+                        }
+                        if (kotlin.math.abs(budget.otherSpending * budget.gdp) >= 1.0) {
+                            StatRow("기타 지출·경기 조정", formatCompactDollars(budget.otherSpending * budget.gdp))
+                        }
+                        StatRow("순이자 지출", formatCompactDollars(budget.interest * budget.gdp))
+                    },
+                )
+            }
+
+            BudgetPage.BALANCE -> {
+                PanelColumns(left = { BalanceSheet(budget) }, right = { SpendingComposition(budget) })
+            }
+
+            BudgetPage.DEBT -> {
+                PanelColumns(
+                    left = { DebtSection(budget) },
+                    right = { CreditorBalances(budget.debtWorkout) },
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun BudgetAmount(
+    share: Double,
+    gdp: Double,
+) {
+    Text(formatCompactDollars(share * gdp), style = DossierType.number(27.sp), color = DossierColors.blueInk)
+    Hint("연간 GDP의 ${formatPercent(share)}")
+}
+
+private val BudgetSnapshot.otherSpending: Double get() = primarySpending - spending.sumOf { it.level }
+
+@Composable
+private fun SpendingComposition(budget: BudgetSnapshot) {
+    LedgerHeading("분야별 지출")
+    val lines =
+        buildList {
+            budget.spending.forEach { add(it.kind.label to it.level) }
+            if (kotlin.math.abs(budget.otherSpending * budget.gdp) >= 1.0) add("기타 지출·경기 조정" to budget.otherSpending)
+            add("순이자 지출" to budget.interest)
+        }
+    val low = minOf(0.0, lines.minOf { it.second })
+    val range = maxOf(0.0, lines.maxOf { it.second }) - low
+    lines.sortedByDescending { it.second }.forEach { (label, share) ->
+        Column(Modifier.fillMaxWidth().padding(bottom = 8.dp)) {
+            StatRow(label, "GDP의 ${formatPercent(share)}")
+            Canvas(Modifier.fillMaxWidth().height(6.dp)) {
+                drawRect(DossierColors.paperShade)
+                if (range > 0.0) {
+                    val zero = (-low / range).toFloat() * size.width
+                    val end = ((share - low) / range).toFloat() * size.width
+                    drawRect(
+                        color = DossierColors.blueInk,
+                        topLeft = Offset(minOf(zero, end), 0f),
+                        size = Size(kotlin.math.abs(end - zero), size.height),
+                    )
+                    if (low < 0.0) drawLine(DossierColors.ink, Offset(zero, 0f), Offset(zero, size.height))
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun BalanceSheet(budget: BudgetSnapshot) {
     fun money(share: Double) = formatCompactDollars(share * budget.gdp)
 
-    val pending = politics.pending
-    val editable = pending == null
-
-    SectionTitle("재정 현황 (연간, GDP 대비)")
+    LedgerHeading("연간 재정수지")
+    val balanceInk = if (budget.balance >= 0.0) DossierColors.positive else DossierColors.negative
+    Text(money(budget.balance), style = DossierType.number(27.sp), color = balanceInk)
+    Hint("GDP 대비 ${formatPercent(budget.balance, signed = true)}")
+    SectionTitle("세입과 지출")
     StatRow("세입", "${formatPercent(budget.revenue)} · ${money(budget.revenue)}")
     StatRow("기초지출", "${formatPercent(budget.primarySpending)} · ${money(budget.primarySpending)}")
-    StatRow("이자", "${formatPercent(budget.interest)} · ${money(budget.interest)}")
-    StatRow(
-        "재정수지",
-        "${formatPercent(budget.balance, signed = true)} · ${money(budget.balance)}",
-        valueColor = if (budget.balance >= 0.0) DossierColors.positive else DossierColors.negative,
-    )
+    StatRow("순이자 지출", "${formatPercent(budget.interest)} · ${money(budget.interest)}")
     StatRow("국가부채", formatPercent(budget.debtRatio))
     if (budget.reconstructionSpending > 0.0) {
         StatRow("전후 재건 집행액", "${formatPercent(budget.reconstructionSpending)} · ${money(budget.reconstructionSpending)}")
@@ -66,73 +167,12 @@ fun BudgetPanel(
         val share = String.format(java.util.Locale.KOREA, "%.4f%%", payment * 100.0)
         StatRow("곡물 농가 보조금 (실제 집행 · 연율)", "$share · ${money(payment)}")
     }
-    DebtSection(budget)
-    DraftControls(
-        politics = politics,
-        hint = "세율과 지출, 정책 탭의 규제를 함께 묶어 발의하세요. 통과된 목표는 다음 달부터 집행됩니다.",
-        onIntroduce = onIntroduce,
-        onViewBill = onViewBill,
-        onClear = onClear,
-    )
-
-    fun proposed(
-        item: BudgetItem,
-        enacted: Double,
-    ): Double = pending?.changes?.firstOrNull { it.item == item }?.to ?: politics.draft[item]?.to ?: enacted
-
-    SectionTitle("세입 · 실효세율")
-    Hint(
-        when (budget.revenueCompositionSource) {
-            RevenueCompositionSource.GFS_GENERAL -> "시작 세입 구성은 IMF GFS의 2023년 일반정부 통계를 따릅니다."
-            RevenueCompositionSource.GFS_CENTRAL_INCL_SOCIAL_SECURITY -> "시작 세입 구성은 IMF GFS의 2023년 중앙정부(사회보장기금 포함) 자료로 추정했습니다."
-            RevenueCompositionSource.GFS_CENTRAL_EXCL_SOCIAL_SECURITY -> "시작 세입 구성은 IMF GFS의 2023년 중앙정부(사회보장기금 제외) 자료로 추정했습니다."
-            RevenueCompositionSource.GFS_BUDGETARY_CENTRAL -> "시작 세입 구성은 IMF GFS의 2023년 중앙정부 예산회계 자료로 추정했습니다."
-            RevenueCompositionSource.WORLD_UNSPECIFIED -> "IMF WoRLD의 2023년 세입 구성으로 추정했습니다. 이 국가의 정부 보고범위는 확인되지 않았습니다."
-            RevenueCompositionSource.WDI_MODEL -> "세계은행 세입 지표와 소득그룹별 추정치를 사용했습니다. 개인소득세와 법인세는 소득그룹별 비율로 나눴습니다."
-        },
-    )
-    if (budget.unreportedRevenueTaxes.isNotEmpty()) {
-        val missing = budget.unreportedRevenueTaxes.joinToString("·") { it.label }
-        Hint("원표에서 빠진 세목($missing)과 기타 세입은 보고된 세목을 제외하고 남은 금액에서 추정했습니다.")
-    }
-    Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-        budget.taxes.forEach { line ->
-            val proposed = proposed(line.kind, line.targetRate)
-            DossierSlider(
-                enabled = editable,
-                label = line.kind.label,
-                value = proposed.toFloat(),
-                range = 0f..line.kind.maxTarget.toFloat(),
-                valueText = formatPercent(proposed),
-                secondary = "집행 ${formatPercent(line.rate)} · 승인 ${formatPercent(line.targetRate)}",
-                onValueChange = { onEdit(line.kind, it.toDouble()) },
-            )
-            StatRow("연간 환산 세입", money(line.revenue))
-        }
-        StatRow("기타 세입 (재산세·보조금·자원 수입 등)", "${formatPercent(budget.otherRevenue)} · ${money(budget.otherRevenue)}")
-    }
-
-    SectionTitle("세출 · GDP 대비")
-    Column(verticalArrangement = Arrangement.spacedBy(2.dp), modifier = Modifier) {
-        budget.spending.forEach { line ->
-            val proposed = proposed(line.kind, line.targetLevel)
-            DossierSlider(
-                enabled = editable,
-                label = line.kind.label,
-                value = proposed.toFloat(),
-                range = 0f..line.kind.maxTarget.toFloat(),
-                valueText = formatPercent(proposed),
-                secondary = "집행 ${formatPercent(line.level)} · 승인 ${formatPercent(line.targetLevel)} · ${money(line.level)}",
-                onValueChange = { onEdit(line.kind, it.toDouble()) },
-            )
-        }
-    }
 }
 
 @Composable
 private fun DebtSection(budget: BudgetSnapshot) {
     val debt = budget.debtWorkout
-    SectionTitle("국채 상환과 차환")
+    LedgerHeading("국채 상환과 차환")
     val status =
         when (debt.phase) {
             DebtPhase.NORMAL, DebtPhase.AWAITING_PLAN -> debt.phase.label
@@ -153,6 +193,12 @@ private fun DebtSection(budget: BudgetSnapshot) {
         StatRow("교환채 잔액 (GDP 대비)", formatPercent(debt.exchangedDebt))
         StatRow("교환채 고정 이율", formatPercent(debt.exchangeCoupon))
     }
+    debt.lastWriteDown?.let { StatRow("최근 원금 감면 (합의 당시 GDP 대비)", formatPercent(it)) }
+}
+
+@Composable
+private fun CreditorBalances(debt: DebtWorkoutSnapshot) {
+    LedgerHeading("채권자별 잔액")
     debt.creditors.forEach { line ->
         StatRow(line.creditor.label + " (GDP 대비)", formatPercent(line.outstanding))
         if (debt.phase == DebtPhase.NEGOTIATING) {
@@ -166,41 +212,6 @@ private fun DebtSection(budget: BudgetSnapshot) {
         }
         line.lastWriteDown?.let { Hint("최근 확정 감면 · 합의 당시 GDP의 ${formatPercent(it)}") }
     }
-    debt.lastWriteDown?.let { StatRow("최근 원금 감면 (합의 당시 GDP 대비)", formatPercent(it)) }
-}
-
-/** 재정·정책 탭이 함께 쓰는 법안 초안 조작부. 초안은 하나이고 두 탭의 변경을 함께 담는다. */
-@Composable
-internal fun DraftControls(
-    politics: PoliticsSnapshot,
-    hint: String,
-    onIntroduce: () -> Unit,
-    onViewBill: () -> Unit,
-    onClear: () -> Unit,
-) {
-    val pending = politics.pending
-    SectionTitle("변경안")
-    if (pending != null) {
-        StatRow("처리 상태", pending.stage.label)
-        PaperTag("정치에서 심의 보기", onClick = onViewBill)
-        return
-    }
-    Text(text = hint, style = DossierType.number(12.sp), color = DossierColors.inkMuted)
-    politics.draftSupport?.let { support ->
-        val vote = support.rollCall
-        if (vote == null) StatRow("예상 심의 점수", billScore(support.score)) else StatRow("예상 찬성", voteSummary(vote))
-    }
-    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        PaperTag(
-            "변경안 발의 · ${politics.draft.size}건",
-            selected = true,
-            enabled =
-                politics.draft.isNotEmpty() && !politics.governmentBillsSuspended,
-            onClick = onIntroduce,
-        )
-        if (politics.draft.isNotEmpty()) PaperTag("심의 근거", onClick = onViewBill)
-        PaperTag("초안 초기화", enabled = politics.draft.isNotEmpty(), onClick = onClear)
-    }
 }
 
 @Composable
@@ -211,7 +222,7 @@ internal fun CreditorTermsForm(
     Hint("채권자별 조건을 선택한 뒤 아래에서 기본안을 제출하세요. 기본안을 따르는 채권자는 제출한 조건을 적용합니다.")
     debt.creditors.forEach { line ->
         StatRow(line.creditor.label, "대상 원금 GDP의 ${formatPercent(line.eligible)}")
-        Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
             PaperTag("기본안", selected = line.proposal == null, onClick = { onChange(line.creditor, null) })
             DebtPlan.entries.forEach { terms ->
                 val cut = line.creditor.haircut(terms)

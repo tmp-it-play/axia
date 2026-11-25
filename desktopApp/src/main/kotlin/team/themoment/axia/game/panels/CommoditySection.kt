@@ -30,12 +30,13 @@ internal fun CommoditySection(
     quotes: Map<Commodity, CommodityQuote>,
     date: LocalDate,
     supportedGrainTonnes: Double?,
+    pageHeading: Boolean = false,
     countryName: (String) -> String,
 ) {
+    if (pageHeading) LedgerHeading("상품 수급") else SectionTitle("상품 수급")
     var selected by remember(countryId) { mutableStateOf(Commodity.GRAIN) }
     val quote = quotes.getValue(selected)
     val balance = quote.countries.getValue(countryId)
-    SectionTitle("상품 수급")
     Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
         Commodity.entries.forEach { commodity ->
             PaperTag(commodity.label, selected = selected == commodity, onClick = { selected = commodity })
@@ -43,15 +44,9 @@ internal fun CommoditySection(
     }
     StatRow("국제 가격지수 (시작 = 100)", String.format(Locale.KOREA, "%.1f", quote.priceIndex))
     if (selected == Commodity.GRAIN) {
-        val domesticSupply = quote.cerealDomesticSupply[countryId]
-        if (domesticSupply != null) {
-            StatRow("FAO 곡물 국내 공급 (2023년)", quantity(domesticSupply.tonnes, "톤"))
-            domesticSupply.priorEditionEndYear?.let { endYear ->
-                Hint("현행 수급표에 이 값이 없어 FAO가 공개한 2010~${endYear}년판의 2023년 추계를 사용합니다.")
-            }
-            Hint("식용·사료·가공 등 전체 용도를 포함한 연간 추계입니다. 시작 수요는 이 공급 비중을 게임의 세계 생산량에 맞춰 배분합니다.")
-        } else {
-            Hint("2023년 FAO 곡물 국내 공급 자료가 없어 수록국의 평균 1인당 공급량과 이 나라 인구로 시작 수요를 추정합니다.")
+        quote.cerealDomesticSupply[countryId]?.let {
+            StatRow("연간 곡물 국내 공급 (2023년)", quantity(it.tonnes, "톤"))
+            Hint("식용·사료·가공 등 모든 용도의 곡물을 포함합니다.")
         }
     }
     val period = quote.period
@@ -63,17 +58,17 @@ internal fun CommoditySection(
 
     Hint("${period.year}년 ${period.monthValue}월 수급 · ${date.monthValue}월 1일 정산 · 단위 ${selected.unit}")
     StatRow("기초 재고", quantity(balance.openingStock))
-    StatRow("생산", quantity(balance.production), note = if (countryId in quote.unreportedProduction) "기준연도 생산 미보고" else null)
+    StatRow("생산", quantity(balance.production))
     if (selected == Commodity.GRAIN && supportedGrainTonnes != null) {
         StatRow("생산 중 농가 가격차 보조 물량", quantity(supportedGrainTonnes))
     }
     if (selected == Commodity.GRAIN && countryId !in quote.unreportedProduction) {
         val harvest = balance.harvestFactor
         if (harvest != null) {
-            StatRow("평년 연간 수확 중 ${period.monthValue}월 몫 (추정)", String.format(Locale.KOREA, "%.0f%%", harvest * 100.0 / 12.0))
+            StatRow("평년 연간 수확 중 ${period.monthValue}월 몫", String.format(Locale.KOREA, "%.0f%%", harvest * 100.0 / 12.0))
             Hint("수확기에 농가와 유통 창고에 비축한 곡물은 비수기에 출하됩니다.")
         } else {
-            Hint("국가별 수확 달력이 없어 기준 생산량을 매달 균등하게 배분합니다.")
+            Hint("이 나라의 평년 곡물 생산량은 매달 같습니다.")
         }
     }
     StatRow("수입", quantity(balance.imports))

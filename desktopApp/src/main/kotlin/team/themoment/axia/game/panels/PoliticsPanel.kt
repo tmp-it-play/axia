@@ -1,16 +1,21 @@
 package team.themoment.axia.game.panels
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import team.themoment.axia.format.formatPercent
+import team.themoment.axia.game.PoliticsPage
 import team.themoment.axia.game.formatPoints
 import team.themoment.axia.simulation.country.BillCheck
 import team.themoment.axia.simulation.nation.BudgetItem
@@ -50,98 +55,228 @@ internal fun billScore(value: Double): String = String.format(Locale.KOREA, "%.1
 internal fun voteSummary(vote: RollCall): String = "${vote.yes}표 · 가결선 ${vote.required}표"
 
 @Composable
-fun PoliticsPanel(
+internal fun PoliticsPanel(
     politics: PoliticsSnapshot,
     today: LocalDate,
-    onBudget: () -> Unit,
-    onRevise: () -> Unit,
-    onNegotiate: (String?) -> Unit,
-    onIntroduce: () -> Unit,
+    page: PoliticsPage,
     onCallEarlyElection: () -> Unit,
     onCoalitionPartner: (String?) -> Unit,
     onRenamePerson: (Int, String) -> Unit,
     onRenameParty: (Int, String) -> Unit,
-    onOppositionVeto: (Boolean) -> Unit,
     onChooseElectionList: (String?) -> Unit,
 ) {
-    val profile = politics.profile
-    SectionTitle("현 정부")
-    Text(politics.government, style = DossierType.title(16.sp), color = DossierColors.ink)
-    politics.nextGovernmentDecision?.let { StatRow("다음 정부·의회 결정일", shortDate(it)) }
-    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-        politics.leadership.all().forEach { PersonCard(it, today, onRenamePerson) }
+    when (page) {
+        PoliticsPage.GOVERNMENT -> {
+            GovernmentPage(politics, today, onRenamePerson)
+        }
+
+        PoliticsPage.CHAMBERS -> {
+            ChambersPage(politics, onRenamePerson, onRenameParty)
+        }
+
+        PoliticsPage.ELECTIONS -> {
+            ElectionPage(
+                politics,
+                today,
+                onCallEarlyElection,
+                onChooseElectionList,
+                onCoalitionPartner,
+                onRenamePerson,
+                onRenameParty,
+            )
+        }
     }
+}
+
+@Composable
+private fun GovernmentPage(
+    politics: PoliticsSnapshot,
+    today: LocalDate,
+    onRenamePerson: (Int, String) -> Unit,
+) {
+    val profile = politics.profile
+    PanelColumns(
+        leftWeight = 1f,
+        left = {
+            LedgerHeading("현 정부")
+            Text(politics.government, style = DossierType.title(16.sp), color = DossierColors.ink)
+            politics.nextGovernmentDecision?.let { StatRow("다음 정부·의회 결정일", shortDate(it)) }
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                politics.leadership.all().forEach { PersonCard(it, today, onRenamePerson) }
+            }
+        },
+        right = {
+            LedgerHeading("정치 제도")
+            StatRow("체제 분류", profile.regime.label)
+            StatRow("입법부의 행정부 견제", billScore(profile.legislativeConstraints * 100))
+            StatRow("시민사회 참여", billScore(profile.civilParticipation * 100))
+            politics.legislature?.let {
+                SectionTitle(it.name)
+                StatRow("재적 의석", "${it.filledSeats}석")
+                StatRow("법안 가결선", "${it.required}표")
+            }
+        },
+    )
+}
+
+@Composable
+private fun ChambersPage(
+    politics: PoliticsSnapshot,
+    onRenamePerson: (Int, String) -> Unit,
+    onRenameParty: (Int, String) -> Unit,
+) {
+    val profile = politics.profile
     val openingContest = profile.elections.legislature?.openingContest
     val chamber = politics.legislature
-    StatRow("재정 심의 기구", politics.reviewBody)
-    if (openingContest != null && chamber == null && politics.schedule.legislative != null) {
-        Hint("${openingContest.chamberName} 해산으로 과도 내각이 심의합니다. 총선 후에는 새 의회가 법안을 표결합니다.")
-    }
-    chamber?.let { ChamberComposition(it, politics.takenPartyNames, onRenameParty) }
-    ElectionSection(politics, today, onCallEarlyElection, onChooseElectionList, onRenamePerson)
-    if (chamber != null && politics.schedule.legislative != null && profile.elections.coalitionNegotiations &&
-        chamber.groups.any { it.role == PartyRole.LEAD }
-    ) {
-        val eligible = chamber.groups.filter { it.role != PartyRole.LEAD && it.role != PartyRole.OTHER && it.votingSeats > 0 }
-        if (eligible.isNotEmpty()) {
-            var choosing by remember { mutableStateOf(false) }
-            SectionTitle("다음 총선 연정 교섭")
-            StatRow("우선 교섭 상대", politics.coalitionPreference?.partner ?: "자동 협상")
-            PaperTag(if (choosing) "목록 접기" else "우선 상대 선택", onClick = { choosing = !choosing })
-            if (choosing) {
-                Hint("현 정부가 선거 뒤 연정을 구성하면 선택한 정당에 먼저 제안합니다. 이념 차이가 크면 협상이 결렬될 수 있습니다.")
-                PaperTag("자동 협상", selected = politics.coalitionPreference == null, onClick = { onCoalitionPartner(null) })
-                eligible.forEach { party ->
-                    PaperTag(
-                        party.name,
-                        selected = politics.coalitionPreference?.partner == party.name,
-                        onClick = { onCoalitionPartner(party.name) },
-                    )
+    PanelColumns(
+        leftWeight = 1f,
+        left = {
+            LedgerHeading("의회 구성")
+            StatRow("법안 심의 기구", politics.reviewBody)
+            if (openingContest != null && chamber == null && politics.schedule.legislative != null) {
+                Hint("${openingContest.chamberName} 해산으로 과도 내각이 심의합니다. 총선 후에는 새 의회가 법안을 표결합니다.")
+            }
+            chamber?.let { ChamberComposition(it, politics.takenPartyNames, onRenameParty) }
+        },
+        right = {
+            ConstitutionSection(politics.constitution, onRenamePerson)
+        },
+    )
+}
+
+@Composable
+private fun ElectionPage(
+    politics: PoliticsSnapshot,
+    today: LocalDate,
+    onCallEarlyElection: () -> Unit,
+    onChooseElectionList: (String?) -> Unit,
+    onCoalitionPartner: (String?) -> Unit,
+    onRenamePerson: (Int, String) -> Unit,
+    onRenameParty: (Int, String) -> Unit,
+) {
+    PanelColumns(
+        leftWeight = 1f,
+        left = {
+            LedgerHeading("선거 일정과 후보")
+            ElectionSection(politics, today, onCallEarlyElection, onChooseElectionList, onRenamePerson)
+        },
+        right = {
+            LedgerHeading("정당과 선거 결과")
+            politics.legislature?.let { chamber ->
+                StatRow("현 의회", chamber.name)
+                StatRow("원내 정당·교섭단체", "${chamber.groups.size}곳")
+            }
+            val profile = politics.profile
+            val chamber = politics.legislature
+            if (chamber != null && politics.schedule.legislative != null && profile.elections.coalitionNegotiations &&
+                chamber.groups.any { it.role == PartyRole.LEAD }
+            ) {
+                val eligible = chamber.groups.filter { it.role != PartyRole.LEAD && it.role != PartyRole.OTHER && it.votingSeats > 0 }
+                if (eligible.isNotEmpty()) {
+                    var choosing by remember { mutableStateOf(false) }
+                    SectionTitle("다음 총선 연정 교섭")
+                    StatRow("우선 교섭 상대", politics.coalitionPreference?.partner ?: "자동 협상")
+                    PaperTag(if (choosing) "목록 접기" else "우선 상대 선택", onClick = { choosing = !choosing })
+                    if (choosing) {
+                        Hint("현 정부가 선거 뒤 연정을 구성하면 선택한 정당에 먼저 제안합니다. 이념 차이가 크면 협상이 결렬될 수 있습니다.")
+                        PaperTag("자동 협상", selected = politics.coalitionPreference == null, onClick = { onCoalitionPartner(null) })
+                        eligible.forEach { party ->
+                            PaperTag(
+                                party.name,
+                                selected = politics.coalitionPreference?.partner == party.name,
+                                onClick = { onCoalitionPartner(party.name) },
+                            )
+                        }
+                    }
                 }
             }
-        }
-    }
-    if (politics.newParties.isNotEmpty()) {
-        SectionTitle("신생 정당 (다음 총선 출마)")
-        politics.newParties.forEach { party ->
-            StatRow(party.name, "지지 ${formatPercent(party.support)} · ${party.identity.label} 성향")
-            Hint("${shortDate(party.founded)} 창당")
-            RenameControl(party.foundation.id, party.name, politics.takenPartyNames) { onRenameParty(party.foundation.id, it) }
-        }
-    }
-
-    val pending = politics.pending
-    if (pending == null) {
-        SectionTitle(if (politics.draft.isEmpty()) "재정안" else "발의 전 초안")
-        PaperTag(if (politics.draft.isEmpty()) "재정안 작성" else "작성 중인 재정안 열기", onClick = onBudget)
-        politics.draftSupport?.let {
-            BillAssessment(politics.draft.values, it, decided = false)
-            it.rollCall?.let { vote -> Negotiation(vote, onNegotiate) }
-            if (politics.governmentBillsSuspended) {
-                Hint("현재 정부 법안 발의가 중단되어 초안으로 보관합니다.")
-            } else {
-                PaperTag("이 변경안 발의", selected = true, onClick = onIntroduce)
+            if (politics.newParties.isNotEmpty()) {
+                SectionTitle("신생 정당 (다음 총선 출마)")
+                politics.newParties.forEach { party ->
+                    StatRow(party.name, "지지 ${formatPercent(party.support)} · ${party.identity.label} 성향")
+                    Hint("${shortDate(party.founded)} 창당")
+                    RenameControl(party.foundation.id, party.name, politics.takenPartyNames) { onRenameParty(party.foundation.id, it) }
+                }
             }
-        }
-    } else {
-        SectionTitle(if (pending.sponsor == null) "심의 중인 재정안" else "야당 발의 법안")
-        if (pending.sponsor == null && pending.stage == BillStage.STALLED) PaperTag("철회하고 수정", onClick = onRevise)
-        BillDetails(pending)
-        if (pending.stage == BillStage.SIGNATURE) {
-            PaperTag("공포", selected = !pending.vetoRequested, onClick = { onOppositionVeto(false) })
-            PaperTag("재의 요구", selected = pending.vetoRequested, onClick = { onOppositionVeto(true) })
-        }
-    }
-    politics.lastDecision?.let {
-        SectionTitle("최근 결정")
-        BillDetails(it)
-    }
+            politics.lastElection?.let { LastElection(it, politics.profile.id == "KOR") } ?: Hint("이번 캠페인에서 완료된 선거가 없습니다.")
+        },
+    )
+}
 
-    SectionTitle("정치 제도 · V-Dem 2023")
-    StatRow("체제 분류", profile.regime.label)
-    StatRow("입법부의 행정부 견제", billScore(profile.legislativeConstraints * 100))
-    StatRow("시민사회 참여", billScore(profile.civilParticipation * 100))
-    ConstitutionSection(politics.constitution, onRenamePerson)
+@Composable
+internal fun BillsPage(
+    politics: PoliticsSnapshot,
+    lastSelected: Boolean,
+    onSelectLast: (Boolean) -> Unit,
+    onOpenDraft: () -> Unit,
+    onRevise: () -> Unit,
+    onNegotiate: (String?) -> Unit,
+    onOppositionVeto: (Boolean) -> Unit,
+) {
+    val pending = politics.pending
+    val last = politics.lastDecision
+    val hasCurrent = pending != null || politics.draft.isNotEmpty()
+    val showLast = last != null && (lastSelected || !hasCurrent)
+    val bill = if (showLast) last else pending
+    val support = bill?.support ?: politics.draftSupport
+    BoxWithConstraints(Modifier.fillMaxSize()) {
+        LedgerSpread(
+            stacked = maxWidth < 720.dp,
+            leftWeight = 1f,
+            left = {
+                LedgerHeading(
+                    when {
+                        showLast -> "최근 심의 결과"
+                        pending?.sponsor != null -> "야당 발의 법안"
+                        pending != null -> "심의 중인 법안"
+                        politics.draft.isNotEmpty() -> "발의 전 초안"
+                        else -> "심의 안건"
+                    },
+                )
+                if (bill != null) {
+                    BillRecord(bill)
+                    SectionTitle("법안 조항")
+                    ClauseTable(bill.changes, null)
+                    if (!showLast && bill.sponsor == null && bill.stage == BillStage.STALLED) {
+                        PaperTag("철회하고 수정", onClick = onRevise)
+                    }
+                    if (!showLast && bill.stage == BillStage.SIGNATURE) {
+                        PaperTag("공포", selected = !bill.vetoRequested, onClick = { onOppositionVeto(false) })
+                        PaperTag("재의 요구", selected = bill.vetoRequested, onClick = { onOppositionVeto(true) })
+                    }
+                } else if (politics.draft.isNotEmpty()) {
+                    ClauseTable(politics.draft.values, null)
+                    PaperTag("초안 검토하기", onClick = onOpenDraft)
+                    support?.rollCall?.let { Negotiation(it, onNegotiate) }
+                } else {
+                    Hint("심의 중인 법안이 없습니다.")
+                    PaperTag("정책 입안하기", selected = true, onClick = onOpenDraft)
+                }
+                if (showLast && !hasCurrent) PaperTag("정책 입안하기", onClick = onOpenDraft)
+                if (last != null && hasCurrent) {
+                    SectionTitle("의안 기록")
+                    PaperTag(
+                        if (showLast) "현재 안건으로" else "${shortDate(last.decisionDate)} · ${last.stage.label} · 최근 결정 보기",
+                        onClick = { onSelectLast(!showLast) },
+                    )
+                }
+            },
+            right = {
+                LedgerHeading(politics.reviewBody)
+                if (support != null) {
+                    key(showLast, bill?.introduced) { BillAssessment(support, decided = showLast) }
+                } else {
+                    StatRow("정부", politics.government)
+                    politics.legislature?.let { chamber ->
+                        StatRow("표결권 있는 의석", "${chamber.votingSeats}석")
+                        StatRow("가결선", "${chamber.required}표")
+                        SectionTitle("정당별 의석")
+                        chamber.groups.forEach { StatRow(it.name, "${it.seats}석") }
+                    } ?: StatRow("기관 심의 가결선", "50점 / 100")
+                }
+            },
+        )
+    }
 }
 
 @Composable
@@ -152,7 +287,7 @@ private fun ConstitutionSection(
     val profile = constitution.profile
     SectionTitle("헌법기관")
     StatRow("헌법 심사 기관", profile.court ?: "없음")
-    StatRow("사법 견제 지수 · V-Dem 2023", billScore(profile.judicialIndependence * 100))
+    StatRow("사법 견제 지수", billScore(profile.judicialIndependence * 100), note = "2023년 기준")
     if (profile.court != null && !profile.reviewsLaws) Hint("법원이 의회 제정법을 무효로 할 수 없습니다.")
     profile.upperHouse?.let { house ->
         StatRow(house.name, "${house.power.label} · 정부 ${house.governmentSeats} · 야당 ${house.oppositionSeats} · 기타 ${house.otherSeats}")
@@ -320,7 +455,7 @@ private fun Negotiation(
 }
 
 @Composable
-private fun BillDetails(bill: FiscalBill) {
+private fun BillRecord(bill: FiscalBill) {
     val open = bill.stage != BillStage.PASSED && bill.stage != BillStage.REJECTED
     bill.sponsor?.let { StatRow("발의 정당", it) }
     StatRow("처리 상태", bill.stage.label + if (bill.delayed) " · 지연됨" else "")
@@ -351,16 +486,13 @@ private fun BillDetails(bill: FiscalBill) {
             }
         Text(rule, style = DossierType.number(12.sp), color = DossierColors.inkMuted)
     }
-    BillAssessment(bill.changes, bill.support, decided = !open)
 }
 
 @Composable
 private fun BillAssessment(
-    changes: Collection<PolicyChange>,
     support: BillSupport,
     decided: Boolean,
 ) {
-    changes.forEach { StatRow(it.item.label, it.describe()) }
     ChecksSection(support.checks, decided)
     if (support.upperVotes.isNotEmpty()) {
         var showUpper by remember { mutableStateOf(false) }
@@ -380,7 +512,7 @@ private fun BillAssessment(
                 StatRow(row.party.name, "찬성 ${row.yes} · 반대 ${row.no}")
                 val base =
                     row.party.constituency
-                        ?.let { " · 모형 지지 기반 ${it.label}" }
+                        ?.let { " · 지지 기반 ${it.label}" }
                         .orEmpty()
                 Text(row.party.role.label + base, style = DossierType.number(11.sp), color = DossierColors.inkMuted)
             }
@@ -578,7 +710,7 @@ private fun ElectionSection(
             } else if (politics.profile.id == "FRA") {
                 "해산 후 20~40일 안에 첫 일요일 투표를 치르고, 1차에서 결정되지 않은 선거구는 다음 주에 결선을 치릅니다."
             } else {
-                "조기 총선을 소집하면 6주 뒤 선거를 치릅니다. 심의 중인 재정안은 선거일에 폐기되고 초안으로 돌아갑니다."
+                "조기 총선을 소집하면 6주 뒤 선거를 치릅니다. 심의 중인 법안은 선거일에 폐기되고 초안으로 돌아갑니다."
             },
             style = DossierType.number(12.sp),
             color = DossierColors.inkMuted,
@@ -592,7 +724,6 @@ private fun ElectionSection(
                 ?.pakistanAssembly == true,
         )
     }
-    politics.lastElection?.let { LastElection(it, politics.profile.id == "KOR") }
 }
 
 @Composable
@@ -736,7 +867,7 @@ private fun LastElection(
     }
     result.coalitionReport?.let { StatRow("우선 교섭 결과", it) }
     if (result.billLapsed) {
-        Text("총선으로 심의가 종료되어 재정안이 초안으로 돌아갔습니다.", style = DossierType.number(12.sp), color = DossierColors.stamp)
+        Text("총선으로 심의가 끝나 법안이 초안으로 돌아갔습니다.", style = DossierType.number(12.sp), color = DossierColors.stamp)
     }
     if (result.listVoteShares.isNotEmpty()) {
         var showVotes by remember(result) { mutableStateOf(false) }

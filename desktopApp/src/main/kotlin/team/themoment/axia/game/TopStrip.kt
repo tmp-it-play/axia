@@ -52,6 +52,8 @@ fun TopStrip(
     nextElection: String?,
     politicalCapital: Double,
     headline: String?,
+    pendingEventCount: Int,
+    onOpenNewspaper: () -> Unit,
     onTogglePause: () -> Unit,
     onSpeedSelect: (GameSpeed) -> Unit,
     onAdvanceDay: () -> Unit,
@@ -78,6 +80,11 @@ fun TopStrip(
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(5.dp)) {
                     ConsoleGlyph(ConsoleSymbol.BALLOT_PAPER, Modifier.size(15.dp))
                     Text(it, style = DossierType.number(12.sp), color = ConsoleBrass, maxLines = 1)
+                }
+            }
+            if (pendingEventCount > 0) {
+                ConsoleKey(onClick = onOpenNewspaper, description = "사건 신문 다시 열기", modifier = Modifier.height(30.dp)) { ink ->
+                    Text("사건 ${pendingEventCount}건", Modifier.padding(horizontal = 8.dp), style = DossierType.title(13.sp), color = ink)
                 }
             }
             Box(Modifier.weight(1f)) {

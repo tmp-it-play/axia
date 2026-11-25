@@ -11,6 +11,10 @@ enum class MonetaryFramework(
     MONETARY_UNION("통화동맹"),
     CURRENCY_PEG("고정환율"),
     GOVERNMENT_DIRECTED("정부 지시"),
+    ;
+
+    val adjustableIndependence: Boolean
+        get() = this == INFLATION_TARGETING || this == GOVERNMENT_DIRECTED
 }
 
 enum class MonetaryStance(
@@ -337,7 +341,7 @@ internal class CentralBank(
     private var pendingShock = 0.0
 
     val adjustableIndependence: Boolean
-        get() = framework == MonetaryFramework.INFLATION_TARGETING || framework == MonetaryFramework.GOVERNMENT_DIRECTED
+        get() = framework.adjustableIndependence
 
     fun appoint(choice: GovernorMandate) {
         if (independent && leadership.earlyReplacement) credibility = (credibility - 0.08).coerceAtLeast(0.0)

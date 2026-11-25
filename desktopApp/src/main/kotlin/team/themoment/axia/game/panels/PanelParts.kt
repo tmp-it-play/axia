@@ -25,10 +25,8 @@ import team.themoment.axia.format.formatPopulation
 import team.themoment.axia.format.formatRate
 import team.themoment.axia.format.formatWholeDollars
 import team.themoment.axia.game.formatPoints
-import team.themoment.axia.game.note
 import team.themoment.axia.game.satisfactionColor
 import team.themoment.axia.simulation.economy.EconomyIndicators
-import team.themoment.axia.simulation.economy.POLICY_RATE_FIELD
 import team.themoment.axia.simulation.nation.NationSnapshot
 import team.themoment.axia.simulation.nation.SatisfactionFactor
 import team.themoment.axia.theme.DossierColors
@@ -98,33 +96,29 @@ private const val MIN_SHOWN_CONTRIBUTION = 0.05
 
 @Composable
 internal fun KeyIndicatorRows(indicators: EconomyIndicators) {
-    StatRow("인구", formatPopulation(indicators.population), note = indicators.note("population"))
-    StatRow("GDP", formatDollars(indicators.gdp), note = indicators.note("gdp"))
-    StatRow("1인당 GDP", formatWholeDollars(indicators.gdpPerCapita), note = indicators.note("gdp", "population"))
-    StatRow("경제성장률", formatPercent(indicators.growth, signed = true), note = indicators.note("growth"))
-    StatRow("물가상승률", formatPercent(indicators.inflation), note = indicators.note("inflation"))
-    StatRow("실업률", formatPercent(indicators.unemployment), note = indicators.note("unemployment"))
+    StatRow("인구", formatPopulation(indicators.population))
+    StatRow("GDP", formatDollars(indicators.gdp))
+    StatRow("1인당 GDP", formatWholeDollars(indicators.gdpPerCapita))
+    StatRow("경제성장률", formatPercent(indicators.growth, signed = true))
+    StatRow("물가상승률", formatPercent(indicators.inflation))
+    StatRow("실업률", formatPercent(indicators.unemployment))
     RateContributions(indicators)
-    StatRow(
-        "재정수지 (GDP 대비)",
-        formatPercent(indicators.budgetBalance, signed = true),
-        note = indicators.note("revenue", "expense", "interest"),
-    )
-    StatRow("국가부채 (GDP 대비)", formatPercent(indicators.debtRatio), note = indicators.note("debt"))
-    StatRow("기준금리", formatRate(indicators.policyRate), note = indicators.note(POLICY_RATE_FIELD))
+    StatRow("재정수지 (GDP 대비)", formatPercent(indicators.budgetBalance, signed = true))
+    StatRow("국가부채 (GDP 대비)", formatPercent(indicators.debtRatio))
+    StatRow("기준금리", formatRate(indicators.policyRate))
     StatRow("통화 가치 (달러 대비, 시작 대비)", formatPercent(kotlin.math.exp(indicators.realExchange) - 1.0, signed = true))
 }
 
 @Composable
 private fun RateContributions(indicators: EconomyIndicators) {
     var expanded by remember { mutableStateOf(false) }
-    PaperTag("물가·실업률 산정 근거", selected = expanded, onClick = { expanded = !expanded })
+    PaperTag("물가·실업률 변동 요인", selected = expanded, onClick = { expanded = !expanded })
     if (!expanded) return
     val inflation = indicators.inflationContributions
     val unemployment = indicators.unemploymentContributions
     if (inflation == null || unemployment == null) {
-        StatRow("시작 물가상승률", formatRate(indicators.inflation), note = indicators.note("inflation"))
-        StatRow("시작 실업률", formatRate(indicators.unemployment), note = indicators.note("unemployment"))
+        StatRow("시작 물가상승률", formatRate(indicators.inflation))
+        StatRow("시작 실업률", formatRate(indicators.unemployment))
         Hint("첫 월 결산부터 원인별 기여도를 볼 수 있습니다.")
         return
     }
@@ -135,14 +129,14 @@ private fun RateContributions(indicators: EconomyIndicators) {
     RateContribution("국제 원유·곡물 가격", inflation.commodityPrices)
     RateContribution("환율 전가", inflation.exchangeRate)
     RateContribution("사건·국가 정책 충격", inflation.shocks)
-    if (inflation.limitAdjustment != 0.0) RateContribution("모형 상·하한 보정", inflation.limitAdjustment)
+    if (inflation.limitAdjustment != 0.0) RateContribution("상·하한 조정", inflation.limitAdjustment)
     StatRow("물가상승률 (연율)", formatRate(inflation.rate))
     SectionTitle("직전 월 결산 · 실업률")
     RateContribution("자연실업률 (시작값)", unemployment.naturalRate)
     RateContribution("노동 규제·고용 정책", unemployment.laborPolicy)
     RateContribution("전쟁에 따른 실업", unemployment.war)
     RateContribution("경기 (산출 갭)", unemployment.outputGap)
-    if (unemployment.limitAdjustment != 0.0) RateContribution("모형 상·하한 보정", unemployment.limitAdjustment)
+    if (unemployment.limitAdjustment != 0.0) RateContribution("상·하한 조정", unemployment.limitAdjustment)
     StatRow("실업률", formatRate(unemployment.rate))
 }
 

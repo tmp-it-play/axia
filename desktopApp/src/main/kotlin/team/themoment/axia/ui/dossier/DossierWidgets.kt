@@ -26,6 +26,9 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.input.pointer.PointerIcon
+import androidx.compose.ui.input.pointer.pointerHoverIcon
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -52,7 +55,7 @@ fun Stamp(
     }
 }
 
-/** 라벨 ······· 값 형태의 한 줄. [note]가 있으면 값 앞에 작은 붉은 글씨로 붙인다(예: 추정). */
+/** 라벨과 값을 점선으로 잇고, [note]가 있으면 값 앞에 덧붙인다. */
 @Composable
 fun StatRow(
     label: String,
@@ -211,7 +214,7 @@ fun PaperTag(
 ) {
     val background =
         when {
-            !enabled -> DossierColors.deskRaised
+            !enabled -> DossierColors.paperLine
             selected -> DossierColors.folder
             else -> DossierColors.paper
         }
@@ -220,14 +223,15 @@ fun PaperTag(
             modifier
                 .clip(RoundedCornerShape(3.dp))
                 .background(background)
-                .then(if (onClick != null && enabled) Modifier.clickable(onClick = onClick) else Modifier)
+                .then(if (onClick != null && enabled) Modifier.pointerHoverIcon(PointerIcon.Hand) else Modifier)
+                .then(if (onClick != null) Modifier.clickable(enabled = enabled, role = Role.Button, onClick = onClick) else Modifier)
                 .padding(horizontal = 10.dp, vertical = 5.dp),
         contentAlignment = Alignment.Center,
     ) {
         Text(
             text = text,
             style = DossierType.number(13.sp, weight = if (selected) FontWeight.Bold else FontWeight.Medium),
-            color = if (enabled) DossierColors.ink else DossierColors.deskTextMuted,
+            color = if (enabled) DossierColors.ink else DossierColors.inkMuted,
         )
     }
 }
