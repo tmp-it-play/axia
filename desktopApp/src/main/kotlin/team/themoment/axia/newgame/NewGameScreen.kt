@@ -41,13 +41,9 @@ import team.themoment.axia.simulation.world.Country
 import team.themoment.axia.theme.DossierColors
 import team.themoment.axia.theme.DossierType
 import team.themoment.axia.ui.dossier.PaperTag
-import team.themoment.axia.ui.dossier.Stamp
 import team.themoment.axia.ui.dossier.StatRow
 import java.time.format.DateTimeFormatter
 import java.util.Locale
-
-/** 추정 항목이 이만큼 이상이면 카드에 "추정 자료" 도장을 찍는다. */
-private const val ESTIMATED_STAMP_THRESHOLD = 5
 
 /** 책상 위에 놓인 국가별 서류철에서 플레이할 나라를 고른다. */
 @Composable
@@ -143,9 +139,6 @@ private fun CountryCard(
                 StatRow("물가", formatPercent(economy.inflation))
                 StatRow("국가부채", formatPercent(economy.debt))
                 Spacer(Modifier.height(2.dp))
-            }
-            if (economy.estimated.size >= ESTIMATED_STAMP_THRESHOLD) {
-                Stamp(text = "추정 자료", modifier = Modifier.align(Alignment.TopEnd).padding(end = 6.dp, top = 2.dp))
             }
         }
     }

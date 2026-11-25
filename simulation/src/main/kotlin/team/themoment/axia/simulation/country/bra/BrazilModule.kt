@@ -20,8 +20,8 @@ internal class BrazilModule :
             lowLabel = "기존 경매 유지",
             highLabel = "추가 경매 확대",
             description =
-                "국제 곡물 지수를 산지가격의 대용치로 삼아, 지수 105 미만일 때 농가와 협동조합에 가격 차액을 지급한다. 법안은 추가 경매 범위를 정하고 실지출은 월별 가격과 국내 생산량에 따라 달라진다. " +
-                    "첫 결산 전 법안의 지출 추정에는 한도를 적용한다.",
+                "국제 곡물 가격 지수가 105 아래로 떨어지면 농가와 협동조합에 가격 차액을 지급한다. 법안으로 추가 경매 범위를 정하며, 지급액은 월별 곡물 가격과 국내 생산량에 따라 달라진다. " +
+                    "첫 결산 전에는 지출 한도를 기준으로 법안의 예상 지출을 계산한다.",
             identityReactions = mapOf(Identity.FREE_MARKET to -3.0),
             groupReactions = mapOf(PopulationGroup.FARMERS to 6.0),
         )
@@ -73,7 +73,7 @@ internal class BrazilModule :
                 "월초 실질 GDP로 정한 연간 한도의 12분의 1을 매월 배정한다. 남은 한도는 다음 달로 이월하지 않는다.",
             ),
             CountryIndicator(
-                "산지가격 대용 지수",
+                "국제 곡물 가격 지수",
                 latestPrice?.let { String.format(Locale.KOREA, "%.1f", it) } ?: "첫 정산 전",
                 "국제 곡물 지수가 지원 기준 105 아래로 떨어지면 추가 경매 대상에 가격차 보조금을 지급한다.",
             ),
