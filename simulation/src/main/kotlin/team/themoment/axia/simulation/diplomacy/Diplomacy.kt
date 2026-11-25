@@ -97,6 +97,7 @@ data class BilateralSnapshot(
     val sanctioningUs: Double,
     val atWar: Boolean,
     val aidMonthsLeft: Int,
+    val nextSummitDate: LocalDate?,
     val available: Set<DiplomaticAction>,
 )
 
@@ -110,6 +111,24 @@ data class MembershipDecision(
     val canJoin: Boolean get() = !member && !atWarWithMember && votes >= required
 }
 
+enum class DiplomaticOutcome { COMPLETED, DECLINED, UNAVAILABLE, INSUFFICIENT_CAPITAL }
+
+data class DiplomaticDispatch(
+    val date: LocalDate,
+    val countryId: String,
+    val action: DiplomaticAction,
+    val outcome: DiplomaticOutcome,
+)
+
+enum class MembershipOutcome { COMPLETED, UNCHANGED, AT_WAR, INSUFFICIENT_VOTES, UNKNOWN_ORGANIZATION }
+
+data class MembershipDispatch(
+    val date: LocalDate,
+    val organizationId: String,
+    val join: Boolean,
+    val outcome: MembershipOutcome,
+)
+
 data class DiplomacySnapshot(
     val playerId: String,
     val organizations: List<InternationalOrganization>,
@@ -117,6 +136,8 @@ data class DiplomacySnapshot(
     /** 플레이어를 제외한 모든 외교 상대. 주요 상대는 [BilateralSnapshot.notable]로 구분한다. */
     val partners: List<BilateralSnapshot>,
     val relations: Map<String, Double>,
+    val lastDispatch: DiplomaticDispatch?,
+    val lastMembershipDispatch: MembershipDispatch?,
 )
 
 /**
@@ -151,6 +172,7 @@ internal class Diplomacy(
     private val aidMonthsLeft = mutableMapOf<String, Int>()
     private val news = mutableListOf<WorldNews>()
     private val organizations = data.organizations.associateBy { it.id }.toMutableMap()
+    private var lastMembershipDispatch: MembershipDispatch? = null
     private var membership = emptyMap<String, List<InternationalOrganization>>()
     private val organizationAlliances = HashMap<Pair<String, String>, String>()
     private val organizationTrade = HashSet<Pair<String, String>>()
@@ -234,8 +256,18 @@ internal class Diplomacy(
         join: Boolean,
         date: LocalDate,
     ): Boolean {
-        val org = organizations[id] ?: return false
-        if (join == (playerId in org.members) || (join && !membershipDecision(org).canJoin)) return false
+        val decision = organizations[id]?.let(::membershipDecision)
+        val outcome =
+            when {
+                decision == null -> MembershipOutcome.UNKNOWN_ORGANIZATION
+                join == decision.member -> MembershipOutcome.UNCHANGED
+                join && decision.atWarWithMember -> MembershipOutcome.AT_WAR
+                join && !decision.canJoin -> MembershipOutcome.INSUFFICIENT_VOTES
+                else -> MembershipOutcome.COMPLETED
+            }
+        lastMembershipDispatch = MembershipDispatch(date, id, join, outcome)
+        if (decision == null || outcome != MembershipOutcome.COMPLETED) return false
+        val org = decision.organization
         val members = if (join) (org.members + playerId).sorted() else org.members - playerId
         organizations[id] = org.copy(members = members)
         indexOrganizations()
@@ -581,6 +613,7 @@ internal class Diplomacy(
     fun snapshot(
         date: LocalDate,
         focus: Collection<String>,
+        lastDispatch: DiplomaticDispatch?,
     ): DiplomacySnapshot {
         val relations = ids.filter { it != playerId }.associateWith { relation(playerId, it) }
         return DiplomacySnapshot(
@@ -602,10 +635,13 @@ internal class Diplomacy(
                         sanctioningUs = sanction(id, playerId),
                         atWar = pair(playerId, id) in wars,
                         aidMonthsLeft = aidMonthsLeft[id] ?: 0,
+                        nextSummitDate = summitReady[id]?.takeIf { it > date },
                         available = available(id, date),
                     )
                 },
             relations = relations,
+            lastDispatch = lastDispatch,
+            lastMembershipDispatch = lastMembershipDispatch,
         )
     }
 

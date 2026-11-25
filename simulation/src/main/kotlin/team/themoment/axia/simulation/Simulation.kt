@@ -4,6 +4,8 @@ import team.themoment.axia.simulation.country.CountryEffects
 import team.themoment.axia.simulation.country.CountryModules
 import team.themoment.axia.simulation.diplomacy.Diplomacy
 import team.themoment.axia.simulation.diplomacy.DiplomaticAction
+import team.themoment.axia.simulation.diplomacy.DiplomaticDispatch
+import team.themoment.axia.simulation.diplomacy.DiplomaticOutcome
 import team.themoment.axia.simulation.economy.BankLeadership
 import team.themoment.axia.simulation.economy.BankPressure
 import team.themoment.axia.simulation.economy.CentralBank
@@ -145,6 +147,7 @@ class Simulation(
         )
     private val diplomacy =
         Diplomacy(states, playerCountryId, ::democratic, economy::tradeShare, Random(seed xor DIPLOMACY_SEED_SALT))
+    private var lastDiplomaticDispatch: DiplomaticDispatch? = null
     private val military =
         Military(
             states,
@@ -661,7 +664,7 @@ class Simulation(
         return WorldSnapshot(
             date = date,
             politics = worldPolitics.snapshot(),
-            diplomacy = diplomacy.snapshot(date, focus),
+            diplomacy = diplomacy.snapshot(date, focus, lastDiplomaticDispatch),
             military = military.snapshot(),
             militaryActions = states.associateWith(military::available).filterValues { it.isNotEmpty() },
             trade = economy.tradeSnapshot(),
@@ -711,17 +714,31 @@ class Simulation(
         target: String,
         action: DiplomaticAction,
     ): Boolean {
-        if (action !in diplomacy.available(target, date) || !nation.spendCapital(action.cost)) return false
-        val done = diplomacy.perform(target, action, date)
-        if (!done) {
-            nation.applyEvent(economy.country(playerCountryId), EventEffects(politicalCapital = action.cost))
-            nation.report(date, "외교", "${countryName(target).josa("이", "가")} ${action.label.josa("을", "를")} 거절했다.", major = false)
-            return false
-        }
-        if (action == DiplomaticAction.CONDEMN) {
+        val outcome =
+            when {
+                action !in diplomacy.available(target, date) -> {
+                    DiplomaticOutcome.UNAVAILABLE
+                }
+
+                !nation.spendCapital(action.cost) -> {
+                    DiplomaticOutcome.INSUFFICIENT_CAPITAL
+                }
+
+                diplomacy.perform(target, action, date) -> {
+                    DiplomaticOutcome.COMPLETED
+                }
+
+                else -> {
+                    nation.applyEvent(economy.country(playerCountryId), EventEffects(politicalCapital = action.cost))
+                    nation.report(date, "외교", "${countryName(target).josa("이", "가")} ${action.label.josa("을", "를")} 거절했다.", major = false)
+                    DiplomaticOutcome.DECLINED
+                }
+            }
+        if (outcome == DiplomaticOutcome.COMPLETED && action == DiplomaticAction.CONDEMN) {
             nation.applyEvent(economy.country(playerCountryId), EventEffects(identityMood = mapOf(Identity.PATRIOTS to 1.0)))
         }
-        return true
+        lastDiplomaticDispatch = DiplomaticDispatch(date, target, action, outcome)
+        return outcome == DiplomaticOutcome.COMPLETED
     }
 
     fun negotiateRegion(
