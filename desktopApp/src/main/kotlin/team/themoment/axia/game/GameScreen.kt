@@ -38,6 +38,7 @@ import team.themoment.axia.map.WorldMapModel
 import team.themoment.axia.selection.SelectionPanel
 import team.themoment.axia.simulation.SimulationRunner
 import team.themoment.axia.simulation.world.World
+import team.themoment.axia.ui.dossier.MetricTooltipHost
 
 /** 지도와 분야별 전체 화면이 시간 조작과 캠페인 상태를 공유한다. */
 @Composable
@@ -70,19 +71,21 @@ fun GameScreen(
         if (pageOpen && !showNewspaper && !hasGameFocus) gameFocus.requestFocus()
     }
 
-    Box(
-        modifier
-            .fillMaxSize()
-            .onPreviewKeyEvent {
-                if (!showNewspaper && desk.panel != null && it.key == Key.Escape && it.type == KeyEventType.KeyDown) {
-                    desk.panel = null
-                    true
-                } else {
-                    false
-                }
-            }.onFocusChanged { hasGameFocus = it.hasFocus }
-            .focusRequester(gameFocus)
-            .focusable(enabled = pageOpen),
+    MetricTooltipHost(
+        modifier =
+            modifier
+                .fillMaxSize()
+                .onPreviewKeyEvent {
+                    if (!showNewspaper && desk.panel != null && it.key == Key.Escape && it.type == KeyEventType.KeyDown) {
+                        desk.panel = null
+                        true
+                    } else {
+                        false
+                    }
+                }.onFocusChanged { hasGameFocus = it.hasFocus }
+                .focusRequester(gameFocus)
+                .focusable(enabled = pageOpen),
+        enabled = !showNewspaper,
     ) {
         Column(Modifier.fillMaxSize()) {
             TopStrip(

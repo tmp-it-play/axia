@@ -33,6 +33,7 @@ import team.themoment.axia.ui.console.ConsoleKey
 import team.themoment.axia.ui.console.ConsoleMuted
 import team.themoment.axia.ui.console.ConsoleText
 import team.themoment.axia.ui.console.consoleFrame
+import team.themoment.axia.ui.dossier.metricTooltip
 import team.themoment.axia.ui.dossier.steelTexture
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -77,13 +78,21 @@ fun TopStrip(
             }
             nextElection?.let {
                 Groove(Modifier.height(16.dp))
-                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+                Row(
+                    modifier = Modifier.metricTooltip("다음 선거", "정치 화면의 선거 탭에서 선거 일정과 후보를 확인할 수 있습니다."),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(5.dp),
+                ) {
                     ConsoleGlyph(ConsoleSymbol.BALLOT_PAPER, Modifier.size(15.dp))
                     Text(it, style = DossierType.number(12.sp), color = ConsoleBrass, maxLines = 1)
                 }
             }
             if (pendingEventCount > 0) {
-                ConsoleKey(onClick = onOpenNewspaper, description = "사건 신문 다시 열기", modifier = Modifier.height(30.dp)) { ink ->
+                ConsoleKey(
+                    onClick = onOpenNewspaper,
+                    description = "사건 신문 다시 열기",
+                    modifier = Modifier.height(30.dp).metricTooltip("대기 중인 사건", "신문을 열어 사건에 대응할 수 있습니다."),
+                ) { ink ->
                     Text("사건 ${pendingEventCount}건", Modifier.padding(horizontal = 8.dp), style = DossierType.title(13.sp), color = ink)
                 }
             }
@@ -92,9 +101,14 @@ fun TopStrip(
                     Text(it, style = DossierType.number(12.sp), color = ConsoleMuted, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 }
             }
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            val date = DATE_FORMAT.format(clock.date)
+            Row(
+                modifier = Modifier.metricTooltip("캠페인 날짜", "매월 1일에 직전 달의 경제를 결산합니다."),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+            ) {
                 ConsoleGlyph(ConsoleSymbol.CALENDAR, Modifier.size(17.dp))
-                Text(DATE_FORMAT.format(clock.date), style = DossierType.number(15.sp, FontWeight.SemiBold), color = ConsoleText)
+                Text(date, style = DossierType.number(15.sp, FontWeight.SemiBold), color = ConsoleText)
             }
             ClockControls(clock, onTogglePause, onSpeedSelect, onAdvanceDay)
         }
@@ -105,36 +119,43 @@ fun TopStrip(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             val cell = Modifier.weight(1f)
-            ConsoleMetric(ConsoleSymbol.BALLOT_BOX, "지지율", "${approval.roundToInt()}%", cell)
-            Groove()
-            ConsoleMetric(ConsoleSymbol.LECTERN, "정치 자본", politicalCapital.roundToInt().toString(), cell)
-            Groove()
-            ConsoleMetric(ConsoleSymbol.GROWTH, "성장", formatPercent(indicators.growth, signed = true), cell)
-            Groove()
-            ConsoleMetric(ConsoleSymbol.PRICE_TAG, "물가", formatPercent(indicators.inflation), cell)
-            Groove()
-            ConsoleMetric(ConsoleSymbol.BRIEFCASE, "실업", formatPercent(indicators.unemployment), cell)
-            Groove()
-            ConsoleMetric(ConsoleSymbol.SCALES, "재정", formatPercent(indicators.budgetBalance, signed = true), cell)
-            Groove()
-            ConsoleMetric(ConsoleSymbol.BOND, "부채", formatPercent(indicators.debtRatio), cell)
-            Groove()
-            ConsoleMetric(ConsoleSymbol.INTEREST, "금리", formatRate(indicators.policyRate), cell)
+            NationalMetric.entries.forEachIndexed { index, metric ->
+                if (index > 0) Groove()
+                val value =
+                    when (metric) {
+                        NationalMetric.APPROVAL -> "${approval.roundToInt()}%"
+                        NationalMetric.POLITICAL_CAPITAL -> politicalCapital.toInt().toString()
+                        NationalMetric.GROWTH -> formatPercent(indicators.growth, signed = true)
+                        NationalMetric.INFLATION -> formatPercent(indicators.inflation)
+                        NationalMetric.UNEMPLOYMENT -> formatPercent(indicators.unemployment)
+                        NationalMetric.BALANCE -> formatPercent(indicators.budgetBalance, signed = true)
+                        NationalMetric.DEBT -> formatPercent(indicators.debtRatio)
+                        NationalMetric.RATE -> formatRate(indicators.policyRate)
+                    }
+                ConsoleMetric(metric, value, metric.hudDescription(indicators, value), cell)
+            }
         }
     }
 }
 
 @Composable
 private fun ConsoleMetric(
-    symbol: ConsoleSymbol,
-    label: String,
+    metric: NationalMetric,
     value: String,
+    detail: String,
     modifier: Modifier,
 ) {
-    Column(modifier.semantics(mergeDescendants = true) {}.padding(horizontal = 6.dp)) {
-        Text(label, color = ConsoleMuted, style = DossierType.number(11.sp), maxLines = 1)
+    Column(
+        modifier
+            .fillMaxHeight()
+            .metricTooltip(metric.title, detail)
+            .semantics(mergeDescendants = true) {}
+            .padding(horizontal = 6.dp),
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Text(metric.shortName, color = ConsoleMuted, style = DossierType.number(11.sp), maxLines = 1)
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            ConsoleGlyph(symbol, Modifier.size(26.dp))
+            ConsoleGlyph(metric.symbol, Modifier.size(26.dp))
             Text(value, color = ConsoleText, style = DossierType.number(18.sp, FontWeight.Bold), maxLines = 1, softWrap = false)
         }
     }
@@ -167,7 +188,11 @@ private fun ClockControls(
                 onClick = { onSpeedSelect(speed) },
                 active = speed == clock.speed,
                 description = "${speed.multiplier}배속",
-                modifier = Modifier.width(30.dp).height(32.dp),
+                modifier =
+                    Modifier
+                        .width(30.dp)
+                        .height(32.dp)
+                        .metricTooltip("시간 배속", "실제 1초 동안 진행할 게임 속 날짜 수를 정합니다."),
             ) { ink ->
                 Text("${speed.multiplier}×", style = DossierType.number(12.sp, FontWeight.SemiBold), color = ink)
             }

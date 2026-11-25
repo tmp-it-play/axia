@@ -24,6 +24,7 @@ import team.themoment.axia.simulation.economy.EconomyData
 import team.themoment.axia.simulation.world.Country
 import team.themoment.axia.simulation.world.World
 import team.themoment.axia.theme.CampaignTypography
+import team.themoment.axia.ui.dossier.MetricTooltipHost
 import team.themoment.axia.update.AppUpdater
 import team.themoment.axia.update.UpdateNotice
 
@@ -62,7 +63,7 @@ internal fun AxiaApp(
                 }
 
                 StartScreen.NEW_GAME -> {
-                    NewGameScreen(data, playable, campaigns::start, onBack = { screen = StartScreen.LOBBY })
+                    MetricTooltipHost { NewGameScreen(data, playable, campaigns::start, onBack = { screen = StartScreen.LOBBY }) }
                 }
             }
         } else {
