@@ -88,5 +88,5 @@ Mac에서 처음 설치할 때는 DMG 안의 Axia를 응용 프로그램 폴더�
 - 공통 정책 구조에 맞는 국가 사업은 `national_programs.json`과 `NationalProgramModule`을 사용한다. 독자 규칙이 필요하면 `CountryModule`을 구현해 `CountryModules.specialized`와 `create`에 등록한다. 고유 정책과 집단별 반응은 `CountryPolicyItem`에 정의한다.
 - 사건은 `events.json`에 추가한다. 새 조건 변수는 `EventContext.VARIABLES`에 등록하고 `Nation.eventValues` 또는 `Simulation.sharedEventValues`에서 값을 제공한다.
 - 새 정책 종류는 `PolicyItem`과 이를 처리하는 심의·성향·화면 분기에 연결한다. 화면에 값을 추가할 때는 해당 `*Snapshot`에서 `GameScreen`을 거쳐 패널로 전달한다. 지역별 지도 색은 `MapMode.regionColor`에서 결정한다.
-- 모델 계수는 이름 있는 상수로 두고 단위와 근거를 기록한다. 자료가 없는 값은 게임 가정으로 표시한다. 주석·KDoc·화면 문구는 한국어로 쓰고, 화면에는 국가 이름과 `String.josa()`를 사용한다.
+- 모델 계수는 이름 있는 상수로 두고 단위와 근거를 기록한다. 출처와 결측값의 추정 방식은 데이터와 개발 문서에 기록한다. 게임 화면에는 지표의 단위·기준 시점과 플레이에 영향을 주는 요인을 표시한다. 주석·KDoc·화면 문구는 한국어로 쓰고, 화면에는 국가 이름과 `String.josa()`를 사용한다.
 - 게임 규칙을 바꾸면 설계 문서의 해당 절을 갱신하고 README는 간단히 유지한다. 커밋은 사용자가 요청할 때 만들며 [저장소의 커밋 규칙](../.agents/skills/git-commit/SKILL.md)을 따른다.

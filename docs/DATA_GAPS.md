@@ -180,7 +180,7 @@ WDI 개인송금은 같은 방향의 가계 간 개인이전과 피용자보수�
 <details>
 <summary>대외 투자소득의 기준연도·세부 항목과 결측 국가</summary>
 
-IMF BPM6 연간 국제수지의 투자소득 총계로 수취·지급을 각각 집계한다. 2014~2023년 중 방향별로 가장 최근 총계를 쓰며 국가·지역 통계기관의 원표로 보완한다. 양방향 총액과 공표 순액이 모두 없는 경우 IMF의 1994~2013년 보고도 확인한다. 과거 금액은 당시 명목 달러이며, 화면에 연도와 대용 여부를 표시한다. 단위는 연간 명목 미 달러다. [IMF 국제수지](https://data.imf.org/en/datasets/IMF.STA:BOP) · [국가별 원표와 환산식](../tools/econdata/investment_income_supplements.py) · [국가·연도별 번들](../simulation/src/main/resources/world/investment_income.json)
+IMF BPM6 연간 국제수지의 투자소득 총계로 수취·지급을 각각 집계한다. 2014~2023년 중 방향별로 가장 최근 총계를 쓰며 국가·지역 통계기관의 원표로 보완한다. 양방향 총액과 공표 순액이 모두 없는 경우 IMF의 1994~2013년 보고도 확인한다. 과거 금액은 당시 명목 달러이며, 화면에는 기준연도를 표시하고 대용 여부는 번들에 기록한다. 단위는 연간 명목 미 달러다. [IMF 국제수지](https://data.imf.org/en/datasets/IMF.STA:BOP) · [국가별 원표와 환산식](../tools/econdata/investment_income_supplements.py) · [국가·연도별 번들](../simulation/src/main/resources/world/investment_income.json)
 
 | 출처와 연도 | 수취 | 지급 | 국가 코드 또는 범위 |
 |---|---:|---:|---|
