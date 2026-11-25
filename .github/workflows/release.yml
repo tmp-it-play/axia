@@ -14,7 +14,7 @@ jobs:
     outputs:
       value: ${{ steps.version.outputs.value }}
     steps:
-      - name: Resolve version from tag
+      - name: Resolve Version from Tag
         id: version
         run: |
           if [[ ! "$GITHUB_REF_NAME" =~ ^v([0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
@@ -51,10 +51,10 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v6
 
-      - name: Build installer
+      - name: Build Installer
         run: ./gradlew :desktopApp:${{ matrix.task }} "-Paxia.version=${{ needs.version.outputs.value }}"
 
-      - name: Include Mac architecture in DMG filename
+      - name: Include Mac Architecture in DMG Filename
         if: runner.os == 'macOS'
         working-directory: desktopApp/build/compose/binaries/main/dmg
         run: mv ./*.dmg "Axia-${{ needs.version.outputs.value }}-${{ matrix.platform }}.dmg"
@@ -78,7 +78,7 @@ jobs:
           path: installers
           merge-multiple: true
 
-      - name: Create draft release
+      - name: Create Draft Release
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
