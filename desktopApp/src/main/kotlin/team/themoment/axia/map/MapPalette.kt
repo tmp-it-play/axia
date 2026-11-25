@@ -4,11 +4,11 @@ import androidx.compose.ui.graphics.Color
 
 object MapPalette {
     val ocean = Color(0xFF2C4A5E)
-    val unclaimed = Color(0xFFDCE3E6)
+    val unclaimed = Color(0xFFADB9BD)
 
     /** 지도 모드에 자료가 없는 나라. */
-    val noData = Color(0xFFB9B4A8)
-    val peace = Color(0xFFE8DCC0)
+    val noData = Color(0xFFA49F96)
+    val peace = Color(0xFFA39A88)
     val countries =
         listOf(
             Color(0xFFC8B48A),
@@ -26,16 +26,15 @@ object MapPalette {
     val selectedCountry = Color(0x2EFFFFFF)
     val selectedRegion = Color(0x40FFFFFF)
     val selectedOutline = Color(0xFFFFF2C0)
-    val labelInk = Color(0xFF33372F)
-    val labelLight = Color(0xFFF4EFDC)
+    val countryName = Color.White.copy(alpha = 0.94f)
 
     /** 클수록 부유함. */
     val wealth =
         listOf(
-            Color(0xFFE9E4CF),
-            Color(0xFFC9D3B0),
-            Color(0xFFA2BE93),
-            Color(0xFF74A07F),
+            Color(0xFFB7B6A2),
+            Color(0xFFA2AE92),
+            Color(0xFF88A582),
+            Color(0xFF6B9476),
             Color(0xFF4B7F6E),
             Color(0xFF2E5A57),
         )
@@ -43,21 +42,21 @@ object MapPalette {
     /** 클수록 나쁨. */
     val severity =
         listOf(
-            Color(0xFFEFE3C2),
-            Color(0xFFE1C78E),
-            Color(0xFFCFA45E),
+            Color(0xFFBBB093),
+            Color(0xFFB9A075),
+            Color(0xFFB79153),
             Color(0xFFB87A3D),
             Color(0xFF925229),
             Color(0xFF64321A),
         )
 
-    /** 음수는 붉은 쪽, 양수는 푸른 쪽. */
+    /** 음수는 적색, 중립은 회갈색, 양수는 녹색이다. */
     val diverging =
         listOf(
             Color(0xFF9E3A2E),
             Color(0xFFD08A6A),
-            Color(0xFFE8DCC0),
-            Color(0xFFB5C98F),
+            Color(0xFFB9AE9E),
+            Color(0xFF96AA7F),
             Color(0xFF7FA764),
             Color(0xFF4E7A42),
         )

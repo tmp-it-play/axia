@@ -16,7 +16,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.withTransform
-import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.input.pointer.pointerInput
@@ -54,15 +53,14 @@ fun WorldMap(
     /** 지역 단위로 다시 칠할 나라와 지역 색. 색이 null이면 나라 색을 그대로 둔다. */
     regionOverlay: Pair<String, (String) -> Color?>? = null,
     regionOwners: Map<String, String> = emptyMap(),
+    viewport: MapViewport = remember(model) { MapViewport() },
 ) {
-    val viewport = remember { MapViewport() }
     val borders = remember(model, regionOwners) { model.politicalBorders(regionOwners) }
     val currentOnRegionClick by rememberUpdatedState(onRegionClick)
     val textMeasurer = rememberTextMeasurer()
     val labelStyle = DossierType.mapLabel(LABEL_BASE_SIZE_SP.sp)
     val curves = remember(model, regionOwners) { model.labelsFor(regionOwners) }
     val lettering = remember(curves, labelStyle, textMeasurer) { layoutLabels(curves, textMeasurer, labelStyle) }
-    val fills = remember(model) { model.countryFills.associateBy(CountryFill::countryId) }
     Canvas(
         modifier =
             modifier
@@ -88,7 +86,7 @@ fun WorldMap(
                 drawWorldCopy(model, viewport, shift, fillColor, selectedRegionId, regionOverlay, regionOwners, borders)
             }
             copies.forEach { shift ->
-                drawLabels(viewport, shift, lettering) { id -> fillColor(fills.getValue(id)) }
+                drawLabels(viewport, shift, lettering)
             }
         }
     }
@@ -218,7 +216,6 @@ private fun DrawScope.drawLabels(
     viewport: MapViewport,
     shift: Float,
     lettering: List<MapLettering>,
-    countryColor: (String) -> Color,
 ) {
     val zoom = viewport.zoom
     val area = viewport.visibleArea.translate(-shift, 0f)
@@ -228,14 +225,17 @@ private fun DrawScope.drawLabels(
     }) {
         lettering.forEach { label ->
             if (!label.country.bounds.overlaps(area)) return@forEach
-            val ink = if (countryColor(label.country.countryId).luminance() > 0.22f) MapPalette.labelInk else MapPalette.labelLight
             label.letters.forEach { letter ->
                 withTransform({
                     translate(letter.center.x, letter.center.y)
                     rotate(letter.angle, pivot = Offset.Zero)
                     scale(label.scale, label.scale, pivot = Offset.Zero)
                 }) {
-                    drawText(letter.glyph, color = ink, topLeft = Offset(-letter.glyph.size.width / 2f, -letter.glyph.size.height / 2f))
+                    drawText(
+                        letter.glyph,
+                        color = MapPalette.countryName,
+                        topLeft = Offset(-letter.glyph.size.width / 2f, -letter.glyph.size.height / 2f),
+                    )
                 }
             }
         }
