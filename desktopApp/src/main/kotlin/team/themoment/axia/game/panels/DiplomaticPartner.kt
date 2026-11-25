@@ -28,6 +28,7 @@ import team.themoment.axia.theme.DossierType
 import team.themoment.axia.ui.dossier.PaperTag
 import team.themoment.axia.ui.dossier.SectionTitle
 import team.themoment.axia.ui.dossier.StatRow
+import team.themoment.axia.ui.dossier.metricTooltip
 import kotlin.math.ceil
 import kotlin.math.roundToInt
 
@@ -64,19 +65,21 @@ internal fun DiplomaticPartner(
     onAction: (String, DiplomaticAction) -> Unit,
 ) {
     var group by remember(partner.countryId) { mutableStateOf(ActionGroup.EXCHANGE) }
-    Row(
-        Modifier.fillMaxWidth().padding(top = 8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(6.dp),
-    ) {
-        Text(name, modifier = Modifier.weight(1f), style = DossierType.title(22.sp), color = DossierColors.ink)
-        Text(
-            "관계 ${partner.relation.roundToInt()} · ${relationLabel(partner.relation)}",
-            style = DossierType.title(15.sp),
-            color = relationColor(partner.relation),
-        )
+    Column(Modifier.fillMaxWidth().relationTooltip(name)) {
+        Row(
+            Modifier.fillMaxWidth().padding(top = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
+        ) {
+            Text(name, modifier = Modifier.weight(1f), style = DossierType.title(22.sp), color = DossierColors.ink)
+            Text(
+                "관계 ${partner.relation.roundToInt()} · ${relationLabel(partner.relation)}",
+                style = DossierType.title(15.sp),
+                color = relationColor(partner.relation),
+            )
+        }
+        RelationScale(partner.relation)
     }
-    RelationScale(partner.relation)
     SectionTitle("양국 현황")
     if (partner.atWar) StatRow("군사 상태", "교전 중", valueColor = DossierColors.negative)
     val agreements =
@@ -123,7 +126,12 @@ internal fun DiplomaticPartner(
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 PaperTag(action.label, enabled = blocked == null, onClick = { onAction(partner.countryId, action) })
-                Text("비용 ${action.cost.toInt()}점", style = DossierType.number(12.sp), color = DossierColors.inkMuted)
+                Text(
+                    "비용 ${action.cost.toInt()}점",
+                    modifier = Modifier.metricTooltip("${action.label} · 정치 자본", "외교 행동에 드는 비용입니다. 상대국이 제안을 거절하면 돌려받습니다."),
+                    style = DossierType.number(12.sp),
+                    color = DossierColors.inkMuted,
+                )
             }
             Hint(action.description)
             if (blocked != null) Text(blocked, style = DossierType.number(12.sp), color = DossierColors.negative)
@@ -166,6 +174,12 @@ private fun unavailableReason(
             "실행 조건을 충족하지 못했습니다."
         }
     }
+
+internal fun Modifier.relationTooltip(name: String): Modifier =
+    metricTooltip(
+        "$name · 외교 관계",
+        "−100점에서 +100점 사이로 나타냅니다. 양국 관계가 좋을수록 무역협정과 통행권 협정을 체결하기 쉽습니다.",
+    )
 
 /** 가운데 눈금이 중립을 나타내는 -100~100 관계 표시. */
 @Composable

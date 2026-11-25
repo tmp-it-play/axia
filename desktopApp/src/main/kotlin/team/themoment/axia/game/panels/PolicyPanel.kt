@@ -36,6 +36,7 @@ import team.themoment.axia.simulation.nation.TaxKind
 import team.themoment.axia.simulation.politics.PoliticsSnapshot
 import team.themoment.axia.theme.DossierColors
 import team.themoment.axia.theme.DossierType
+import team.themoment.axia.ui.dossier.metricTooltip
 import kotlin.math.roundToInt
 
 internal enum class PolicyGroup(
@@ -86,6 +87,16 @@ internal fun PolicyItem.printLevel(level: Double): String =
         is RegulationItem -> "${(level * 100).roundToInt()} / 100"
     }
 
+internal val PolicyItem.levelDescription: String
+    get() =
+        when (this) {
+            is TaxKind -> "과세 대상 금액에서 실제 세금으로 걷는 비율입니다."
+            is SpendingKind -> "연간 GDP에서 이 분야 지출이 차지하는 비율입니다."
+            is RegulationItem -> "0점은 ‘$lowLabel’, 100점은 ‘$highLabel’입니다."
+            is CountryPolicyItem -> if (binary) description else "0점은 ‘$lowLabel’, 100점은 ‘$highLabel’입니다."
+            is InstitutionItem -> "중앙은행이 독립적으로 금리를 결정할지 정합니다."
+        }
+
 @Composable
 internal fun LawRegisterGroup(
     group: PolicyGroup,
@@ -108,10 +119,12 @@ internal fun LawRegisterGroup(
         val active = selected == item
         val change = politics.pending?.changes?.firstOrNull { it.item == item } ?: politics.draft[item]
         val current = item.printLevel(option.target)
+        val proposal = change?.let { (if (politics.pending == null) "초안" else "심의안") + " " + item.printLevel(it.to) }
         Row(
             Modifier
                 .fillMaxWidth()
                 .background(if (active) DossierColors.paperLine else DossierColors.paper.copy(alpha = 0.35f))
+                .metricTooltip(item.label, item.levelDescription)
                 .pointerHoverIcon(PointerIcon.Hand)
                 .clickable(role = Role.Button, onClick = { onSelect(item) })
                 .heightIn(min = 36.dp)
@@ -122,9 +135,8 @@ internal fun LawRegisterGroup(
             Text(item.label, Modifier.weight(1f), style = DossierType.title(14.sp), color = DossierColors.ink)
             Column(horizontalAlignment = Alignment.End) {
                 Text(current, style = DossierType.number(13.sp), color = DossierColors.ink)
-                if (change != null) {
-                    val state = if (politics.pending == null) "초안" else "심의안"
-                    Text("$state ${item.printLevel(change.to)}", style = DossierType.number(12.sp), color = DossierColors.blueInk)
+                if (proposal != null) {
+                    Text(proposal, style = DossierType.number(12.sp), color = DossierColors.blueInk)
                 }
             }
         }

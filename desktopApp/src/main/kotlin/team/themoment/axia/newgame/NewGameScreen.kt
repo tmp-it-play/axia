@@ -33,6 +33,9 @@ import team.themoment.axia.format.formatDollars
 import team.themoment.axia.format.formatPercent
 import team.themoment.axia.format.formatPopulation
 import team.themoment.axia.format.formatWholeDollars
+import team.themoment.axia.game.GDP_DESCRIPTION
+import team.themoment.axia.game.GDP_PER_CAPITA_DESCRIPTION
+import team.themoment.axia.game.NationalMetric
 import team.themoment.axia.simulation.Simulation
 import team.themoment.axia.simulation.campaign.CampaignScenario
 import team.themoment.axia.simulation.economy.EconomyData
@@ -133,11 +136,11 @@ private fun CountryCard(
                 verticalArrangement = Arrangement.spacedBy(3.dp),
             ) {
                 StatRow("인구", formatPopulation(economy.population))
-                StatRow("GDP", formatDollars(economy.gdp))
-                StatRow("1인당 GDP", formatWholeDollars(economy.gdp / economy.population))
-                StatRow("성장률", formatPercent(economy.growth, signed = true))
-                StatRow("물가", formatPercent(economy.inflation))
-                StatRow("국가부채", formatPercent(economy.debt))
+                StatRow("GDP", formatDollars(economy.gdp), tooltip = GDP_DESCRIPTION)
+                StatRow("1인당 GDP", formatWholeDollars(economy.gdp / economy.population), tooltip = GDP_PER_CAPITA_DESCRIPTION)
+                StatRow("성장률", formatPercent(economy.growth, signed = true), tooltip = "시작 시점의 연간 실질 GDP 성장률입니다.")
+                StatRow("물가", formatPercent(economy.inflation), tooltip = "캠페인 시작 시점의 연간 물가상승률입니다.")
+                StatRow("국가부채", formatPercent(economy.debt), tooltip = NationalMetric.DEBT.description)
                 Spacer(Modifier.height(2.dp))
             }
         }

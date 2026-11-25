@@ -42,6 +42,7 @@ import team.themoment.axia.ui.dossier.LineChart
 import team.themoment.axia.ui.dossier.PaperTag
 import team.themoment.axia.ui.dossier.SectionTitle
 import team.themoment.axia.ui.dossier.StatRow
+import team.themoment.axia.ui.dossier.metricTooltip
 import java.time.LocalDate
 import kotlin.math.ceil
 import kotlin.math.roundToInt
@@ -225,11 +226,34 @@ private fun SectorRow(
 ) {
     val style = if (header) DossierType.title(12.sp) else DossierType.number(14.sp)
     val ink = if (header) DossierColors.blueInk else DossierColors.ink
+
+    fun Modifier.figure(
+        label: String,
+        detail: String,
+    ): Modifier = if (header) this else metricTooltip("$sector · $label", detail)
     Row(Modifier.fillMaxWidth().padding(vertical = 5.dp), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
         Text(sector, Modifier.weight(1.35f), style = style, color = ink)
-        Text(share, Modifier.weight(1.1f), textAlign = TextAlign.End, style = style, color = ink)
-        Text(growth, Modifier.weight(1f), textAlign = TextAlign.End, style = style, color = if (header) ink else growthColor)
-        Text(jobs, Modifier.weight(1f), textAlign = TextAlign.End, style = style, color = ink)
+        Text(
+            share,
+            Modifier.weight(1.1f).figure("부가가치 비중", "국내 산업 전체의 부가가치에서 이 부문이 차지하는 비율입니다."),
+            textAlign = TextAlign.End,
+            style = style,
+            color = ink,
+        )
+        Text(
+            growth,
+            Modifier.weight(1f).figure("성장률", "지난해 같은 달에 비해 이 부문의 실질 부가가치가 변한 비율입니다."),
+            textAlign = TextAlign.End,
+            style = style,
+            color = if (header) ink else growthColor,
+        )
+        Text(
+            jobs,
+            Modifier.weight(1f).figure("고용 비중", "전체 취업자 중 이 부문에서 일하는 사람의 비율입니다."),
+            textAlign = TextAlign.End,
+            style = style,
+            color = ink,
+        )
     }
 }
 
@@ -303,7 +327,7 @@ private fun MonetarySection(
     StatRow("실질금리 (기준금리 − 기대 물가)", formatRate(monetary.realRate, signed = true))
     StatRow("통화 기조", monetary.stance.label, valueColor = stanceColor(monetary.stance))
     StatRow("통화 신뢰도", "${(monetary.credibility * 100).roundToInt()}점")
-    LineChart(history[EconomySeries.POLICY_RATE], history.start, rateFormat)
+    LineChart(history[EconomySeries.POLICY_RATE], history.start, rateFormat, title = "기준금리")
 
     val pending = politics.pending
     val proposedInBill = pending?.changes?.any { it.item == InstitutionItem.CENTRAL_BANK_INDEPENDENCE } == true

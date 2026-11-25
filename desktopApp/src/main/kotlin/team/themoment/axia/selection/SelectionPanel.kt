@@ -101,7 +101,7 @@ fun SelectionPanel(
                         formatPercent(r.economy.unemployment),
                         note = indicators?.let { "전국 ${formatPercent(it.unemployment)}" },
                     )
-                    StatRow("전국 GDP 중 지역 비중", formatPercent(r.economy.gdpShare))
+                    StatRow("전국 GDP 중 지역 비중", formatPercent(r.economy.gdpShare), tooltip = "이 지역의 생산이 국가 전체 GDP에서 차지하는 비율입니다.")
                     SectionTitle("지역 사업")
                     StatRow("사업 예산 · 전국 GDP 대비", formatPercent(r.programSpending))
                     RegionalProgram.entries.forEach { program ->
@@ -134,7 +134,11 @@ fun SelectionPanel(
                     SectionTitle("지역 산업 구성")
                     StatRow("부문", "부가가치 · 고용 비중")
                     r.economy.sectors.sortedByDescending { it.share }.forEach { sector ->
-                        StatRow(sector.sector.label, "${formatPercent(sector.share)} · ${formatPercent(sector.employment)}")
+                        StatRow(
+                            sector.sector.label,
+                            "${formatPercent(sector.share)} · ${formatPercent(sector.employment)}",
+                            tooltip = "이 산업이 지역의 부가가치와 고용에서 각각 차지하는 비율입니다.",
+                        )
                     }
                 }
                 if (indicators != null) {

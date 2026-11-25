@@ -62,11 +62,15 @@ internal fun MilitaryPanel(
             PanelColumns(
                 left = {
                     LedgerHeading("우리 군")
-                    StatRow("군사력 (세계 최강 = 100)", "%.1f".format(forces.power))
+                    StatRow(
+                        "군사력 (세계 최강 = 100)",
+                        "%.1f".format(forces.power),
+                        tooltip = "가장 강한 국가의 전력을 100점으로 두고 각국의 전력을 비교합니다.",
+                    )
                     forces.branches.forEach { (branch, value) -> StatRow("  ${branch.label}", "%.1f".format(value)) }
                     StatRow("병력", formatPopulation(forces.personnel))
                     StatRow("국방비 (연간)", formatCompactDollars(forces.spending))
-                    StatRow("준비태세", formatPercent(forces.readiness))
+                    StatRow("준비태세", formatPercent(forces.readiness), tooltip = "현재 준비태세는 선택한 동원 단계의 목표치를 향해 서서히 변합니다.")
                     if (forces.nuclearWarheads > 0) StatRow("핵탄두", "${forces.nuclearWarheads}기")
                     val rank =
                         military.forces.values

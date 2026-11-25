@@ -63,8 +63,12 @@ fun StatRow(
     modifier: Modifier = Modifier,
     valueColor: Color = DossierColors.ink,
     note: String? = null,
+    tooltip: String? = null,
 ) {
-    Row(modifier = modifier.fillMaxWidth().heightIn(min = 19.dp), verticalAlignment = Alignment.CenterVertically) {
+    Row(
+        modifier = modifier.fillMaxWidth().heightIn(min = 19.dp).metricTooltip(label, tooltip),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
         Text(text = label, style = DossierType.number(13.sp, weight = FontWeight.Normal), color = DossierColors.inkMuted)
         DottedLeader(Modifier.weight(1f).padding(horizontal = 6.dp, vertical = 4.dp))
         if (note != null) {
@@ -102,12 +106,18 @@ data class Contribution(
 fun ContributionBars(
     contributions: List<Contribution>,
     format: (Double) -> String,
+    metric: String,
+    unit: String,
     modifier: Modifier = Modifier,
     scale: Double = contributions.maxOfOrNull { abs(it.value) }?.coerceAtLeast(1e-9) ?: 1.0,
 ) {
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(4.dp)) {
         contributions.forEach { contribution ->
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            val value = format(contribution.value)
+            Row(
+                Modifier.fillMaxWidth().metricTooltip("${contribution.label} · $metric 기여도", "양수는 상승 요인, 음수는 하락 요인입니다. 표시 단위는 ${unit}입니다."),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
                 Text(
                     text = contribution.label,
                     style = DossierType.number(12.sp, weight = FontWeight.Normal),
@@ -123,7 +133,7 @@ fun ContributionBars(
                     drawRect(color.copy(alpha = 0.8f), topLeft = Offset(left, 1f), size = Size(length, size.height - 2f))
                 }
                 Text(
-                    text = format(contribution.value),
+                    text = value,
                     style = DossierType.number(12.sp),
                     color = if (contribution.value >= 0) DossierColors.positive else DossierColors.negative,
                     textAlign = TextAlign.End,
@@ -156,7 +166,13 @@ fun CompositionBar(
                 .border(1.dp, DossierColors.inkMuted.copy(alpha = 0.4f)),
     ) {
         segments.filter { it.fraction > 0.0 }.forEach { segment ->
-            Box(Modifier.weight(segment.fraction.toFloat()).height(14.dp).background(segment.color))
+            Box(
+                Modifier
+                    .weight(segment.fraction.toFloat())
+                    .height(14.dp)
+                    .background(segment.color)
+                    .metricTooltip(segment.label, "전체에서 이 집단이 차지하는 비율입니다."),
+            )
         }
     }
 }
@@ -172,9 +188,10 @@ fun DossierSlider(
     modifier: Modifier = Modifier,
     secondary: String? = null,
     enabled: Boolean = true,
+    tooltip: String? = null,
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
-        Row(verticalAlignment = Alignment.Bottom) {
+        Row(Modifier.fillMaxWidth().metricTooltip(label, tooltip), verticalAlignment = Alignment.Bottom) {
             Text(text = label, style = DossierType.number(13.sp, weight = FontWeight.Normal), color = DossierColors.ink)
             Box(Modifier.weight(1f))
             if (secondary != null) {

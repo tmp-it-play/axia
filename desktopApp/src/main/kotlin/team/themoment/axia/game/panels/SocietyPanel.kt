@@ -33,6 +33,7 @@ import team.themoment.axia.ui.dossier.SectionTitle
 import team.themoment.axia.ui.dossier.Segment
 import team.themoment.axia.ui.dossier.StatRow
 import team.themoment.axia.ui.dossier.Swatch
+import team.themoment.axia.ui.dossier.metricTooltip
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
@@ -74,7 +75,8 @@ internal fun SocietyPanel(
                                     group.satisfaction.roundToInt().toString(),
                                     satisfactionColor(group.satisfaction),
                                     group.group == occupation,
-                                    group.group.color(),
+                                    tooltip = "인구 비중은 15세 이상 인구를 기준으로 합니다. 만족도가 높을수록 이 집단이 정부를 지지합니다.",
+                                    swatch = group.group.color(),
                                 ) {
                                     occupation = group.group
                                     openDetail()
@@ -102,6 +104,7 @@ internal fun SocietyPanel(
                                     group.satisfaction.roundToInt().toString(),
                                     satisfactionColor(group.satisfaction),
                                     group.identity == identity,
+                                    tooltip = "소속률은 성인 중 이 성향에 속한 사람의 비율입니다. 만족도가 높을수록 이들이 정부를 지지합니다.",
                                 ) {
                                     identity = group.identity
                                     openDetail()
@@ -123,7 +126,7 @@ internal fun SocietyPanel(
                         StatRow("현재 지지율", "%.1f%%".format(nation.approval), valueColor = satisfactionColor(nation.approval))
                         StatRow("시작 대비", formatPoints(nation.approval - nation.initialApproval.approval) + "%p")
                         SectionTitle("월별 지지율")
-                        LineChart(nation.history.approval, nation.history.start, { "%.1f%%".format(it) })
+                        LineChart(nation.history.approval, nation.history.start, { "%.1f%%".format(it) }, title = "정부 지지율")
                     },
                     right = {
                         LedgerHeading("지지율 변동 요인")
@@ -147,11 +150,14 @@ private fun Demographics(nation: NationSnapshot) {
         )
     CompositionBar(ages)
     Row(Modifier.fillMaxWidth().padding(vertical = 7.dp), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-        ages.forEach { Swatch(it.color, "${it.label} ${formatPercent(it.fraction)}", Modifier.weight(1f)) }
+        ages.forEach { age ->
+            val share = formatPercent(age.fraction)
+            Swatch(age.color, "${age.label} $share", Modifier.weight(1f).metricTooltip(age.label, "전체 인구에서 이 연령대가 차지하는 비율입니다."))
+        }
     }
-    StatRow("합계출산율", "%.2f".format(demography.fertility))
+    StatRow("합계출산율", "%.2f".format(demography.fertility), tooltip = "현재 연령별 출산율이 유지될 때 여성 한 명이 평생 낳을 평균 자녀 수입니다.")
     StatRow("기대수명", "%.1f세".format(demography.lifeExpectancy))
-    StatRow("경제활동참가율 (15세 이상)", formatPercent(demography.adultParticipation))
+    StatRow("경제활동참가율 (15세 이상)", formatPercent(demography.adultParticipation), tooltip = "취업 중인 사람과 일자리를 구하는 실업자를 경제활동인구로 집계합니다.")
     StatRow(
         "15~64세 · 65세 이상 참가율",
         "${formatPercent(demography.workingAgeParticipation)} · ${formatPercent(demography.olderParticipation)}",
@@ -187,11 +193,11 @@ private fun LivingConditions(nation: NationSnapshot) {
     StatRow("실질 집값 (2024년 = 100)", demography.housePrice.roundToInt().toString())
     StatRow("소득 대비 집값 부담", formatPercent(-demography.affordability, signed = true), note = "시작 대비")
     SectionTitle("오염 지수")
-    StatRow("2024년 1월 = 100", indexFormat(nation.social.pollution))
-    LineChart(nation.history.pollution, nation.history.start, indexFormat, height = 88.dp)
+    StatRow("2024년 1월 = 100", indexFormat(nation.social.pollution), tooltip = "기준선보다 높으면 시작 시점보다 오염이 심해진 상태입니다.")
+    LineChart(nation.history.pollution, nation.history.start, indexFormat, title = "오염 지수", height = 88.dp)
     SectionTitle("범죄 지수")
-    StatRow("2024년 1월 = 100", indexFormat(nation.social.crime))
-    LineChart(nation.history.crime, nation.history.start, indexFormat, height = 88.dp)
+    StatRow("2024년 1월 = 100", indexFormat(nation.social.crime), tooltip = "기준선보다 높으면 시작 시점보다 범죄가 늘어난 상태입니다.")
+    LineChart(nation.history.crime, nation.history.start, indexFormat, title = "범죄 지수", height = 88.dp)
 }
 
 @Composable
@@ -220,7 +226,7 @@ private fun OccupationDetail(
     FactorBars(group.factors)
     nation.history.satisfaction[group.group]?.takeIf { it.size > 1 }?.let {
         SectionTitle("월별 만족도")
-        LineChart(it, nation.history.start, indexFormat)
+        LineChart(it, nation.history.start, indexFormat, title = "${group.group.label} 만족도")
     }
 }
 
@@ -242,6 +248,8 @@ private fun IdentityDetail(
                 Contribution("정부 언행", group.governmentEffect),
             ),
         format = ::formatPoints,
+        metric = "만족도",
+        unit = "점",
         scale = 20.0,
     )
     SectionTitle("함께 속한 성향")
@@ -250,7 +258,7 @@ private fun IdentityDetail(
     }
     nation.history.identities[group.identity]?.takeIf { it.size > 1 }?.let {
         SectionTitle("월별 만족도")
-        LineChart(it, nation.history.start, indexFormat)
+        LineChart(it, nation.history.start, indexFormat, title = "${group.identity.label} 만족도")
     }
 }
 

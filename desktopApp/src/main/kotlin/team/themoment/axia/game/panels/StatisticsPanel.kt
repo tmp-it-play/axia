@@ -28,6 +28,9 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import team.themoment.axia.format.formatWholeDollars
+import team.themoment.axia.game.GDP_DESCRIPTION
+import team.themoment.axia.game.GDP_PER_CAPITA_DESCRIPTION
+import team.themoment.axia.game.NationalMetric
 import team.themoment.axia.simulation.economy.CountryHistory
 import team.themoment.axia.simulation.economy.EconomySeries
 import team.themoment.axia.simulation.nation.NationHistory
@@ -38,6 +41,7 @@ import team.themoment.axia.ui.dossier.LineChart
 import team.themoment.axia.ui.dossier.PaperTag
 import team.themoment.axia.ui.dossier.SectionTitle
 import team.themoment.axia.ui.dossier.StatRow
+import team.themoment.axia.ui.dossier.metricTooltip
 import java.time.YearMonth
 
 private class ChartSpec(
@@ -45,15 +49,23 @@ private class ChartSpec(
     val values: List<Double>,
     val start: YearMonth,
     val format: (Double) -> String,
+    val description: String,
     val zeroLine: Boolean = false,
 )
 
+private fun CountryHistory.chart(
+    series: EconomySeries,
+    metric: NationalMetric,
+    format: (Double) -> String,
+    zeroLine: Boolean = false,
+) = ChartSpec(metric.title, this[series], start, format, metric.description, zeroLine)
+
 private fun macroCharts(history: CountryHistory) =
     listOf(
-        ChartSpec("GDP", history[EconomySeries.GDP], history.start, dollarFormat),
-        ChartSpec("경제성장률", history[EconomySeries.GROWTH], history.start, signedPercentFormat, zeroLine = true),
-        ChartSpec("물가상승률", history[EconomySeries.INFLATION], history.start, percentFormat),
-        ChartSpec("실업률", history[EconomySeries.UNEMPLOYMENT], history.start, percentFormat),
+        ChartSpec("GDP", history[EconomySeries.GDP], history.start, dollarFormat, GDP_DESCRIPTION),
+        history.chart(EconomySeries.GROWTH, NationalMetric.GROWTH, signedPercentFormat, zeroLine = true),
+        history.chart(EconomySeries.INFLATION, NationalMetric.INFLATION, percentFormat),
+        history.chart(EconomySeries.UNEMPLOYMENT, NationalMetric.UNEMPLOYMENT, percentFormat),
     )
 
 @Composable
@@ -70,21 +82,22 @@ fun StatisticsPanel(
     history: CountryHistory,
     nation: NationHistory,
 ) {
-    val perCapita = ChartSpec("1인당 GDP", history[EconomySeries.GDP_PER_CAPITA], history.start, ::formatWholeDollars)
+    val perCapita =
+        ChartSpec("1인당 GDP", history[EconomySeries.GDP_PER_CAPITA], history.start, ::formatWholeDollars, GDP_PER_CAPITA_DESCRIPTION)
     val groups =
         mapOf(
             "경제·고용" to macroCharts(history) + perCapita,
             "재정·통화" to
                 listOf(
-                    ChartSpec("재정수지 (GDP 대비)", history[EconomySeries.BUDGET_BALANCE], history.start, signedPercentFormat, zeroLine = true),
-                    ChartSpec("국가부채 (GDP 대비)", history[EconomySeries.DEBT], history.start, percentFormat),
-                    ChartSpec("기준금리", history[EconomySeries.POLICY_RATE], history.start, rateFormat),
+                    history.chart(EconomySeries.BUDGET_BALANCE, NationalMetric.BALANCE, signedPercentFormat, zeroLine = true),
+                    history.chart(EconomySeries.DEBT, NationalMetric.DEBT, percentFormat),
+                    history.chart(EconomySeries.POLICY_RATE, NationalMetric.RATE, rateFormat),
                 ),
             "정치·사회" to
                 listOf(
-                    ChartSpec("정부 지지율", nation.approval, nation.start, { "${approvalFormat(it)}%" }),
-                    ChartSpec("오염 지수", nation.pollution, nation.start, approvalFormat),
-                    ChartSpec("범죄 지수", nation.crime, nation.start, approvalFormat),
+                    ChartSpec("정부 지지율", nation.approval, nation.start, { "${approvalFormat(it)}%" }, NationalMetric.APPROVAL.description),
+                    ChartSpec("오염 지수", nation.pollution, nation.start, approvalFormat, "게임 시작 때의 오염 수준을 100으로 삼습니다."),
+                    ChartSpec("범죄 지수", nation.crime, nation.start, approvalFormat, "게임 시작 때의 범죄 수준을 100으로 삼습니다."),
                 ),
         )
     var selected by remember { mutableStateOf("GDP") }
@@ -112,6 +125,7 @@ fun StatisticsPanel(
                                     Modifier
                                         .fillMaxWidth()
                                         .background(if (chosen) DossierColors.blueInk else Color.Transparent)
+                                        .metricTooltip(spec.title, spec.description)
                                         .pointerHoverIcon(PointerIcon.Hand)
                                         .selectable(chosen, role = Role.RadioButton, onClick = { selected = spec.title })
                                         .padding(horizontal = 9.dp, vertical = 7.dp),
@@ -143,7 +157,12 @@ private fun HistoryDetail(spec: ChartSpec) {
         return
     }
     val end = spec.start.plusMonths(spec.values.lastIndex.toLong())
-    Text(spec.format(latest), style = DossierType.number(32.sp), color = DossierColors.blueInk)
+    Text(
+        spec.format(latest),
+        modifier = Modifier.metricTooltip(spec.title, spec.description),
+        style = DossierType.number(32.sp),
+        color = DossierColors.blueInk,
+    )
     Hint(end.koreanMonth())
     if (spec.values.size == 1) {
         Spacer(Modifier.height(10.dp))
@@ -160,10 +179,10 @@ private fun HistoryDetail(spec: ChartSpec) {
     val values = if (recentYear) spec.values.takeLast(12) else spec.values
     val start = end.minusMonths(values.lastIndex.toLong())
     Spacer(Modifier.height(14.dp))
-    LineChart(values, start, spec.format, height = 175.dp, zeroLine = spec.zeroLine)
+    LineChart(values, start, spec.format, title = spec.title, height = 175.dp, zeroLine = spec.zeroLine)
     SectionTitle("최근 월별 기록")
     spec.values.takeLast(6).asReversed().forEachIndexed { index, value ->
-        StatRow(end.minusMonths(index.toLong()).koreanMonth(), spec.format(value))
+        StatRow(end.minusMonths(index.toLong()).koreanMonth(), spec.format(value), tooltip = spec.description)
     }
 }
 

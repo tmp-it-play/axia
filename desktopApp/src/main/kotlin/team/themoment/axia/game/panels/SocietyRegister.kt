@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import team.themoment.axia.theme.DossierColors
 import team.themoment.axia.theme.DossierType
 import team.themoment.axia.ui.dossier.PaperTag
+import team.themoment.axia.ui.dossier.metricTooltip
 
 @Composable
 internal fun SocietyRegister(
@@ -80,6 +81,7 @@ internal fun SocietyRegisterRow(
     end: String,
     endColor: Color,
     selected: Boolean,
+    tooltip: String,
     swatch: Color? = null,
     onSelect: () -> Unit,
 ) {
@@ -87,6 +89,7 @@ internal fun SocietyRegisterRow(
         Modifier
             .fillMaxWidth()
             .background(if (selected) DossierColors.paperLine else Color.Transparent)
+            .metricTooltip(name, tooltip)
             .pointerHoverIcon(PointerIcon.Hand)
             .selectable(selected, role = Role.RadioButton, onClick = onSelect)
             .heightIn(min = 36.dp)

@@ -45,6 +45,7 @@ import team.themoment.axia.ui.dossier.DossierSlider
 import team.themoment.axia.ui.dossier.PaperTag
 import team.themoment.axia.ui.dossier.SectionTitle
 import team.themoment.axia.ui.dossier.StatRow
+import team.themoment.axia.ui.dossier.metricTooltip
 import kotlin.math.roundToInt
 
 @Composable
@@ -117,6 +118,7 @@ internal fun PolicyEditor(
             value = value.toFloat(),
             range = 0f..item.maxTarget.toFloat(),
             valueText = item.printLevel(value),
+            tooltip = item.levelDescription,
             onValueChange = { next -> onEdit(item, if (item is BudgetItem) next.toDouble() else (next * 100).roundToInt() / 100.0) },
         )
         ends?.let { (low, high) ->
@@ -216,6 +218,8 @@ internal fun ClauseTable(
         Text("개정안", Modifier.weight(1f), style = DossierType.title(12.sp), color = DossierColors.blueInk, textAlign = TextAlign.End)
     }
     changes.forEach { change ->
+        val before = change.item.printLevel(change.from)
+        val after = change.item.printLevel(change.to)
         val action =
             if (onEdit !=
                 null
@@ -227,6 +231,7 @@ internal fun ClauseTable(
         Row(
             Modifier
                 .fillMaxWidth()
+                .metricTooltip(change.item.label, change.item.levelDescription)
                 .then(action)
                 .heightIn(min = 35.dp)
                 .padding(horizontal = 3.dp, vertical = 5.dp),
@@ -235,14 +240,14 @@ internal fun ClauseTable(
         ) {
             Text(change.item.label, Modifier.weight(1.4f), style = DossierType.title(14.sp), color = DossierColors.ink)
             Text(
-                change.item.printLevel(change.from),
+                before,
                 Modifier.weight(1f),
                 style = DossierType.number(13.sp),
                 color = DossierColors.ink,
                 textAlign = TextAlign.End,
             )
             Text(
-                change.item.printLevel(change.to),
+                after,
                 Modifier.weight(1f),
                 style = DossierType.title(13.sp),
                 color = DossierColors.blueInk,
@@ -288,28 +293,42 @@ internal fun VoteForecast(
     SectionTitle("심의 전망")
     Text(politics.reviewBody, style = DossierType.title(21.sp), color = DossierColors.ink)
     if (vote != null) {
-        VoteScale(vote.yes.toDouble(), vote.required.toDouble(), (vote.yes + vote.no).toDouble())
+        VoteScale(
+            vote.yes.toDouble(),
+            vote.required.toDouble(),
+            (vote.yes + vote.no).toDouble(),
+            Modifier.metricTooltip("표결 전망", "예상 찬성 비중을 나타내는 막대입니다. 초록색 막대가 세로선에 닿으면 가결 전망입니다."),
+        )
         StatRow("예상 찬성", "${vote.yes}표", valueColor = DossierColors.positive)
         StatRow("예상 반대", "${vote.no}표", valueColor = DossierColors.negative)
     } else if (support != null) {
-        VoteScale(support.score, 50.0, 100.0)
+        VoteScale(
+            support.score,
+            50.0,
+            100.0,
+            Modifier.metricTooltip("기관 심의 전망", "예상 심의 점수를 나타내는 막대입니다. 초록색 막대가 세로선에 닿으면 통과 전망입니다."),
+        )
         StatRow("예상 심의 점수", billScore(support.score))
     }
     if ((support != null && vote == null) || required == null) {
         StatRow("통과 기준", "심의 점수 50점")
     } else {
-        StatRow("가결선", "${required}표")
+        StatRow("가결선", "${required}표", tooltip = "이 법안의 표결을 통과하는 데 필요한 최소 찬성표입니다.")
         if (vote == null && total != null) StatRow("표결권 있는 의석", "${total}석")
     }
     if (support != null) {
-        StatRow("재정적자 증감 (GDP 대비)", formatRate(support.addedDeficit, signed = true))
+        StatRow(
+            "재정적자 증감 (GDP 대비)",
+            formatRate(support.addedDeficit, signed = true),
+            tooltip = "이 법안의 지출 증가분에서 세입 증가분을 뺀 값입니다. 양수이면 적자가 커집니다.",
+        )
         if (details) {
             if (vote != null) {
                 SectionTitle("정당별 표결 전망")
                 vote.rows.forEach { row -> StatRow(row.party.name, "찬성 ${row.yes} · 반대 ${row.no}") }
             } else {
                 SectionTitle("집단별 법안 지지")
-                support.groupScores.forEach { (group, score) -> SatisfactionRow(group.label, score) }
+                support.groupScores.forEach { (group, score) -> SatisfactionRow(group.label, score, billSupport = true) }
             }
             if (support.checks.isNotEmpty()) {
                 SectionTitle("후속 심사")
@@ -325,8 +344,9 @@ private fun VoteScale(
     yes: Double,
     required: Double,
     total: Double,
+    modifier: Modifier,
 ) {
-    Canvas(Modifier.fillMaxWidth().height(24.dp)) {
+    Canvas(modifier.fillMaxWidth().height(24.dp)) {
         if (total <= 0.0) return@Canvas
         val track = 8.dp.toPx()
         val y = (size.height - track) / 2

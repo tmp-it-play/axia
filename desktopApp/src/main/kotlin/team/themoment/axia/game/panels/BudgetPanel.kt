@@ -13,10 +13,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import team.themoment.axia.format.formatCompactDollars
 import team.themoment.axia.format.formatPercent
+import team.themoment.axia.format.formatWholeDollars
 import team.themoment.axia.game.BudgetPage
 import team.themoment.axia.simulation.economy.Creditor
 import team.themoment.axia.simulation.economy.DebtPhase
@@ -31,6 +33,8 @@ import team.themoment.axia.ui.dossier.DossierLinkRow
 import team.themoment.axia.ui.dossier.PaperTag
 import team.themoment.axia.ui.dossier.SectionTitle
 import team.themoment.axia.ui.dossier.StatRow
+import team.themoment.axia.ui.dossier.metricReadingTooltip
+import team.themoment.axia.ui.dossier.metricTooltip
 
 @Composable
 internal fun BudgetPanel(
@@ -45,9 +49,9 @@ internal fun BudgetPanel(
     Column(Modifier.fillMaxSize()) {
         if (page != BudgetPage.DEBT) {
             if (pending != null) {
-                DossierLinkRow("심의 중인 법안", pending.stage.label, onViewBill)
+                DossierLinkRow("심의 중인 법안", pending.stage.label, onClick = onViewBill)
             } else if (politics.draft.isNotEmpty()) {
-                DossierLinkRow("초안 검토", "변경 ${politics.draft.size}건", onReview)
+                DossierLinkRow("초안 검토", "변경 ${politics.draft.size}건", onClick = onReview)
             }
         }
         when (page) {
@@ -55,11 +59,13 @@ internal fun BudgetPanel(
                 PanelColumns(
                     left = {
                         LedgerHeading("세입")
-                        BudgetAmount(budget.revenue, budget.gdp)
+                        BudgetAmount("연간 세입", budget.revenue, budget.gdp)
                         SectionTitle("세목별 실효세율 · 연간 세입")
                         budget.taxes.forEach { line ->
                             val detail = "${formatPercent(line.rate)} · ${formatCompactDollars(line.revenue * budget.gdp)}"
-                            DossierLinkRow(line.kind.label, detail) { if (pending == null) onEdit(line.kind) else onViewBill() }
+                            DossierLinkRow(line.kind.label, detail, tooltip = "현재 실효세율과 이 세목의 연간 세입입니다.") {
+                                if (pending == null) onEdit(line.kind) else onViewBill()
+                            }
                         }
                         StatRow("기타 세입", formatCompactDollars(budget.otherRevenue * budget.gdp))
                         val transfers = budget.revenue - budget.otherRevenue - budget.taxes.sumOf { it.revenue }
@@ -67,11 +73,13 @@ internal fun BudgetPanel(
                     },
                     right = {
                         LedgerHeading("세출")
-                        BudgetAmount(budget.primarySpending + budget.interest, budget.gdp)
+                        BudgetAmount("연간 세출", budget.primarySpending + budget.interest, budget.gdp)
                         SectionTitle("분야별 GDP 비중 · 연간 지출")
                         budget.spending.forEach { line ->
                             val detail = "${formatPercent(line.level)} · ${formatCompactDollars(line.level * budget.gdp)}"
-                            DossierLinkRow(line.kind.label, detail) { if (pending == null) onEdit(line.kind) else onViewBill() }
+                            DossierLinkRow(line.kind.label, detail, tooltip = "이 분야의 연간 지출을 GDP 비중과 달러 금액으로 표시합니다.") {
+                                if (pending == null) onEdit(line.kind) else onViewBill()
+                            }
                         }
                         if (kotlin.math.abs(budget.otherSpending * budget.gdp) >= 1.0) {
                             StatRow("기타 지출·경기 조정", formatCompactDollars(budget.otherSpending * budget.gdp))
@@ -97,11 +105,22 @@ internal fun BudgetPanel(
 
 @Composable
 private fun BudgetAmount(
+    label: String,
     share: Double,
     gdp: Double,
+    color: Color = DossierColors.blueInk,
+    signed: Boolean = false,
+    detail: String? = null,
 ) {
-    Text(formatCompactDollars(share * gdp), style = DossierType.number(27.sp), color = DossierColors.blueInk)
-    Hint("연간 GDP의 ${formatPercent(share)}")
+    val amount = share * gdp
+    val compact = formatCompactDollars(amount)
+    val precise = formatWholeDollars(amount)
+    val hover =
+        if (compact == precise) Modifier.metricTooltip(label, detail) else Modifier.metricReadingTooltip(label, precise, detail)
+    Column(hover) {
+        Text(compact, style = DossierType.number(27.sp), color = color)
+        Hint("연간 GDP의 ${formatPercent(share, signed = signed)}")
+    }
 }
 
 private val BudgetSnapshot.otherSpending: Double get() = primarySpending - spending.sumOf { it.level }
@@ -118,7 +137,8 @@ private fun SpendingComposition(budget: BudgetSnapshot) {
     val low = minOf(0.0, lines.minOf { it.second })
     val range = maxOf(0.0, lines.maxOf { it.second }) - low
     lines.sortedByDescending { it.second }.forEach { (label, share) ->
-        Column(Modifier.fillMaxWidth().padding(bottom = 8.dp)) {
+        val amount = "연간 ${formatWholeDollars(share * budget.gdp)}"
+        Column(Modifier.fillMaxWidth().padding(bottom = 8.dp).metricReadingTooltip(label, amount)) {
             StatRow(label, "GDP의 ${formatPercent(share)}")
             Canvas(Modifier.fillMaxWidth().height(6.dp)) {
                 drawRect(DossierColors.paperShade)
@@ -143,8 +163,14 @@ private fun BalanceSheet(budget: BudgetSnapshot) {
 
     LedgerHeading("연간 재정수지")
     val balanceInk = if (budget.balance >= 0.0) DossierColors.positive else DossierColors.negative
-    Text(money(budget.balance), style = DossierType.number(27.sp), color = balanceInk)
-    Hint("GDP 대비 ${formatPercent(budget.balance, signed = true)}")
+    BudgetAmount(
+        "연간 재정수지",
+        budget.balance,
+        budget.gdp,
+        color = balanceInk,
+        signed = true,
+        detail = "세입에서 순이자를 포함한 지출을 뺀 금액입니다.",
+    )
     SectionTitle("세입과 지출")
     StatRow("세입", "${formatPercent(budget.revenue)} · ${money(budget.revenue)}")
     StatRow("기초지출", "${formatPercent(budget.primarySpending)} · ${money(budget.primarySpending)}")

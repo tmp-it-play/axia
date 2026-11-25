@@ -32,6 +32,7 @@ import team.themoment.axia.theme.DossierType
 import team.themoment.axia.ui.dossier.PaperTag
 import team.themoment.axia.ui.dossier.SectionTitle
 import team.themoment.axia.ui.dossier.StatRow
+import team.themoment.axia.ui.dossier.metricTooltip
 import kotlin.math.roundToInt
 
 internal enum class OrganizationsTab(
@@ -71,6 +72,7 @@ internal fun OrganizationsPanel(
                                         "%+d".format(org.stance.roundToInt()),
                                         stanceColor(org.stance),
                                         org.id == selected?.id,
+                                        tooltip = "정치적 영향력은 조직 유형과 조직력, 회원 규모에 따라 달라집니다. 태도가 양수이면 정부를 지지합니다.",
                                     ) {
                                         selectedId = org.id
                                         openDetail()
@@ -132,7 +134,12 @@ private fun OrganizationDetail(
 ) {
     LedgerHeading(org.name)
     StatRow("유형", if (org.origin == OrganizationOrigin.REAL) org.kind.label else "${org.kind.label} · ${org.origin.label}")
-    StatRow("정부에 대한 태도", "%+d".format(org.stance.roundToInt()), valueColor = stanceColor(org.stance))
+    StatRow(
+        "정부에 대한 태도",
+        "%+d".format(org.stance.roundToInt()),
+        valueColor = stanceColor(org.stance),
+        tooltip = "−100에 가까울수록 정부에 반대하고 +100에 가까울수록 지지합니다.",
+    )
     if (!org.kind.state) StatRow("회원 비중", formatPercent(org.membership), note = "성인 대비")
     StatRow("조직력 · 과격성", "${(org.capacity * 100).roundToInt()} · ${(org.radicalism * 100).roundToInt()}")
     org.promise?.let { promise ->
@@ -154,7 +161,14 @@ private fun OrganizationDetail(
                     action.cost > 0.0 -> "${action.label} · ${action.cost.toInt()}"
                     else -> action.label
                 }
-            PaperTag(label, enabled = action in org.availableActions, onClick = { onAct(org.id, action) })
+            val modifier =
+                if (action.cost > 0.0) {
+                    val detail = if (capital < action.cost) "이 행동에 필요한 정치 자본이 부족합니다." else "이 행동을 실행하면 정치 자본을 씁니다."
+                    Modifier.metricTooltip(action.label, detail)
+                } else {
+                    Modifier
+                }
+            PaperTag(label, modifier, enabled = action in org.availableActions, onClick = { onAct(org.id, action) })
         }
     }
     if (GovernmentAction.DIALOGUE !in org.availableActions && capital >= GovernmentAction.DIALOGUE.cost) {

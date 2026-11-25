@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.sp
 import team.themoment.axia.format.formatPercent
 import team.themoment.axia.game.ConsoleGlyph
 import team.themoment.axia.game.ConsoleSymbol
+import team.themoment.axia.game.NationalMetric
 import team.themoment.axia.simulation.WorldSnapshot
 import team.themoment.axia.simulation.diplomacy.BilateralSnapshot
 import team.themoment.axia.simulation.diplomacy.DiplomaticAction
@@ -53,6 +54,7 @@ import team.themoment.axia.theme.DossierType
 import team.themoment.axia.ui.dossier.PaperTag
 import team.themoment.axia.ui.dossier.SectionTitle
 import team.themoment.axia.ui.dossier.StatRow
+import team.themoment.axia.ui.dossier.metricTooltip
 import kotlin.math.roundToInt
 
 internal enum class DiplomacySection(
@@ -248,7 +250,13 @@ private fun DiplomaticOverview(
     ) {
         ConsoleGlyph(ConsoleSymbol.GLOBE, Modifier.size(25.dp), DossierColors.paper)
         Text(countryName(diplomacy.playerId), style = DossierType.title(18.sp), modifier = Modifier.weight(1f), color = DossierColors.paper)
-        Text("정치 자본 ${politicalCapital.toInt()} / 100", style = DossierType.number(13.sp), color = DossierColors.paper)
+        val capital = "${politicalCapital.toInt()} / 100"
+        Text(
+            "정치 자본 $capital",
+            modifier = Modifier.metricTooltip("정치 자본", NationalMetric.POLITICAL_CAPITAL.description),
+            style = DossierType.number(13.sp),
+            color = DossierColors.paper,
+        )
     }
     SectionTitle("대외 관계")
     StatRow("동맹국 · 무역협정국", "${diplomacy.partners.count { it.allied }}개국 · ${diplomacy.partners.count { it.tradeAgreement }}개국")
@@ -301,6 +309,7 @@ private fun CountryRecord(
     Row(
         Modifier
             .fillMaxWidth()
+            .relationTooltip(name)
             .background(if (partner.countryId == selectedId) DossierColors.folder.copy(alpha = 0.53f) else Color.Transparent)
             .pointerHoverIcon(PointerIcon.Hand)
             .selectable(selected = partner.countryId == selectedId, role = Role.RadioButton) { onSelect(partner.countryId) }

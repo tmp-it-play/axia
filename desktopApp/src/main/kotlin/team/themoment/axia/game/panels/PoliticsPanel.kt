@@ -113,7 +113,7 @@ private fun GovernmentPage(
             politics.legislature?.let {
                 SectionTitle(it.name)
                 StatRow("재적 의석", "${it.filledSeats}석")
-                StatRow("법안 가결선", "${it.required}표")
+                StatRow("법안 가결선", "${it.required}표", tooltip = "법안을 가결하는 데 필요한 최소 찬성표 수입니다.")
             }
         },
     )
@@ -410,7 +410,11 @@ private fun ChamberComposition(
     if (cabinet.isNotEmpty()) StatRow("정부·연정 의석", "${cabinet.sumOf { it.seats }}석")
     val allies = chamber.groups.filter { it.role == PartyRole.SUPPLY }
     if (allies.isNotEmpty()) StatRow("정부 협력 의석", "${allies.sumOf { it.seats }}석")
-    StatRow("표결권 · 가결선", "${chamber.votingSeats}표 · ${chamber.required}표")
+    StatRow(
+        "표결권 · 가결선",
+        "${chamber.votingSeats}표 · ${chamber.required}표",
+        tooltip = "앞은 표결에 참여할 수 있는 의석 수, 뒤는 법안 통과에 필요한 찬성표 수입니다.",
+    )
     PaperTag(if (expanded) "정당별 의석 접기" else "정당별 의석 보기", onClick = { expanded = !expanded })
     if (expanded) {
         chamber.groups.forEach { party ->
@@ -529,9 +533,9 @@ private fun BillAssessment(
     var groupDetails by remember { mutableStateOf(false) }
     PaperTag(if (groupDetails) "집단별 지지 접기" else "집단별 지지 보기", onClick = { groupDetails = !groupDetails })
     if (groupDetails) {
-        support.groupScores.forEach { (group, score) -> SatisfactionRow(group.label, score) }
+        support.groupScores.forEach { (group, score) -> SatisfactionRow(group.label, score, billSupport = true) }
         SectionTitle("성향별 지지")
-        support.identityScores.forEach { (identity, score) -> SatisfactionRow(identity.label, score) }
+        support.identityScores.forEach { (identity, score) -> SatisfactionRow(identity.label, score, billSupport = true) }
         if (support.organizationPositions.isNotEmpty()) {
             SectionTitle("조직 입장")
             support.organizationPositions.forEach {

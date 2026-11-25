@@ -67,11 +67,13 @@ internal fun <T> DossierIndex(
 internal fun DossierLinkRow(
     title: String,
     detail: String,
+    tooltip: String? = null,
     onClick: () -> Unit,
 ) {
     Row(
         Modifier
             .fillMaxWidth()
+            .metricTooltip(title, tooltip)
             .pointerHoverIcon(PointerIcon.Hand)
             .clickable(role = Role.Button, onClick = onClick)
             .heightIn(min = 34.dp)

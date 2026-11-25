@@ -24,6 +24,9 @@ import team.themoment.axia.format.formatPercent
 import team.themoment.axia.format.formatPopulation
 import team.themoment.axia.format.formatRate
 import team.themoment.axia.format.formatWholeDollars
+import team.themoment.axia.game.GDP_DESCRIPTION
+import team.themoment.axia.game.GDP_PER_CAPITA_DESCRIPTION
+import team.themoment.axia.game.NationalMetric
 import team.themoment.axia.game.formatPoints
 import team.themoment.axia.game.satisfactionColor
 import team.themoment.axia.simulation.economy.EconomyIndicators
@@ -36,6 +39,7 @@ import team.themoment.axia.ui.dossier.ContributionBars
 import team.themoment.axia.ui.dossier.PaperTag
 import team.themoment.axia.ui.dossier.SectionTitle
 import team.themoment.axia.ui.dossier.StatRow
+import team.themoment.axia.ui.dossier.metricTooltip
 import kotlin.math.roundToInt
 
 /** 0~100 만족도를 막대로 보여 주는 한 줄. */
@@ -44,8 +48,17 @@ internal fun SatisfactionRow(
     label: String,
     value: Double,
     modifier: Modifier = Modifier,
+    billSupport: Boolean = false,
 ) {
-    Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
+    val metric = if (billSupport) "법안 지지 점수" else "만족도"
+    val title = if (label == metric) metric else "$label · $metric"
+    val detail =
+        if (billSupport) {
+            "집단의 현재 만족도에 법안으로 받을 영향을 더해 100점 만점으로 표시합니다. 높을수록 이 법안을 지지합니다."
+        } else {
+            "이 집단이 정부에 얼마나 만족하는지 100점 만점으로 표시합니다. 정부 지지율에는 각 집단의 영향력에 따라 반영됩니다."
+        }
+    Row(modifier.metricTooltip(title, detail), verticalAlignment = Alignment.CenterVertically) {
         Text(
             text = label,
             style = DossierType.number(12.sp, weight = FontWeight.Normal),
@@ -72,6 +85,8 @@ internal fun FactorBars(factors: Map<SatisfactionFactor, Double>) {
     ContributionBars(
         contributions = factors.map { (factor, value) -> Contribution(factor.label, value) },
         format = ::formatPoints,
+        metric = "만족도",
+        unit = "점",
         scale = maxOf(5.0, factors.values.maxOf { kotlin.math.abs(it) }),
     )
 }
@@ -88,6 +103,8 @@ internal fun ApprovalBreakdown(nation: NationSnapshot) {
     ContributionBars(
         contributions = contributions,
         format = ::formatPoints,
+        metric = "정부 지지율",
+        unit = "%p",
         scale = maxOf(5.0, contributions.maxOf { kotlin.math.abs(it.value) }),
     )
 }
@@ -96,17 +113,29 @@ private const val MIN_SHOWN_CONTRIBUTION = 0.05
 
 @Composable
 internal fun KeyIndicatorRows(indicators: EconomyIndicators) {
-    StatRow("인구", formatPopulation(indicators.population))
-    StatRow("GDP", formatDollars(indicators.gdp))
-    StatRow("1인당 GDP", formatWholeDollars(indicators.gdpPerCapita))
-    StatRow("경제성장률", formatPercent(indicators.growth, signed = true))
-    StatRow("물가상승률", formatPercent(indicators.inflation))
-    StatRow("실업률", formatPercent(indicators.unemployment))
+    StatRow("인구", formatPopulation(indicators.population), tooltip = "이 나라에 거주하는 전체 인구입니다. 인구의 자연 증감과 국제 이동을 반영합니다.")
+    StatRow("GDP", formatDollars(indicators.gdp), tooltip = GDP_DESCRIPTION)
+    StatRow("1인당 GDP", formatWholeDollars(indicators.gdpPerCapita), tooltip = GDP_PER_CAPITA_DESCRIPTION)
+    IndicatorRow(NationalMetric.GROWTH, formatPercent(indicators.growth, signed = true))
+    IndicatorRow(NationalMetric.INFLATION, formatPercent(indicators.inflation))
+    IndicatorRow(NationalMetric.UNEMPLOYMENT, formatPercent(indicators.unemployment))
     RateContributions(indicators)
-    StatRow("재정수지 (GDP 대비)", formatPercent(indicators.budgetBalance, signed = true))
-    StatRow("국가부채 (GDP 대비)", formatPercent(indicators.debtRatio))
-    StatRow("기준금리", formatRate(indicators.policyRate))
-    StatRow("통화 가치 (달러 대비, 시작 대비)", formatPercent(kotlin.math.exp(indicators.realExchange) - 1.0, signed = true))
+    IndicatorRow(NationalMetric.BALANCE, formatPercent(indicators.budgetBalance, signed = true))
+    IndicatorRow(NationalMetric.DEBT, formatPercent(indicators.debtRatio))
+    IndicatorRow(NationalMetric.RATE, formatRate(indicators.policyRate))
+    StatRow(
+        "통화 가치 (달러 대비, 시작 대비)",
+        formatPercent(kotlin.math.exp(indicators.realExchange) - 1.0, signed = true),
+        tooltip = "시작일과 비교한 달러 대비 자국 통화의 실질 가치입니다. 양수면 절상, 음수면 절하를 뜻합니다.",
+    )
+}
+
+@Composable
+private fun IndicatorRow(
+    metric: NationalMetric,
+    value: String,
+) {
+    StatRow(metric.title, value, tooltip = metric.description)
 }
 
 @Composable
@@ -117,8 +146,8 @@ private fun RateContributions(indicators: EconomyIndicators) {
     val inflation = indicators.inflationContributions
     val unemployment = indicators.unemploymentContributions
     if (inflation == null || unemployment == null) {
-        StatRow("시작 물가상승률", formatRate(indicators.inflation))
-        StatRow("시작 실업률", formatRate(indicators.unemployment))
+        StatRow("시작 물가상승률", formatRate(indicators.inflation), tooltip = NationalMetric.INFLATION.description)
+        StatRow("시작 실업률", formatRate(indicators.unemployment), tooltip = NationalMetric.UNEMPLOYMENT.description)
         Hint("첫 월 결산부터 원인별 기여도를 볼 수 있습니다.")
         return
     }
@@ -130,14 +159,14 @@ private fun RateContributions(indicators: EconomyIndicators) {
     RateContribution("환율 전가", inflation.exchangeRate)
     RateContribution("사건·국가 정책 충격", inflation.shocks)
     if (inflation.limitAdjustment != 0.0) RateContribution("상·하한 조정", inflation.limitAdjustment)
-    StatRow("물가상승률 (연율)", formatRate(inflation.rate))
+    StatRow("물가상승률 (연율)", formatRate(inflation.rate), tooltip = NationalMetric.INFLATION.description)
     SectionTitle("직전 월 결산 · 실업률")
     RateContribution("자연실업률 (시작값)", unemployment.naturalRate)
     RateContribution("노동 규제·고용 정책", unemployment.laborPolicy)
     RateContribution("전쟁에 따른 실업", unemployment.war)
     RateContribution("경기 (산출 갭)", unemployment.outputGap)
     if (unemployment.limitAdjustment != 0.0) RateContribution("상·하한 조정", unemployment.limitAdjustment)
-    StatRow("실업률", formatRate(unemployment.rate))
+    StatRow("실업률", formatRate(unemployment.rate), tooltip = NationalMetric.UNEMPLOYMENT.description)
 }
 
 @Composable
@@ -145,7 +174,7 @@ private fun RateContribution(
     label: String,
     share: Double,
 ) {
-    StatRow(label, formatRate(share, signed = true) + "p")
+    StatRow(label, formatRate(share, signed = true) + "p", tooltip = "이 항목이 전체 비율에 더한 퍼센트포인트입니다. 음수이면 전체 비율을 낮춥니다.")
 }
 
 internal val percentFormat: (Double) -> String = { formatPercent(it) }

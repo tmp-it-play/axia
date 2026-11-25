@@ -4,12 +4,23 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.input.pointer.PointerEventType
+import androidx.compose.ui.input.pointer.PointerType
+import androidx.compose.ui.input.pointer.areAnyPressed
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.Dp
@@ -18,6 +29,12 @@ import androidx.compose.ui.unit.sp
 import team.themoment.axia.theme.DossierColors
 import team.themoment.axia.theme.DossierType
 import java.time.YearMonth
+import kotlin.math.roundToInt
+
+private val plotLeft = 52.dp
+private val plotRight = 4.dp
+private val plotTop = 6.dp
+private val plotBottom = 16.dp
 
 /**
  * 월간 시계열을 잉크 선으로 그린다. [start]는 첫 값의 연월이다.
@@ -28,6 +45,7 @@ fun LineChart(
     values: List<Double>,
     start: YearMonth,
     format: (Double) -> String,
+    title: String,
     modifier: Modifier = Modifier,
     height: Dp = 120.dp,
     color: Color = DossierColors.blueInk,
@@ -35,11 +53,63 @@ fun LineChart(
 ) {
     val measurer = rememberTextMeasurer()
     val labelStyle = DossierType.number(10.sp).copy(color = DossierColors.inkMuted)
-    Canvas(modifier.fillMaxWidth().height(height)) {
-        val left = 52.dp.toPx()
-        val bottom = 16.dp.toPx()
-        val top = 6.dp.toPx()
-        val plotWidth = size.width - left - 4.dp.toPx()
+    var hoverFraction by remember { mutableFloatStateOf(-1f) }
+    val hoveredIndex by remember(values.size) {
+        derivedStateOf { if (hoverFraction < 0f || values.isEmpty()) null else (hoverFraction * values.lastIndex).roundToInt() }
+    }
+    val index = hoveredIndex
+    val month = index?.let { start.plusMonths(it.toLong()) }
+    val reading = index?.let { format(values[it]) }.orEmpty()
+    val previous = index?.takeIf { it > 0 }?.let { format(values[it - 1]) }
+    val hover =
+        Modifier
+            .pointerInput(Unit) {
+                awaitPointerEventScope {
+                    while (true) {
+                        val event = awaitPointerEvent()
+                        when (event.type) {
+                            PointerEventType.Enter, PointerEventType.Move -> {
+                                val mouse = event.changes.firstOrNull { it.type == PointerType.Mouse } ?: continue
+                                if (event.buttons.areAnyPressed) continue
+                                val position = mouse.position
+                                val left = plotLeft.toPx()
+                                val right = size.width - plotRight.toPx()
+                                hoverFraction =
+                                    if (right > left && position.x in left..right &&
+                                        position.y in plotTop.toPx()..size.height - plotBottom.toPx()
+                                    ) {
+                                        (position.x - left) / (right - left)
+                                    } else {
+                                        -1f
+                                    }
+                            }
+
+                            PointerEventType.Exit, PointerEventType.Press, PointerEventType.Scroll -> {
+                                hoverFraction = -1f
+                            }
+                        }
+                    }
+                }
+            }.metricReadingTooltip(
+                if (month == null) title else "${month.year}년 ${month.monthValue}월 · $title",
+                reading,
+                when (previous) {
+                    null -> null
+                    reading -> "전월과 동일"
+                    else -> "전월  $previous"
+                },
+            )
+    Canvas(
+        modifier
+            .fillMaxWidth()
+            .height(height)
+            .semantics { contentDescription = "$title 월별 추이" }
+            .then(hover),
+    ) {
+        val left = plotLeft.toPx()
+        val bottom = plotBottom.toPx()
+        val top = plotTop.toPx()
+        val plotWidth = size.width - left - plotRight.toPx()
         val plotHeight = size.height - bottom - top
         if (values.isEmpty() || plotWidth <= 0f) return@Canvas
 
@@ -85,6 +155,12 @@ fun LineChart(
         }
         drawPath(line, color, style = Stroke(width = 1.8.dp.toPx()))
         drawCircle(color, radius = 3.dp.toPx(), center = Offset(x(values.lastIndex), y(values.last())))
+        if (index != null) {
+            val point = Offset(x(index), y(values[index]))
+            drawLine(DossierColors.inkMuted, Offset(point.x, top), Offset(point.x, top + plotHeight), pathEffect = dash)
+            drawCircle(DossierColors.paper, radius = 4.5.dp.toPx(), center = point)
+            drawCircle(color, radius = 3.dp.toPx(), center = point)
+        }
 
         val end = start.plusMonths((values.size - 1).toLong())
         val first = measurer.measure("${start.year}.${start.monthValue}", labelStyle)

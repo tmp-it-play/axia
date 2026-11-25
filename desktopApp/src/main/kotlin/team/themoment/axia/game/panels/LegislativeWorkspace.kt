@@ -64,12 +64,14 @@ internal fun LegislativeWorkspace(
                         nation.social.pollution
                             .roundToInt()
                             .toString(),
+                        tooltip = "지수가 높을수록 오염이 심합니다.",
                     )
                     StatRow(
                         "범죄 지수",
                         nation.social.crime
                             .roundToInt()
                             .toString(),
+                        tooltip = "지수가 높을수록 범죄가 많습니다.",
                     )
                     politics.lastDecision?.let { last ->
                         SectionTitle("최근 법안")

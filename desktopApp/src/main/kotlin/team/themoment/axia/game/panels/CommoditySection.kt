@@ -21,6 +21,7 @@ import team.themoment.axia.theme.DossierType
 import team.themoment.axia.ui.dossier.PaperTag
 import team.themoment.axia.ui.dossier.SectionTitle
 import team.themoment.axia.ui.dossier.StatRow
+import team.themoment.axia.ui.dossier.metricTooltip
 import java.time.LocalDate
 import java.util.Locale
 
@@ -57,10 +58,11 @@ internal fun CommoditySection(
     }
 
     Hint("${period.year}년 ${period.monthValue}월 수급 · ${date.monthValue}월 1일 정산 · 단위 ${selected.unit}")
-    StatRow("기초 재고", quantity(balance.openingStock))
-    StatRow("생산", quantity(balance.production))
+    val monthlyUnit = "월간 ${selected.label} 수급을 ${selected.unit} 단위로 표시합니다."
+    StatRow("기초 재고", quantity(balance.openingStock), tooltip = monthlyUnit)
+    StatRow("생산", quantity(balance.production), tooltip = monthlyUnit)
     if (selected == Commodity.GRAIN && supportedGrainTonnes != null) {
-        StatRow("생산 중 농가 가격차 보조 물량", quantity(supportedGrainTonnes))
+        StatRow("생산 중 농가 가격차 보조 물량", quantity(supportedGrainTonnes), tooltip = monthlyUnit)
     }
     if (selected == Commodity.GRAIN && countryId !in quote.unreportedProduction) {
         val harvest = balance.harvestFactor
@@ -71,13 +73,25 @@ internal fun CommoditySection(
             Hint("이 나라의 평년 곡물 생산량은 매달 같습니다.")
         }
     }
-    StatRow("수입", quantity(balance.imports))
-    StatRow("수출", quantity(balance.exports))
-    StatRow("수요", quantity(balance.demand))
-    StatRow("실제 소비", quantity(balance.consumption))
+    StatRow("수입", quantity(balance.imports), tooltip = monthlyUnit)
+    StatRow("수출", quantity(balance.exports), tooltip = monthlyUnit)
+    StatRow("수요", quantity(balance.demand), tooltip = monthlyUnit)
+    StatRow("실제 소비", quantity(balance.consumption), tooltip = "한 달 수요 중 국내 공급과 수입으로 충당한 물량입니다.")
     val unmet = (balance.demand - balance.consumption).coerceAtLeast(0.0)
-    StatRow("미충족 수요", quantity(unmet), valueColor = if (unmet >= 0.5) DossierColors.negative else DossierColors.ink)
-    StatRow("기말 재고", quantity(balance.closingStock))
+    StatRow(
+        "미충족 수요",
+        quantity(unmet),
+        valueColor =
+            if (unmet >=
+                0.5
+            ) {
+                DossierColors.negative
+            } else {
+                DossierColors.ink
+            },
+        tooltip = "월간 수요에서 실제 소비를 뺀 부족분입니다.",
+    )
+    StatRow("기말 재고", quantity(balance.closingStock), tooltip = monthlyUnit)
     val routes =
         remember(countryId, quote.shipments) {
             quote.shipments.filter { it.exporter == countryId || it.importer == countryId }.sortedByDescending { it.quantity }
@@ -107,13 +121,14 @@ private fun CommodityRoutes(
     (if (expanded) routes else routes.take(ROUTE_PREVIEW)).forEach { shipment ->
         val exporting = shipment.exporter == countryId
         val partner = if (exporting) shipment.importer else shipment.exporter
+        val route = if (exporting) "수출 · ${countryName(partner)}" else "수입 · ${countryName(partner)}"
         Row(
-            Modifier.fillMaxWidth(),
+            Modifier.fillMaxWidth().metricTooltip("$route · ${commodity.label}", "이번 달 두 나라 사이에 인도된 물량을 ${commodity.unit} 단위로 표시합니다."),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(6.dp),
         ) {
             Text(
-                if (exporting) "수출 · ${countryName(partner)}" else "수입 · ${countryName(partner)}",
+                route,
                 modifier = Modifier.weight(1f),
                 style = DossierType.number(13.sp),
                 color = DossierColors.inkMuted,
