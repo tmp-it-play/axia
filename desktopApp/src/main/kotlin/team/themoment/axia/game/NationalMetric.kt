@@ -3,11 +3,16 @@ package team.themoment.axia.game
 import team.themoment.axia.simulation.economy.CountryHistory
 import team.themoment.axia.simulation.economy.EconomySeries
 import team.themoment.axia.simulation.nation.NationHistory
+import team.themoment.axia.ui.dossier.AlignmentTrend
 import team.themoment.axia.ui.dossier.MetricTrend
+import team.themoment.axia.ui.dossier.TooltipTrend
 
 internal const val GDP_DESCRIPTION = "국내에서 한 해 동안 생산한 재화와 서비스의 부가가치를 현재 가격과 달러 기준으로 합한 금액입니다."
 
 internal const val GDP_PER_CAPITA_DESCRIPTION = "연간 명목 GDP를 전체 인구로 나눈 1인당 생산액입니다."
+
+internal const val ALIGNMENT_TITLE = "충성파·반대파"
+internal const val ALIGNMENT_DESCRIPTION = "15세 이상 주민 중 정부를 강하게 지지하거나 반대하는 사람의 수입니다."
 
 internal enum class NationalMetric(
     val symbol: ConsoleSymbol,
@@ -20,6 +25,12 @@ internal enum class NationalMetric(
         "지지율",
         "정부 지지율",
         "직업·성향 집단의 만족도에 각 집단의 정치적 영향력을 반영합니다. 사회 불안이 커지면 지지율이 내려갑니다.",
+    ),
+    ALIGNMENT(
+        ConsoleSymbol.COCKADE,
+        ALIGNMENT_TITLE,
+        ALIGNMENT_TITLE,
+        ALIGNMENT_DESCRIPTION,
     ),
     POLITICAL_CAPITAL(
         ConsoleSymbol.LECTERN,
@@ -68,11 +79,12 @@ internal enum class NationalMetric(
     fun trend(
         economy: CountryHistory,
         nation: NationHistory,
-    ): MetricTrend {
+    ): TooltipTrend? {
         val series =
             when (this) {
                 APPROVAL -> return MetricTrend(nation.start, nation.approval, "%")
-                POLITICAL_CAPITAL -> return MetricTrend(nation.start, nation.politicalCapital, "점")
+                ALIGNMENT -> return AlignmentTrend(nation.start, nation.loyalists, nation.opponents)
+                POLITICAL_CAPITAL -> return null
                 GROWTH -> EconomySeries.GROWTH
                 INFLATION -> EconomySeries.INFLATION
                 UNEMPLOYMENT -> EconomySeries.UNEMPLOYMENT

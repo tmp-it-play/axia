@@ -104,7 +104,7 @@ internal fun MetricTooltipHost(
 internal fun Modifier.metricTooltip(
     title: String,
     detail: String?,
-    trend: MetricTrend? = null,
+    trend: TooltipTrend? = null,
 ): Modifier = if (detail.isNullOrBlank() && trend == null) this else then(MetricHint(title, null, detail, trend))
 
 internal fun Modifier.controlTooltip(
@@ -122,7 +122,7 @@ private data class MetricHint(
     val title: String,
     val reading: String?,
     val detail: String?,
-    val trend: MetricTrend? = null,
+    val trend: TooltipTrend? = null,
     val control: Boolean = false,
 ) : ModifierNodeElement<MetricAnchor>() {
     override fun create() = MetricAnchor(this)
@@ -257,7 +257,11 @@ private fun TooltipCard(hint: MetricHint) {
             hint.detail?.takeIf { it.isNotBlank() }?.let {
                 Text(it, style = DossierType.number(13.sp, FontWeight.Normal).copy(lineHeight = 18.sp), color = Color(0xFFF2F2ED))
             }
-            hint.trend?.let { TooltipTrendChart(it) }
+            when (val trend = hint.trend) {
+                is MetricTrend -> TooltipTrendChart(trend)
+                is AlignmentTrend -> AlignmentChart(trend)
+                null -> Unit
+            }
         }
     }
 }

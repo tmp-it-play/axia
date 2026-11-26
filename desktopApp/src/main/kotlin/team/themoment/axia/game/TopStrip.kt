@@ -23,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import team.themoment.axia.format.formatCompactPopulation
 import team.themoment.axia.format.formatPercent
 import team.themoment.axia.format.formatRate
 import team.themoment.axia.simulation.ClockState
@@ -36,7 +37,7 @@ import team.themoment.axia.ui.console.ConsoleKey
 import team.themoment.axia.ui.console.ConsoleMuted
 import team.themoment.axia.ui.console.ConsoleText
 import team.themoment.axia.ui.console.consoleFrame
-import team.themoment.axia.ui.dossier.MetricTrend
+import team.themoment.axia.ui.dossier.TooltipTrend
 import team.themoment.axia.ui.dossier.controlTooltip
 import team.themoment.axia.ui.dossier.metricTooltip
 import team.themoment.axia.ui.dossier.steelTexture
@@ -47,6 +48,7 @@ import kotlin.math.roundToInt
 private val DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy년 M월 d일 EEEE", Locale.KOREAN)
 private val grooveDark = Color(0xFF1A201E)
 private val grooveLight = Color(0x887B806F)
+private val metricRowHeight = 46.dp
 
 /** 날짜 옆에 시간 조작계를 두고, 그 아래 한 줄에는 아이콘과 수치를 짝지어 표시한다. */
 @Composable
@@ -120,31 +122,88 @@ fun TopStrip(
         Spacer(Modifier.fillMaxWidth().height(1.dp).background(grooveDark))
         Spacer(Modifier.fillMaxWidth().height(1.dp).background(grooveLight))
         Row(
-            modifier = Modifier.fillMaxWidth().height(46.dp),
+            modifier = Modifier.fillMaxWidth().height(metricRowHeight),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            val cell = Modifier.weight(1f)
             val trends =
                 remember(economyHistory, nation.history) {
                     NationalMetric.entries.associateWith { it.trend(economyHistory, nation.history) }
                 }
             val politicalCapital = nation.society.politicalCapital
-            NationalMetric.entries.forEachIndexed { index, metric ->
-                if (index > 0) Groove()
+            for (metric in NationalMetric.entries) {
+                if (metric != NationalMetric.APPROVAL) Groove()
+                val trend = trends.getValue(metric)
                 val value =
                     when (metric) {
-                        NationalMetric.APPROVAL -> "${nation.approval.roundToInt()}%"
-                        NationalMetric.POLITICAL_CAPITAL -> politicalCapital.toInt().toString()
-                        NationalMetric.GROWTH -> formatPercent(indicators.growth, signed = true)
-                        NationalMetric.INFLATION -> formatPercent(indicators.inflation)
-                        NationalMetric.UNEMPLOYMENT -> formatPercent(indicators.unemployment)
-                        NationalMetric.BALANCE -> formatPercent(indicators.budgetBalance, signed = true)
-                        NationalMetric.DEBT -> formatPercent(indicators.debtRatio)
-                        NationalMetric.RATE -> formatRate(indicators.policyRate)
+                        NationalMetric.APPROVAL -> {
+                            "${nation.approval.roundToInt()}%"
+                        }
+
+                        NationalMetric.ALIGNMENT -> {
+                            Column(Modifier.weight(1.4f).fillMaxHeight().metricTooltip(metric.title, detail = null, trend = trend)) {
+                                ConstituencyRow("충성파", metric.symbol, nation.loyalists, Modifier.weight(1f))
+                                ConstituencyRow("반대파", ConsoleSymbol.PLACARD, nation.opponents, Modifier.weight(1f))
+                            }
+                            continue
+                        }
+
+                        NationalMetric.POLITICAL_CAPITAL -> {
+                            politicalCapital.toInt().toString()
+                        }
+
+                        NationalMetric.GROWTH -> {
+                            formatPercent(indicators.growth, signed = true)
+                        }
+
+                        NationalMetric.INFLATION -> {
+                            formatPercent(indicators.inflation)
+                        }
+
+                        NationalMetric.UNEMPLOYMENT -> {
+                            formatPercent(indicators.unemployment)
+                        }
+
+                        NationalMetric.BALANCE -> {
+                            formatPercent(indicators.budgetBalance, signed = true)
+                        }
+
+                        NationalMetric.DEBT -> {
+                            formatPercent(indicators.debtRatio)
+                        }
+
+                        NationalMetric.RATE -> {
+                            formatRate(indicators.policyRate)
+                        }
                     }
-                ConsoleMetric(metric, value, trends.getValue(metric), cell)
+                ConsoleMetric(metric, value, trend, Modifier.weight(1f))
             }
         }
+    }
+}
+
+@Composable
+private fun ConstituencyRow(
+    name: String,
+    symbol: ConsoleSymbol,
+    count: Long,
+    modifier: Modifier,
+) {
+    Row(
+        modifier
+            .fillMaxWidth()
+            .semantics(mergeDescendants = true) {}
+            .padding(horizontal = 5.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+    ) {
+        ConsoleGlyph(symbol, Modifier.size(17.dp))
+        Text(name, Modifier.weight(1f), color = ConsoleMuted, style = DossierType.number(12.sp), maxLines = 1)
+        Text(
+            formatCompactPopulation(count.toDouble()),
+            color = ConsoleText,
+            style = DossierType.number(16.sp, FontWeight.Bold),
+            maxLines = 1,
+        )
     }
 }
 
@@ -152,7 +211,7 @@ fun TopStrip(
 private fun ConsoleMetric(
     metric: NationalMetric,
     value: String,
-    trend: MetricTrend,
+    trend: TooltipTrend?,
     modifier: Modifier,
 ) {
     Column(
@@ -160,11 +219,11 @@ private fun ConsoleMetric(
             .fillMaxHeight()
             .metricTooltip(metric.title, metric.description, trend)
             .semantics(mergeDescendants = true) {}
-            .padding(horizontal = 6.dp),
+            .padding(horizontal = 5.dp),
         verticalArrangement = Arrangement.Center,
     ) {
         Text(metric.shortName, color = ConsoleMuted, style = DossierType.number(11.sp), maxLines = 1)
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
             ConsoleGlyph(metric.symbol, Modifier.size(26.dp))
             Text(value, color = ConsoleText, style = DossierType.number(18.sp, FontWeight.Bold), maxLines = 1, softWrap = false)
         }

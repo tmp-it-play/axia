@@ -34,6 +34,8 @@ import kotlin.math.floor
 import kotlin.math.log10
 import kotlin.math.pow
 
+internal sealed interface TooltipTrend
+
 /** 캠페인 전체의 월별 기록. 소수로 저장한 비율은 [scale]로 백분율 눈금에 맞춘다. */
 internal data class MetricTrend(
     val start: YearMonth,
@@ -41,7 +43,7 @@ internal data class MetricTrend(
     val unit: String,
     val scale: Double = 1.0,
     val decimals: Int = 1,
-)
+) : TooltipTrend
 
 private val monthFormat = DateTimeFormatter.ofPattern("yyyy.MM")
 private val plotInk = Color(0xFFEEC375)

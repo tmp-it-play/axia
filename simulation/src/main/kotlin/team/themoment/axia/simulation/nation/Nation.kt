@@ -32,6 +32,7 @@ import team.themoment.axia.simulation.society.IdentityBase
 import team.themoment.axia.simulation.society.OpinionWeights
 import team.themoment.axia.simulation.society.OrganizationSeed
 import team.themoment.axia.simulation.society.OrganizationStake
+import team.themoment.axia.simulation.society.PoliticalAlignment
 import team.themoment.axia.simulation.society.SocialIndicators
 import team.themoment.axia.simulation.society.SocietyProfile
 import team.themoment.axia.simulation.society.VoterConditions
@@ -105,6 +106,8 @@ data class NationHistory(
     val start: YearMonth,
     val approval: List<Double>,
     val politicalCapital: List<Double>,
+    val loyalists: List<Double>,
+    val opponents: List<Double>,
     val satisfaction: Map<PopulationGroup, List<Double>>,
     val identities: Map<Identity, List<Double>>,
     val pollution: List<Double>,
@@ -121,6 +124,8 @@ data class CountrySpecialSnapshot(
 data class NationSnapshot(
     val countryId: String,
     val approval: Double,
+    val loyalists: Long,
+    val opponents: Long,
     /** 시작 지지율이 2024년 1월 여론조사 수준이 되도록 정한 기준선. */
     val baseline: Double,
     /** 시작 지지율(2024년 1월 여론조사)과 그 출처. */
@@ -217,7 +222,7 @@ class Nation internal constructor(
                 activity = demography.activity,
                 lifeExpectancy = structure.lifeExpectancy,
             ),
-            Random(seed),
+            seed,
         )
     private var constituents = electorate.summarize(composition.shares, civilParticipation)
     private val initialIdentityShares = constituents.memberShares
@@ -246,6 +251,9 @@ class Nation internal constructor(
     private var baseline = BASELINE
     private val approvalSeries = MonthlySeries()
     private val politicalCapitalSeries = MonthlySeries()
+    private val loyalistSeries = MonthlySeries()
+    private val opponentSeries = MonthlySeries()
+    private var alignment = PoliticalAlignment(0L, 0L)
     private val satisfactionSeries = PopulationGroup.entries.associateWith { MonthlySeries() }
     private val identitySeries = Identity.entries.associateWith { MonthlySeries() }
     private val pollutionSeries = MonthlySeries()
@@ -262,7 +270,7 @@ class Nation internal constructor(
         val target = initialApproval.approval
         baseline = target + (BASELINE - approvalAt(BASELINE))
         baseline += target - approvalAt(baseline)
-        record()
+        record(economy)
     }
 
     /** @param institutionChanges 제도 항목의 시작 대비 변화(예: 중앙은행 독립 1 → 0이면 -1). */
@@ -330,7 +338,7 @@ class Nation internal constructor(
         pendingCrime += effects.crime
         economy.addOutputGapShock(effects.outputGapShock)
         budget.organizationSubsidies = civilSociety.subsidySpending
-        record()
+        record(economy)
     }
 
     /** 국가별 특화 모듈의 월간 갱신과 그 결과 반영. */
@@ -489,6 +497,8 @@ class Nation internal constructor(
         return NationSnapshot(
             countryId = countryId,
             approval = approval(),
+            loyalists = alignment.loyalists,
+            opponents = alignment.opponents,
             baseline = baseline,
             initialApproval = initialApproval,
             approvalFactors =
@@ -562,6 +572,8 @@ class Nation internal constructor(
                     start = startMonth,
                     approval = approvalSeries.toList(),
                     politicalCapital = politicalCapitalSeries.toList(),
+                    loyalists = loyalistSeries.toList(),
+                    opponents = opponentSeries.toList(),
                     satisfaction = satisfactionSeries.mapValues { it.value.toList() },
                     identities = identitySeries.mapValues { it.value.toList() },
                     pollution = pollutionSeries.toList(),
@@ -729,7 +741,18 @@ class Nation internal constructor(
         groups.sumOf { approvalWeights.groups.getValue(it.group) * it.satisfaction(level) } +
             Identity.entries.sumOf { approvalWeights.identities.getValue(it) * identitySatisfaction(it, level) }
 
-    private fun record() {
+    private fun record(economy: CountryEconomy) {
+        alignment =
+            electorate.settleAlignment(
+                adultPopulation = economy.populationCount * demography.adultShare,
+                groupShares = constituents.groupShares,
+                groupSatisfaction = groups.associate { it.group to it.satisfaction(baseline) },
+                identitySatisfaction = Identity.entries.associateWith { identitySatisfaction(it) },
+                unrest = civilSociety.unrest.coerceAtMost(MAX_UNREST),
+                opening = months == 0,
+            )
+        loyalistSeries.record(alignment.loyalists.toDouble())
+        opponentSeries.record(alignment.opponents.toDouble())
         approvalSeries.record(approval())
         politicalCapitalSeries.record(civilSociety.politicalCapital)
         groups.forEach { satisfactionSeries.getValue(it.group).record(it.satisfaction(baseline)) }

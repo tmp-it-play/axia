@@ -55,6 +55,23 @@ fun formatPopulation(value: Double): String =
         }
     }
 
+/** 계기판·눈금용 인원수. 예: 1.25억 명, 2,345만 명, 12.3만 명. */
+fun formatCompactPopulation(value: Double): String {
+    val count = value.roundToLong()
+    if (abs(count) < MAN) return "${count.grouped()}명"
+    val unit = if (abs(count) >= EOK - MAN / 2) EOK else MAN
+    val scaled = count / unit
+    val digits =
+        when {
+            abs(scaled) >= 100 -> 0
+            abs(scaled) >= 10 -> 1
+            else -> 2
+        }
+    val rounded = String.format(Locale.KOREA, "%,.${digits}f", scaled)
+    val number = if (digits == 0) rounded else rounded.trimEnd('0').trimEnd('.')
+    return number + if (unit == EOK) "억 명" else "만 명"
+}
+
 fun formatWholeDollars(value: Double): String = "${value.roundToLong().grouped()}달러"
 
 /** 금리처럼 0.25%p 단위로 움직이는 값. 소수 둘째 자리까지 쓴다. */

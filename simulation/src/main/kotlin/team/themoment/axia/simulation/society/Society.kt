@@ -6,6 +6,7 @@ import team.themoment.axia.simulation.math.nextGaussian
 import team.themoment.axia.simulation.nation.PopulationGroup
 import kotlin.math.exp
 import kotlin.math.pow
+import kotlin.math.roundToLong
 import kotlin.random.Random
 
 /** 성향 집단 기준률을 정하는 국가별 실측값. 비율은 소수다. */
@@ -81,6 +82,12 @@ internal data class ElectorateSummary(
     val politicalWeights: OpinionWeights,
 )
 
+/** 직업별 인구로 환산한 강한 지지·반대 인원. 그 밖의 인구는 중립이다. */
+internal data class PoliticalAlignment(
+    val loyalists: Long,
+    val opponents: Long,
+)
+
 /** 시작 시점과 비교한 생활 여건. 가치관 재평가 때 각 사안의 중요도를 바꾼다. */
 internal data class VoterConditions(
     val unemploymentChange: Double = 0.0,
@@ -109,12 +116,16 @@ internal data class VoterConditions(
 internal class Electorate(
     groupShares: Map<PopulationGroup, Double>,
     private val profile: SocietyProfile,
-    private val random: Random,
+    seed: Long,
 ) {
+    private val random = Random(seed)
+    private val leanRandom = Random(seed xor LEAN_SEED_SALT)
+
     private class Voter(
         var group: PopulationGroup,
         var ageMonths: Int,
         val lifespan: Int,
+        val personalLean: Double,
         random: Random,
     ) {
         val tradition = random.nextGaussian()
@@ -122,6 +133,8 @@ internal class Electorate(
         val threshold = DoubleArray(Identity.entries.size) { random.nextDouble() }
         val attachment = DoubleArray(Identity.entries.size) { 0.5 + 0.5 * random.nextDouble() }
         val strengths = DoubleArray(Identity.entries.size)
+        var opinionWeight = 1.0
+        var commitment = 50.0
         val age: AgeBand get() =
             when {
                 ageMonths < 35 * 12 -> AgeBand.YOUNG
@@ -142,7 +155,7 @@ internal class Electorate(
         ) {
             count += delta
             val strengths = voter.strengths
-            val denominator = 1.0 + Identity.entries.sumOf { it.weight * strengths[it.ordinal] }
+            val denominator = voter.opinionWeight
             jobCoefficient += delta / denominator
             for (identity in Identity.entries) {
                 val strength = strengths[identity.ordinal]
@@ -185,7 +198,7 @@ internal class Electorate(
                         draw < olderAmongOthers + youngAmongOthers -> random.nextInt(ENTRY_AGE, 35 * 12)
                         else -> initialMiddleAge(earlyRetired = false)
                     }
-                Voter(group, age, lifespan, random)
+                Voter(group, age, lifespan, personalLean(), random)
             }
         scale =
             attitudes.associateWith { identity ->
@@ -214,7 +227,7 @@ internal class Electorate(
             if (exits || voter.ageMonths % 12 == 0) {
                 samples.getValue(voter.group).countVoter(voter, -1)
                 if (exits) {
-                    voter = Voter(occupations.random(random), ENTRY_AGE, lifespan(), random)
+                    voter = Voter(occupations.random(random), ENTRY_AGE, lifespan(), personalLean(), random)
                     voters[i] = voter
                 } else if (voter.group != PopulationGroup.RETIREES) {
                     val chance = profile.activity.retirementProbability(voter.ageMonths / 12)
@@ -263,6 +276,9 @@ internal class Electorate(
         return age
     }
 
+    // 성향 소속과 별도로 같은 여건에서도 사람마다 정부를 평가하는 출발점이 다르다.
+    private fun personalLean(): Double = (leanRandom.nextDouble() - leanRandom.nextDouble()) * LEAN_RANGE
+
     private fun lifespan(): Int = ((profile.lifeExpectancy + 7.0 + 7.0 * random.nextGaussian()).coerceIn(70.0, 100.0) * 12).toInt()
 
     /** 소수 집단에 한 명을 보장하고 나머지 표본을 최대 잔여 방식으로 배분한다. */
@@ -306,6 +322,39 @@ internal class Electorate(
                     0.0
                 }
         }
+        voter.opinionWeight = 1.0 + Identity.entries.sumOf { it.weight * voter.strengths[it.ordinal] }
+    }
+
+    /** 개인별 직업·성향 만족도가 쌓여 강한 지지나 반대로 굳어진 인원을 월초에 집계한다. */
+    fun settleAlignment(
+        adultPopulation: Double,
+        groupShares: Map<PopulationGroup, Double>,
+        groupSatisfaction: Map<PopulationGroup, Double>,
+        identitySatisfaction: Map<Identity, Double>,
+        unrest: Double,
+        opening: Boolean,
+    ): PoliticalAlignment {
+        val adultsPerVoter = groupShares.mapValues { (group, share) -> adultPopulation * share / samples.getValue(group).count }
+        val issueScores =
+            DoubleArray(Identity.entries.size) { i ->
+                val identity = Identity.entries[i]
+                identity.weight * identitySatisfaction.getValue(identity)
+            }
+        var loyalists = 0.0
+        var opponents = 0.0
+        for (voter in voters) {
+            var weightedMood = groupSatisfaction.getValue(voter.group)
+            for (i in issueScores.indices) weightedMood += voter.strengths[i] * issueScores[i]
+            val target = (weightedMood / voter.opinionWeight - unrest + voter.personalLean).coerceIn(0.0, 100.0)
+            voter.commitment = if (opening) target else voter.commitment + MONTHLY_ADJUSTMENT * (target - voter.commitment)
+            when {
+                voter.commitment >= LOYALIST_THRESHOLD -> loyalists += adultsPerVoter.getValue(voter.group)
+                voter.commitment <= OPPONENT_THRESHOLD -> opponents += adultsPerVoter.getValue(voter.group)
+            }
+        }
+        val committed = (loyalists + opponents).roundToLong().coerceAtMost(adultPopulation.roundToLong())
+        val loyalistCount = loyalists.roundToLong().coerceAtMost(committed)
+        return PoliticalAlignment(loyalistCount, committed - loyalistCount)
     }
 
     fun summarize(
@@ -378,6 +427,11 @@ internal class Electorate(
         const val ENTRY_AGE = 18 * 12
         const val SENIOR_AGE = 65 * 12
         const val SAMPLE_SIZE = 3_000
+        const val LEAN_SEED_SALT = 0x4C4F59414CL
+        const val LEAN_RANGE = 60.0
+        const val LOYALIST_THRESHOLD = 70.0
+        const val OPPONENT_THRESHOLD = 30.0
+        const val MONTHLY_ADJUSTMENT = 0.15
         const val MAX_PROBABILITY = 0.95
         const val REFERENCE_CHILD_SHARE = 0.18
 

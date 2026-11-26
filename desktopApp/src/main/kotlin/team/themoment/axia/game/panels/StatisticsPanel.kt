@@ -28,9 +28,12 @@ import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import team.themoment.axia.format.formatWholeDollars
+import team.themoment.axia.game.ALIGNMENT_DESCRIPTION
+import team.themoment.axia.game.ALIGNMENT_TITLE
 import team.themoment.axia.game.GDP_DESCRIPTION
 import team.themoment.axia.game.GDP_PER_CAPITA_DESCRIPTION
 import team.themoment.axia.game.NationalMetric
@@ -39,6 +42,8 @@ import team.themoment.axia.simulation.economy.EconomySeries
 import team.themoment.axia.simulation.nation.NationHistory
 import team.themoment.axia.theme.DossierColors
 import team.themoment.axia.theme.DossierType
+import team.themoment.axia.ui.dossier.AlignmentChart
+import team.themoment.axia.ui.dossier.AlignmentTrend
 import team.themoment.axia.ui.dossier.DossierIndex
 import team.themoment.axia.ui.dossier.LineChart
 import team.themoment.axia.ui.dossier.PaperTag
@@ -64,6 +69,8 @@ private class ChartSpec(
     val format: (Double) -> String,
     val description: String,
     val zeroLine: Boolean = false,
+    /** 충성파·반대파 항목은 [values]에 충성파, 같은 달의 두 번째 열에 반대파를 담는다. */
+    val opponents: List<Double>? = null,
 )
 
 private fun CountryHistory.chart(
@@ -110,6 +117,14 @@ fun StatisticsPanel(
                 listOf(
                     ChartSpec("정부 지지율", nation.approval, nation.start, { "${approvalFormat(it)}%" }, NationalMetric.APPROVAL.description),
                     ChartSpec(
+                        ALIGNMENT_TITLE,
+                        nation.loyalists,
+                        nation.start,
+                        { "%,d명".format(Locale.KOREA, it.toLong()) },
+                        ALIGNMENT_DESCRIPTION,
+                        opponents = nation.opponents,
+                    ),
+                    ChartSpec(
                         NationalMetric.POLITICAL_CAPITAL.title,
                         nation.politicalCapital,
                         nation.start,
@@ -154,7 +169,13 @@ fun StatisticsPanel(
                                 ) {
                                     val ink = if (chosen) DossierColors.paper else DossierColors.ink
                                     Text(spec.title, Modifier.weight(1f), style = DossierType.title(14.sp), color = ink)
-                                    Text(spec.values.lastOrNull()?.let(spec.format) ?: "—", style = DossierType.number(13.sp), color = ink)
+                                    if (spec.opponents == null) {
+                                        Text(
+                                            spec.values.lastOrNull()?.let(spec.format) ?: "—",
+                                            style = DossierType.number(13.sp),
+                                            color = ink,
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -195,16 +216,23 @@ private fun HistoryDetail(
     }
     val end = spec.start.plusMonths(spec.values.lastIndex.toLong())
     val count = minOf(range.months ?: spec.values.size, spec.values.size)
-    val values = spec.values.subList(spec.values.size - count, spec.values.size)
+    val first = spec.values.size - count
+    val values = spec.values.subList(first, spec.values.size)
+    val opponents = spec.opponents?.subList(first, spec.values.size)
     val start = end.minusMonths(values.lastIndex.toLong())
-    Text(
-        spec.format(latest),
-        modifier = Modifier.metricTooltip(spec.title, spec.description),
-        style = DossierType.number(32.sp),
-        color = DossierColors.blueInk,
-    )
-    Hint(if (statistics && start != end) "${start.koreanMonth()} ~ ${end.koreanMonth()}" else end.koreanMonth())
-    if (values.size == 1) {
+    if (opponents == null) {
+        Text(
+            spec.format(latest),
+            modifier = Modifier.metricTooltip(spec.title, spec.description),
+            style = DossierType.number(32.sp),
+            color = DossierColors.blueInk,
+        )
+        Hint(if (statistics && start != end) "${start.koreanMonth()} ~ ${end.koreanMonth()}" else end.koreanMonth())
+    }
+    if (opponents != null) {
+        Spacer(Modifier.height(14.dp))
+        AlignmentChart(AlignmentTrend(start, values, opponents), interactive = true)
+    } else if (values.size == 1) {
         Spacer(Modifier.height(10.dp))
         Hint("다음 달부터 월별 변화를 비교할 수 있습니다.")
         if (!statistics) return
@@ -225,8 +253,37 @@ private fun HistoryDetail(
         }
     }
     val newest = values.lastIndex - page * rows
+    if (opponents != null) AlignmentRecord("월", "충성파", "반대파")
     for (index in newest downTo maxOf(0, newest - rows + 1)) {
-        StatRow(start.plusMonths(index.toLong()).koreanMonth(), spec.format(values[index]), tooltip = spec.description)
+        val month = start.plusMonths(index.toLong()).koreanMonth()
+        if (opponents == null) {
+            StatRow(month, spec.format(values[index]), tooltip = spec.description)
+        } else {
+            AlignmentRecord(month, spec.format(values[index]), spec.format(opponents[index]))
+        }
+    }
+}
+
+@Composable
+private fun AlignmentRecord(
+    month: String,
+    loyalists: String,
+    opponents: String,
+) {
+    Row(
+        Modifier.fillMaxWidth().metricTooltip(ALIGNMENT_TITLE, ALIGNMENT_DESCRIPTION).padding(vertical = 3.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        Text(month, Modifier.weight(1f), style = DossierType.number(13.sp), color = DossierColors.inkMuted)
+        for (text in listOf(loyalists, opponents)) {
+            Text(
+                text,
+                Modifier.weight(1f),
+                style = DossierType.number(13.sp),
+                color = DossierColors.ink,
+                textAlign = TextAlign.End,
+            )
+        }
     }
 }
 
