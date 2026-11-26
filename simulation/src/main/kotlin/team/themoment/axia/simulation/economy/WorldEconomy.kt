@@ -59,7 +59,11 @@ class WorldEconomy internal constructor(
     private val remittances = RemittanceNetwork(countries)
     private val investmentIncome = WorldInvestmentIncome(countries)
     internal val currencyNotices = mutableListOf<Pair<String, CurrencyNotice>>()
-    private val histories = countries.associate { country -> country.id to EconomySeries.entries.associateWith { MonthlySeries() } }
+    private val histories =
+        countries.associate { country ->
+            val limit = if (country.id == playerCountryId) null else OTHER_COUNTRY_HISTORY_MONTHS
+            country.id to EconomySeries.entries.associateWith { MonthlySeries(limit) }
+        }
 
     init {
         require(fiscalPolicies.keys.all(countriesById::containsKey)) { "Unknown country in fiscal policies: ${fiscalPolicies.keys}" }
@@ -195,6 +199,8 @@ class WorldEconomy internal constructor(
     }
 
     private companion object {
+        const val OTHER_COUNTRY_HISTORY_MONTHS = 50 * 12
+
         /** 지표를 표시하는 기준 통화(달러)의 발행국. */
         const val RESERVE_CURRENCY_ISSUER = "USA"
 

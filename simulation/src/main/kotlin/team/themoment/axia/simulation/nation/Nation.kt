@@ -104,6 +104,7 @@ data class SocialSnapshot(
 data class NationHistory(
     val start: YearMonth,
     val approval: List<Double>,
+    val politicalCapital: List<Double>,
     val satisfaction: Map<PopulationGroup, List<Double>>,
     val identities: Map<Identity, List<Double>>,
     val pollution: List<Double>,
@@ -244,6 +245,7 @@ class Nation internal constructor(
     private var months = 0
     private var baseline = BASELINE
     private val approvalSeries = MonthlySeries()
+    private val politicalCapitalSeries = MonthlySeries()
     private val satisfactionSeries = PopulationGroup.entries.associateWith { MonthlySeries() }
     private val identitySeries = Identity.entries.associateWith { MonthlySeries() }
     private val pollutionSeries = MonthlySeries()
@@ -557,8 +559,9 @@ class Nation internal constructor(
                 ),
             history =
                 NationHistory(
-                    start = startMonth.plusMonths(approvalSeries.dropped.toLong()),
+                    start = startMonth,
                     approval = approvalSeries.toList(),
+                    politicalCapital = politicalCapitalSeries.toList(),
                     satisfaction = satisfactionSeries.mapValues { it.value.toList() },
                     identities = identitySeries.mapValues { it.value.toList() },
                     pollution = pollutionSeries.toList(),
@@ -728,6 +731,7 @@ class Nation internal constructor(
 
     private fun record() {
         approvalSeries.record(approval())
+        politicalCapitalSeries.record(civilSociety.politicalCapital)
         groups.forEach { satisfactionSeries.getValue(it.group).record(it.satisfaction(baseline)) }
         Identity.entries.forEach { identitySeries.getValue(it).record(identitySatisfaction(it)) }
         pollutionSeries.record(indicators.pollution)
