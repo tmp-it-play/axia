@@ -1,8 +1,8 @@
 package team.themoment.axia.map
 
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -17,6 +17,8 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.input.pointer.PointerEventType
+import androidx.compose.ui.input.pointer.PointerInputScope
+import androidx.compose.ui.input.pointer.PointerType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
@@ -25,6 +27,7 @@ import androidx.compose.ui.text.TextMeasurer
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import team.themoment.axia.theme.DossierType
@@ -34,6 +37,7 @@ import kotlin.math.floor
 /** 행정구역 하나가 화면에서 이 크기(dp)를 넘으면 그 나라의 행정구역 경계를 그린다. */
 private const val REGION_BORDER_MIN_SIZE_DP = 34f
 private const val SCROLL_ZOOM_SPEED = 0.12f
+private val mouseDragThreshold = 5.dp
 
 /** 기준 글꼴은 한 번만 측정한다. 실제 글자 높이와 간격은 지도 좌표로 정한다. */
 private const val LABEL_BASE_SIZE_SP = 32
@@ -65,13 +69,8 @@ fun WorldMap(
             modifier
                 .clipToBounds()
                 .onSizeChanged { viewport.resize(it.toSize()) }
-                .pointerInput(viewport) {
-                    detectDragGestures { change, dragAmount ->
-                        change.consume()
-                        viewport.pan(dragAmount)
-                    }
-                }.pointerInput(viewport, model) {
-                    detectTapGestures { position -> currentOnRegionClick(model.regionAt(viewport.toMap(position))) }
+                .pointerInput(viewport, model) {
+                    mapGestures(viewport) { position -> currentOnRegionClick(model.regionAt(viewport.toMap(position))) }
                 }.onPointerEvent(PointerEventType.Scroll) { event ->
                     val change = event.changes.first()
                     viewport.zoomAt(exp(-change.scrollDelta.y * SCROLL_ZOOM_SPEED), change.position)
@@ -86,6 +85,34 @@ fun WorldMap(
             }
             copies.forEach { shift ->
                 drawLabels(viewport, shift, lettering)
+            }
+        }
+    }
+}
+
+/** 작은 손떨림은 누른 지점을 선택하고, 드래그를 시작하면 버튼을 놓을 때까지 지도만 움직인다. */
+private suspend fun PointerInputScope.mapGestures(
+    viewport: MapViewport,
+    onTap: (Offset) -> Unit,
+) {
+    awaitEachGesture {
+        val down = awaitFirstDown()
+        down.consume()
+        val threshold = if (down.type == PointerType.Mouse) mouseDragThreshold.toPx() else viewConfiguration.touchSlop
+        var dragging = false
+        while (true) {
+            val event = awaitPointerEvent()
+            val change = event.changes.singleOrNull() ?: break
+            if (change.id != down.id || change.isConsumed || event.type == PointerEventType.Scroll) break
+            val travel = change.position - down.position
+            if (dragging || travel.getDistance() > threshold) {
+                viewport.pan(if (dragging) change.position - change.previousPosition else travel)
+                dragging = true
+            }
+            change.consume()
+            if (!change.pressed) {
+                if (!dragging && Rect(Offset.Zero, size.toSize()).contains(change.position)) onTap(down.position)
+                break
             }
         }
     }
