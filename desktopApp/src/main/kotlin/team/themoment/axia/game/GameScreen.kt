@@ -90,11 +90,11 @@ fun GameScreen(
         Column(Modifier.fillMaxSize()) {
             TopStrip(
                 countryName = playerName,
-                approval = nation.approval,
+                nation = nation,
                 indicators = playerIndicators,
+                economyHistory = economy.history.getValue(nation.countryId),
                 clock = clock,
                 nextElection = nextElectionTag(politics.schedule, clock.date),
-                politicalCapital = nation.society.politicalCapital,
                 pendingEventCount = if (showNewspaper) 0 else worldState.pendingEvents.size,
                 onOpenNewspaper = { foldedEventId = null },
                 headline =

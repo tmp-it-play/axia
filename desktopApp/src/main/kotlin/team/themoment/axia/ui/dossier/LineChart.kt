@@ -60,7 +60,6 @@ fun LineChart(
     val index = hoveredIndex
     val month = index?.let { start.plusMonths(it.toLong()) }
     val reading = index?.let { format(values[it]) }.orEmpty()
-    val previous = index?.takeIf { it > 0 }?.let { format(values[it - 1]) }
     val hover =
         Modifier
             .pointerInput(Unit) {
@@ -93,11 +92,6 @@ fun LineChart(
             }.metricReadingTooltip(
                 if (month == null) title else "${month.year}년 ${month.monthValue}월 · $title",
                 reading,
-                when (previous) {
-                    null -> null
-                    reading -> "전월과 동일"
-                    else -> "전월  $previous"
-                },
             )
     Canvas(
         modifier

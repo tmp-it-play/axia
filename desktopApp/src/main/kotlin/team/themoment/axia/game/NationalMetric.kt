@@ -1,8 +1,9 @@
 package team.themoment.axia.game
 
-import team.themoment.axia.format.formatCompactDollars
-import team.themoment.axia.format.formatPercent
-import team.themoment.axia.simulation.economy.EconomyIndicators
+import team.themoment.axia.simulation.economy.CountryHistory
+import team.themoment.axia.simulation.economy.EconomySeries
+import team.themoment.axia.simulation.nation.NationHistory
+import team.themoment.axia.ui.dossier.MetricTrend
 
 internal const val GDP_DESCRIPTION = "국내에서 한 해 동안 생산한 재화와 서비스의 부가가치를 현재 가격과 달러 기준으로 합한 금액입니다."
 
@@ -54,7 +55,7 @@ internal enum class NationalMetric(
         ConsoleSymbol.BOND,
         "부채",
         "국가부채 (GDP 대비)",
-        "정부의 부채 잔액을 연간 명목 GDP로 나눈 비율입니다. 100%면 한 해 GDP와 같은 규모입니다.",
+        "정부의 부채 잔액을 연간 명목 GDP로 나눈 비율입니다.",
     ),
     RATE(
         ConsoleSymbol.INTEREST,
@@ -64,26 +65,21 @@ internal enum class NationalMetric(
     ),
     ;
 
-    fun hudDescription(
-        indicators: EconomyIndicators,
-        displayed: String,
-    ): String {
-        val reading =
+    fun trend(
+        economy: CountryHistory,
+        nation: NationHistory,
+    ): MetricTrend {
+        val series =
             when (this) {
-                GROWTH -> "현재 명목 GDP  ${formatCompactDollars(indicators.gdp)}"
-                INFLATION -> benchmark("직전 결산 기대 물가상승률", indicators.inflationContributions?.expectations, displayed)
-                UNEMPLOYMENT -> benchmark("자연실업률", indicators.unemploymentContributions?.naturalRate, displayed)
-                else -> null
+                APPROVAL -> return MetricTrend(nation.start, nation.approval, "%")
+                POLITICAL_CAPITAL -> return MetricTrend(nation.start, nation.politicalCapital, "점")
+                GROWTH -> EconomySeries.GROWTH
+                INFLATION -> EconomySeries.INFLATION
+                UNEMPLOYMENT -> EconomySeries.UNEMPLOYMENT
+                BALANCE -> EconomySeries.BUDGET_BALANCE
+                DEBT -> EconomySeries.DEBT
+                RATE -> EconomySeries.POLICY_RATE
             }
-        return if (reading == null) description else "$description\n$reading"
-    }
-
-    private fun benchmark(
-        label: String,
-        rate: Double?,
-        displayed: String,
-    ): String? {
-        val reference = rate?.let { formatPercent(it) } ?: return null
-        return if (reference == displayed) null else "$label  $reference"
+        return MetricTrend(economy.start, economy[series], "%", scale = 100.0, decimals = if (this == RATE) 2 else 1)
     }
 }

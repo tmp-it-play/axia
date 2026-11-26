@@ -71,12 +71,14 @@ private fun economic(field: (EconomyIndicators) -> Double): (MapData, String) ->
 
 enum class MapMode(
     val label: String,
+    internal val tooltip: String,
     val scale: ChoroplethScale?,
     private val regionValue: ((RegionSnapshot) -> Double)? = null,
 ) {
-    POLITICAL("정치", null),
+    POLITICAL("정치", "각 지역을 현재 통치하는 나라의 색으로 표시합니다.", null),
     GDP_PER_CAPITA(
         "1인당 GDP",
+        "각국의 연간 국내총생산을 인구로 나눈 금액을 비교합니다.",
         ChoroplethScale(
             thresholds = listOf(1_000.0, 4_000.0, 13_000.0, 30_000.0, 60_000.0),
             colors = MapPalette.wealth,
@@ -86,6 +88,7 @@ enum class MapMode(
     ),
     GROWTH(
         "경제성장률",
+        "지난해 같은 달과 비교해 각국의 실질 생산이 얼마나 늘거나 줄었는지 표시합니다.",
         ChoroplethScale(
             thresholds = listOf(-0.02, 0.0, 0.02, 0.04, 0.06),
             colors = MapPalette.diverging,
@@ -95,6 +98,7 @@ enum class MapMode(
     ),
     INFLATION(
         "물가상승률",
+        "각국의 물가가 오르거나 내리는 속도를 연율로 비교합니다.",
         ChoroplethScale(
             thresholds = listOf(0.02, 0.04, 0.07, 0.15, 0.5),
             colors = MapPalette.severity,
@@ -104,6 +108,7 @@ enum class MapMode(
     ),
     UNEMPLOYMENT(
         "실업률",
+        "국가별 실업률을 비교합니다. 우리나라는 지역별로 표시합니다.",
         ChoroplethScale(
             thresholds = listOf(0.03, 0.05, 0.08, 0.12, 0.2),
             colors = MapPalette.severity,
@@ -114,6 +119,7 @@ enum class MapMode(
     ),
     PUBLIC_SAFETY(
         "치안",
+        "우리나라 각 지역의 범죄 지수를 비교합니다. 지수가 높을수록 범죄가 많습니다.",
         ChoroplethScale(
             thresholds = listOf(85.0, 95.0, 100.0, 105.0, 115.0),
             colors = MapPalette.severity,
@@ -127,6 +133,7 @@ enum class MapMode(
     ),
     DEBT(
         "국가부채",
+        "각국의 국내총생산에 비해 정부 부채가 얼마나 큰지 표시합니다.",
         ChoroplethScale(
             thresholds = listOf(0.3, 0.6, 0.9, 1.2, 2.0),
             colors = MapPalette.severity,
@@ -136,6 +143,7 @@ enum class MapMode(
     ),
     POLICY_RATE(
         "기준금리",
+        "각국 중앙은행의 기준금리를 비교합니다.",
         ChoroplethScale(
             thresholds = listOf(0.02, 0.04, 0.07, 0.12, 0.25),
             colors = MapPalette.severity,
@@ -145,6 +153,7 @@ enum class MapMode(
     ),
     APPROVAL(
         "민심",
+        "각국 정부의 지지율을 비교합니다. 우리나라는 지역별로 표시합니다.",
         ChoroplethScale(
             thresholds = listOf(30.0, 40.0, 47.0, 53.0, 60.0),
             colors = MapPalette.diverging,
@@ -155,6 +164,7 @@ enum class MapMode(
     ),
     RELATIONS(
         "외교 관계",
+        "우리나라와 각국의 관계를 적대에서 우호에 이르는 색으로 표시합니다.",
         ChoroplethScale(
             thresholds = listOf(-50.0, -15.0, 15.0, 40.0, 70.0),
             colors = MapPalette.diverging,
@@ -164,6 +174,7 @@ enum class MapMode(
     ),
     MILITARY(
         "군사력",
+        "세계 최강국을 기준으로 각국의 군사력을 비교합니다.",
         ChoroplethScale(
             thresholds = listOf(0.5, 2.0, 5.0, 12.0, 30.0),
             colors = MapPalette.wealth,
@@ -173,6 +184,7 @@ enum class MapMode(
     ),
     RESOURCES(
         "자원",
+        "천연자원 채취 수입에서 생산비를 뺀 금액이 각국 GDP에서 차지하는 비율을 표시합니다.",
         ChoroplethScale(
             thresholds = listOf(0.01, 0.03, 0.08, 0.15, 0.3),
             colors = MapPalette.wealth,
@@ -182,6 +194,7 @@ enum class MapMode(
     ),
     CONFLICT(
         "전쟁",
+        "내전과 국가 간 전쟁이 벌어진 곳, 우리나라와 교전 중인 나라를 구분합니다.",
         ChoroplethScale(
             thresholds = listOf(0.5, 1.5, 2.5),
             colors = listOf(MapPalette.peace, MapPalette.severity[2], MapPalette.severity[4], MapPalette.diverging[0]),

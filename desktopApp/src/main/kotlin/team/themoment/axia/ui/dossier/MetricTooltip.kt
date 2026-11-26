@@ -22,14 +22,24 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.focus.FocusEventModifierNode
+import androidx.compose.ui.focus.FocusState
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.input.pointer.PointerEvent
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.PointerType
 import androidx.compose.ui.input.pointer.areAnyPressed
+import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -55,10 +65,19 @@ private class TooltipState {
     var coordinates: LayoutCoordinates? = null
     var hovered by mutableStateOf<MetricAnchor?>(null)
     var cursor by mutableStateOf(IntOffset.Zero)
+    var keyboardNavigation = false
+
+    fun switchInput(keyboard: Boolean) {
+        if (keyboardNavigation != keyboard) {
+            keyboardNavigation = keyboard
+            hovered = null
+        }
+    }
 }
 
 /** 같은 화면의 지표들은 툴팁 한 개를 공유한다. 입력은 원래 수치 행과 그 버튼이 처리한다. */
 @Composable
+@OptIn(ExperimentalComposeUiApi::class)
 internal fun MetricTooltipHost(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
@@ -66,7 +85,16 @@ internal fun MetricTooltipHost(
 ) {
     val state = remember(enabled) { if (enabled) TooltipState() else null }
     CompositionLocalProvider(LocalMetricTooltip provides state) {
-        Box(modifier.fillMaxSize().onGloballyPositioned { state?.coordinates = it }) {
+        Box(
+            modifier
+                .fillMaxSize()
+                .onGloballyPositioned { state?.coordinates = it }
+                .onPreviewKeyEvent {
+                    if (it.type == KeyEventType.KeyDown && it.key == Key.Tab) state?.switchInput(keyboard = true)
+                    false
+                }.onPointerEvent(PointerEventType.Move, PointerEventPass.Initial) { state?.switchInput(keyboard = false) }
+                .onPointerEvent(PointerEventType.Press, PointerEventPass.Initial) { state?.switchInput(keyboard = false) },
+        ) {
             content()
             if (state != null) TooltipOverlay(state)
         }
@@ -76,19 +104,26 @@ internal fun MetricTooltipHost(
 internal fun Modifier.metricTooltip(
     title: String,
     detail: String?,
-): Modifier = if (detail.isNullOrBlank()) this else then(MetricHint(title, null, detail))
+    trend: MetricTrend? = null,
+): Modifier = if (detail.isNullOrBlank() && trend == null) this else then(MetricHint(title, null, detail, trend))
+
+internal fun Modifier.controlTooltip(
+    title: String,
+    detail: String,
+): Modifier = then(MetricHint(title, null, detail, control = true))
 
 /** 그래프의 관측값처럼 커서를 올려야 읽을 수 있는 수치를 표시한다. */
 internal fun Modifier.metricReadingTooltip(
     title: String,
     reading: String,
-    detail: String? = null,
-): Modifier = then(MetricHint(title, reading, detail))
+): Modifier = then(MetricHint(title, reading, null))
 
 private data class MetricHint(
     val title: String,
     val reading: String?,
     val detail: String?,
+    val trend: MetricTrend? = null,
+    val control: Boolean = false,
 ) : ModifierNodeElement<MetricAnchor>() {
     override fun create() = MetricAnchor(this)
 
@@ -101,9 +136,26 @@ private class MetricAnchor(
     initial: MetricHint,
 ) : Modifier.Node(),
     PointerInputModifierNode,
+    FocusEventModifierNode,
     CompositionLocalConsumerModifierNode {
     var hint by mutableStateOf(initial)
     private var host: TooltipState? = null
+
+    override fun onFocusEvent(focusState: FocusState) {
+        if (!isAttached || !hint.control) return
+        val state = currentValueOf(LocalMetricTooltip) ?: return
+        if (!state.keyboardNavigation) return
+        if (!focusState.isFocused) {
+            dismiss()
+            return
+        }
+        val coordinates = state.coordinates ?: return
+        val target = requireLayoutCoordinates()
+        val below = Offset(target.size.width / 2f, target.size.height.toFloat())
+        state.cursor = coordinates.localPositionOf(target, below).round()
+        host = state
+        state.hovered = this
+    }
 
     override fun onPointerEvent(
         pointerEvent: PointerEvent,
@@ -117,7 +169,10 @@ private class MetricAnchor(
                 if (pointerEvent.buttons.areAnyPressed) return
                 val state = currentValueOf(LocalMetricTooltip) ?: return
                 val coordinates = state.coordinates ?: return
-                state.cursor = coordinates.localPositionOf(requireLayoutCoordinates(), mouse.position).round()
+                state.switchInput(keyboard = false)
+                val target = requireLayoutCoordinates()
+                val origin = if (hint.trend == null) mouse.position else mouse.position.copy(y = target.size.height.toFloat())
+                state.cursor = coordinates.localPositionOf(target, origin).round()
                 host = state
                 state.hovered = this
             }
@@ -142,7 +197,7 @@ private class MetricAnchor(
 private fun TooltipOverlay(state: TooltipState) {
     val anchor = state.hovered ?: return
     val hint = anchor.hint
-    if (hint.reading.isNullOrBlank() && hint.detail.isNullOrBlank()) return
+    if (hint.reading.isNullOrBlank() && hint.detail.isNullOrBlank() && hint.trend == null) return
     var ready by remember(anchor) { mutableStateOf(false) }
     LaunchedEffect(anchor) {
         delay(HOVER_DELAY_MS)
@@ -182,7 +237,7 @@ private fun TooltipCard(hint: MetricHint) {
     Column(
         Modifier
             .widthIn(min = 142.dp)
-            .width(IntrinsicSize.Max)
+            .then(if (hint.trend == null) Modifier.width(IntrinsicSize.Max) else Modifier.width(300.dp))
             .shadow(5.dp)
             .background(Color(0xFF202421))
             .border(1.dp, brass)
@@ -202,6 +257,7 @@ private fun TooltipCard(hint: MetricHint) {
             hint.detail?.takeIf { it.isNotBlank() }?.let {
                 Text(it, style = DossierType.number(13.sp, FontWeight.Normal).copy(lineHeight = 18.sp), color = Color(0xFFF2F2ED))
             }
+            hint.trend?.let { TooltipTrendChart(it) }
         }
     }
 }

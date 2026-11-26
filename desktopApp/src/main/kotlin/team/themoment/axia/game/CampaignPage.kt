@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import team.themoment.axia.theme.DossierColors
 import team.themoment.axia.theme.DossierType
+import team.themoment.axia.ui.dossier.controlTooltip
 import team.themoment.axia.ui.dossier.paperTexture
 
 @Composable
@@ -50,6 +51,7 @@ internal fun CampaignPage(
                     Row(
                         Modifier
                             .background(if (active) DossierColors.blueInk else DossierColors.deskRaised)
+                            .controlTooltip(destination.label, destination.tooltip)
                             .pointerHoverIcon(PointerIcon.Hand)
                             .selectable(selected = active, role = Role.Tab) { desk.panel = destination }
                             .height(36.dp)
@@ -64,6 +66,7 @@ internal fun CampaignPage(
             }
             Row(
                 Modifier
+                    .controlTooltip("지도로 돌아가기", "현재 화면을 닫고 세계 지도로 돌아갑니다. Esc 키로도 돌아갈 수 있습니다.")
                     .pointerHoverIcon(PointerIcon.Hand)
                     .clickable(role = Role.Button, onClick = onReturnToMap)
                     .height(36.dp)

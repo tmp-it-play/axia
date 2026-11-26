@@ -16,6 +16,7 @@ import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -25,6 +26,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import team.themoment.axia.format.formatWholeDollars
@@ -43,6 +46,16 @@ import team.themoment.axia.ui.dossier.SectionTitle
 import team.themoment.axia.ui.dossier.StatRow
 import team.themoment.axia.ui.dossier.metricTooltip
 import java.time.YearMonth
+import java.util.Locale
+
+private enum class HistoryRange(
+    val label: String,
+    val months: Int?,
+) {
+    YEAR("최근 1년", 12),
+    FIVE_YEARS("최근 5년", 60),
+    ALL("전체 기간", null),
+}
 
 private class ChartSpec(
     val title: String,
@@ -96,6 +109,13 @@ fun StatisticsPanel(
             "정치·사회" to
                 listOf(
                     ChartSpec("정부 지지율", nation.approval, nation.start, { "${approvalFormat(it)}%" }, NationalMetric.APPROVAL.description),
+                    ChartSpec(
+                        NationalMetric.POLITICAL_CAPITAL.title,
+                        nation.politicalCapital,
+                        nation.start,
+                        { "%.1f점".format(Locale.KOREA, it) },
+                        NationalMetric.POLITICAL_CAPITAL.description,
+                    ),
                     ChartSpec("오염 지수", nation.pollution, nation.start, approvalFormat, "게임 시작 때의 오염 수준을 100으로 삼습니다."),
                     ChartSpec("범죄 지수", nation.crime, nation.start, approvalFormat, "게임 시작 때의 범죄 수준을 100으로 삼습니다."),
                 ),
@@ -143,46 +163,70 @@ fun StatisticsPanel(
             },
             right = {
                 LedgerHeading(active.title)
-                HistoryDetail(active)
+                HistoryDetail(active, statistics = true)
             },
         )
     }
 }
 
 @Composable
-private fun HistoryDetail(spec: ChartSpec) {
+private fun HistoryDetail(
+    spec: ChartSpec,
+    statistics: Boolean = false,
+) {
+    var range by remember(statistics) { mutableStateOf(if (statistics) HistoryRange.ALL else HistoryRange.YEAR) }
+    if (statistics || spec.values.size > 12) {
+        val ranges = if (statistics) HistoryRange.entries else listOf(HistoryRange.YEAR, HistoryRange.ALL)
+        Row(Modifier.selectableGroup().padding(vertical = 8.dp), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            ranges.forEach { option ->
+                PaperTag(
+                    option.label,
+                    modifier = Modifier.semantics { selected = range == option },
+                    selected = range == option,
+                    onClick = { range = option },
+                )
+            }
+        }
+    }
     val latest = spec.values.lastOrNull()
     if (latest == null) {
         Hint("월별 기록은 첫 월 결산 후 표시됩니다.")
         return
     }
     val end = spec.start.plusMonths(spec.values.lastIndex.toLong())
+    val count = minOf(range.months ?: spec.values.size, spec.values.size)
+    val values = spec.values.subList(spec.values.size - count, spec.values.size)
+    val start = end.minusMonths(values.lastIndex.toLong())
     Text(
         spec.format(latest),
         modifier = Modifier.metricTooltip(spec.title, spec.description),
         style = DossierType.number(32.sp),
         color = DossierColors.blueInk,
     )
-    Hint(end.koreanMonth())
-    if (spec.values.size == 1) {
+    Hint(if (statistics && start != end) "${start.koreanMonth()} ~ ${end.koreanMonth()}" else end.koreanMonth())
+    if (values.size == 1) {
         Spacer(Modifier.height(10.dp))
         Hint("다음 달부터 월별 변화를 비교할 수 있습니다.")
-        return
+        if (!statistics) return
+    } else {
+        Spacer(Modifier.height(14.dp))
+        LineChart(values, start, spec.format, title = spec.title, height = 175.dp, zeroLine = spec.zeroLine)
     }
-    var recentYear by remember { mutableStateOf(true) }
-    if (spec.values.size > 12) {
-        Row(Modifier.padding(top = 8.dp), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            PaperTag("최근 12개월", selected = recentYear, onClick = { recentYear = true })
-            PaperTag("전체 기간", selected = !recentYear, onClick = { recentYear = false })
+    SectionTitle(if (statistics) "월별 기록" else "최근 월별 기록")
+    var requestedPage by remember(spec.title, range) { mutableIntStateOf(0) }
+    val rows = if (statistics) 12 else 6
+    val lastPage = values.lastIndex / rows
+    val page = requestedPage.coerceAtMost(lastPage)
+    if (statistics && lastPage > 0) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            PaperTag("더 최근 기록", enabled = page > 0, onClick = { requestedPage = page - 1 })
+            Text("${page + 1} / ${lastPage + 1}", style = DossierType.number(12.sp), color = DossierColors.inkMuted)
+            PaperTag("이전 기록", enabled = page < lastPage, onClick = { requestedPage = page + 1 })
         }
     }
-    val values = if (recentYear) spec.values.takeLast(12) else spec.values
-    val start = end.minusMonths(values.lastIndex.toLong())
-    Spacer(Modifier.height(14.dp))
-    LineChart(values, start, spec.format, title = spec.title, height = 175.dp, zeroLine = spec.zeroLine)
-    SectionTitle("최근 월별 기록")
-    spec.values.takeLast(6).asReversed().forEachIndexed { index, value ->
-        StatRow(end.minusMonths(index.toLong()).koreanMonth(), spec.format(value), tooltip = spec.description)
+    val newest = values.lastIndex - page * rows
+    for (index in newest downTo maxOf(0, newest - rows + 1)) {
+        StatRow(start.plusMonths(index.toLong()).koreanMonth(), spec.format(values[index]), tooltip = spec.description)
     }
 }
 

@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import team.themoment.axia.format.formatCompactDollars
 import team.themoment.axia.format.formatPercent
-import team.themoment.axia.format.formatWholeDollars
 import team.themoment.axia.game.BudgetPage
 import team.themoment.axia.simulation.economy.Creditor
 import team.themoment.axia.simulation.economy.DebtPhase
@@ -33,7 +32,6 @@ import team.themoment.axia.ui.dossier.DossierLinkRow
 import team.themoment.axia.ui.dossier.PaperTag
 import team.themoment.axia.ui.dossier.SectionTitle
 import team.themoment.axia.ui.dossier.StatRow
-import team.themoment.axia.ui.dossier.metricReadingTooltip
 import team.themoment.axia.ui.dossier.metricTooltip
 
 @Composable
@@ -59,7 +57,7 @@ internal fun BudgetPanel(
                 PanelColumns(
                     left = {
                         LedgerHeading("세입")
-                        BudgetAmount("연간 세입", budget.revenue, budget.gdp)
+                        BudgetAmount("연간 세입", budget.revenue, budget.gdp, detail = "세금과 세외수입, 이전 수입을 합한 금액입니다.")
                         SectionTitle("세목별 실효세율 · 연간 세입")
                         budget.taxes.forEach { line ->
                             val detail = "${formatPercent(line.rate)} · ${formatCompactDollars(line.revenue * budget.gdp)}"
@@ -73,7 +71,7 @@ internal fun BudgetPanel(
                     },
                     right = {
                         LedgerHeading("세출")
-                        BudgetAmount("연간 세출", budget.primarySpending + budget.interest, budget.gdp)
+                        BudgetAmount("연간 세출", budget.primarySpending + budget.interest, budget.gdp, detail = "기초지출과 순이자를 합한 금액입니다.")
                         SectionTitle("분야별 GDP 비중 · 연간 지출")
                         budget.spending.forEach { line ->
                             val detail = "${formatPercent(line.level)} · ${formatCompactDollars(line.level * budget.gdp)}"
@@ -108,17 +106,12 @@ private fun BudgetAmount(
     label: String,
     share: Double,
     gdp: Double,
+    detail: String,
     color: Color = DossierColors.blueInk,
     signed: Boolean = false,
-    detail: String? = null,
 ) {
-    val amount = share * gdp
-    val compact = formatCompactDollars(amount)
-    val precise = formatWholeDollars(amount)
-    val hover =
-        if (compact == precise) Modifier.metricTooltip(label, detail) else Modifier.metricReadingTooltip(label, precise, detail)
-    Column(hover) {
-        Text(compact, style = DossierType.number(27.sp), color = color)
+    Column(Modifier.metricTooltip(label, detail)) {
+        Text(formatCompactDollars(share * gdp), style = DossierType.number(27.sp), color = color)
         Hint("연간 GDP의 ${formatPercent(share, signed = signed)}")
     }
 }
@@ -137,8 +130,7 @@ private fun SpendingComposition(budget: BudgetSnapshot) {
     val low = minOf(0.0, lines.minOf { it.second })
     val range = maxOf(0.0, lines.maxOf { it.second }) - low
     lines.sortedByDescending { it.second }.forEach { (label, share) ->
-        val amount = "연간 ${formatWholeDollars(share * budget.gdp)}"
-        Column(Modifier.fillMaxWidth().padding(bottom = 8.dp).metricReadingTooltip(label, amount)) {
+        Column(Modifier.fillMaxWidth().padding(bottom = 8.dp).metricTooltip(label, "연간 GDP에서 이 항목의 지출이 차지하는 비율입니다.")) {
             StatRow(label, "GDP의 ${formatPercent(share)}")
             Canvas(Modifier.fillMaxWidth().height(6.dp)) {
                 drawRect(DossierColors.paperShade)
@@ -167,9 +159,9 @@ private fun BalanceSheet(budget: BudgetSnapshot) {
         "연간 재정수지",
         budget.balance,
         budget.gdp,
+        detail = "세입에서 순이자를 포함한 지출을 뺀 금액입니다.",
         color = balanceInk,
         signed = true,
-        detail = "세입에서 순이자를 포함한 지출을 뺀 금액입니다.",
     )
     SectionTitle("세입과 지출")
     StatRow("세입", "${formatPercent(budget.revenue)} · ${money(budget.revenue)}")

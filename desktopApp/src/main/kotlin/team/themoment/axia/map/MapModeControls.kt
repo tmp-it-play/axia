@@ -25,6 +25,7 @@ import team.themoment.axia.theme.DossierColors
 import team.themoment.axia.theme.DossierType
 import team.themoment.axia.ui.console.ConsoleKey
 import team.themoment.axia.ui.console.consoleFrame
+import team.themoment.axia.ui.dossier.controlTooltip
 import team.themoment.axia.ui.dossier.paperTexture
 import team.themoment.axia.ui.dossier.steelTexture
 
@@ -47,7 +48,11 @@ fun MapModeBar(
         verticalArrangement = Arrangement.spacedBy(2.dp),
     ) {
         MapMode.entries.forEach { mode ->
-            ConsoleKey(onClick = { onSelect(mode) }, active = mode == selected, modifier = Modifier.height(24.dp)) { ink ->
+            ConsoleKey(
+                onClick = { onSelect(mode) },
+                active = mode == selected,
+                modifier = Modifier.height(24.dp).controlTooltip(mode.label, mode.tooltip),
+            ) { ink ->
                 Text(
                     mode.label,
                     modifier = Modifier.padding(horizontal = 8.dp),

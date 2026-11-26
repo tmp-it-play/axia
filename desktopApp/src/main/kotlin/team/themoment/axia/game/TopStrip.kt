@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,7 +26,9 @@ import androidx.compose.ui.unit.sp
 import team.themoment.axia.format.formatPercent
 import team.themoment.axia.format.formatRate
 import team.themoment.axia.simulation.ClockState
+import team.themoment.axia.simulation.economy.CountryHistory
 import team.themoment.axia.simulation.economy.EconomyIndicators
+import team.themoment.axia.simulation.nation.NationSnapshot
 import team.themoment.axia.simulation.time.GameSpeed
 import team.themoment.axia.theme.DossierType
 import team.themoment.axia.ui.console.ConsoleBrass
@@ -33,6 +36,8 @@ import team.themoment.axia.ui.console.ConsoleKey
 import team.themoment.axia.ui.console.ConsoleMuted
 import team.themoment.axia.ui.console.ConsoleText
 import team.themoment.axia.ui.console.consoleFrame
+import team.themoment.axia.ui.dossier.MetricTrend
+import team.themoment.axia.ui.dossier.controlTooltip
 import team.themoment.axia.ui.dossier.metricTooltip
 import team.themoment.axia.ui.dossier.steelTexture
 import java.time.format.DateTimeFormatter
@@ -47,11 +52,11 @@ private val grooveLight = Color(0x887B806F)
 @Composable
 fun TopStrip(
     countryName: String,
-    approval: Double,
+    nation: NationSnapshot,
     indicators: EconomyIndicators,
+    economyHistory: CountryHistory,
     clock: ClockState,
     nextElection: String?,
-    politicalCapital: Double,
     headline: String?,
     pendingEventCount: Int,
     onOpenNewspaper: () -> Unit,
@@ -91,7 +96,7 @@ fun TopStrip(
                 ConsoleKey(
                     onClick = onOpenNewspaper,
                     description = "사건 신문 다시 열기",
-                    modifier = Modifier.height(30.dp).metricTooltip("대기 중인 사건", "신문을 열어 사건에 대응할 수 있습니다."),
+                    modifier = Modifier.height(30.dp).controlTooltip("대기 중인 사건", "신문을 열어 사건에 대응할 수 있습니다."),
                 ) { ink ->
                     Text("사건 ${pendingEventCount}건", Modifier.padding(horizontal = 8.dp), style = DossierType.title(13.sp), color = ink)
                 }
@@ -119,11 +124,16 @@ fun TopStrip(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             val cell = Modifier.weight(1f)
+            val trends =
+                remember(economyHistory, nation.history) {
+                    NationalMetric.entries.associateWith { it.trend(economyHistory, nation.history) }
+                }
+            val politicalCapital = nation.society.politicalCapital
             NationalMetric.entries.forEachIndexed { index, metric ->
                 if (index > 0) Groove()
                 val value =
                     when (metric) {
-                        NationalMetric.APPROVAL -> "${approval.roundToInt()}%"
+                        NationalMetric.APPROVAL -> "${nation.approval.roundToInt()}%"
                         NationalMetric.POLITICAL_CAPITAL -> politicalCapital.toInt().toString()
                         NationalMetric.GROWTH -> formatPercent(indicators.growth, signed = true)
                         NationalMetric.INFLATION -> formatPercent(indicators.inflation)
@@ -132,7 +142,7 @@ fun TopStrip(
                         NationalMetric.DEBT -> formatPercent(indicators.debtRatio)
                         NationalMetric.RATE -> formatRate(indicators.policyRate)
                     }
-                ConsoleMetric(metric, value, metric.hudDescription(indicators, value), cell)
+                ConsoleMetric(metric, value, trends.getValue(metric), cell)
             }
         }
     }
@@ -142,13 +152,13 @@ fun TopStrip(
 private fun ConsoleMetric(
     metric: NationalMetric,
     value: String,
-    detail: String,
+    trend: MetricTrend,
     modifier: Modifier,
 ) {
     Column(
         modifier
             .fillMaxHeight()
-            .metricTooltip(metric.title, detail)
+            .metricTooltip(metric.title, metric.description, trend)
             .semantics(mergeDescendants = true) {}
             .padding(horizontal = 6.dp),
         verticalArrangement = Arrangement.Center,
@@ -172,11 +182,20 @@ private fun ClockControls(
         ConsoleKey(
             onClick = onTogglePause,
             description = if (clock.paused) "시간 재생" else "일시정지",
-            modifier = Modifier.width(34.dp).height(32.dp),
+            modifier =
+                Modifier
+                    .width(
+                        34.dp,
+                    ).height(32.dp)
+                    .controlTooltip(if (clock.paused) "시간 재생" else "일시정지", "스페이스바로 시간을 멈추거나 다시 진행합니다."),
         ) { ink ->
             ConsoleGlyph(if (clock.paused) ConsoleSymbol.PLAY else ConsoleSymbol.PAUSE, Modifier.size(15.dp), ink)
         }
-        ConsoleKey(onClick = onAdvanceDay, enabled = clock.paused, modifier = Modifier.width(55.dp).height(32.dp)) { ink ->
+        ConsoleKey(
+            onClick = onAdvanceDay,
+            enabled = clock.paused,
+            modifier = Modifier.width(55.dp).height(32.dp).controlTooltip("하루 진행", "일시정지 중에 게임 시간을 하루 진행합니다."),
+        ) { ink ->
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(3.dp)) {
                 ConsoleGlyph(ConsoleSymbol.NEXT_DAY, Modifier.size(12.dp), ink)
                 Text("하루", style = DossierType.title(12.sp), color = ink)
@@ -192,7 +211,7 @@ private fun ClockControls(
                     Modifier
                         .width(30.dp)
                         .height(32.dp)
-                        .metricTooltip("시간 배속", "실제 1초 동안 진행할 게임 속 날짜 수를 정합니다."),
+                        .controlTooltip("시간 배속", "실제 1초 동안 진행할 게임 속 날짜 수를 정합니다."),
             ) { ink ->
                 Text("${speed.multiplier}×", style = DossierType.number(12.sp, FontWeight.SemiBold), color = ink)
             }
