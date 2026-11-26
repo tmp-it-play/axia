@@ -35,7 +35,6 @@ class CountryLabel(
     val countryId: String,
     val name: String,
     curve: CountryLabelCurve,
-    val maxGlyphHeight: Float,
 ) {
     private val start = if (curve.start.x <= curve.end.x) curve.start else curve.end
     private val end = if (curve.start.x <= curve.end.x) curve.end else curve.start
@@ -46,23 +45,21 @@ class CountryLabel(
             for (i in 1..SAMPLES) table[i] = table[i - 1] + (samples[i] - samples[i - 1]).getDistance()
         }
 
-    val thickness = curve.thickness
+    val maxGlyphHeight = curve.glyphHeight
     val length: Float get() = lengths[SAMPLES]
     val bounds: Rect =
         Rect(samples.minOf { it.x }, samples.minOf { it.y }, samples.maxOf { it.x }, samples.maxOf { it.y })
-            .inflate(curve.thickness / 2f)
+            .inflate(maxGlyphHeight)
 
     /** 호 길이 [distance] 지점의 위치와 접선 각도(라디안). */
     fun placeAt(distance: Float): Pair<Offset, Float> {
         val target = distance.coerceIn(0f, length)
-        var index = lengths.indexOfFirst { it >= target }.coerceAtLeast(1)
-        if (index > SAMPLES) index = SAMPLES
+        val index = lengths.indexOfFirst { it >= target }.coerceAtLeast(1)
         val segment = lengths[index] - lengths[index - 1]
         val fraction = if (segment > 0f) (target - lengths[index - 1]) / segment else 0f
-        val a = samples[index - 1]
-        val b = samples[index]
-        val direction = b - a
-        return (a + direction * fraction) to atan2(direction.y, direction.x)
+        val t = (index - 1 + fraction) / SAMPLES
+        val tangent = (control - start) * (1f - t) + (end - control) * t
+        return pointAt(t) to atan2(tangent.y, tangent.x)
     }
 
     private fun pointAt(t: Float): Offset {
@@ -105,7 +102,7 @@ class WorldMapModel(
     }
 
     private val initialLabels by lazy {
-        regionsByCountry.mapValues { (owner, shapes) -> fitLabel(owner, shapes, geometry.countries.getValue(owner).labelCurve) }
+        regionsByCountry.mapValues { (owner, shapes) -> fitLabel(owner, shapes) }
     }
 
     /** 바뀐 소유권이 있는 나라만 다시 맞춘다. 줌과 화면 위치는 표기 배치에 관여하지 않는다. */
@@ -114,20 +111,18 @@ class WorldMapModel(
         val changed = owners.entries.flatMap { (region, owner) -> listOf(countryOf(region), owner) }.toSet()
         val current = regions.groupBy { owners[it.id] ?: countryOf(it.id) }
         return current.mapNotNull { (owner, shapes) ->
-            if (owner in changed) fitLabel(owner, shapes, null) else initialLabels[owner]
+            if (owner in changed) fitLabel(owner, shapes) else initialLabels[owner]
         }
     }
 
     private fun fitLabel(
         owner: String,
         shapes: List<RegionShape>,
-        original: CountryLabelCurve?,
     ): CountryLabel? {
         val mainland = shapes.filter { world.region(it.id).territoryId == null }.ifEmpty { shapes }
         val name = world.country(owner).name
-        val curve = fitTerritoryCurve(mainland, original, name.count { !it.isWhitespace() }) ?: return null
-        val area = abs(mainland.sumOf { shape -> shape.rings.sumOf(::signedArea) })
-        return CountryLabel(owner, name, curve, sqrt(area).toFloat() * 0.28f)
+        val curve = fitTerritoryCurve(mainland, name.length) ?: return null
+        return CountryLabel(owner, name, curve)
     }
 
     class PoliticalBorders(

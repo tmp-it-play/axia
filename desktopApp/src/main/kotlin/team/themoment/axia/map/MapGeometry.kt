@@ -26,18 +26,17 @@ class BorderLine(
     val bounds: Rect,
 )
 
-/** 국가 이름을 따라 쓸 이차 베지어 곡선과 그 곡선 주변 국토 두께. 모두 투영 좌표다. */
+/** 국가 이름을 따라 쓸 이차 베지어 곡선과 허용 활자 높이. 모두 투영 좌표다. */
 class CountryLabelCurve(
     val start: Offset,
     val control: Offset,
     val end: Offset,
-    val thickness: Float,
+    val glyphHeight: Float,
 )
 
 class CountryMapInfo(
     val id: String,
     val colorIndex: Int,
-    val labelCurve: CountryLabelCurve,
 )
 
 class MapGeometry(
@@ -48,7 +47,7 @@ class MapGeometry(
     companion object {
         private const val RESOURCE = "/map/world-map.bin"
         private const val FORMAT_NAME = "AXIA-MAP"
-        private const val FORMAT_VERSION = 3
+        private const val FORMAT_VERSION = 4
 
         fun loadDefault(): MapGeometry {
             val stream = requireNotNull(MapGeometry::class.java.getResourceAsStream(RESOURCE)) { "Missing $RESOURCE" }
@@ -59,7 +58,8 @@ class MapGeometry(
             check(input.readUTF() == FORMAT_NAME) { "Not an Axia map file" }
             val version = input.readInt()
             check(version == FORMAT_VERSION) { "Unsupported map format version $version" }
-            val countries = List(input.readInt()) { input.readCountry() }.associateBy(CountryMapInfo::id)
+            val countries =
+                List(input.readInt()) { CountryMapInfo(input.readUTF(), input.readByte().toInt()) }.associateBy(CountryMapInfo::id)
             val regions =
                 List(input.readInt()) {
                     val id = input.readUTF()
@@ -75,19 +75,6 @@ class MapGeometry(
                     BorderLine(kind, ownerId, points, boundsOf(listOf(points)))
                 }
             return MapGeometry(countries, regions, borders)
-        }
-
-        private fun DataInputStream.readCountry(): CountryMapInfo {
-            val id = readUTF()
-            val colorIndex = readByte().toInt()
-            val curve =
-                CountryLabelCurve(
-                    start = Offset(readFloat(), readFloat()),
-                    control = Offset(readFloat(), readFloat()),
-                    end = Offset(readFloat(), readFloat()),
-                    thickness = readFloat(),
-                )
-            return CountryMapInfo(id, colorIndex, curve)
         }
 
         private fun DataInputStream.readProjectedPoints(): FloatArray {

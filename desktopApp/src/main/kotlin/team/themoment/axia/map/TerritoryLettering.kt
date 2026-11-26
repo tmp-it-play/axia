@@ -2,183 +2,234 @@ package team.themoment.axia.map
 
 import androidx.compose.ui.geometry.Offset
 import java.awt.Color
-import java.awt.geom.AffineTransform
-import java.awt.geom.Area
-import java.awt.geom.Path2D
-import java.awt.geom.PathIterator
+import java.awt.Shape
+import java.awt.geom.QuadCurve2D
 import java.awt.image.BufferedImage
-import kotlin.math.abs
+import kotlin.math.atan2
+import kotlin.math.ceil
 import kotlin.math.cos
+import kotlin.math.hypot
+import kotlin.math.roundToInt
 import kotlin.math.sin
+import kotlin.math.sqrt
 
-/** 국토에서 벗어난 곡선 또는 새 국경에만 내부 표기선을 구한다. */
+/** 본토의 면적 중심 가까이에서 한글 이름이 들어가는 완만한 호를 찾는다. */
 internal fun fitTerritoryCurve(
     shapes: List<RegionShape>,
-    original: CountryLabelCurve?,
     glyphs: Int,
 ): CountryLabelCurve? {
-    val land = Path2D.Float(Path2D.WIND_EVEN_ODD)
-    shapes.forEach { shape ->
-        shape.rings.forEach { ring ->
-            land.moveTo(ring[0], ring[1])
-            for (i in 2 until ring.size step 2) land.lineTo(ring[i], ring[i + 1])
-            land.closePath()
-        }
-    }
-    if (original != null && followsLand(original, land)) return original
-    val body = largestLandmass(Area(land)) ?: return null
-    return fitInscription(body, glyphs)
-}
-
-private fun followsLand(
-    curve: CountryLabelCurve,
-    land: Path2D,
-): Boolean {
-    for (i in 0..48) {
-        val t = i / 48f
-        val u = 1f - t
-        val p = curve.start * (u * u) + curve.control * (2 * u * t) + curve.end * (t * t)
-        val tangent = (curve.control - curve.start) * u + (curve.end - curve.control) * t
-        val length = tangent.getDistance()
-        if (length == 0f) return false
-        val normal = Offset(-tangent.y, tangent.x) * (curve.thickness * 0.34f / length)
-        for (side in -2..2) {
-            val edge = p + normal * (side / 2f)
-            if (!land.contains(edge.x.toDouble(), edge.y.toDouble())) return false
-        }
-    }
-    return true
-}
-
-/** 합쳐진 경계에서 가장 넓은 연결 육지를 고르고 호수와 월경지는 비워 둔다. */
-private fun largestLandmass(land: Area): Area? {
-    val iterator = land.getPathIterator(null)
-    val p = DoubleArray(6)
-    var outline = Path2D.Double()
-    var previousX = 0.0
-    var previousY = 0.0
-    var firstX = 0.0
-    var firstY = 0.0
-    var twiceArea = 0.0
-    var largest = 0.0
-    var best: Path2D? = null
-    while (!iterator.isDone) {
-        when (iterator.currentSegment(p)) {
-            PathIterator.SEG_MOVETO -> {
-                outline = Path2D.Double()
-                outline.moveTo(p[0], p[1])
-                firstX = p[0]
-                firstY = p[1]
-                twiceArea = 0.0
-            }
-
-            PathIterator.SEG_LINETO -> {
-                outline.lineTo(p[0], p[1])
-                twiceArea += previousX * p[1] - p[0] * previousY
-            }
-
-            PathIterator.SEG_CLOSE -> {
-                outline.closePath()
-                val area = abs(twiceArea + previousX * firstY - firstX * previousY)
-                if (area > largest) {
-                    largest = area
-                    best = outline
-                }
-            }
-        }
-        previousX = p[0]
-        previousY = p[1]
-        iterator.next()
-    }
-    return best?.let { Area(it).apply { intersect(land) } }
-}
-
-private const val GRID = 80
-
-/** 여러 방향에서 본토 안에 들어가는 직사각형을 찾고, 한글 이름의 길이에 맞는 폭·높이를 고른다. */
-private fun fitInscription(
-    body: Area,
-    glyphs: Int,
-): CountryLabelCurve? {
+    val body = mainlandOutline(shapes) ?: return null
+    val inset = LandGrid(body)
+    if (inset.heightLimit == 0.0) return null
+    val anchors = inset.anchors()
+    val angles = listOf(0.0, inset.axis.coerceIn(-MAX_TILT, MAX_TILT), -12.0, 12.0, -25.0, 25.0, -50.0, 50.0, -75.0, 75.0).distinct()
+    val lengths = generateSequence(1.5) { it * 1.25 }.takeWhile { it < GRID * 1.3 }.toList().asReversed()
     var bestScore = 0.0
     var best: CountryLabelCurve? = null
-    val orientations =
-        listOf(0, -25, 25, -50, 50, -75, 75, 90).associateWith { degrees ->
-            AffineTransform.getRotateInstance(-Math.toRadians(degrees.toDouble())).createTransformedShape(body)
-        }
-    val axis = orientations.maxBy { (_, shape) -> shape.bounds2D.run { width / height } }
-    val narrow = axis.value.bounds2D.run { width > 2.0 * height }
-    for ((degrees, rotated) in orientations) {
-        val angle = Math.toRadians(degrees.toDouble())
-        // 둥근 국토에는 가로쓰기를, 길고 좁은 국토에는 긴 축을 우선한다.
-        val alignment =
-            if (narrow) {
-                val alongAxis = cos(Math.toRadians((degrees - axis.key).toDouble()))
-                0.42 + 0.58 * alongAxis * alongAxis
-            } else {
-                1.0 - abs(degrees) / 175.0
-            }
-        val bounds = rotated.bounds2D
-        val cell = maxOf(bounds.width, bounds.height) / (GRID - 2)
-        val image = BufferedImage(GRID, GRID, BufferedImage.TYPE_BYTE_GRAY)
-        val pen = image.createGraphics()
-        try {
-            pen.color = Color.WHITE
-            pen.translate(1.0, 1.0)
-            pen.scale(1 / cell, 1 / cell)
-            pen.translate(-bounds.minX, -bounds.minY)
-            pen.fill(rotated)
-        } finally {
-            pen.dispose()
-        }
-        val heights = IntArray(GRID + 1)
-        val stack = IntArray(GRID + 1)
-
-        fun toMap(
-            x: Double,
-            y: Double,
-        ): Offset {
-            val u = bounds.minX + (x - 1) * cell
-            val v = bounds.minY + (y - 1) * cell
-            return Offset((u * cos(angle) - v * sin(angle)).toFloat(), (u * sin(angle) + v * cos(angle)).toFloat())
-        }
-
-        // 누적 높이 히스토그램에서 행마다 내부 직사각형 후보를 선형 시간에 열거한다.
-        for (y in 0 until GRID) {
-            var top = -1
-            for (x in 0..GRID) {
-                heights[x] = if (x < GRID && image.raster.getSample(x, y, 0) != 0) heights[x] + 1 else 0
-                while (top >= 0 && heights[stack[top]] > heights[x]) {
-                    val height = heights[stack[top--]]
-                    val left = if (top < 0) 0 else stack[top] + 1
-                    val width = x - left
-                    val readable = minOf(height * 0.50, width * 0.80 / glyphs)
-                    val spread = minOf(4.0, width / (glyphs * readable))
-                    val score = cell * readable * alignment * (1.0 + 0.10 * spread)
-                    if (score > bestScore) {
-                        val midY = y + 1 - height / 2.0
-                        val safeLeft = left + width * 0.08
-                        val safeRight = x - width * 0.08
-                        // 픽셀 하나보다 얇은 해안·국경도 실제 벡터 형상에서 다시 확인한다.
-                        if (!rotated.contains(
-                                bounds.minX + (safeLeft - 1) * cell,
-                                bounds.minY + (midY - height * 0.28 - 1) * cell,
-                                (safeRight - safeLeft) * cell,
-                                height * 0.56 * cell,
-                            )
-                        ) {
-                            continue
-                        }
-                        val start = toMap(safeLeft, midY)
-                        val end = toMap(safeRight, midY)
-                        val candidate = CountryLabelCurve(start, (start + end) / 2f, end, (height * cell * 0.82).toFloat())
+    for (degrees in angles) {
+        val angle = Math.toRadians(degrees)
+        // 폭이 넓은 나라는 가로쓰기를, 길쭉한 나라는 본토의 장축을 우선한다.
+        val horizontal = 1.0 - 0.36 * sin(angle) * sin(angle)
+        val tilt = sin(Math.toRadians(degrees - inset.axis))
+        val alignment = horizontal + inset.elongation * (1.0 - 0.42 * tilt * tilt - horizontal)
+        for (span in lengths) {
+            for (bow in listOf(0.065, -0.065)) {
+                val arc = LabelArc(angle, span, bow)
+                for (anchor in anchors) {
+                    val clearance = arc.clearanceAt(anchor.x, anchor.y, inset.clearance)
+                    // 한글 한 자의 폭은 줄높이의 약 85%. 실제 글꼴 측정값은 그릴 때 적용한다.
+                    val height = minOf(inset.heightLimit, clearance * 1.35, span * 0.82 / (0.85 * glyphs))
+                    if (height <= 0.0) continue
+                    val spread = minOf(2.5, span / (glyphs * height))
+                    val score = height * (1.0 + 0.22 * spread) * anchor.centrality * alignment * (if (bow > 0) 1.02 else 1.0)
+                    if (score <= bestScore) continue
+                    val candidate = arc.onMap(inset.toMap(anchor.x, anchor.y), inset.cell, height)
+                    if (candidate.fitsInside(body)) {
                         best = candidate
                         bestScore = score
                     }
                 }
-                stack[++top] = x
             }
         }
     }
     return best
+}
+
+private const val GRID = 92
+private const val MAX_TILT = 82.0
+
+private class LabelAnchor(
+    val x: Int,
+    val y: Int,
+    val centrality: Double,
+)
+
+/** 본토 하나의 투영 격자. 같은 표본으로 면적 중심, 장축과 해안·구멍까지의 여유를 구한다. */
+private class LandGrid(
+    body: Shape,
+) {
+    private val bounds = body.bounds2D
+    val cell = maxOf(bounds.width, bounds.height) / (GRID - 4)
+    val clearance = FloatArray(GRID * GRID)
+    private val center: Offset
+    private val meanSquareRadius: Double
+    val axis: Double
+    val elongation: Double
+    val heightLimit: Double
+
+    init {
+        val image = BufferedImage(GRID, GRID, BufferedImage.TYPE_BYTE_GRAY)
+        val pen = image.createGraphics()
+        try {
+            pen.color = Color.WHITE
+            pen.translate(2.0, 2.0)
+            pen.scale(1 / cell, 1 / cell)
+            pen.translate(-bounds.minX, -bounds.minY)
+            pen.fill(body)
+        } finally {
+            pen.dispose()
+        }
+        var count = 0
+        var sx = 0.0
+        var sy = 0.0
+        var sxx = 0.0
+        var syy = 0.0
+        var sxy = 0.0
+        for (y in 1 until GRID - 1) {
+            for (x in 1 until GRID - 1) {
+                if (image.raster.getSample(x, y, 0) == 0) continue
+                clearance[y * GRID + x] = GRID.toFloat()
+                count++
+                sx += x
+                sy += y
+                sxx += x * x
+                syy += y * y
+                sxy += x * y
+            }
+        }
+        val samples = count.coerceAtLeast(1)
+        val mx = sx / samples
+        val my = sy / samples
+        center = Offset(mx.toFloat(), my.toFloat())
+        val xx = sxx / samples - mx * mx
+        val yy = syy / samples - my * my
+        val xy = sxy / samples - mx * my
+        meanSquareRadius = maxOf(1.0, xx + yy)
+        axis = Math.toDegrees(0.5 * atan2(2 * xy, xx - yy))
+        elongation = ((hypot(xx - yy, 2 * xy) / meanSquareRadius - 0.25) / 0.5).coerceIn(0.0, 1.0)
+        heightLimit = sqrt(count.toDouble()) * 0.28
+        for (i in GRID + 1 until clearance.size - GRID - 1) updateDistance(i, 1)
+        for (i in clearance.size - GRID - 2 downTo GRID + 1) updateDistance(i, -1)
+    }
+
+    fun anchors(): List<LabelAnchor> {
+        val cells = mutableSetOf(clearance.indices.maxBy { clearance[it] })
+        for (y in 1 until GRID - 1 step 3) {
+            for (x in 1 until GRID - 1 step 3) {
+                if (clearance[y * GRID + x] > 0f) cells.add(y * GRID + x)
+            }
+        }
+        return cells
+            .map { cell ->
+                val x = cell % GRID
+                val y = cell / GRID
+                val dx = x - center.x
+                val dy = y - center.y
+                LabelAnchor(x, y, 1.0 / (1.0 + 4.0 * (dx * dx + dy * dy) / meanSquareRadius))
+            }.sortedByDescending { it.centrality }
+    }
+
+    // 가로·세로 및 대각선의 두 차례 거리 변환. 최종 활자 띠는 원본 벡터 경계로 검사한다.
+    private fun updateDistance(
+        i: Int,
+        step: Int,
+    ) {
+        if (clearance[i] == 0f) return
+        val above = i - step * GRID
+        clearance[i] =
+            minOf(
+                clearance[i],
+                1f + minOf(clearance[i - step], clearance[above]),
+                1.4142f + minOf(clearance[above - 1], clearance[above + 1]),
+            )
+    }
+
+    fun toMap(
+        x: Int,
+        y: Int,
+    ) = Offset((bounds.minX + (x - 1.5) * cell).toFloat(), (bounds.minY + (y - 1.5) * cell).toFloat())
+}
+
+/** t=0은 국명 한가운데, 양 끝은 t=±1이다. 정중앙을 고정한 채 휘는 방향만 바꿀 수 있다. */
+private class LabelArc(
+    angle: Double,
+    span: Double,
+    bow: Double,
+) {
+    private val half = Offset((cos(angle) * span / 2).toFloat(), (sin(angle) * span / 2).toFloat())
+    private val rise = Offset((-sin(angle) * span * bow).toFloat(), (cos(angle) * span * bow).toFloat())
+    private val steps = 2 * ceil(span / 6).toInt()
+    private val samples =
+        Array(steps + 1) { i ->
+            val t = 2f * i / steps - 1f
+            half * t + rise * (t * t)
+        }
+    private val dx = IntArray(samples.size) { samples[it].x.roundToInt() }
+    private val dy = IntArray(samples.size) { samples[it].y.roundToInt() }
+    private val offsets = IntArray(samples.size) { dy[it] * GRID + dx[it] }
+    private val xRange = -dx.min() until GRID - dx.max()
+    private val yRange = -dy.min() until GRID - dy.max()
+
+    fun clearanceAt(
+        x: Int,
+        y: Int,
+        land: FloatArray,
+    ): Double {
+        if (x !in xRange || y !in yRange) return 0.0
+        val center = y * GRID + x
+        var smallest = land[center]
+        for (offset in offsets) {
+            smallest = minOf(smallest, land[center + offset])
+            if (smallest == 0f) break
+        }
+        return (smallest - 0.5) * 0.92
+    }
+
+    fun onMap(
+        center: Offset,
+        cell: Double,
+        height: Double,
+    ): CountryLabelCurve {
+        val along = half * cell.toFloat()
+        val bend = rise * cell.toFloat()
+        return CountryLabelCurve(center - along + bend, center - bend, center + along + bend, (height * cell).toFloat())
+    }
+}
+
+private fun CountryLabelCurve.fitsInside(body: Shape): Boolean {
+    // 각 부분 호의 제어 삼각형과 활자 반높이를 포함하는 상자가 육지 안이면 띠 전체가 안전하다.
+    fun containsArc(
+        arc: QuadCurve2D.Double,
+        depth: Int,
+    ): Boolean {
+        val bounds = arc.bounds2D
+        val margin = glyphHeight / 2.0
+        if (body.contains(bounds.x - margin, bounds.y - margin, bounds.width + glyphHeight, bounds.height + glyphHeight)) return true
+        if (depth == 0) return false
+        val left = QuadCurve2D.Double()
+        val right = QuadCurve2D.Double()
+        arc.subdivide(left, right)
+        return containsArc(left, depth - 1) && containsArc(right, depth - 1)
+    }
+
+    val arc =
+        QuadCurve2D.Double(
+            start.x.toDouble(),
+            start.y.toDouble(),
+            control.x.toDouble(),
+            control.y.toDouble(),
+            end.x.toDouble(),
+            end.y.toDouble(),
+        )
+    return containsArc(arc, 5)
 }

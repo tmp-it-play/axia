@@ -50,11 +50,11 @@ def read_map():
     with MAP_IN.open("rb") as stream:
         assert read_utf(stream) == "AXIA-MAP"
         (version,) = struct.unpack(">i", stream.read(4))
-        assert version == 3, version
+        assert version == 4, version
         (countries,) = struct.unpack(">i", stream.read(4))
         for _ in range(countries):
             read_utf(stream)
-            stream.read(1 + 7 * 4)
+            stream.read(1)
         (region_count,) = struct.unpack(">i", stream.read(4))
         regions = []
         for _ in range(region_count):

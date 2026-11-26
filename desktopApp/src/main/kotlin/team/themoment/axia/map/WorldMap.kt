@@ -37,7 +37,6 @@ private const val SCROLL_ZOOM_SPEED = 0.12f
 
 /** 기준 글꼴은 한 번만 측정한다. 실제 글자 높이와 간격은 지도 좌표로 정한다. */
 private const val LABEL_BASE_SIZE_SP = 32
-private const val LABEL_THICKNESS_FILL = 0.60f
 private const val LABEL_LENGTH_FILL = 0.82f
 private const val LABEL_SPREAD_FILL = 0.84f
 private const val LABEL_MAX_TRACKING = 1.5f
@@ -195,8 +194,7 @@ private fun layoutLabels(
         val glyphs = country.name.map { glyphCache.getOrPut(it) { measurer.measure(it.toString(), style) } }
         val naturalWidth = glyphs.sumOf { it.size.width }
         val height = glyphs.maxOf { it.size.height }
-        val letterHeight = minOf(country.thickness * LABEL_THICKNESS_FILL, country.maxGlyphHeight)
-        val scale = minOf(letterHeight / height, country.length * LABEL_LENGTH_FILL / naturalWidth)
+        val scale = minOf(country.maxGlyphHeight / height, country.length * LABEL_LENGTH_FILL / naturalWidth)
         val gaps = (glyphs.size - 1).coerceAtLeast(1)
         val spread = country.length * LABEL_SPREAD_FILL - naturalWidth * scale
         val tracking = (spread / gaps).coerceIn(0f, height * scale * LABEL_MAX_TRACKING)
